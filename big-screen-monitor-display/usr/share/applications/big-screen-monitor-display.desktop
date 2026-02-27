@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Big Screen Monitor Display
+Comment=Configure settings for Big Screen Monitor Display
+Exec=/usr/bin/big-screen-monitor-config.sh
+Type=Application
+Terminal=false
+Icon=big-screen-monitor-display
+Categories=Settings;System;Monitor;Utility;
+Keywords=monitor;display;lcd;hardware;gpu;cpu;settings;config;
+
+[Desktop Action Settings]
+Name=Run
+Exec=/usr/bin/big-screen-monitor-display.sh

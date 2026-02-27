@@ -1,0 +1,25 @@
+[Unit]
+Description=Big Screen Monitor Display - System Monitor
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/usr/share/big-screen-monitor-display
+ExecStart=/usr/bin/big-screen-monitor-display.sh
+Environment=PYTHONUNBUFFERED=1
+
+# Reinicia sempre que o serviço falhar
+Restart=always
+RestartSec=5
+StartLimitBurst=0
+
+# Proteger o sistema
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
