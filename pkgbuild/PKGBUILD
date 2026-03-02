@@ -34,10 +34,11 @@ package() {
         cp -r "${InternalDir}/usr" "${pkgdir}/"
     fi
 
-    # Install locale
-    if [ -d "${InternalDir}/locale" ]; then
-        mkdir -p "${pkgdir}/usr/share/${pkgname}/"
-        cp -r "${InternalDir}/locale" "${pkgdir}/usr/share/${pkgname}/"
+    # Install locale (.po files)
+    if [ -d "${InternalDir}/locale" ] && [ -n "$(ls -A ${InternalDir}/locale/*.po 2>/dev/null)" ]; then
+        install -d "${pkgdir}/usr/share/${pkgname}/locale"
+        install -m644 "${InternalDir}/locale/"*.po \
+            "${pkgdir}/usr/share/${pkgname}/locale/"
     fi
 
     # Fix permissions for executables
