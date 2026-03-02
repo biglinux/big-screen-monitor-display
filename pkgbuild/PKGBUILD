@@ -13,24 +13,38 @@ if [ -e "pkgbuild.install" ];then
 fi
 
 package() {
-    # Usa o diretório pai do pkgbuild como fonte
-    InternalDir="${startdir}/.."
+    # Detect project root
+    if [ -d "${startdir}/../usr" ]; then
+        InternalDir="${startdir}/.."
+    elif [ -d "${srcdir}/${pkgname}/usr" ]; then
+        InternalDir="${srcdir}/${pkgname}"
+    else
+        InternalDir="${startdir}"
+    fi
 
-    # Copy files
+    # Install usr/ tree
     if [ -d "${InternalDir}/usr" ]; then
         cp -r "${InternalDir}/usr" "${pkgdir}/"
     fi
 
+    # Install locale
     if [ -d "${InternalDir}/locale" ]; then
-        mkdir -p "${pkgdir}/usr/share/big-screen-monitor-display/"
-        cp -r "${InternalDir}/locale" "${pkgdir}/usr/share/big-screen-monitor-display/"
+        mkdir -p "${pkgdir}/usr/share/${pkgname}/"
+        cp -r "${InternalDir}/locale" "${pkgdir}/usr/share/${pkgname}/"
     fi
 
-    # Make scripts executable
-    chmod +x "${pkgdir}/usr/bin/big-screen-monitor-display.sh"
-    chmod +x "${pkgdir}/usr/bin/big-screen-monitor-config.sh"
-    chmod +x "${pkgdir}/usr/share/big-screen-monitor-display/main.py"
+    # Fix permissions for executables
+    if [ -d "${pkgdir}/usr/bin" ]; then
+        chmod 755 "${pkgdir}/usr/bin/"*
+    fi
+
+    # Specific file permissions
+    if [ -f "${pkgdir}/usr/share/${pkgname}/main.py" ]; then
+        chmod +x "${pkgdir}/usr/share/${pkgname}/main.py"
+    fi
 
     # Ensure systemd service has correct permissions
-    chmod 644 "${pkgdir}/usr/lib/systemd/system/big-screen-monitor-display.service"
+    if [ -d "${pkgdir}/usr/lib/systemd/system" ]; then
+        chmod 644 "${pkgdir}/usr/lib/systemd/system/"*
+    fi
 }
