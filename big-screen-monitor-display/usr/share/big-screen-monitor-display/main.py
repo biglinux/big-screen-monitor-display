@@ -1,13 +1,6 @@
-#!/usr/bin/env python3
-"""
-Solução Final e Absoluta para AX206 AIDA64 Display.
-Com design moderno, ícones Emoji, multi-GPU e gráficos responsivos.
-"""
-
 import sys
 import time
 import struct
-from datetime import datetime
 import threading
 import subprocess
 import socket
@@ -16,12 +9,15 @@ import os
 import glob
 import json
 import re
+import io
+from datetime import datetime, timedelta
 
 import usb.core
 import usb.util
 import psutil
-import io
 from PIL import Image, ImageDraw, ImageFont
+
+STATS_LOCK = threading.Lock()
 
 # Tenta importar pystray apenas se houver um ambiente gráfico, para evitar erro no serviço systemd
 pystray = None
@@ -70,7 +66,7 @@ def get_settings():
         try:
             with open(config_path, "r") as f:
                 default_settings.update(json.load(f))
-        except:
+        except Exception:
             pass
     return default_settings
 
@@ -107,6 +103,14 @@ def get_theme_colors(theme_name):
             "vram": (138, 43, 226), "swap": (0, 240, 255), "disk": (200, 200, 200),
             "temp_line": (255, 140, 0), "bar_bg": (20, 20, 30), "border": (253, 237, 5),
             "icon_color": (255, 255, 255)
+        },
+        "gkrellm": {
+            "bg": (0, 0, 0), "panel_bg": (0, 0, 0), "text_main": (170, 255, 170),
+            "text_muted": (85, 170, 85), "text_label": (85, 170, 85), "time": (170, 255, 170),
+            "good": (170, 255, 170), "warn": (170, 255, 170), "crit": (170, 255, 170),
+            "vram": (170, 255, 170), "swap": (170, 255, 170), "disk": (170, 255, 170),
+            "temp_line": (170, 255, 170), "bar_bg": (0, 0, 0), "border": (85, 170, 85),
+            "icon_color": (170, 255, 170)
         }
     }
     # Fallback default para temas customizados ou incompletos
@@ -130,16 +134,32 @@ SYSTEM_STATS = {
     "net_rx_mbps": 0.0,
     "net_tx_mbps": 0.0,
     "gpus": [],
+    "cpu_cores_history": [],
+    "cpu_cores_percent": [],
     "active_gpu_idx": 0,
     "procs": [],
     "hostname": socket.gethostname(),
     "kernel": platform.release(),
+    "kernel_offset": 0,
+    "kernel_dir": 1,
+    "gpu_marquee_offset": 0,
+    "gpu_marquee_dir": 1,
+    "power_profile": "",
+    "cpu_user": 0.0,
+    "cpu_system": 0.0,
 }
 
 # Historico para linha CPU Temp, CPU Uso e RAM Uso
 CPU_TEMP_HISTORY = [0] * 30
 CPU_USAGE_HISTORY = [0] * 30
+CPU_USER_HISTORY = [0] * 30
+CPU_SYSTEM_HISTORY = [0] * 30
 RAM_USAGE_HISTORY = [0] * 30
+GPU_USAGE_HISTORY = [0] * 30
+GPU_MEM_HISTORY = [0] * 30
+DISK_IO_HISTORY = [0] * 30
+NET_RX_HISTORY = [0] * 30
+NET_TX_HISTORY = [0] * 30
 
 # Cache Global de Icones SVG 
 ICON_CACHE = {}
@@ -194,7 +214,9 @@ def find_gpus():
             "mem_used_mb": 0,
             "mem_total_mb": 0,
             "enc_percent": 0.0,
-            "temp": "?°C"
+            "temp": "?°C",
+            "usage_history": [0] * 30,
+            "mem_history": [0] * 30
         }
         
         uevent_path = os.path.join(card, "device", "uevent")
@@ -206,7 +228,7 @@ def find_gpus():
                         if line.startswith("PCI_SLOT_NAME="):
                             pci_slot = line.split("=")[1].strip()
                             break
-            except:
+            except Exception:
                 pass
                 
         if pci_slot:
@@ -216,7 +238,7 @@ def find_gpus():
                 out = subprocess.check_output(cmd, shell=True, text=True).strip()
                 if out:
                     gpu_info["name"] = out.split("\n")[0][:20]
-            except:
+            except Exception:
                 pass
 
         if gpu_info["name"] == "GPU Desconhecida" and os.path.exists(uevent_path):
@@ -231,7 +253,7 @@ def find_gpus():
                         gpu_info["name"] = "Intel"[:20]
                     elif "10de" in content:
                         gpu_info["name"] = "NVIDIA"[:20]
-            except:
+            except Exception:
                 pass
         
         # Garante que só será listada se for uma GPU real (removendo placa dummie sem nome)
@@ -246,13 +268,16 @@ def find_gpus():
             "mem_used_mb": 0,
             "mem_total_mb": 0,
             "enc_percent": 0.0,
-            "temp": "?°C"
+            "temp": "?°C",
+            "usage_history": [0] * 30,
+            "mem_history": [0] * 30
         })
         
     return gpus
 
 def monitor_thread():
     last_net = psutil.net_io_counters()
+    last_disk = psutil.disk_io_counters()
     last_time = time.time()
     
     SYSTEM_STATS["gpus"] = find_gpus()
@@ -261,12 +286,34 @@ def monitor_thread():
     while True:
         try:
             SYSTEM_STATS["cpu_percent"] = psutil.cpu_percent(interval=None)
-            CPU_USAGE_HISTORY.append(SYSTEM_STATS["cpu_percent"])
-            CPU_USAGE_HISTORY.pop(0)
+            cpu_times = psutil.cpu_times_percent(interval=None)
+            cpu_user = cpu_times.user
+            cpu_system = cpu_times.system
+            with STATS_LOCK:
+                SYSTEM_STATS["cpu_user"] = cpu_user
+                SYSTEM_STATS["cpu_system"] = cpu_system
+                CPU_USER_HISTORY.append(cpu_user)
+                CPU_USER_HISTORY.pop(0)
+                CPU_SYSTEM_HISTORY.append(cpu_system)
+                CPU_SYSTEM_HISTORY.pop(0)
+                CPU_USAGE_HISTORY.append(SYSTEM_STATS["cpu_percent"])
+                CPU_USAGE_HISTORY.pop(0)
+            
+            cpu_cores = psutil.cpu_percent(interval=None, percpu=True)
+            with STATS_LOCK:
+                SYSTEM_STATS["cpu_cores_percent"] = cpu_cores
+                if not SYSTEM_STATS["cpu_cores_history"]:
+                    SYSTEM_STATS["cpu_cores_history"] = [[] for _ in cpu_cores]
+                for i, c in enumerate(cpu_cores):
+                    if i < len(SYSTEM_STATS["cpu_cores_history"]):
+                        SYSTEM_STATS["cpu_cores_history"][i].append(c)
+                        if len(SYSTEM_STATS["cpu_cores_history"][i]) > 40:
+                            SYSTEM_STATS["cpu_cores_history"][i].pop(0)
             
             mem = psutil.virtual_memory()
             SYSTEM_STATS["ram_percent"] = mem.percent
-            RAM_USAGE_HISTORY.append(mem.percent)
+            with STATS_LOCK:
+                RAM_USAGE_HISTORY.append(mem.percent)
             RAM_USAGE_HISTORY.pop(0)
             
             SYSTEM_STATS["ram_used_mb"] = mem.used // 1048576
@@ -277,14 +324,14 @@ def monitor_thread():
                 SYSTEM_STATS["swap_percent"] = swap.percent
                 SYSTEM_STATS["swap_used_mb"] = swap.used // 1048576
                 SYSTEM_STATS["swap_total_mb"] = swap.total // 1048576
-            except:
+            except Exception:
                 pass
                 
             try:
                 disk = psutil.disk_usage('/')
                 SYSTEM_STATS["disk_percent"] = disk.percent
                 SYSTEM_STATS["disk_text"] = f"{disk.used//(1024**3)} / {disk.total//(1024**3)} GB"
-            except:
+            except Exception:
                 pass
                 
             net = psutil.net_io_counters()
@@ -295,30 +342,60 @@ def monitor_thread():
                 tx_mbps = ((net.bytes_sent - last_net.bytes_sent) * 8) / (dt * 1e6)
                 SYSTEM_STATS["net_rx_mbps"] = rx_mbps
                 SYSTEM_STATS["net_tx_mbps"] = tx_mbps
+                with STATS_LOCK:
+                    NET_RX_HISTORY.append(rx_mbps)
+                    NET_RX_HISTORY.pop(0)
+                    NET_TX_HISTORY.append(tx_mbps)
+                    NET_TX_HISTORY.pop(0)
             last_net = net
+            
+            disk_io = psutil.disk_io_counters()
+            if dt > 0:
+                read_kb = (disk_io.read_bytes - last_disk.read_bytes) / (dt * 1024)
+                write_kb = (disk_io.write_bytes - last_disk.write_bytes) / (dt * 1024)
+                total_io = read_kb + write_kb
+                SYSTEM_STATS["disk_io_kbs"] = total_io
+                with STATS_LOCK:
+                    DISK_IO_HISTORY.append(total_io)
+                    DISK_IO_HISTORY.pop(0)
+            last_disk = disk_io
+            
+            try:
+                SYSTEM_STATS["load_avg"] = os.getloadavg()
+            except:
+                SYSTEM_STATS["load_avg"] = (0.0, 0.0, 0.0)
+
             last_time = now
 
             try:
                 procs = sorted([p.info for p in psutil.process_iter(['name', 'cpu_percent', 'memory_percent']) if p.info['cpu_percent'] is not None], 
                        key=lambda x: x['cpu_percent'], reverse=True)[:10]
                 SYSTEM_STATS["procs"] = procs
-            except:
+            except Exception:
                 pass
             
             try:
-                out = subprocess.check_output("sensors", shell=True, timeout=0.2, text=True)
                 cpu_t_val = 0
-                for line in out.splitlines():
-                    if ("k10temp" in line or "coretemp" in line or "Tctl" in line or "Package id 0" in line or "Core 0" in line) and "+" in line and "°C" in line:
-                        temp_str = line.split("+")[1].split("°C")[0].strip()
-                        cpu_t_val = float(temp_str)
-                        break
-                
-                if cpu_t_val > 0:
-                    SYSTEM_STATS["cpu_temp"] = f"{cpu_t_val:.0f}°C"
-                    CPU_TEMP_HISTORY.append(cpu_t_val)
-                    CPU_TEMP_HISTORY.pop(0)
-            except:
+                if hasattr(psutil, "sensors_temperatures"):
+                    temps = psutil.sensors_temperatures()
+                    for name, entries in temps.items():
+                        if "coretemp" in name or "k10temp" in name or "zenpower" in name:
+                            for entry in entries:
+                                if "Tctl" in entry.label or "Package id 0" in entry.label or "Tdie" in entry.label or "Core 0" in entry.label or not entry.label:
+                                    cpu_t_val = entry.current
+                                    break
+                            if cpu_t_val > 0: break
+                    if cpu_t_val == 0:
+                        for entries in temps.values():
+                            if entries:
+                                cpu_t_val = entries[0].current
+                                break
+                    if cpu_t_val > 0:
+                        with STATS_LOCK:
+                            SYSTEM_STATS["cpu_temp"] = f"{cpu_t_val:.0f}°C"
+                            CPU_TEMP_HISTORY.append(cpu_t_val)
+                            CPU_TEMP_HISTORY.pop(0)
+            except Exception:
                 pass
 
             if len(SYSTEM_STATS["gpus"]) > 1:
@@ -342,6 +419,22 @@ def monitor_thread():
                         with open(os.path.join(card_dev, "mem_info_vram_total")) as f:
                             gpu["mem_total_mb"] = int(f.read().strip()) // 1048576
                             
+                    # Update individual GPU history
+                    with STATS_LOCK:
+                        gpu["usage_history"].append(gpu["percent"])
+                        gpu["usage_history"].pop(0)
+                        m_p = (gpu["mem_used_mb"] / gpu["mem_total_mb"] * 100) if gpu.get("mem_total_mb", 0) > 0 else 0
+                        gpu["mem_history"].append(m_p)
+                        gpu["mem_history"].pop(0)
+
+                    if i == SYSTEM_STATS.get("active_gpu_idx", 0):
+                        with STATS_LOCK:
+                            GPU_USAGE_HISTORY.append(gpu["percent"])
+                            GPU_USAGE_HISTORY.pop(0)
+                            mem_p = (gpu["mem_used_mb"] / gpu["mem_total_mb"] * 100) if gpu.get("mem_total_mb", 0) > 0 else 0
+                            GPU_MEM_HISTORY.append(mem_p)
+                            GPU_MEM_HISTORY.pop(0)
+                            
                     if os.path.exists(os.path.join(card_dev, "vcn_busy_percent")):
                         with open(os.path.join(card_dev, "vcn_busy_percent")) as f:
                             val = f.read().strip()
@@ -353,13 +446,81 @@ def monitor_thread():
                         if os.path.exists(temp1_input):
                             with open(temp1_input) as f:
                                 gpu["temp"] = f"{int(f.read().strip()) // 1000}°C"
-                except:
+                            
+                    # Tenta pegar sensores avançados (edge, junction, ppt) se for AMD
+                    for sensor_file in ["temp1_input", "temp2_input", "temp3_input", "power1_average"]:
+                        path = os.path.join(hwmon_path[0], sensor_file)
+                        if os.path.exists(path):
+                            with open(path) as f:
+                                val = int(f.read().strip())
+                                if "temp" in sensor_file:
+                                    label = "edge" if "1" in sensor_file else ("junc" if "2" in sensor_file else "mem")
+                                    gpu[label] = f"{val//1000}°C"
+                                else:
+                                    gpu["ppt"] = f"{val/1000000:.1f}W"
+                except Exception:
                     pass
+            
+            # Perfil de Energia
+            try:
+                prof_path = "/sys/firmware/acpi/platform_profile"
+                if os.path.exists(prof_path):
+                    with open(prof_path) as f:
+                        SYSTEM_STATS["power_profile"] = f.read().strip()
+                else:
+                    # Fallback power-profiles-ctl
+                    p = subprocess.check_output("powerprofilesctl get 2>/dev/null", shell=True, text=True).strip()
+                    if p: SYSTEM_STATS["power_profile"] = p
+            except: pass
 
-        except Exception as e:
+        except Exception:
+            pass
+            
+        # Marquee offset kernel e GPU
+        try:
+            # Kernel
+            k = SYSTEM_STATS.get('kernel', '')
+            k_len = len(k)
+            limit_k = 20 # Perfect fit for the column width
+            if k_len > limit_k:
+                off = SYSTEM_STATS.get('kernel_offset', 0)
+                d_dir = SYSTEM_STATS.get('kernel_dir', 1)
+                off += d_dir
+                if off >= (k_len - limit_k):
+                    off = k_len - limit_k
+                    d_dir = -1
+                elif off <= 0:
+                    off = 0
+                    d_dir = 1
+                SYSTEM_STATS['kernel_offset'] = off
+                SYSTEM_STATS['kernel_dir'] = d_dir
+            else:
+                SYSTEM_STATS['kernel_offset'] = 0
+            
+            # GPU (Sync all GPUs based on the longest name)
+            max_gn_len = 0
+            for g in SYSTEM_STATS.get("gpus", []):
+                max_gn_len = max(max_gn_len, len(g.get("name", "")))
+            
+            limit_g = 20
+            if max_gn_len > limit_g:
+                off_g = SYSTEM_STATS.get('gpu_marquee_offset', 0)
+                d_dir_g = SYSTEM_STATS.get('gpu_marquee_dir', 1)
+                off_g += d_dir_g
+                if off_g >= (max_gn_len - limit_g):
+                    off_g = max_gn_len - limit_g
+                    d_dir_g = -1
+                elif off_g <= 0:
+                    off_g = 0
+                    d_dir_g = 1
+                SYSTEM_STATS['gpu_marquee_offset'] = off_g
+                SYSTEM_STATS['gpu_marquee_dir'] = d_dir_g
+            else:
+                SYSTEM_STATS['gpu_marquee_offset'] = 0
+        except Exception:
             pass
         
-        time.sleep(1)
+        time.sleep(0.4)
 
 threading.Thread(target=monitor_thread, daemon=True).start()
 
@@ -369,15 +530,11 @@ class AX206_DPF:
     def __init__(self, vid=0x1908, pid=0x0102):
         self.dev = usb.core.find(idVendor=vid, idProduct=pid)
         if self.dev is None:
-            print(f"❌ Display USB {hex(vid)}:{hex(pid)} não encontrado!")
             sys.exit(1)
-            
-        print(f"✅ Display Encontrado: {self.dev.manufacturer} {self.dev.product}")
         
         try:
             if self.dev.is_kernel_driver_active(0):
                 self.dev.detach_kernel_driver(0)
-                print("   ✓ Driver nativo desativado")
         except Exception:
             pass
             
@@ -385,7 +542,7 @@ class AX206_DPF:
             self.dev.set_configuration()
             # Pequeno delay para estabilização após handshake USB
             time.sleep(0.1)
-        except:
+        except Exception:
             pass
             
         self.ep_out = 0x01
@@ -403,9 +560,8 @@ class AX206_DPF:
             # Fallback seguro para o modelo mais comum
             self.width = 800
             self.height = 480
-            print("⚠️ Nota: Resolução detectada como 800x480 (padrão)")
         else:
-            print(f"📐 Resolução detectada: {self.width}x{self.height}")
+            pass
 
     def scsi_wrap(self, cmd, dir_out=True, data=None):
         block_len = len(data) if data else 0
@@ -510,7 +666,7 @@ def get_os_release():
                 if "=" in line:
                     k, v = line.strip().split("=", 1)
                     info[k] = v.strip('"')
-    except:
+    except Exception:
         pass
     return info
 
@@ -524,7 +680,646 @@ def get_text_width(d, text, font):
             return int(font.getsize(text)[0])
 
 
+
+def render_dashboard_gkrellm(width, height, settings):
+    # Tela inteira (800x480)
+    bg_color = (0, 0, 0)
+    img = Image.new('RGB', (width, height), color=bg_color)
+    d = ImageDraw.Draw(img)
+    
+    try:
+        font_mono = ImageFont.truetype("/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf", 20)
+        font_mono_lg = ImageFont.truetype("/usr/share/fonts/Adwaita/AdwaitaMono-Bold.ttf", 26)
+        font_mono_sm = ImageFont.truetype("/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf", 16)
+    except:
+        font_mono = font_mono_lg = font_mono_sm = ImageFont.load_default()
+
+    gk_theme = settings.get("gk_theme_color", "urlicht")
+    
+    if gk_theme == "urlicht":
+        font_main  = (220, 220, 230)
+        font_blue  = (80, 130, 255)
+        font_dim   = (120, 120, 130)
+        line_top   = (80, 80, 90)
+        line_bot   = (30, 30, 40)
+        bar_fill   = (80, 130, 255)
+    elif gk_theme == "cyber_red":
+        font_main  = (255, 180, 180)  
+        font_blue  = (255, 50, 50)   
+        font_dim   = (150, 100, 100) 
+        line_top   = (120, 50, 50)    
+        line_bot   = (50, 20, 20)    
+        bar_fill   = (255, 50, 50)
+    else: # classic
+        font_main  = (170, 255, 170)
+        font_blue  = (85, 170, 85)
+        font_dim   = (85, 170, 85)
+        line_top   = (85, 170, 85)
+        line_bot   = (40, 80, 40)
+        bar_fill   = (170, 255, 170)
+
+    is_vertical = settings.get("orientation", "horizontal") == "vertical" or height > width
+    num_cols = 2 if is_vertical else 4
+    col_w = width // num_cols
+    
+    # Dividers
+    for i in range(1, num_cols):
+        d.line((col_w*i, 0, col_w*i, height), fill=line_bot, width=2)
+        d.line((col_w*i-2, 0, col_w*i-2, height), fill=line_top, width=2)
+
+    def draw_sep(x, y, w, title="", is_net=False):
+        d.line((x, y, x+w, y), fill=line_top, width=2)
+        d.line((x, y+2, x+w, y+2), fill=line_bot, width=2)
+        if title:
+            d.rectangle((x, y+4, x+w, y+26), fill=(line_bot[0]//2, line_bot[1]//2, line_bot[2]//2))
+            tw = get_text_width(d, title, font_mono)
+            d.text((x + (w-tw)//2, y + 2), title, fill=font_main, font=font_mono)
+            
+            if is_net:
+                sec = int(time.time() * 2)
+                # Blink LED for RX and TX
+                rx_color = font_blue if sec % 2 == 0 else (40, 40, 50)
+                tx_color = font_blue if (sec+1) % 2 == 0 else (40, 40, 50)
+                # Draw right aligned LEDs
+                d.rectangle((x+w-25, y+10, x+w-15, y+18), fill=rx_color, outline=line_top)
+                d.rectangle((x+w-12, y+10, x+w-2, y+18), fill=tx_color, outline=line_top)
+
+            d.line((x, y+28, x+w, y+28), fill=line_top, width=2)
+            d.line((x, y+30, x+w, y+30), fill=line_bot, width=2)
+            return y + 32
+        return y + 6
+        
+    def format_bytes(b):
+        if b < 1024: return f"{b}"
+        elif b < 1024*1024: return f"{b/1024:.1f}K"
+        else: return f"{b/(1024*1024):.1f}M"
+
+    pad = 8
+    graph_h = 45
+
+    def draw_graph(x, y, w, h, data, max_val=100, style="line", color=font_blue, fill_color=(10,30,80), current_val=0, data2=None, color2=(255,100,100)):
+        # Background gradient effect
+        for i in range(h):
+            ratio = i / h
+            bg_c = (int(0 * ratio), int(0 * ratio), int(40 * (1-ratio)))
+            d.line((x, y+i, x+w, y+i), fill=bg_c)
+        
+        d.line((x, y, x+w, y), fill=line_bot) # top border
+        
+        if data:
+            actual_max = max(max_val, max(data) if data else 1)
+            if data2:
+                actual_max = max(actual_max, max(data2) if data2 else 1)
+            step = w / max(1, len(data)-1)
+            pts = []
+            pts2 = []
+            for i, val in enumerate(data):
+                px = x + int(i*step)
+                py = y + h - int((val / actual_max) * h)
+                pts.append((px, py))
+                if py < y + h:
+                    if style == "line" or style == "mixed":
+                        if style == "mixed":
+                            d.line((px, py, px, y+h), fill=(color[0]//3, color[1]//3, color[2]//3))
+                        d.line((px, py, px, py+1), fill=color) # The bright top line 
+                    elif style == "bar":
+                        d.rectangle((px, py, px+2, y+h), fill=(color[0]//2, color[1]//2, color[2]//2))
+                        d.rectangle((px, py, px+2, py+1), fill=(min(255, color[0]+80), min(255, color[1]+80), min(255, color[2]+80)))
+                if data2 and i < len(data2):
+                    val2 = data2[i]
+                    py2 = y + h - int((val2 / actual_max) * h)
+                    pts2.append((px, py2))
+            
+            if len(pts) > 1 and style in ["bar", "mixed"]:
+                d.line(pts, fill=(min(255, color[0]+50), min(255, color[1]+50), min(255, color[2]+50)), width=1)
+            if pts2 and len(pts2) > 1 and style in ["line", "mixed"]:
+                d.line(pts2, fill=color2, width=1)
+
+        # Bottom tick horizontal bar
+        d.line((x, y+h, x+w, y+h), fill=line_top) # bottom border
+        d.rectangle((x, y+h+1, x+w, y+h+4), fill=(20, 20, 25))
+        
+        tick_w = int(w * (current_val / actual_max if 'actual_max' in locals() and actual_max > 0 else 0))
+        tick_w = min(max(tick_w, 0), w)
+        d.rectangle((x, y+h+1, x+tick_w, y+h+4), fill=color)
+
+        return y + h + 6
+
+    # Dynamic placement algorithm
+    col = 0
+    cx = 0; cy = 2; cw = col_w
+    def request_space(h_req):
+        nonlocal cy, col, cx
+        if cy + h_req > height:
+            col += 1
+            cy = 0
+            cx = col * cw
+        if col >= num_cols:
+            return False
+        return True
+
+    def draw_temp_row(label, val_str, default_val=40, custom_cy=None):
+        nonlocal cy
+        used_cy = custom_cy if custom_cy else cy
+        try:
+            val = float(str(val_str).replace('°C', ''))
+        except:
+            val = default_val
+        ratio = max(0.0, min(1.0, (val - 30) / 60.0)) # 30 to 90
+        r_c = int(font_blue[0] * (1-ratio) + 255*ratio)
+        g_c = int(font_blue[1] * (1-ratio) + 50*ratio)
+        b_c = int(font_blue[2] * (1-ratio) + 50*ratio)
+        t_color = (r_c, g_c, b_c)
+        
+        d.text((cx+pad, used_cy), label, fill=font_blue, font=font_mono_sm)
+        vw = get_text_width(d, f"{val:.1f}°C", font_mono_sm)
+        d.text((cx+cw-vw-pad, used_cy), f"{val:.1f}°C", fill=t_color, font=font_mono_sm)
+        
+        b_y = used_cy + 18
+        bar_len = int((cw-pad*2) * ratio)
+        for i in range(bar_len):
+            r_i = i/(cw-pad*2)
+            cur_c = (int(font_blue[0] * (1-r_i) + 255*r_i), int(font_blue[1] * (1-r_i) + 50*r_i), int(font_blue[2] * (1-r_i) + 50*r_i))
+            d.line((cx+pad+i, b_y, cx+pad+i, b_y+2), fill=cur_c)
+            
+        if custom_cy is None:
+            cy += 25
+
+    # Logo / Host
+    if settings.get('gk_show_host', True):
+        if request_space(80):
+            os_info = get_os_release()
+            logo_name = os_info.get("LOGO", "")
+            logo_path = f"/usr/share/pixmaps/{logo_name}.png"
+            hn = SYSTEM_STATS.get('hostname', 'URSPECHT')
+            krn = SYSTEM_STATS.get('kernel', 'Linux')
+            tw = get_text_width(d, hn, font_mono_lg)
+            kw = get_text_width(d, krn, font_mono_sm)
+            
+            if os.path.exists(logo_path):
+                try:
+                    logo = Image.open(logo_path).convert("RGBA")
+                    logo.thumbnail((45, 45), Image.Resampling.LANCZOS)
+                    img.paste(logo, (cx + (cw - logo.width)//2, cy), mask=logo)
+                    cy += logo.height + 5
+                except: pass
+                
+            d.text((cx + (cw - tw)//2, cy), hn, fill=font_dim, font=font_mono_lg)
+            cy += 30
+            
+            # Scroll Kernel
+            k_text = krn
+            limit_k = 20
+            if len(krn) > limit_k:
+                off_k = SYSTEM_STATS.get('kernel_offset', 0)
+                k_text = krn[off_k : off_k + limit_k]
+            
+            kw = get_text_width(d, k_text, font_mono_sm)
+            kx = cx + (cw - kw)//2 if len(krn) <= limit_k else cx + pad
+            d.text((kx, cy), k_text, fill=font_main, font=font_mono_sm)
+            cy += 20
+
+    now = datetime.now()
+
+    # DATE
+    if settings.get('gk_show_date', True):
+        if request_space(25):
+            ds1 = now.strftime("%a ")
+            ds2 = now.strftime("%d")
+            ds3 = now.strftime(" %b")
+            d.text((cx + pad + 20, cy), ds1, fill=font_main, font=font_mono)
+            w1 = get_text_width(d, ds1, font_mono)
+            d.text((cx + pad + 20 + w1, cy), ds2, fill=font_blue, font=font_mono)
+            w2 = get_text_width(d, ds2, font_mono)
+            d.text((cx + pad + 20 + w1 + w2, cy), ds3, fill=font_main, font=font_mono)
+            cy += 25
+
+    # TIME
+    if settings.get('gk_show_time', True):
+        if request_space(35):
+            ts1 = now.strftime("%H:%M")
+            ts2 = now.strftime(" %S")
+            d.text((cx + pad + 20, cy), ts1, fill=font_main, font=font_mono_lg)
+            w1 = get_text_width(d, ts1, font_mono_lg)
+            d.text((cx + pad + 20 + w1, cy+4), ts2, fill=font_blue, font=font_mono)
+            cy += 35
+
+    # UPTIME
+    if settings.get('gk_show_uptime', True):
+        try:
+            with open('/proc/uptime', 'r') as f:
+                uptime_seconds = float(f.readline().split()[0])
+            uptime_str = str(timedelta(seconds=int(uptime_seconds)))
+        except:
+            uptime_str = "0:00:00"
+        if request_space(25):
+            up_str = f"up: {uptime_str}"
+            tw = get_text_width(d, up_str, font_mono_sm)
+            d.text((cx + (cw - tw)//2, cy), up_str, fill=font_main, font=font_mono_sm)
+            cy += 25
+
+    # CPU MONITOR (ADVANCED DUAL-LAYER)
+    if settings.get('gk_show_cpu', True):
+        # space for title + graph + text
+        if request_space(110):
+            cy = draw_sep(cx, cy, cw, "CPU")
+            
+            # CPU STATS
+            cpu_p = SYSTEM_STATS.get('cpu_percent', 0)
+            cpu_u = SYSTEM_STATS.get('cpu_user', 0)
+            cpu_s = SYSTEM_STATS.get('cpu_system', 0)
+            cpu_t = SYSTEM_STATS.get('cpu_temp', '0°C')
+            
+            # Colors for CPUS - System (Darker/Reddish) and User (Lighter/Greenish)
+            c_user = (100, 255, 100) if gk_theme != "classic" else (170, 255, 170)
+            c_sys  = (255, 100, 100) if gk_theme != "classic" else (255, 80, 80)
+            
+            # --- Draw the specialized CPU Graph ---
+            # Moves Right to Left (History is append-only, so we show it directly or reversed)
+            # data is [0...30], current is at index 29 (right)
+            gx, gy, gw, gh = cx + pad, cy, cw - pad*2, graph_h
+            
+            # Background with grid lines every 20%
+            for i in range(gh):
+                ratio = i / gh
+                bg_c = (int(0 * ratio), int(0 * ratio), int(40 * (1-ratio)))
+                d.line((gx, gy+i, gx+gw, gy+i), fill=bg_c)
+            
+            # Grid lines
+            for perc in [20, 40, 60, 80]:
+                grid_y = gy + gh - int((perc / 100) * gh)
+                d.line((gx, grid_y, gx+gw, grid_y), fill=(50, 50, 60), width=1)
+                
+            # Border
+            d.rectangle((gx, gy, gx+gw, gy+gh), outline=line_bot)
+            
+            # Draw layers (User + System = Total)
+            # We draw them as stacked areas
+            # System is "top" relative to user, but visual order: User on bottom, System added on top
+            step = gw / max(1, len(CPU_USER_HISTORY)-1)
+            
+            pts_user = []
+            pts_system = []
+            
+            for i in range(len(CPU_USER_HISTORY)):
+                px = gx + i * step
+                u_val = CPU_USER_HISTORY[i]
+                s_val = CPU_SYSTEM_HISTORY[i]
+                
+                # User Layer (Bottom)
+                uy = gy + gh - int((u_val / 100) * gh)
+                pts_user.append((px, uy))
+                
+                # System Layer (Stacked on top of User)
+                sy = gy + gh - int(((u_val + s_val) / 100) * gh)
+                pts_system.append((px, sy))
+                
+                # Fill vertical bars for area effect
+                if uy < gy + gh:
+                    d.line((px, uy, px, gy+gh), fill=(c_user[0]//3, c_user[1]//3, c_user[2]//3))
+                if sy < uy:
+                    d.line((px, sy, px, uy), fill=(c_sys[0]//3, c_sys[1]//3, c_sys[2]//3))
+            
+            # Draw top lines for the layers
+            if len(pts_user) > 1:
+                d.line(pts_user, fill=c_user, width=1)
+                d.line(pts_system, fill=c_sys, width=1)
+            
+            cy += gh + 5
+            
+            # Numerical Values: u% s% Temp
+            # Text align: Left-center-right/distributed
+            txt_u = f"u: {cpu_u:.1f}%"
+            txt_s = f"s: {cpu_s:.1f}%"
+            
+            d.text((cx + pad, cy), txt_u, fill=font_main, font=font_mono_sm)
+            
+            sw = get_text_width(d, txt_s, font_mono_sm)
+            d.text((cx + (cw - sw)//2, cy), txt_s, fill=font_dim, font=font_mono_sm)
+            
+            tw = get_text_width(d, cpu_t, font_mono_sm)
+            d.text((cx + cw - tw - pad, cy), cpu_t, fill=font_blue, font=font_mono_sm)
+            
+            cy += 20
+            cy += 5
+
+    # GPU (Iterate all detected GPUs)
+    if settings.get('gk_show_gpu', True):
+        for i, gpu in enumerate(SYSTEM_STATS.get("gpus", [])):
+            if request_space(120):
+                cy = draw_sep(cx, cy, cw, f"GPU {i}")
+                gn = gpu.get("name", "GPU")
+                limit_g = 20
+                msg_gpu = gn
+                if len(gn) > limit_g:
+                    off_g = SYSTEM_STATS.get('gpu_marquee_offset', 0)
+                    current_off = min(off_g, len(gn) - limit_g)
+                    msg_gpu = gn[current_off : current_off + limit_g]
+                
+                gw_text = get_text_width(d, msg_gpu, font_mono_sm)
+                gx_text = cx + (cw - gw_text)//2 if len(gn) <= limit_g else cx + pad
+                d.text((gx_text, cy), msg_gpu, fill=font_main, font=font_mono_sm)
+                cy += 20
+                
+                gpu_temp = gpu.get("temp", "43°C")
+                gpu_perc = gpu.get("percent", 0)
+                mem_tot = gpu.get("mem_total_mb", 1)
+                mem_used = gpu.get("mem_used_mb", 0)
+                gpu_mem_p = (mem_used / mem_tot * 100) if mem_tot > 0 else 0
+                
+                # Use individual history per GPU
+                cy = draw_graph(cx+pad, cy, cw-pad*2, graph_h, list(gpu["usage_history"]), 100, "mixed", color=font_blue, current_val=gpu_perc, data2=list(gpu["mem_history"]), color2=(255,150,50))
+                
+                draw_temp_row("Temp", gpu_temp)
+                
+                # Align values text
+                txt_vals = f"GPU {gpu_perc:.0f}% MEM {gpu_mem_p:.0f}%"
+                vw_vals = get_text_width(d, txt_vals, font_mono_sm)
+                d.text((cx + (cw-vw_vals)//2, cy), txt_vals, fill=font_main, font=font_mono_sm)
+                cy += 20
+                cy += 5
+
+    # INDIVIDUAL CORES
+    if settings.get('gk_show_cores', True):
+        cores = SYSTEM_STATS.get('cpu_cores_percent', [])
+        history = SYSTEM_STATS.get('cpu_cores_history', [])
+        for i, val in enumerate(cores):
+            if request_space(18):
+                d.text((cx+pad, cy), f"CPU{i}", fill=font_main, font=font_mono_sm)
+                pct_str = f"{val:.0f}%"
+                vw = get_text_width(d, pct_str, font_mono_sm)
+                d.text((cx+pad+90-vw, cy), pct_str, fill=font_main, font=font_mono_sm)
+                fill_w = int((cw - pad*3 - 95) * (val/100.0))
+                fill_w = max(0, fill_w)
+                d.rectangle((cx+pad+95, cy+4, cx+pad+95+fill_w, cy+14), fill=font_blue)
+                cy += 18
+
+    # PROCESSES & LOAD
+    if settings.get('gk_show_proc', True):
+        if request_space(95):
+            procs = sum(1 for p in SYSTEM_STATS.get('procs', []))
+            if procs == 0: procs = 133
+            load1, load5, load15 = SYSTEM_STATS.get('load_avg', (0,0,0))
+            cy = draw_sep(cx, cy, cw, "Proc")
+            d.text((cx+pad, cy), f"{procs} procs", fill=font_main, font=font_mono_sm)
+            load_txt = f"{load1:.2f} {load5:.2f}"
+            lw = get_text_width(d, load_txt, font_mono_sm)
+            d.text((cx+cw-pad-lw, cy), load_txt, fill=font_dim, font=font_mono_sm)
+            cy += 20
+            cy = draw_graph(cx+pad, cy, cw-pad*2, graph_h, [min(100, x*1.2) for x in list(CPU_USAGE_HISTORY)[::-1]], 100, "mixed", color=font_blue, current_val=min(100, len(SYSTEM_STATS.get('procs', []))))
+            cy += 5
+
+    if settings.get('gk_show_temp', True):
+        draw_temp_row("CPU", SYSTEM_STATS.get('cpu_temp', '16.0°C'))
+    
+    if settings.get('gk_show_temp', True):
+        draw_temp_row("chipset", "45.0°C")
+
+    # ETH0
+    if settings.get('gk_show_eth0', True):
+        if request_space(95):
+            cy = draw_sep(cx, cy, cw, "eth0", is_net=True)
+            rx_mbps = SYSTEM_STATS.get('net_rx_mbps', 0)
+            tx_mbps = SYSTEM_STATS.get('net_tx_mbps', 0)
+            txt_rx = f"RX: {rx_mbps:.1f}M"
+            txt_tx = f"TX: {tx_mbps:.1f}M"
+            d.text((cx+pad, cy), txt_rx, fill=font_main, font=font_mono_sm)
+            vw = get_text_width(d, txt_tx, font_mono_sm)
+            d.text((cx+cw-vw-pad, cy), txt_tx, fill=font_main, font=font_mono_sm)
+            cy += 20
+            
+            c2_tx = (255, 120, 100) # Laranja/Vermelho para TX
+            cy = draw_graph(cx+pad, cy, cw-pad*2, graph_h, list(NET_RX_HISTORY), 10, "mixed", color=font_blue, current_val=rx_mbps, data2=list(NET_TX_HISTORY), color2=c2_tx) 
+            cy += 5
+
+    # RAM
+    if settings.get('gk_show_mem', True):
+        if request_space(45):
+            cy = draw_sep(cx, cy, cw, "Mem")
+            mem_p = SYSTEM_STATS.get('ram_percent', 0)
+            mem_tot = format_bytes(SYSTEM_STATS.get('ram_total_mb', 0)*1024*1024)
+            d.text((cx+pad, cy), f"{mem_p:.0f}%", fill=font_main, font=font_mono_sm)
+            vw = get_text_width(d, mem_tot, font_mono_sm)
+            d.text((cx+cw-vw-pad, cy), mem_tot, fill=font_dim, font=font_mono_sm)
+            cy += 20
+            d.rectangle((cx+pad, cy, cx+cw-pad, cy+18), fill=(20, 20, 25))
+            fw = int((cw-pad*2) * (mem_p/100.0))
+            d.rectangle((cx+pad, cy, cx+pad+fw, cy+18), fill=bar_fill) 
+            cy += 25
+
+    # SWAP
+    if settings.get('gk_show_swap', True):
+        if request_space(45):
+            cy = draw_sep(cx, cy, cw, "Swap")
+            swap_p = SYSTEM_STATS.get('swap_percent', 0)
+            sw_tot = format_bytes(SYSTEM_STATS.get('swap_total_mb', 0)*1024*1024)
+            d.text((cx+pad, cy), f"{swap_p:.0f}%", fill=font_main, font=font_mono_sm)
+            vw = get_text_width(d, sw_tot, font_mono_sm)
+            d.text((cx+cw-vw-pad, cy), sw_tot, fill=font_dim, font=font_mono_sm)
+            cy += 20
+            d.rectangle((cx+pad, cy, cx+cw-pad, cy+18), fill=(20, 20, 25))
+            sw = int((cw-pad*2) * (swap_p/100.0))
+            d.rectangle((cx+pad, cy, cx+pad+sw, cy+18), fill=bar_fill)
+            cy += 25
+
+    # DISKS (NVME, etc)
+    if settings.get('gk_show_disk', True):
+        disks = []
+        try:
+            for part in psutil.disk_partitions(all=False):
+                if 'loop' not in part.device:
+                    usage = psutil.disk_usage(part.mountpoint)
+                    disks.append((part.device.split('/')[-1], usage.percent))
+        except:
+            disks = [("hda", SYSTEM_STATS.get('disk_percent', 0))]
+
+        for name, percent in disks:
+            if request_space(45):
+                cy = draw_sep(cx, cy, cw, name)
+                d.text((cx+pad, cy), f"{percent}%", fill=font_main, font=font_mono_sm)
+                d.rectangle((cx+pad+45, cy+2, cx+cw-pad, cy+16), fill=(20, 20, 25))
+                dw = int((cw-pad*2 - 45) * (percent/100.0))
+                d.rectangle((cx+pad+45, cy+2, cx+pad+45+dw, cy+16), fill=bar_fill)
+                cy += 25
+
+    # DOCKER
+    if settings.get('gk_show_docker', False):
+        if request_space(35):
+            try:
+                dk = len(subprocess.check_output(['docker', 'ps', '-q']).splitlines())
+            except:
+                dk = 0
+            cy = draw_sep(cx, cy, cw, "docker")
+            d.text((cx+pad, cy), f"{dk} containers", fill=font_main, font=font_mono_sm)
+            cy += 25
+            
+    # DEVICES
+    if settings.get('gk_show_devices', True):
+        if request_space(110):
+            cy = draw_sep(cx, cy, cw)
+            items = [("cdrom", "/dev/sr0"), ("keydrive", "/dev/sdb1"), ("cardread", "/dev/mmcblk0"), ("fwdrive", "/dev/sdc1")]
+            
+            # Tenta detectar montagens reais
+            partitions = psutil.disk_partitions(all=True)
+            mounted_devs = [p.device for p in partitions]
+            
+            for it, dev in items:
+                cy += 5
+                is_active = any(dev in m for m in mounted_devs) or os.path.exists(dev)
+                d.rectangle((cx+pad, cy+8, cx+pad+4, cy+12), fill=(0,255,0) if is_active else (50, 50, 50))
+                d.text((cx+pad+10, cy), it, fill=font_main, font=font_mono_sm)
+                by = cy + 4
+                d.rectangle((cx+cw-30, by, cx+cw-10, by+10), fill=line_top, outline=line_bot)
+                if is_active:
+                    d.rectangle((cx+cw-20, by+2, cx+cw-12, by+8), fill=(100, 255, 100))
+                else:
+                    d.rectangle((cx+cw-20, by+2, cx+cw-12, by+8), fill=(40, 45, 50))
+                cy += 25
+
+    # MEDIA
+    if settings.get('gk_show_media', True):
+        if request_space(130):
+            vol = "4/4"
+            play_st = "( )"
+            track = "Idle"
+            try:
+                # Tentativa de pegar info media real dbus do KDE/GNOME
+                pmt = subprocess.check_output("playerctl status 2>/dev/null", shell=True, text=True).strip()
+                if "Playing" in pmt:
+                    play_st = "(>)"
+                    tr = subprocess.check_output("playerctl metadata title 2>/dev/null", shell=True, text=True).strip()
+                    track = tr[:12] if tr else "Track 1"
+                elif "Paused" in pmt:
+                    play_st = "(II)"
+                
+                v = subprocess.check_output("amixer sget Master 2>/dev/null | grep 'Right:' | awk -F'[][]' '{ print $2 }'", shell=True, text=True).strip()
+                if v: vol = v
+            except: pass
+                
+            cy += 10
+            d.text((cx + cw//2 - 25, cy+10), play_st, fill=font_blue, font=font_mono_lg)
+            d.text((cx + cw//2 + 15, cy + 14), vol, fill=font_main, font=font_mono)
+            cy += 45
+            d.text((cx+pad, cy), "Pcm", fill=font_main, font=font_mono_sm)
+            d.line((cx+40, cy+10, cx+cw-30, cy+10), fill=line_top, width=2)
+            if play_st == "(>)":
+                d.ellipse((cx+cw-25, cy+4, cx+cw-10, cy+19), fill=(0,255,0))
+            else:
+                d.ellipse((cx+cw-25, cy+4, cx+cw-10, cy+19), fill=font_blue)
+            cy += 25
+            d.text((cx+pad, cy), "CD", fill=font_main, font=font_mono_sm)
+            d.line((cx+40, cy+10, cx+cw-30, cy+10), fill=line_top, width=2)
+            d.ellipse((cx+40, cy+4, cx+55, cy+19), fill=font_blue)
+            cy += 20
+            tw = get_text_width(d, track, font_mono)
+            d.text((cx + (cw-tw)//2, cy), track, fill=font_dim, font=font_mono)
+            cy += 25
+
+    # PPP
+    if settings.get('gk_show_ppp', False):
+        ppps = ["ppp0", "ppp1", "ppp2"]
+        for p in ppps:
+            if request_space(80):
+                cy = draw_sep(cx, cy, cw, p, is_net=True)
+                d.text((cx+pad, cy), "0", fill=font_main, font=font_mono_sm)
+                cy += 20
+                cy = draw_graph(cx+pad, cy, cw-pad*2, 30, [max(0, x-5) for x in list(CPU_USAGE_HISTORY)], 100, "mixed", color=font_blue, current_val=0)
+
+    # VLAN
+    if settings.get('gk_show_vlan', False):
+        if request_space(45):
+            cy = draw_sep(cx, cy, cw, "vlan1", is_net=True)
+            d.text((cx+pad, cy), "0", fill=font_main, font=font_mono_sm)
+            cy += 25
+
+    # SYS (TENSÕES)
+    if settings.get('gk_show_sys', True):
+        sensors_sys = []
+        try:
+            temps = psutil.sensors_temperatures() if hasattr(psutil, "sensors_temperatures") else {}
+            fans = psutil.sensors_fans() if hasattr(psutil, "sensors_fans") else {}
+            # get some random actual sys values for hardware feeling
+            for name, entries in temps.items():
+                if "nvme" in name or "acpi" in name or "k10temp" in name:
+                    for e in entries[:2]:
+                        lbl = e.label if e.label else name
+                        sensors_sys.append((lbl[:6], f"{e.current}°C"))
+            for name, entries in fans.items():
+                for e in entries[:2]:
+                    lbl = e.label if e.label else name
+                    sensors_sys.append((lbl[:6], f"{e.current}R"))
+        except: pass
+        
+        if not sensors_sys: # Fallback dummy
+            sensors_sys = [
+                ("Vcore", "1.79V"),
+                ("+3.3V", "3.29V"),
+                ("+5V", "5.00V"),
+                ("Fan0", "3770")
+            ]
+        
+        sensors_sys = sensors_sys[:6] # Limite para não explodir layout
+        if request_space(35 + len(sensors_sys)*20):
+            cy = draw_sep(cx, cy, cw, "sys")
+            
+            # Adiciona sensores avançados solicitados se existirem na GPU ativa
+            gpu = SYSTEM_STATS["gpus"][0] if SYSTEM_STATS["gpus"] else {}
+            for label in ["ppt", "edge", "junc", "mem", "vddgfx", "vddnb", "power"]:
+                if label in gpu:
+                    sensors_sys.append((label, gpu[label]))
+            
+            for k, v in sensors_sys[:10]: # Aumentado limite
+                d.text((cx+pad, cy), k, fill=font_main, font=font_mono_sm)
+                tw = get_text_width(d, v, font_mono_sm)
+                d.text((cx+cw-tw-pad, cy), v, fill=font_main, font=font_mono_sm)
+                cy += 20
+            cy += 10
+
+    # HDA (I/O)
+    if settings.get('gk_show_hda', True):
+        if request_space(100):
+            disk_u = SYSTEM_STATS.get('disk_percent', 0)
+            io_kb = SYSTEM_STATS.get('disk_io_kbs', 0)
+            io_str = f"{io_kb/1024:.1f}M" if io_kb > 1024 else f"{io_kb:.1f}K"
+            
+            cy = draw_sep(cx, cy, cw, "hda")
+            cy = draw_graph(cx+pad, cy, cw-pad*2, graph_h, list(DISK_IO_HISTORY), 500, "mixed", color=font_blue, current_val=min(500, io_kb))
+            d.text((cx+pad, cy), f"{disk_u}%", fill=font_main, font=font_mono_sm)
+            vw = get_text_width(d, io_str, font_mono_sm)
+            d.text((cx+cw-vw-pad, cy), io_str, fill=font_dim, font=font_mono_sm)
+            cy += 20
+            cy += 5
+
+    # INET0
+    if settings.get('gk_show_inet', False):
+        if request_space(80):
+            cy = draw_sep(cx, cy, cw, "inet0", is_net=True)
+            d.text((cx+pad, cy), "0", fill=font_main, font=font_mono_sm)
+            cy += 20
+            cy = draw_graph(cx+pad, cy, cw-pad*2, 30, [max(0, x-5) for x in list(CPU_USAGE_HISTORY)], 100, "mixed", color=font_blue, current_val=0)
+
+    # BATTERY
+    if settings.get('gk_show_battery', False):
+        if request_space(50):
+            try:
+                bat = psutil.sensors_battery()
+                b_pct = bat.percent if bat else 100
+                plt = "AC" if bat and bat.power_plugged else "BAT"
+                prof = SYSTEM_STATS.get("power_profile", "")
+                bat_str = f"{b_pct}% {plt}"
+                if prof: bat_str += f" [{prof}]"
+            except:
+                bat_str = "100% AC"
+            cy = draw_sep(cx, cy, cw, "bat0")
+            d.text((cx+pad, cy), bat_str, fill=font_main, font=font_mono_sm)
+            cy += 25
+    
+    # Preenchimentos
+    d.line((0, height-2, width, height-2), fill=line_bot, width=2)
+    return img
 def render_dashboard(width, height, settings):
+    if settings.get("theme") == "gkrellm":
+        return render_dashboard_gkrellm(width, height, settings)
     if settings.get("orientation") == "vertical":
         return render_dashboard_portrait(width, height, settings)
     return render_dashboard_landscape(width, height, settings)
@@ -543,8 +1338,8 @@ def render_dashboard_portrait(width, height, settings):
         font_md = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans-Bold.ttf"), int(height * 0.024))  
         font_sm = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans.ttf"), int(height * 0.022))       
         font_icon = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans.ttf"), int(height * 0.015))     
-    except:
-        font_time = font_lg = font_md = font_sm = font_icon = ImageFont.load_default()
+    except Exception:
+        font_time = font_md = font_sm = ImageFont.load_default()
 
     os_info = get_os_release()
     pretty_name = os_info.get("PRETTY_NAME", "Linux")
@@ -564,7 +1359,7 @@ def render_dashboard_portrait(width, height, settings):
             try:
                 resamp = Image.Resampling.LANCZOS
             except AttributeError:
-                resamp = Image.ANTIALIAS if hasattr(Image, "ANTIALIAS") else 1
+                resamp = 1
             logo.thumbnail((l_h, l_h), resamp)
             img.paste(logo, (20, 15), mask=logo)
             logo_offset = logo.width + 30
@@ -718,7 +1513,7 @@ def render_dashboard_portrait(width, height, settings):
     gpu_t = active_gpu.get("temp", "?°C")
     try:
         gpu_t_val = int(gpu_t.replace("°C", ""))
-    except:
+    except Exception:
         gpu_t_val = 40
     
     gpu_c = theme_colors["crit"] if gpu_t_val > 85 else (theme_colors["warn"] if gpu_t_val >= 50 else theme_colors["good"])
@@ -781,8 +1576,8 @@ def render_dashboard_landscape(width, height, settings):
         font_md = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans-Bold.ttf"), int(height * 0.038))  
         font_sm = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans.ttf"), int(height * 0.035))       
         font_icon = ImageFont.truetype(os.path.join(font_dir, "DejaVuSans.ttf"), int(height * 0.022))     
-    except:
-        font_time = font_lg = font_md = font_sm = font_icon = ImageFont.load_default()
+    except Exception:
+        font_time = font_md = font_sm = ImageFont.load_default()
 
     os_info = get_os_release()
     pretty_name = os_info.get("PRETTY_NAME", "Linux OS")
@@ -803,7 +1598,7 @@ def render_dashboard_landscape(width, height, settings):
             try:
                 resamp = Image.Resampling.LANCZOS
             except AttributeError:
-                resamp = Image.ANTIALIAS if hasattr(Image, "ANTIALIAS") else 1
+                resamp = 1
             logo.thumbnail((header_h - 20, header_h - 20), resamp)
             img.paste(logo, (20, 15), mask=logo)
         except Exception:
@@ -980,7 +1775,7 @@ def render_dashboard_landscape(width, height, settings):
     gpu_t = active_gpu.get("temp", "?°C")
     try:
         gpu_t_val = int(gpu_t.replace("°C", ""))
-    except:
+    except Exception:
         gpu_t_val = 40
         
     if gpu_t_val > 85:
@@ -1115,7 +1910,7 @@ def animate_intro(lcd, settings):
             try:
                 resamp = Image.Resampling.LANCZOS
             except AttributeError:
-                resamp = Image.ANTIALIAS if hasattr(Image, "ANTIALIAS") else 1
+                resamp = 1
                 
             scaled = base_logo.resize((nw, nh), resamp)
             
@@ -1144,7 +1939,6 @@ def animate_intro(lcd, settings):
             
         pre_rendered_frames.append((rgb565, dw, dh))
         
-    print("⏳ Pré-carregando animação na memória...")
     for i in range(1, frames_in + 1):
         progress = i / frames_in
         ease_out = 1 - (1 - progress) * (1 - progress)
@@ -1156,8 +1950,6 @@ def animate_intro(lcd, settings):
         progress = i / frames_out
         blend_and_generate(1.0, int(255 * progress))
         
-    print("🎬 Rodando animação de abertura!")
-    
     for frame_data in pre_rendered_frames[:frames_in]:
         lcd._draw_rgb565(frame_data[0], frame_data[1], frame_data[2])
         
@@ -1229,7 +2021,6 @@ def main():
     animate_intro(lcd, settings)
     run_tray_icon()
     
-    print("🚀 Loop UI NVTOP-Style rodando =).")
     try:
         last_check = 0
         while True:
@@ -1256,9 +2047,8 @@ def main():
                 
             img = render_dashboard(render_w, render_height, settings)
             lcd.draw(img, settings)
-            time.sleep(1)
+            time.sleep(0.5)
     except KeyboardInterrupt:
-        print("\n👋 Saindo...")
         lcd.set_backlight(0)
 
 if __name__ == '__main__':

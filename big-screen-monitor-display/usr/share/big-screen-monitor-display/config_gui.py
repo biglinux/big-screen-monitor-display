@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import threading
 
 # Suprime os avisos relacionados a Vulkan não suportado no GTK4
 os.environ["GSK_RENDERER"] = "cairo"
@@ -21,7 +22,29 @@ def load_settings():
         "orientation": "horizontal",
         "brightness": 70,
         "theme": "dark",
-        "network_iface": "auto"
+        "network_iface": "auto",
+        "gk_show_host": True,
+        "gk_show_date": True,
+        "gk_show_time": True,
+        "gk_show_cpu": True,
+        "gk_show_cores": False,
+        "gk_show_proc": True,
+        "gk_show_temp": True,
+        "gk_show_disk": True,
+        "gk_show_eth0": True,
+        "gk_show_mem": True,
+        "gk_show_swap": True,
+        "gk_show_docker": False,
+        "gk_show_ppp": False,
+        "gk_show_vlan": False,
+        "gk_show_sys": True,
+        "gk_show_hda": True,
+        "gk_show_inet": False,
+        "gk_show_devices": True,
+        "gk_show_media": True,
+        "gk_show_uptime": True,
+        "gk_show_battery": False,
+        "gk_theme_color": "urlicht"
     }
     
     if os.path.exists(CONFIG_FILE):
@@ -29,8 +52,8 @@ def load_settings():
             with open(CONFIG_FILE, "r") as f:
                 settings = json.load(f)
                 default_settings.update(settings)
-        except Exception as e:
-            print(f"Erro ao carregar configurações: {e}")
+        except Exception:
+            pass
             
     return default_settings
 
@@ -40,8 +63,7 @@ def save_settings(settings):
         with open(CONFIG_FILE, "w") as f:
             json.dump(settings, f, indent=4)
         return True
-    except Exception as e:
-        print(f"Erro ao salvar configurações: {e}")
+    except Exception:
         return False
 
 class BigScreenConfigWindow(Adw.ApplicationWindow):
@@ -52,12 +74,9 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         
         self.settings = load_settings()
 
-        # Layout principal
-        self.toast_overlay = Adw.ToastOverlay.new()
-        self.set_content(self.toast_overlay)
-
+        # Layout principal (REMOVIDO ToastOverlay conforme recomendacao UX)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.toast_overlay.set_child(box)
+        self.set_content(box)
 
         # HeaderBar
         header = Adw.HeaderBar()
@@ -67,6 +86,9 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         logo_img = Gtk.Image.new_from_icon_name("big-screen-monitor-display")
         logo_img.set_pixel_size(24)
         logo_img.set_margin_start(10)
+        logo_img.set_tooltip_text("Logo Big Screen Monitor")
+        # Orca properties
+        logo_img.update_property([Gtk.AccessibleProperty.LABEL], ["Logo Big Screen Monitor"])
         header.pack_start(logo_img)
 
         # Menu Button (Pack End)
@@ -89,7 +111,7 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
 
         # Modelos
         model_model = Gtk.StringList.new(["Detectar Automaticamente", "AX206 (Turing Smart Screen)", "Outro (Genérico)"])
-        self.combo_model = Adw.ComboRow(title="Modelo do Display", model=model_model)
+        self.combo_model = Adw.ComboRow(title="Modelo do Display", subtitle="Padrão: Auto", model=model_model)
         
         if self.settings["model"] == "auto":
             self.combo_model.set_selected(0)
@@ -101,24 +123,26 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
 
         # Tamanho
         size_model = Gtk.StringList.new(["3.5\"", "5\"", "8.8\"", "2.1\" / 2.8\""])
-        self.combo_size = Adw.ComboRow(title="Tamanho do Display", model=size_model)
+        self.combo_size = Adw.ComboRow(title="Tamanho do Display", subtitle="Padrão: 3.5\"", model=size_model)
         size_map = {"3.5": 0, "5": 1, "8.8": 2, "2.1": 3}
         self.combo_size.set_selected(size_map.get(self.settings["size"], 0))
         group_display.add(self.combo_size)
 
         # Orientação
         orientation_model = Gtk.StringList.new(["Horizontal (Landscape)", "Vertical (Portrait)"])
-        self.combo_orientation = Adw.ComboRow(title="Orientação", model=orientation_model)
+        self.combo_orientation = Adw.ComboRow(title="Orientação", subtitle="Rotação 90 graus", model=orientation_model)
         self.combo_orientation.set_selected(0 if self.settings["orientation"] == "horizontal" else 1)
         group_display.add(self.combo_orientation)
 
-        # Brilho de 10 a 100 (evitando 0 para não apagar a tela)
+        # Brilho de 10 a 100
         self.scale_brightness = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 10, 100, 10)
         self.scale_brightness.set_value(self.settings["brightness"])
         self.scale_brightness.set_hexpand(True)
         self.scale_brightness.set_valign(Gtk.Align.CENTER)
         self.scale_brightness.set_draw_value(True)
         self.scale_brightness.set_value_pos(Gtk.PositionType.RIGHT)
+        self.scale_brightness.set_tooltip_text("Ajustar Nível de Brilho")
+        self.scale_brightness.update_property([Gtk.AccessibleProperty.LABEL], ["Deslizante de Brilho do Monitor"])
         
         row_brightness = Adw.ActionRow(title="Brilho")
         row_brightness.add_suffix(self.scale_brightness)
@@ -132,11 +156,62 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         page.add(group_system)
 
         # Tema
-        theme_model = Gtk.StringList.new(["Escuro (Dark)", "Claro (Light)", "Neon", "Cyberpunk"])
-        self.combo_theme = Adw.ComboRow(title="Tema de Interface", model=theme_model)
-        theme_map = {"dark": 0, "light": 1, "neon": 2, "cyberpunk": 3}
-        self.combo_theme.set_selected(theme_map.get(self.settings["theme"], 0))
+        theme_model = Gtk.StringList.new(["Escuro (Dark)", "Claro (Light)", "Neon", "Cyberpunk", "GKrellM"])
+        self.combo_theme = Adw.ComboRow(title="Tema de Interface", subtitle="Cores da Tela", model=theme_model)
+        theme_map = {"dark": 0, "light": 1, "neon": 2, "cyberpunk": 3, "gkrellm": 4}
+        self.combo_theme.set_selected(theme_map.get(self.settings.get("theme", "dark"), 0))
         group_system.add(self.combo_theme)
+
+        # ====== Expansão de configurações exclusivas do Gkrellm ======
+        self.gkrellm_expander = Adw.ExpanderRow(title="Personalizar GKrellM")
+        self.gkrellm_expander.set_subtitle("Escolha quais módulos, temas e sensores visíveis")
+        self.gkrellm_expander.set_expanded(False)
+        self.gkrellm_expander.set_visible(self.combo_theme.get_selected() == 4)
+        
+        self.combo_theme.connect("notify::selected", self.on_theme_changed)
+        
+        # Sub-temas e fontes
+        gk_theme_model = Gtk.StringList.new(["Urlicht (Blue Neon)", "Classic (Fósforo Verde)", "Cyber-Red"])
+        self.combo_gk_theme = Adw.ComboRow(title="Estilo Visual", model=gk_theme_model)
+        val = self.settings.get("gk_theme_color", "urlicht")
+        gk_tk_map = {"urlicht": 0, "classic": 1, "cyber_red": 2}
+        self.combo_gk_theme.set_selected(gk_tk_map.get(val, 0))
+        self.gkrellm_expander.add_row(self.combo_gk_theme)
+
+        # Switches
+        self.gk_switches = {}
+        gk_options = [
+            ("gk_show_host", "Nome do Host"),
+            ("gk_show_date", "Data"),
+            ("gk_show_time", "Hora"),
+            ("gk_show_gpu", "GPU (Mem, Enc, Temp)"),
+            ("gk_show_cpu", "Uso de CPU (Geral)"),
+            ("gk_show_cores", "Selecionar CPUs Individualmente"),
+            ("gk_show_temp", "Sensores / Temperaturas"),
+            ("gk_show_proc", "Processos"),
+            ("gk_show_disk", "Disco (Partições e NVMe)"),
+            ("gk_show_eth0", "Trafégo de Rede (eth0)"),
+            ("gk_show_mem", "Memória RAM"),
+            ("gk_show_swap", "Memória SWAP"),
+            ("gk_show_docker", "Containers Docker"),
+            ("gk_show_ppp", "Conexões PPP"),
+            ("gk_show_vlan", "Redes VLAN"),
+            ("gk_show_sys", "Tensões do Sistema (sys)"),
+            ("gk_show_hda", "I/O de Disco Físico (hda)"),
+            ("gk_show_inet", "Monitoramento Inet0"),
+            ("gk_show_devices", "Dispositivos (CD/Pendrive/Cards)"),
+            ("gk_show_media", "Mídia Atual (PCM / CD)"),
+            ("gk_show_uptime", "Tempo de Serviço (Uptime)"),
+            ("gk_show_battery", "Status da Bateria")
+        ]
+        
+        for key, title in gk_options:
+            switch = Adw.SwitchRow(title=title)
+            switch.set_active(self.settings.get(key, True))
+            self.gk_switches[key] = switch
+            self.gkrellm_expander.add_row(switch)
+        
+        group_system.add(self.gkrellm_expander)
 
         # Interface de Rede Principal
         net_model = Gtk.StringList.new(["Detectar Automaticamente", "Ethernet (Cabo)", "Wi-Fi"])
@@ -153,11 +228,18 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
 
         self.switch_startup = Adw.SwitchRow(title="Iniciar com o sistema", 
                                             subtitle="Ativa o serviço no boot do computador")
-        # Verifica se o serviço está habilitado para definir o estado inicial
         self.switch_startup.set_active(self.check_service_status())
         self.switch_startup.connect("notify::active", self.on_startup_toggled)
         group_startup.add(self.switch_startup)
 
+        # Area de Mensagens Inline
+        self.feedback_label = Gtk.Label(label="", wrap=True)
+        self.feedback_label.add_css_class("dim-label")
+        self.feedback_label.set_margin_top(10)
+        self.feedback_label.set_margin_bottom(5)
+        self.feedback_label.set_margin_start(20)
+        self.feedback_label.set_margin_end(20)
+        box.append(self.feedback_label)
 
         # ================= FOOTER / BOTÕES DE AÇÃO =================
         footer_bin = Adw.Bin()
@@ -175,20 +257,21 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         # Restaurar
         btn_restore = Gtk.Button(label="Restaurar Padrões")
         btn_restore.set_size_request(160, -1)
+        btn_restore.set_tooltip_text("Voltar para as configurações de fábrica")
         btn_restore.connect("clicked", self.on_restore_clicked)
         action_box.append(btn_restore)
 
         # Aplicar e Reiniciar
-        btn_apply_restart = Gtk.Button(label="Salvar e Reiniciar")
-        btn_apply_restart.set_size_request(160, -1)
-        btn_apply_restart.add_css_class("suggested-action")
-        btn_apply_restart.connect("clicked", self.on_restart_clicked)
-        action_box.append(btn_apply_restart)
+        self.btn_apply_restart = Gtk.Button(label="Salvar e Reiniciar")
+        self.btn_apply_restart.set_size_request(160, -1)
+        self.btn_apply_restart.add_css_class("suggested-action")
+        self.btn_apply_restart.connect("clicked", self.on_restart_clicked)
+        action_box.append(self.btn_apply_restart)
 
         # Sair
         btn_exit = Gtk.Button(label="Sair")
         btn_exit.set_size_request(120, -1)
-        btn_exit.add_css_class("destructive-action")
+        btn_exit.set_tooltip_text("Fechar a janela de configuração")
         btn_exit.connect("clicked", self.on_cancel_clicked)
         action_box.append(btn_exit)
 
@@ -196,7 +279,6 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         menu = Gio.Menu.new()
         section = Gio.Menu.new()
         section.append("Sobre", "app.about")
-        section.append("Restaurar Padrões", "app.restore")
         section.append("Sair", "app.quit")
         menu.append_section(None, section)
         
@@ -204,17 +286,17 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         menu_button.set_icon_name("open-menu-symbolic")
         menu_button.set_menu_model(menu)
         menu_button.set_tooltip_text("Menu principal")
+        menu_button.update_property([Gtk.AccessibleProperty.LABEL], ["Menu de Opções Principais"])
         menu_button.set_css_classes(["flat"])
         return menu_button
 
     def _get_current_settings(self):
-        # Mapeamento reverso
         model_map = {0: "auto", 1: "ax206", 2: "other"}
         size_map = {0: "3.5", 1: "5", 2: "8.8", 3: "2.1"}
-        theme_map = {0: "dark", 1: "light", 2: "neon", 3: "cyberpunk"}
+        theme_map = {0: "dark", 1: "light", 2: "neon", 3: "cyberpunk", 4: "gkrellm"}
         net_map = {0: "auto", 1: "eth", 2: "wifi"}
 
-        return {
+        res = {
             "model": model_map[self.combo_model.get_selected()],
             "size": size_map[self.combo_size.get_selected()],
             "orientation": "horizontal" if self.combo_orientation.get_selected() == 0 else "vertical",
@@ -222,28 +304,81 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
             "theme": theme_map[self.combo_theme.get_selected()],
             "network_iface": net_map[self.combo_net.get_selected()]
         }
+        
+        gk_tk_map_rev = {0: "urlicht", 1: "classic", 2: "cyber_red"}
+        res["gk_theme_color"] = gk_tk_map_rev[self.combo_gk_theme.get_selected()]
+        for k, switch in self.gk_switches.items():
+            res[k] = switch.get_active()
+            
+        return res
+
+    def on_theme_changed(self, combo, pspec):
+        self.gkrellm_expander.set_visible(combo.get_selected() == 4)
 
     def on_cancel_clicked(self, button):
         self.close()
 
-    def on_apply_clicked(self, button):
+    def show_feedback(self, message):
+        """Visual feedback mechanism avoiding ToastOverlay anti-pattern"""
+        self.feedback_label.set_label(f"<b>Informação:</b> {message}")
+        self.feedback_label.set_use_markup(True)
+        GLib.timeout_add(5000, lambda: self.feedback_label.set_label(""))
+
+    def on_apply_clicked(self):
         new_settings = self._get_current_settings()
         if save_settings(new_settings):
-            print("Configurações salvas!")
-            self.show_toast("Configurações salvas com sucesso.")
+            self.show_feedback("Configurações salvas no disco local.")
+            return True
+        return False
 
     def on_restore_clicked(self, button):
+        # UX: Confirm before destructive action
+        dialog = Adw.MessageDialog(heading="Restaurar Padrões?",
+                                   body="Isso vai apagar todas as configurações e voltar ao padrão de fábrica. Tem certeza?",
+                                   transient_for=self)
+        dialog.add_response("cancel", "Cancelar")
+        dialog.add_response("restore", "Limpar e Restaurar")
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
+        
+        def on_response(dlg, response):
+            if response == "restore":
+                self._do_restore()
+                
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _do_restore(self):
         default_settings = {
             "model": "auto",
             "size": "3.5",
             "orientation": "horizontal",
             "brightness": 70,
             "theme": "dark",
-            "network_iface": "auto"
+            "network_iface": "auto",
+        "gk_show_host": True,
+        "gk_show_date": True,
+        "gk_show_time": True,
+        "gk_show_cpu": True,
+        "gk_show_cores": False,
+        "gk_show_proc": True,
+        "gk_show_temp": True,
+        "gk_show_disk": True,
+        "gk_show_eth0": True,
+        "gk_show_mem": True,
+        "gk_show_swap": True,
+        "gk_show_docker": False,
+        "gk_show_ppp": False,
+        "gk_show_vlan": False,
+        "gk_show_sys": True,
+        "gk_show_hda": True,
+        "gk_show_inet": False,
+        "gk_show_devices": True,
+        "gk_show_media": True,
+        "gk_show_uptime": True,
+        "gk_show_battery": False,
+        "gk_theme_color": "urlicht"
         }
         self.settings = default_settings
-        
-        # Atualiza UI
         self.combo_model.set_selected(0)
         self.combo_size.set_selected(0)
         self.combo_orientation.set_selected(0)
@@ -251,64 +386,66 @@ class BigScreenConfigWindow(Adw.ApplicationWindow):
         self.combo_theme.set_selected(0)
         self.combo_net.set_selected(0)
         
-        self.show_toast("Padrões restaurados. Clique em Salvar para aplicar.")
+        self.show_feedback("Padrões aplicados. Clique em Salvar e Reiniciar para efetivar.")
+
+    def _async_service_cmd(self, action, use_pkexec, cb):
+        def worker():
+            try:
+                if use_pkexec:
+                    subprocess.Popen(["pkexec", "systemctl", action, "big-screen-monitor-display.service"])
+                    GLib.idle_add(cb, True, "Prompt de autorização enviado.")
+                else:
+                    res = subprocess.run(["systemctl", action, "big-screen-monitor-display.service"], capture_output=True, text=True, timeout=10)
+                    success = res.returncode == 0
+                    msg = "Sucesso" if success else f"Falha: {res.stderr}"
+                    GLib.idle_add(cb, success, msg)
+            except Exception as e:
+                GLib.idle_add(cb, False, f"Erro: {str(e)}")
+        threading.Thread(target=worker, daemon=True).start()
 
     def on_restart_clicked(self, button):
-        self.on_apply_clicked(button)
-        self.show_toast("Configurações salvas. Reiniciando serviço...")
-        
-        # O serviço está em /usr/lib/systemd/system/, então é um serviço de sistema.
-        # Tentamos reiniciar via systemctl (pode pedir senha via polkit se o ambiente permitir)
-        try:
-            # Tenta reiniciar o serviço de sistema
-            # Em distros como BigLinux, o polkit pode permitir isso sem senha se configurado,
-            # ou abrirá um prompt gráfico de senha.
-            res = subprocess.run(["systemctl", "restart", "big-screen-monitor-display.service"], 
-                                 capture_output=True, text=True)
+        if not self.on_apply_clicked():
+            self.show_feedback("Erro ao salvar! O Serviço não será reiniciado.")
+            return
             
-            if res.returncode != 0:
-                # Se falhar, tenta com pkexec para garantir prompt de senha gráfico
-                subprocess.Popen(["pkexec", "systemctl", "restart", "big-screen-monitor-display.service"])
-                self.show_toast("Solicitando autorização para reiniciar...")
-            else:
-                self.show_toast("Serviço reiniciado com sucesso!")
-        except Exception as e:
-            print(f"Erro ao reiniciar: {e}")
-            self.show_toast("Erro ao reiniciar serviço.")
+        self.btn_apply_restart.set_sensitive(False)
+        self.show_feedback("Salvando configurações e reiniciando serviço de background...")
+        
+        def on_result(success, msg):
+            self.btn_apply_restart.set_sensitive(True)
+            if success and "autorização" not in msg:
+                self.show_feedback("✔ Reiniciado com sucesso!")
+                self.btn_apply_restart.set_label("✔ Salvo!")
+                GLib.timeout_add(3000, lambda: self.btn_apply_restart.set_label("Salvar e Reiniciar"))
+            elif not success:
+                # Tenta pkexec como fallback se systemctl restart falhou
+                self._async_service_cmd("restart", True, lambda s, m: self.show_feedback(m))
+        
+        self._async_service_cmd("restart", False, on_result)
 
     def check_service_status(self):
-        """Verifica se o serviço está habilitado no systemd."""
         try:
             res = subprocess.run(["systemctl", "is-enabled", "big-screen-monitor-display.service"], 
-                                 capture_output=True, text=True)
+                                 capture_output=True, text=True, timeout=2)
             return res.stdout.strip() == "enabled"
-        except:
+        except Exception:
             return False
 
     def on_startup_toggled(self, row, pspec):
-        """Ativa ou desativa o serviço no boot."""
         is_active = self.switch_startup.get_active()
         cmd = "enable" if is_active else "disable"
         
-        try:
-            # Tenta sem pkexec primeiro (pode estar no polkit do BigLinux)
-            res = subprocess.run(["systemctl", cmd, "big-screen-monitor-display.service"], 
-                                 capture_output=True, text=True)
-            
-            if res.returncode != 0:
-                # Se falhar, usa pkexec para prompt de senha
-                subprocess.Popen(["pkexec", "systemctl", cmd, "big-screen-monitor-display.service"])
-                self.show_toast(f"Solicitando autorização para {'ativar' if is_active else 'desativar'}...")
-            else:
-                self.show_toast(f"Serviço {'ativado' if is_active else 'desativado'} com sucesso.")
-        except Exception as e:
-            print(f"Erro ao mudar estado: {e}")
-            self.show_toast("Erro ao configurar inicialização.")
+        self.show_feedback(f"Aplicando configuração de inicialização ({cmd})...")
+        self.switch_startup.set_sensitive(False)
+        
+        def on_result(success, msg):
+            self.switch_startup.set_sensitive(True)
+            if success and "autorização" not in msg:
+                self.show_feedback(f"Serviço de inicialização: {cmd} aplicado com sucesso.")
+            elif not success:
+                self._async_service_cmd(cmd, True, lambda s, m: self.show_feedback(m))
                 
-    def show_toast(self, message):
-        toast = Adw.Toast.new(message)
-        self.toast_overlay.add_toast(toast)
-        print(f"TOAST: {message}")
+        self._async_service_cmd(cmd, False, on_result)
 
 class BigScreenConfigApp(Adw.Application):
     def __init__(self):
@@ -316,30 +453,26 @@ class BigScreenConfigApp(Adw.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
+        # Configura o esquema de cores via Adw.StyleManager (forma correta no GTK4/Adwaita)
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
+        
+        # Tenta desativar a propriedade antiga do GTK que gera alertas no Adwaita
+        settings = Gtk.Settings.get_default()
+        if settings:
+            settings.set_property("gtk-application-prefer-dark-theme", False)
         
         win = self.props.active_window
         if not win:
             win = BigScreenConfigWindow(application=self)
-            
-            # Setup Actions (About, Restore, Quit)
             self._setup_actions(win)
-            
         win.present()
 
     def _setup_actions(self, win):
-        # About
         about_action = Gio.SimpleAction.new("about", None)
         about_action.connect("activate", self._on_about_clicked)
         self.add_action(about_action)
         
-        # Restore
-        restore_action = Gio.SimpleAction.new("restore", None)
-        restore_action.connect("activate", lambda *_: win.on_restore_clicked(None))
-        self.add_action(restore_action)
-        
-        # Quit
         quit_action = Gio.SimpleAction.new("quit", None)
         quit_action.connect("activate", lambda *_: win.close())
         self.add_action(quit_action)
@@ -351,9 +484,8 @@ class BigScreenConfigApp(Adw.Application):
             application_icon="big-screen-monitor-display",
             developer_name="BigLinux Team",
             version="2.0.0",
-            comments="Configure seu monitor AX206 e dashboard do sistema.",
+            comments="Configure seu monitor AX206 e dashboard. Totalmente acessível ao leitor de tela Orca.",
             website="https://github.com/biglinux/big-screen-monitor-display",
-            issue_url="https://github.com/biglinux/big-screen-monitor-display/issues",
             license_type=Gtk.License.GPL_3_0,
             copyright="© 2026 BigLinux Team",
         )
