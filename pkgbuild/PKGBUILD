@@ -1,12 +1,14 @@
 pkgname=big-screen-monitor-display
 pkgdesc="Big Screen Monitor Display - System Monitor Dashboard for USB LCD Displays"
 depends=('python' 'python-pillow' 'python-psutil' 'python-pyusb' 'librsvg' 'lm_sensors' 'python-pystray')
-pkgver=3.0.0
-pkgrel=1
+pkgver=$(date +%y.%m.%d)
+pkgrel=$(date +%H%M)
 arch=('any')
 license=('GPL3')
 url="https://github.com/biglinux/$pkgname"
 provides=("$pkgname")
+source=("git+https://github.com/biglinux/$pkgname.git")
+md5sums=(SKIP)
 
 if [ -e "pkgbuild.install" ];then
     install=pkgbuild.install
@@ -14,12 +16,17 @@ fi
 
 package() {
     # Detect project root
-    if [ -d "${startdir}/../usr" ]; then
-        InternalDir="${startdir}/.."
-    elif [ -d "${srcdir}/${pkgname}/usr" ]; then
+    if [ -d "${srcdir}/${pkgname}/${pkgname}" ]; then
+        InternalDir="${srcdir}/${pkgname}/${pkgname}"
+    elif [ -d "${srcdir}/${pkgname}" ]; then
         InternalDir="${srcdir}/${pkgname}"
     else
-        InternalDir="${startdir}"
+        # Fallback for local builds outside of CI
+        if [ -d "${startdir}/../usr/share/${pkgname}" ]; then
+            InternalDir="${startdir}/.."
+        else
+            InternalDir="${startdir}"
+        fi
     fi
 
     # Install usr/ tree
