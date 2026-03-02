@@ -1,2 +1,0 @@
-./big-screen-monitor-display/usr/share/big-screen-monitor-display/main.py
-./big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py

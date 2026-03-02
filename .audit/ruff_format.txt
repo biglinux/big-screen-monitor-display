@@ -1,3 +1,0 @@
-Would reformat: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py
-Would reformat: big-screen-monitor-display/usr/share/big-screen-monitor-display/main.py
-2 files would be reformatted

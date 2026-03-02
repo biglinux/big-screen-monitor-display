@@ -1,8 +1,8 @@
 pkgname=big-screen-monitor-display
 pkgdesc="Big Screen Monitor Display - System Monitor Dashboard for USB LCD Displays"
 depends=('python' 'python-pillow' 'python-psutil' 'python-pyusb' 'librsvg' 'lm_sensors' 'python-pystray')
-pkgver=$(date +%y.%m.%d)
-pkgrel=$(date +%H%M)
+pkgver=3.0.0
+pkgrel=1
 arch=('any')
 license=('GPL3')
 url="https://github.com/biglinux/$pkgname"
@@ -17,8 +17,13 @@ package() {
     InternalDir="${startdir}/.."
 
     # Copy files
-    if [ -d "${InternalDir}/${pkgname}/usr" ]; then
-        cp -r "${InternalDir}/${pkgname}/usr" "${pkgdir}/"
+    if [ -d "${InternalDir}/usr" ]; then
+        cp -r "${InternalDir}/usr" "${pkgdir}/"
+    fi
+
+    if [ -d "${InternalDir}/locale" ]; then
+        mkdir -p "${pkgdir}/usr/share/big-screen-monitor-display/"
+        cp -r "${InternalDir}/locale" "${pkgdir}/usr/share/big-screen-monitor-display/"
     fi
 
     # Make scripts executable

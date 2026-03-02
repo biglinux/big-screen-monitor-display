@@ -1,7 +1,0 @@
-big-screen-monitor-display/usr/share/big-screen-monitor-display/main.py
-    F 770:0 render_dashboard_landscape - E (33)
-    F 254:0 monitor_thread - D (30)
-    F 532:0 render_dashboard_portrait - D (29)
-    F 183:0 find_gpus - C (19)
-    F 1070:0 animate_intro - C (15)
-    M 410:4 AX206_DPF.scsi_wrap - C (14)
