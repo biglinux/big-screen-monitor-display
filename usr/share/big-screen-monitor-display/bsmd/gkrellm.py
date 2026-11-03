@@ -81,18 +81,47 @@ def human_mbps(mbps):
     return f"{mbps:.1f}M" if mbps >= 1 else f"{mbps * 1000:.0f}K"
 
 
+# Container storage and the service sandbox's own bind mounts (StateDirectory,
+# PrivateTmp) are not partitions the user would recognise.
+HIDDEN_MOUNTS = ("/snap", "/var/lib/docker", "/var/lib/snapd", "/var/lib/private", "/var/tmp")
+# btrfs subvolumes mounted here are listed on their own (/ and /home on the
+# same partition are two entries, like in GKrellM); any other subvolume
+# (@swapfile, @log, @cache...) folds into the first entry of its partition.
+USER_MOUNTS = ("/home/", "/mnt/", "/media/", "/run/media/", "/srv/", "/data/")
+
+
+def _mount_rank(mount):
+    if mount == "/":
+        return 0
+    if mount == "/home":
+        return 1
+    return 3 if mount == "/boot" or mount.startswith("/boot/") else 2
+
+
+def _btrfs_subvol(opts):
+    options = dict(o.partition("=")[::2] for o in opts.split(","))
+    return options.get("subvol") or options.get("subvolid", "")
+
+
 def partitions():
     seen, result = set(), []
-    for part in psutil.disk_partitions(all=False):
-        if part.device in seen or part.mountpoint.startswith(("/snap", "/var/lib/docker", "/boot/efi")):
+    parts = sorted(psutil.disk_partitions(all=False),
+                   key=lambda p: (_mount_rank(p.mountpoint), len(p.mountpoint), p.mountpoint))
+    for part in parts:
+        mount = part.mountpoint
+        if mount.startswith(HIDDEN_MOUNTS):
             continue
-        seen.add(part.device)
+        key = part.device
+        if part.fstype == "btrfs" and (_mount_rank(mount) < 2 or (mount + "/").startswith(USER_MOUNTS)):
+            key = (part.device, _btrfs_subvol(part.opts))
+        if key in seen:
+            continue
+        seen.update((key, part.device))
         try:
-            usage = psutil.disk_usage(part.mountpoint)
+            usage = psutil.disk_usage(mount)
         except OSError:
             continue
-        result.append((part.mountpoint, usage.percent, usage.used / 1024 ** 3, usage.total / 1024 ** 3))
-    result.sort(key=lambda item: (item[0] != "/", item[0]))
+        result.append((mount, usage.percent, usage.used / 1024 ** 3, usage.total / 1024 ** 3))
     return result
 
 
@@ -434,9 +463,22 @@ def _fs_list(s):
     return (cached("partitions", 30, partitions) or [])[:int(s.get("gk_disk_count", "2"))]
 
 
+def _fs_row_height(cv):
+    return cv.line * 2 + 6
+
+
 def _fs_height(cv, w, stats, s):
     parts = _fs_list(s)
-    return Canvas.title_height(cv) + len(parts) * (cv.line * 2 + 6) if parts else None
+    return Canvas.title_height(cv) + len(parts) * _fs_row_height(cv) if parts else None
+
+
+def _fs_shrink(cv, w, stats, s, available):
+    """Fewer partitions instead of no Disks module when the full list does not fit."""
+    rows = min(len(_fs_list(s)), (available - Canvas.title_height(cv)) // _fs_row_height(cv))
+    if rows < 1:
+        return None
+    s = dict(s, gk_disk_count=str(rows))
+    return s, _fs_height(cv, w, stats, s)
 
 
 def _fs_draw(cv, x, y, w, stats, s):
@@ -576,6 +618,8 @@ MODULES = [
     ("gk_show_devices", _devices_height, _devices_draw),
     ("gk_show_media", _single_line_height, _media_draw),
 ]
+# Modules that can be drawn shorter: (cv, w, stats, s, available) -> (s, height) or None.
+SHRINK = {"gk_show_disk": _fs_shrink}
 
 
 def column_count(width, height, s):
@@ -610,15 +654,18 @@ def render(width, height, s):
         height_needed = measure(cv, w, stats, s)
         if height_needed is None:
             continue
+        module_s = s
         if y + height_needed > height - 2:
-            if column + 1 >= cols:
-                continue            # does not fit anywhere: skip instead of overlapping
-            column, y = column + 1, 2
-            x = column * col_w
-            w = col_w - (4 if column < cols - 1 else 0)
+            if column + 1 < cols:
+                column, y = column + 1, 2
+                x = column * col_w
+                w = col_w - (4 if column < cols - 1 else 0)
             if y + height_needed > height - 2:
-                continue
-        draw(cv, x, y, w, stats, s)
+                shrunk = SHRINK[key](cv, w, stats, s, height - 2 - y) if key in SHRINK else None
+                if shrunk is None:
+                    continue        # does not fit anywhere: skip instead of overlapping
+                module_s, height_needed = shrunk
+        draw(cv, x, y, w, stats, module_s)
         y += height_needed + gap
     cv.d.line((0, height - 2, width, height - 2), fill=style["bevel_lo"], width=2)
     return image

@@ -41,6 +41,8 @@ log = logging.getLogger("bsmd")
 # Character poses are drawn "on twos" (8 drawings per second), so the automatic
 # profile stops at 8 fps; "fluid" makes walking and weather smoother.
 FPS_PROFILES = {"economy": 4.0, "balanced": 8.0, "fluid": 15.0, "auto": 8.0}
+# Seconds between telemetry samples: values and charts move this often.
+TELEMETRY_INTERVAL = {"economy": 2.0, "balanced": 1.0, "fluid": 0.5, "auto": 1.0}
 # Panels behind slow links get a lower automatic ceiling (whole frames over
 # serial at 115200 baud-class throughput, or PNG/JPEG encoding per frame).
 TRANSPORT_FPS_CAP = {"turing_rev_c": 4.0, "turing_usb": 6.0, "xuanfang_rev_b": 6.0}
@@ -294,6 +296,14 @@ class DisplaySession:
                 # Keep the pipeline at most ~60 % busy.
                 cap = min(cap, max(2.0, 0.6 / cost))
         return cap
+
+    def _content_fps(self):
+        """Highest rate at which the panel content can change."""
+        theme = self.theme
+        if theme is not None and not theme.info.animated:
+            # Static dashboards render a few times per second, per profile.
+            return 1.0 / themes.static_period(self.settings(), self.ctx)
+        return self.ctx.target_fps
 
     def _render_pattern(self, size):
         name, until = self.pattern
@@ -664,7 +674,7 @@ class DisplaySession:
             "pipeline": {name: beat.snapshot() for name, beat in self.hb.items()},
             "stats": dict(self.stats, frames_dropped=self.mailbox.dropped,
                           last_transfer_age_s=None if last_wall is None else round(time.time() - last_wall, 1),
-                          target_fps=round(self.ctx.target_fps, 1)),
+                          target_fps=round(self._content_fps(), 1)),
             "recoveries": self.recoveries,
             "failed_attempts": self.failed_attempts,
             "sensors": dict(self.sensors),
@@ -828,6 +838,10 @@ class Runtime:
         collector.want_fans = any(n["fans"] for n in needs)
         collector.want_disks = set().union(*(n["disks"] for n in needs)) if needs else set()
         collector.want_addrs = any(n["addrs"] for n in needs)
+        # The fastest profile among the panels decides (each panel may override it).
+        collector.interval = min((TELEMETRY_INTERVAL.get(s.settings().get("performance_profile"),
+                                                         TELEMETRY_INTERVAL["auto"]) for s in sessions),
+                                 default=telemetry.Collector.INTERVAL)
 
     # ------------------------------------------------------------ lifecycle
     def install_signal_handlers(self):

@@ -2,6 +2,7 @@
 
 import itertools
 import shutil
+from types import SimpleNamespace
 
 import pytest
 
@@ -80,6 +81,65 @@ def test_gkrellm_meters_at_zero_percent(monkeypatch):
         monkeypatch.setitem(telemetry.SYSTEM_STATS, key, value)
     for size in ((320, 240), (800, 480)):
         render("gkrellm", size)
+
+
+def _fake_mounts(monkeypatch, mounts):
+    parts = [SimpleNamespace(device=dev, mountpoint=mount, fstype=fstype, opts=opts)
+             for dev, mount, fstype, opts in mounts]
+    usage = SimpleNamespace(total=100 * 1024 ** 3, used=40 * 1024 ** 3, free=60 * 1024 ** 3, percent=40.0)
+    monkeypatch.setattr(gkrellm.psutil, "disk_partitions", lambda all=False: parts)
+    monkeypatch.setattr(gkrellm.psutil, "disk_usage", lambda mount: usage)
+    gkrellm._CACHE.pop("partitions", None)
+
+
+def test_gkrellm_partitions_on_btrfs_inside_the_service_sandbox(monkeypatch):
+    """Regression: only "/" was listed, whatever "Partitions listed" said."""
+    btrfs = "rw,compress=zstd:3,subvolid={},subvol=/{}"
+    _fake_mounts(monkeypatch, [
+        ("/dev/nvme0n1p2", "/", "btrfs", btrfs.format(256, "@")),
+        ("/dev/nvme0n1p2", "/swapfile", "btrfs", btrfs.format(258, "@swapfile")),
+        ("/dev/nvme0n1p1", "/boot/efi", "vfat", "rw"),
+        ("/dev/nvme0n1p2", "/var/lib/private/big-screen-monitor-display", "btrfs", btrfs.format(256, "@")),
+        ("/dev/nvme0n1p2", "/var/tmp", "btrfs", btrfs.format(256, "@")),
+        ("/dev/nvme0n1p2", "/home", "btrfs", btrfs.format(257, "@home")),
+        ("/dev/sda1", "/run/media/user/USB", "ext4", "rw"),
+    ])
+    assert [p[0] for p in gkrellm.partitions()] == ["/", "/home", "/run/media/user/USB", "/boot/efi"]
+    assert [p[0] for p in gkrellm._fs_list({"gk_disk_count": "3"})] == ["/", "/home", "/run/media/user/USB"]
+
+
+def test_gkrellm_disk_module_shrinks_instead_of_vanishing(monkeypatch):
+    _fake_mounts(monkeypatch, [(f"/dev/sd{c}1", f"/mnt/{c}", "ext4", "rw") for c in "abcd"])
+    drawn = []
+    monkeypatch.setattr(gkrellm, "_fs_draw", lambda cv, x, y, w, stats, s: drawn.append(len(gkrellm._fs_list(s))))
+    monkeypatch.setattr(gkrellm, "MODULES", [(k, m, gkrellm._fs_draw if k == "gk_show_disk" else d)
+                                             for k, m, d in gkrellm.MODULES])
+    only_disks = {key: key == "gk_show_disk" for key, _m, _d in gkrellm.MODULES if key != "clock"}
+    render("gkrellm", (320, 140), gk_disk_count="4", gk_columns="1", **only_disks)
+    assert drawn and 1 <= drawn[0] < 4
+
+
+@pytest.mark.parametrize("profile,base,expected", [
+    ("economy", 0.5, 1.0), ("auto", 0.5, 0.5), ("balanced", 0.5, 0.5), ("fluid", 0.5, 0.25),
+    ("economy", 1.0, 1.0), ("fluid", 1.0, 0.5)])
+def test_static_themes_follow_the_performance_profile(monkeypatch, profile, base, expected):
+    monkeypatch.setattr(themes.time, "time", lambda: 1000.0)       # on a period boundary
+    ctx = runtime.RenderContext(preview=True)
+    ctx.target_fps = 15.0
+    assert themes.static_interval({"performance_profile": profile}, ctx, base) == pytest.approx(expected + 0.01)
+    ctx.target_fps = 2.0                                            # a slow panel still wins
+    assert themes.static_interval({"performance_profile": profile}, ctx, base) == pytest.approx(
+        max(expected, 0.5) + 0.01)
+
+
+def test_link_stats_without_sockets(tmp_path):
+    """psutil.net_if_stats() fails with EAFNOSUPPORT under RestrictAddressFamilies."""
+    for name, flags, speed in (("enp3s0", "0x1003", "1000"), ("wlan0", "0x1002", None)):
+        (tmp_path / name).mkdir()
+        (tmp_path / name / "flags").write_text(flags + "\n")
+        if speed:
+            (tmp_path / name / "speed").write_text(speed + "\n")
+    assert telemetry.link_stats(str(tmp_path)) == {"enp3s0": (True, 1000), "wlan0": (False, 0)}
 
 
 def test_gkrellm_never_draws_invented_values():

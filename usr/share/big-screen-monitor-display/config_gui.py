@@ -872,7 +872,7 @@ class ConfigWindow(Adw.ApplicationWindow):
                                                 else _("Telemetry, rendering and transfer are progressing."))
         self.perf_rows["cpu"].set_subtitle(f"{proc.get('cpu_percent', 0):.1f} %")
         self.perf_rows["ram"].set_subtitle(f"{proc.get('rss_mb', 0):.0f} MB")
-        self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:.0f})").format(
+        self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:g})").format(
             fps=min(stats.get("fps", 0), stats.get("target_fps", 0) or 99), target=stats.get("target_fps", 0)))
         self.perf_rows["usb"].set_subtitle(f"{stats.get('transfer_ms', 0):.1f} ms")
         self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "

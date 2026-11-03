@@ -609,7 +609,8 @@ class StandardTheme:
         return render(width, height, settings)
 
     def frame_interval(self, settings, ctx):
-        return 0.5 - (time.time() % 0.5) + 0.01
+        from .themes import static_interval
+        return static_interval(settings, ctx)
 
     def close(self):
         pass

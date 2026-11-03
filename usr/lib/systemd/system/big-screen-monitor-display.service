@@ -45,7 +45,9 @@ MemoryMax=320M
 
 # Sandboxing
 ProtectSystem=strict
-ProtectHome=yes
+# read-only (not "yes"): /home and its mounts must stay visible, or disk
+# widgets and the GKrellM partition list only ever see "/".
+ProtectHome=read-only
 PrivateTmp=yes
 NoNewPrivileges=yes
 CapabilityBoundingSet=

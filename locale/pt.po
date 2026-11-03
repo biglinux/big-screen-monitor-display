@@ -2166,8 +2166,8 @@ msgstr "Telemetria, renderização e transferência estão progredindo."
 
 #: usr/share/big-screen-monitor-display/config_gui.py:875
 #, python-brace-format
-msgid "{fps:.1f} (target {target:.0f})"
-msgstr "{fps:.1f} (alvo {target:.0f})"
+msgid "{fps:.1f} (target {target:g})"
+msgstr "{fps:.1f} (alvo {target:g})"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:879
 #, python-brace-format
