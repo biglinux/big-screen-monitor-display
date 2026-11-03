@@ -108,12 +108,25 @@ def rect_area(rect):
     return (rect[2] - rect[0]) * (rect[3] - rect[1])
 
 
-def plan_rects(curr, prev, tile_w, tile_h, max_rects):
+def tighten(rect, diff):
+    """``rect`` shrunk to the bounding box of the pixels that changed in it."""
+    x0, y0, x1, y1 = rect
+    region = diff[y0:y1, x0:x1]
+    rows = np.flatnonzero(region.any(axis=1))
+    cols = np.flatnonzero(region.any(axis=0))
+    if not rows.size:
+        return None
+    return (x0 + int(cols[0]), y0 + int(rows[0]), x0 + int(cols[-1]) + 1, y0 + int(rows[-1]) + 1)
+
+
+def plan_rects(curr, prev, tile_w, tile_h, max_rects, tight=False):
     """Rectangles to send for ``curr`` given the previously sent ``prev``.
 
     Returns ``None`` for a full frame, ``[]`` when nothing changed.
     When too many small rectangles would be produced (command overhead), they
-    collapse into their bounding box.
+    collapse into their bounding box. ``tight`` trims every rectangle to the
+    pixels that really changed (a clock digit instead of whole tiles), for
+    panels on slow links that accept any rectangle.
     """
     if prev is None or prev.shape != curr.shape:
         return None
@@ -124,6 +137,9 @@ def plan_rects(curr, prev, tile_w, tile_h, max_rects):
     rects = tiles_to_rects(tiles, tile_w, tile_h, width, height)
     if len(rects) > max_rects:
         rects = [bounding_rect(rects)]
+    if tight:
+        diff = curr != prev
+        rects = [r for r in (tighten(rect, diff) for rect in rects) if r]
     if len(rects) == 1 and rect_area(rects[0]) == width * height:
         return None
     return rects

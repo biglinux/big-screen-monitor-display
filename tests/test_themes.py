@@ -119,6 +119,68 @@ def test_gkrellm_disk_module_shrinks_instead_of_vanishing(monkeypatch):
     assert drawn and 1 <= drawn[0] < 4
 
 
+def _gk_layout(size, values, stats):
+    gkrellm._LAYOUTS.clear()
+    style = gkrellm.STYLES["urlicht"]
+    cols, font_px, lines = gkrellm._layout(*size, values, stats, style)
+    canvas = gkrellm.Canvas(gkrellm.Image.new("RGB", size), style, font_px, lines)
+    placements, complete = gkrellm._flow(canvas, gkrellm._enabled(values), cols, size[0] // cols, size[1], stats,
+                                         values)
+    return font_px, placements, complete
+
+
+def _gk_everything(**extra):
+    values = dict(settings.defaults(), theme="gkrellm", gk_disk_count="4")
+    values.update({key: True for key, _m, _d in gkrellm.MODULES if key.startswith("gk_show_")})
+    values.update(gk_show_cores=False, gk_show_inet=False, gk_show_docker=False, gk_show_battery=False, **extra)
+    return values
+
+
+# One integrated GPU and a handful of sensors, like a Ryzen APU desktop.
+APU_STATS = {"cpu_temp_value": 47.0, "sensors": [("nvme", "Composite", 55.0, "°C")],
+             "gpus": [{"path": "/sys/class/drm/card1", "name": "Radeon Vega", "edge": "56°C", "junc": "56°C",
+                       "mem": "62°C", "percent": 3, "usage_history": [0] * 30}]}
+
+
+@pytest.mark.parametrize("size", [(480, 320), (800, 480), (320, 480)])
+def test_gkrellm_shows_every_enabled_module(monkeypatch, size):
+    """Regression: on 480x320 only Clock, CPU, Proc and Sensors fitted; Disks never appeared."""
+    _fake_mounts(monkeypatch, [(f"/dev/sd{c}1", f"/mnt/{c}", "ext4", "rw") for c in "abcd"])
+    values = _gk_everything(gk_show_host=False)
+    with telemetry.STATS_LOCK:
+        stats = dict(telemetry.SYSTEM_STATS, **APU_STATS)
+    font_px, placements, complete = _gk_layout(size, values, stats)
+    assert complete and font_px >= gkrellm.MIN_FONT
+    assert any(draw is gkrellm._fs_draw and len(gkrellm._fs_list(s)) == 4 for draw, _x, _y, _w, s in placements)
+    monkeypatch.setattr(telemetry, "SYSTEM_STATS", stats)
+    render("gkrellm", size, **{k: v for k, v in values.items() if k.startswith("gk_")})
+
+
+def test_gkrellm_too_much_content_shortens_lists_without_overlap(monkeypatch):
+    _fake_mounts(monkeypatch, [(f"/dev/sd{c}1", f"/mnt/{c}", "ext4", "rw") for c in "abcd"])
+    many = [("nvme", f"Sensor {i}", 40.0 + i, "°C") for i in range(12)]
+    with telemetry.STATS_LOCK:
+        stats = dict(telemetry.SYSTEM_STATS, **dict(APU_STATS, sensors=many))
+    stats["gpus"] = APU_STATS["gpus"] * 3
+    font_px, placements, complete = _gk_layout((480, 320), _gk_everything(), stats)
+    assert not complete and font_px == gkrellm.MIN_FONT
+    assert any(draw is gkrellm._fs_draw for draw, *_rest in placements)
+    columns = {}
+    for _draw, x, y, _w, _s in placements:
+        columns.setdefault(x, []).append(y)
+    assert all(ys == sorted(ys) and len(set(ys)) == len(ys) for ys in columns.values())
+
+
+def test_tight_rects_send_only_changed_pixels():
+    import numpy as np
+    from bsmd import frames
+    prev = np.zeros((320, 480), dtype=np.uint32)
+    curr = prev.copy()
+    curr[25:31, 100:104] = 1                       # a clock digit inside one 48x20 tile... and the next
+    assert frames.plan_rects(curr, prev, 48, 20, 48) == [(96, 20, 144, 40)]
+    assert frames.plan_rects(curr, prev, 48, 20, 48, tight=True) == [(100, 25, 104, 31)]
+
+
 @pytest.mark.parametrize("profile,base,expected", [
     ("economy", 0.5, 1.0), ("auto", 0.5, 0.5), ("balanced", 0.5, 0.5), ("fluid", 0.5, 0.25),
     ("economy", 1.0, 1.0), ("fluid", 1.0, 0.5)])

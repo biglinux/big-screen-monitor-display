@@ -77,6 +77,7 @@ class TuringRevA(SerialDisplay):
     DRIVER = "turing_rev_a"
     TILE = (48, 20)
     MAX_RECTS = 48
+    TIGHT_RECTS = True            # ~190 KB/s link: every pixel not sent is time saved
     RESET, CLEAR, SCREEN_OFF, SCREEN_ON = 101, 102, 108, 109
     SET_BRIGHTNESS, SET_ORIENTATION, DISPLAY_BITMAP, HELLO = 110, 121, 197, 69
     SUB_REVISIONS = {bytes([1] * 6): ("UsbPCMonitor 3.5\"", (320, 480)),

@@ -111,7 +111,7 @@ def test_turing_partial_update_covers_edges():
     driver.present(image)
     image.putpixel((799, 0), (255, 0, 0))
     transfer = driver.present(image)
-    assert transfer.rects == 1 and transfer.bytes == 32 * 20 * 2
+    assert transfer.rects == 1 and transfer.bytes == 2     # the edge pixel itself (trimmed rectangle)
 
 
 def reference_command(cmd, x, y, ex, ey):
