@@ -96,6 +96,7 @@ class RasterDriver:
 
     TILE = (32, 16)
     MAX_RECTS = 16
+    TIGHT_RECTS = False           # trim rectangles to changed pixels (panel accepts any x/y/size)
     FULL_REFRESH_RATIO = 0.6
     DRIVER = "raster"
 
@@ -122,7 +123,7 @@ class RasterDriver:
         width, height = self.native_size
         rects = None
         if self.capabilities.partial_update:
-            rects = frames.plan_rects(key, self._prev, *self.TILE, self.MAX_RECTS)
+            rects = frames.plan_rects(key, self._prev, *self.TILE, self.MAX_RECTS, self.TIGHT_RECTS)
         elif self._prev is not None and self._prev.shape == key.shape and not (key != self._prev).any():
             rects = []
         if rects == []:

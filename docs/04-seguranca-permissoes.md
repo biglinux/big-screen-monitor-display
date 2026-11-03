@@ -8,7 +8,7 @@
 | Acesso aos painéis | udev `MODE="0666"` (qualquer processo local) | `0660`, grupo `big-screen-monitor` + `uaccess`, só para os IDs/seriais das famílias suportadas (4.1: o serviço saiu do grupo `uucp`) |
 | Operações administrativas | sudoers `%wheel NOPASSWD` restart/enable/disable | Polkit + helper com verbos fixos (sudoers removido) |
 | Configurações | serviço lia o **primeiro** `/home/*` | `/etc/big-screen-monitor-display/settings.json`, fonte única |
-| Isolamento | `ProtectSystem=full`, `ProtectHome=read-only` | `ProtectSystem=strict`, `ProtectHome=yes`, `DevicePolicy=closed`, filtro de syscalls, sem capabilities |
+| Isolamento | `ProtectSystem=full`, `ProtectHome=read-only` | `ProtectSystem=strict`, `ProtectHome=read-only` (4.2.1; `yes` escondia as partições do `/home`), `DevicePolicy=closed`, filtro de syscalls, sem capabilities |
 
 ## Serviço sem root
 

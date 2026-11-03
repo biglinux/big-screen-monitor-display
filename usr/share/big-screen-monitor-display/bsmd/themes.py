@@ -37,6 +37,29 @@ class ThemeInfo:
     preferences: tuple = field(default_factory=tuple)
 
 
+# Render period of static dashboards relative to their base period, per
+# performance profile. Never above 1 s, so clocks with seconds stay exact.
+STATIC_PERIOD_FACTOR = {"economy": 2.0, "balanced": 1.0, "auto": 1.0, "fluid": 0.5}
+
+
+def static_period(settings, ctx, base=0.5):
+    """Seconds between renders of a theme that only changes with data, never
+    faster than the frame rate the runtime allows for the panel."""
+    factor = STATIC_PERIOD_FACTOR.get(settings.get("performance_profile", "auto"), 1.0)
+    period = min(1.0, base * factor)
+    fps = getattr(ctx, "target_fps", 0) if ctx is not None else 0
+    if fps:
+        period = max(period, 1.0 / fps)
+    return period
+
+
+def static_interval(settings, ctx, base=0.5):
+    """Seconds until the next render, aligned to the wall clock so the clock
+    never lags visibly."""
+    period = static_period(settings, ctx, base)
+    return period - (time.time() % period) + 0.01
+
+
 @functools.lru_cache(maxsize=32)
 def ui_font(size, bold=False):
     name = "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"
@@ -78,9 +101,7 @@ class LegacyTheme:
         return image
 
     def frame_interval(self, settings, ctx):
-        # Align to the next half second so the clock never lags visibly while
-        # static dashboards stay at ~2 renders per second.
-        return 0.5 - (time.time() % 0.5) + 0.01
+        return static_interval(settings, ctx)
 
     def close(self):
         pass

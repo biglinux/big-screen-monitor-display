@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: big-screen-monitor-display 4.2.0\n"
+"Project-Id-Version: big-screen-monitor-display 4.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-03 07:12-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -2135,7 +2135,7 @@ msgstr ""
 
 #: usr/share/big-screen-monitor-display/config_gui.py:875
 #, python-brace-format
-msgid "{fps:.1f} (target {target:.0f})"
+msgid "{fps:.1f} (target {target:g})"
 msgstr ""
 
 #: usr/share/big-screen-monitor-display/config_gui.py:879

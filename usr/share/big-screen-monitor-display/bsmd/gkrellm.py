@@ -81,18 +81,47 @@ def human_mbps(mbps):
     return f"{mbps:.1f}M" if mbps >= 1 else f"{mbps * 1000:.0f}K"
 
 
+# Container storage and the service sandbox's own bind mounts (StateDirectory,
+# PrivateTmp) are not partitions the user would recognise.
+HIDDEN_MOUNTS = ("/snap", "/var/lib/docker", "/var/lib/snapd", "/var/lib/private", "/var/tmp")
+# btrfs subvolumes mounted here are listed on their own (/ and /home on the
+# same partition are two entries, like in GKrellM); any other subvolume
+# (@swapfile, @log, @cache...) folds into the first entry of its partition.
+USER_MOUNTS = ("/home/", "/mnt/", "/media/", "/run/media/", "/srv/", "/data/")
+
+
+def _mount_rank(mount):
+    if mount == "/":
+        return 0
+    if mount == "/home":
+        return 1
+    return 3 if mount == "/boot" or mount.startswith("/boot/") else 2
+
+
+def _btrfs_subvol(opts):
+    options = dict(o.partition("=")[::2] for o in opts.split(","))
+    return options.get("subvol") or options.get("subvolid", "")
+
+
 def partitions():
     seen, result = set(), []
-    for part in psutil.disk_partitions(all=False):
-        if part.device in seen or part.mountpoint.startswith(("/snap", "/var/lib/docker", "/boot/efi")):
+    parts = sorted(psutil.disk_partitions(all=False),
+                   key=lambda p: (_mount_rank(p.mountpoint), len(p.mountpoint), p.mountpoint))
+    for part in parts:
+        mount = part.mountpoint
+        if mount.startswith(HIDDEN_MOUNTS):
             continue
-        seen.add(part.device)
+        key = part.device
+        if part.fstype == "btrfs" and (_mount_rank(mount) < 2 or (mount + "/").startswith(USER_MOUNTS)):
+            key = (part.device, _btrfs_subvol(part.opts))
+        if key in seen:
+            continue
+        seen.update((key, part.device))
         try:
-            usage = psutil.disk_usage(part.mountpoint)
+            usage = psutil.disk_usage(mount)
         except OSError:
             continue
-        result.append((part.mountpoint, usage.percent, usage.used / 1024 ** 3, usage.total / 1024 ** 3))
-    result.sort(key=lambda item: (item[0] != "/", item[0]))
+        result.append((mount, usage.percent, usage.used / 1024 ** 3, usage.total / 1024 ** 3))
     return result
 
 
@@ -218,12 +247,16 @@ class Canvas:
 # ---------------------------------------------------------------- modules
 # Each module: (key, height(canvas, w, stats, s) -> int | None, draw(canvas, x, y, w, stats, s))
 
+def _logo_size(cv, w):
+    return min(48, int(w * 0.22), cv.line * 3)
+
+
 def _host_height(cv, w, stats, s):
-    return cv.line * 2 + text_height(cv.big) - cv.line + cv.pad * 2 + min(48, int(w * 0.22))
+    return cv.line * 2 + text_height(cv.big) - cv.line + cv.pad * 2 + _logo_size(cv, w)
 
 
 def _host_draw(cv, x, y, w, stats, s):
-    logo_size = min(48, int(w * 0.22))
+    logo_size = _logo_size(cv, w)
     logo = legacy.load_distro_logo(legacy.get_os_release().get("LOGO", ""), logo_size)
     if logo is not None:
         cv.image.paste(logo, (int(x + (w - logo.width) / 2), int(y + cv.pad)), logo)
@@ -339,14 +372,28 @@ def _temps(stats):
     return rows
 
 
-def _temp_height(cv, w, stats, s):
+def _temp_rows(stats, s):
     rows = _temps(stats)
+    return rows[:s["_gk_temp_rows"]] if "_gk_temp_rows" in s else rows
+
+
+def _temp_height(cv, w, stats, s):
+    rows = _temp_rows(stats, s)
     return Canvas.title_height(cv) + max(1, len(rows)) * (cv.line + 3) if rows else Canvas.title_height(cv) + cv.line
+
+
+def _temp_shrink(cv, w, stats, s, available):
+    """The first sensors (CPU, then GPU) when the whole list does not fit."""
+    rows = min(len(_temps(stats)), (available - Canvas.title_height(cv)) // (cv.line + 3))
+    if rows < 1:
+        return None
+    s = dict(s, _gk_temp_rows=rows)
+    return s, _temp_height(cv, w, stats, s)
 
 
 def _temp_draw(cv, x, y, w, stats, s):
     y = cv.title(x, y, w, _("Sensors"))
-    rows = _temps(stats)
+    rows = _temp_rows(stats, s)
     if not rows:
         cv.pair(x, y, w, _("no sensors"), "", cv.c["dim"])
         return
@@ -434,9 +481,22 @@ def _fs_list(s):
     return (cached("partitions", 30, partitions) or [])[:int(s.get("gk_disk_count", "2"))]
 
 
+def _fs_row_height(cv):
+    return cv.line * 2 + 6
+
+
 def _fs_height(cv, w, stats, s):
     parts = _fs_list(s)
-    return Canvas.title_height(cv) + len(parts) * (cv.line * 2 + 6) if parts else None
+    return Canvas.title_height(cv) + len(parts) * _fs_row_height(cv) if parts else None
+
+
+def _fs_shrink(cv, w, stats, s, available):
+    """Fewer partitions instead of no Disks module when the full list does not fit."""
+    rows = min(len(_fs_list(s)), (available - Canvas.title_height(cv)) // _fs_row_height(cv))
+    if rows < 1:
+        return None
+    s = dict(s, gk_disk_count=str(rows))
+    return s, _fs_height(cv, w, stats, s)
 
 
 def _fs_draw(cv, x, y, w, stats, s):
@@ -576,6 +636,8 @@ MODULES = [
     ("gk_show_devices", _devices_height, _devices_draw),
     ("gk_show_media", _single_line_height, _media_draw),
 ]
+# Modules that can be drawn shorter: (cv, w, stats, s, available) -> (s, height) or None.
+SHRINK = {"gk_show_disk": _fs_shrink, "gk_show_temp": _temp_shrink}
 
 
 def column_count(width, height, s):
@@ -585,40 +647,100 @@ def column_count(width, height, s):
     return max(1, min(4, round(width / 200)))
 
 
+DEFAULT_OFF = ("gk_show_cores", "gk_show_docker", "gk_show_inet", "gk_show_battery")
+MIN_FONT = 9            # below this the panel is unreadable: modules are dropped instead
+MIN_COLUMN = 150        # narrowest automatic column, in pixels
+_LAYOUTS = {}
+
+
+def _enabled(s):
+    return [module for module in MODULES if module[0] == "clock" or s.get(module[0], module[0] not in DEFAULT_OFF)]
+
+
+def _font_cap(col_w, height, s):
+    scale = TEXT_SCALE.get(s.get("gk_text_size", "normal"), 1.0)
+    return min(18, int(col_w / (21 * 0.6) * scale), max(8, height // 16))
+
+
+def _flow(cv, modules, cols, col_w, height, stats, s):
+    """Place modules top-down, column after column.
+
+    Returns ``(placements, complete)``; ``complete`` is False when a module
+    had to be shortened or left out.
+    """
+    placements, column, y, complete = [], 0, 2, True
+    gap = max(2, cv.pad)
+    for key, measure, draw in modules:
+        w = col_w - (4 if column < cols - 1 else 0)
+        needed = measure(cv, w, stats, s)
+        if needed is None:
+            continue
+        module_s = s
+        if y + needed > height - 2:
+            if column + 1 < cols:
+                column, y = column + 1, 2
+                w = col_w - (4 if column < cols - 1 else 0)
+            if y + needed > height - 2:
+                complete = False
+                shrunk = SHRINK[key](cv, w, stats, s, height - 2 - y) if key in SHRINK else None
+                if shrunk is None:
+                    continue        # does not fit anywhere: skip instead of overlapping
+                module_s, needed = shrunk
+        placements.append((draw, column * col_w, y, w, module_s))
+        y += needed + gap
+    return placements, complete
+
+
+def _layout(width, height, s, stats, style):
+    """Columns, font size and chart height that show every enabled module.
+
+    The 3.x layout sized fonts by column width only, so on 480x320 just four
+    modules fitted and the rest (Disks, Mem, Network...) silently vanished.
+    Here the largest font wins; columns are added (when automatic) and charts
+    flattened before anything is dropped.
+    """
+    modules = _enabled(s)
+    probe = Canvas(Image.new("RGB", (1, 1)), style, 10, 1.0)
+    signature = tuple(measure(probe, 100, stats, s) for _key, measure, _draw in modules)
+    key = (width, height, tuple(sorted((k, v) for k, v in s.items() if k.startswith("gk_"))), signature)
+    if key in _LAYOUTS:
+        return _LAYOUTS[key]
+    base = column_count(width, height, s)
+    if s.get("gk_columns", "auto") == "auto":
+        columns = list(range(base, max(base, min(4, width // MIN_COLUMN)) + 1))
+    else:
+        columns = [base]
+    preferred = CHART_LINES.get(s.get("gk_chart_height", "normal"), 2.4)
+    charts = sorted({preferred, *(lines for lines in (1.6, 1.2) if lines < preferred)}, reverse=True)
+    top = max(_font_cap(width // cols, height, s) for cols in columns)
+    result = (columns[-1], MIN_FONT, charts[-1])
+    for font_px in range(top, MIN_FONT - 1, -1):
+        found = next(((cols, font_px, lines) for cols in columns if font_px <= _font_cap(width // cols, height, s)
+                      for lines in charts
+                      if _flow(Canvas(probe.image, style, font_px, lines), modules, cols, width // cols, height,
+                               stats, s)[1]), None)
+        if found:
+            result = found
+            break
+    if len(_LAYOUTS) > 64:
+        _LAYOUTS.clear()
+    _LAYOUTS[key] = result
+    return result
+
+
 def render(width, height, s):
     style = STYLES.get(s.get("gk_theme_color", "urlicht"), STYLES["urlicht"])
     image = Image.new("RGB", (width, height), (0, 0, 0))
-    cols = column_count(width, height, s)
-    col_w = width // cols
-    font_px = max(8, min(18, int(col_w / (21 * 0.6) * TEXT_SCALE.get(s.get("gk_text_size", "normal"), 1.0))))
-    font_px = min(font_px, max(8, height // 16))
-    cv = Canvas(image, style, font_px, CHART_LINES.get(s.get("gk_chart_height", "normal"), 2.4))
     with STATS_LOCK:
         stats = dict(SYSTEM_STATS)
+    cols, font_px, chart_lines = _layout(width, height, s, stats, style)
+    col_w = width // cols
+    cv = Canvas(image, style, font_px, chart_lines)
     for index in range(1, cols):
         x = index * col_w
         cv.d.line((x - 1, 0, x - 1, height), fill=style["bevel_lo"], width=2)
         cv.d.line((x - 3, 0, x - 3, height), fill=style["bevel_hi"])
-    column, y = 0, 2
-    gap = max(2, cv.pad)
-    for key, measure, draw in MODULES:
-        if key != "clock" and not s.get(key, key not in ("gk_show_cores", "gk_show_docker", "gk_show_inet",
-                                                           "gk_show_battery")):
-            continue
-        x = column * col_w
-        w = col_w - (4 if column < cols - 1 else 0)
-        height_needed = measure(cv, w, stats, s)
-        if height_needed is None:
-            continue
-        if y + height_needed > height - 2:
-            if column + 1 >= cols:
-                continue            # does not fit anywhere: skip instead of overlapping
-            column, y = column + 1, 2
-            x = column * col_w
-            w = col_w - (4 if column < cols - 1 else 0)
-            if y + height_needed > height - 2:
-                continue
-        draw(cv, x, y, w, stats, s)
-        y += height_needed + gap
+    for draw, x, y, w, module_s in _flow(cv, _enabled(s), cols, col_w, height, stats, s)[0]:
+        draw(cv, x, y, w, stats, module_s)
     cv.d.line((0, height - 2, width, height - 2), fill=style["bevel_lo"], width=2)
     return image

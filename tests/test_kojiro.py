@@ -430,6 +430,11 @@ def test_runtime_collects_only_what_kojiro_needs(tmp_path):
     class FakeSession:
         theme = type("T", (), {"info": REGISTRY["kojiro"], "needs": data.needs([
             model.new_widget("fan", "f"), dict(model.new_widget("disk", "d"), opts={"mount": "/data"})])})()
+
+        @staticmethod
+        def settings():
+            return {"performance_profile": "fluid"}
     app.sessions["usb-1-1"] = FakeSession()
     app.wake_collector_needs()
     assert app.collector.want_fans and app.collector.want_disks == {"/data"} and not app.collector.want_addrs
+    assert app.collector.interval == 0.5
