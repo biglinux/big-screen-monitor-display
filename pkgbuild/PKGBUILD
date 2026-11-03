@@ -2,6 +2,7 @@ pkgname=big-screen-monitor-display
 pkgdesc="Big Screen Monitor Display - hardware monitor and animated themes for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
 depends=(
     # runtime
+    'bash'                # /usr/bin launchers
     'python'              # >= 3.10
     'python-pillow'       # rendering
     'python-numpy'        # RGB565 conversion and dirty rectangles
@@ -31,6 +32,7 @@ optdepends=(
     'alsa-utils: sound effects (aplay) and GKrellM volume module'
     'adwaita-fonts: font used by the GKrellM theme'
     'playerctl: media module of the GKrellM theme'
+    'docker: container count in the GKrellM theme'
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
 )
 makedepends=('gettext' 'git')

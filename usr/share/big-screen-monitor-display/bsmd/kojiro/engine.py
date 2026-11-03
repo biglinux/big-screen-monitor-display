@@ -260,8 +260,10 @@ class KojiroTheme:
     def frame_interval(self, settings, ctx):
         if self.animating:
             return 1.0 / max(1.0, getattr(ctx, "target_fps", 8.0) if ctx is not None else 8.0)
-        # Static content: wake on the next wall-clock second (clock digits stay exact).
-        return 1.0 - (time.time() % 1.0) + 0.01
+        # Static content: wake on the next wall-clock second (clock digits stay
+        # exact), twice per second with the fluid profile.
+        from ..themes import static_interval
+        return static_interval(settings, ctx, base=1.0)
 
     def close(self):
         self.layers.clear()

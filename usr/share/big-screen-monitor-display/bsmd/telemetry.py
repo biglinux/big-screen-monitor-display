@@ -161,6 +161,30 @@ def _read(path):
         return handle.read().strip()
 
 
+def link_stats(net_dir="/sys/class/net"):
+    """{interface: (is_up, speed_mbps)} read from sysfs.
+
+    psutil.net_if_stats() needs an AF_INET socket for its ioctls, which the
+    service's RestrictAddressFamilies forbids (EAFNOSUPPORT on every call).
+    """
+    result = {}
+    try:
+        names = os.listdir(net_dir)
+    except OSError:
+        return result
+    for name in names:
+        try:
+            flags = int(_read(os.path.join(net_dir, name, "flags")), 16)
+        except (OSError, ValueError):
+            continue
+        try:
+            speed = max(0, int(_read(os.path.join(net_dir, name, "speed"))))
+        except (OSError, ValueError):     # EINVAL while the link is down, absent on wireless
+            speed = 0
+        result[name] = (bool(flags & 0x1), speed)     # IFF_UP
+    return result
+
+
 def _lspci_name(pci_slot):
     """Marketing name between brackets in ``lspci -s`` output (run once)."""
     try:
@@ -484,8 +508,10 @@ class Collector:
                                       (disk.write_bytes - self._disk.write_bytes)) / (dt * 1024))
                     SYSTEM_STATS["disk_io_kbs"] = total
                     _push(DISK_IO_HISTORY, total)
-        self._sample_interfaces(dt)
+        # Move the baseline first: a failing interface list must not turn the
+        # rates above into averages since start-up.
         self._net, self._disk, self._time = net, disk, now
+        self._sample_interfaces(dt)
 
     IGNORED_NICS = ("lo", "veth", "docker", "br-", "virbr", "vnet")
 
@@ -496,11 +522,11 @@ class Collector:
         dropped, so the dictionary never grows without bound.
         """
         nics = psutil.net_io_counters(pernic=True)
-        stats = psutil.net_if_stats()
+        links = link_stats()
         current = SYSTEM_STATS["net_ifaces"]
         seen = set()
         for name, counters in nics.items():
-            if name.startswith(self.IGNORED_NICS) or not getattr(stats.get(name), "isup", False):
+            if name.startswith(self.IGNORED_NICS) or not links.get(name, (False, 0))[0]:
                 continue
             previous = self._nics.get(name)
             if previous is None or dt <= 0:
@@ -600,14 +626,14 @@ class Collector:
         SYSTEM_STATS["disks"] = result
 
     def _sample_addrs(self):
-        stats = psutil.net_if_stats()
+        links = link_stats()
         result = {}
         for name, addrs in psutil.net_if_addrs().items():
             if name.startswith(self.IGNORED_NICS):
                 continue
             ipv4 = next((a.address for a in addrs if a.family == socket.AF_INET), None)
             if ipv4:
-                speed = getattr(stats.get(name), "speed", 0) or None
+                speed = links.get(name, (False, 0))[1] or None
                 result[name] = {"ipv4": ipv4, "speed_mbps": speed}
         SYSTEM_STATS["net_addrs"] = result
 

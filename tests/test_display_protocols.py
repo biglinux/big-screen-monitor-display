@@ -203,7 +203,7 @@ def test_partial_updates_send_only_changes():
     assert driver.present(frame).bytes == 0
     frame.putpixel((479, 319), (1, 2, 255))
     second = driver.present(frame)
-    assert not second.full and second.bytes == 48 * 20 * 2
+    assert not second.full and second.bytes == 2          # one pixel: rectangles are trimmed
 
 
 # ------------------------------------------------------------- Turing USB

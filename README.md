@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-4.2.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-4.2.1-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-617%20passando-success)
+![Testes](https://img.shields.io/badge/testes-633%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -40,6 +40,14 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 4.2.1 — GKrellM completo e perfis de desempenho de verdade
+
+- **GKrellM mostra todos os módulos ligados.** Em 480×320 só cabiam Relógio, CPU, Processos e Sensores — Discos, Memória, Swap, Rede e GPU sumiam sem aviso, e "Partições listadas" não tinha efeito. Agora o layout procura a maior fonte em que tudo cabe, acrescenta colunas (no modo automático) e achata os gráficos antes de abrir mão de qualquer módulo.
+- **Partições de verdade.** `/` e `/home` em subvolumes btrfs aparecem separados, `/boot/efi` entra no fim da lista, e montagens internas (`@swapfile`, `/var/tmp`, as do próprio isolamento do serviço) não poluem mais a lista. O serviço passou a enxergar o `/home` (somente leitura).
+- **Rede e E/S de disco não ficam mais congeladas.** Dentro do isolamento do serviço a leitura das interfaces falhava em todo ciclo, e as taxas viravam médias desde o início do serviço; a lista de interfaces do GKrellM ficava vazia. Agora o estado e a velocidade das interfaces vêm do `/sys`.
+- **Perfis de desempenho valem para todos os temas.** Econômico, Equilibrado e Fluido mudam a frequência de coleta (2 s · 1 s · 0,5 s) e de desenho dos temas de painel (Padrão, GKrellM, Planet, Computador Antigo e o Kojiro estático), não só dos animados. A página Desempenho mostra o alvo real de cada tema.
+- **Até 65% menos dados nos displays seriais lentos.** No Turing rev. A (~190 KB/s) só os pixels que mudaram vão para a tela, e não blocos inteiros de 48×20: no GKrellM 480×320, de 66 KB para 23 KB por atualização (~360 ms → ~125 ms).
 
 ## ✨ Novidades da 4.2 — Kojiro
 
@@ -253,6 +261,10 @@ Configurações antigas com Escuro, Claro, Neon ou Cyberpunk são migradas autom
 <td align="center" width="50%"><img src="docs/images/theme-planet-amber.png" alt="Planet em âmbar"/><br/><b>Planet</b> · destaque âmbar</td>
 </tr>
 <tr>
+<td align="center"><img src="docs/images/theme-gkrellm-480.png" alt="GKrellM em 480×320 com quatro partições"/><br/><b>GKrellM</b> · 480×320 com 4 partições</td>
+<td align="center"><img src="docs/images/theme-gkrellm-portrait.png" alt="GKrellM clássico em retrato"/><br/><b>GKrellM</b> · Clássico, retrato</td>
+</tr>
+<tr>
 <td align="center"><img src="docs/images/theme-old_computer-slate.png" alt="Computador Antigo Ardósia com disco e swap"/><br/><b>Computador Antigo</b> · Ardósia, 6 cartões</td>
 <td align="center"><img src="docs/images/theme-planet.png" alt="Planet azul"/><br/><b>Planet</b> · Sol e Lua nas posições reais</td>
 </tr>
@@ -260,7 +272,7 @@ Configurações antigas com Escuro, Claro, Neon ou Cyberpunk são migradas autom
 
 | Tema | O que mudou | Opções |
 | --- | --- | --- |
-| **GKrellM** | Reconstruído em módulos que medem a própria altura; fontes acompanham a largura da coluna; módulos que não cabem são omitidos. Os módulos que antes **inventavam dados** (PPP/VLAN/inet0 desenhavam o gráfico da CPU, "sys" mostrava voltagens fixas) agora mostram interfaces, sensores e ventoinhas **reais** ou "indisponível". | estilo Urlicht/Clássico/Cyber-Red · colunas (auto, 1–4) · tamanho do texto · altura dos gráficos · partições listadas · 20 módulos (host, data, hora, tempo ligado, CPU, núcleos, processos e carga, temperaturas, E/S de disco, interface principal, outras interfaces, memória, swap, partições, GPU, bateria, ventoinhas e energia, Docker, mídias removíveis, reprodutor) |
+| **GKrellM** | Reconstruído em módulos que medem a própria altura. O layout escolhe a maior fonte (até 9 px) em que **todos os módulos ligados** cabem, acrescentando colunas no modo automático e achatando os gráficos; só se nem assim couber, as listas de Discos e Sensores ficam mais curtas e os últimos módulos saem — nunca há sobreposição. Partições: `/`, `/home` e mídias montadas, com subvolumes btrfs distintos separados e `/boot` por último. Os módulos que antes **inventavam dados** (PPP/VLAN/inet0 desenhavam o gráfico da CPU, "sys" mostrava voltagens fixas) agora mostram interfaces, sensores e ventoinhas **reais** ou "indisponível". | estilo Urlicht/Clássico/Cyber-Red · colunas (auto, 1–4) · tamanho do texto · altura dos gráficos · partições listadas · 20 módulos (host, data, hora, tempo ligado, CPU, núcleos, processos e carga, temperaturas, E/S de disco, interface principal, outras interfaces, memória, swap, partições, GPU, bateria, ventoinhas e energia, Docker, mídias removíveis, reprodutor) |
 | **Planet** | Sem sobreposição em telas pequenas e no retrato; RAM na ordem certa (usado/total); o texto fixo "SUNNY / WIND 3 / 22°C" e o "VOLUME 28%" **fictícios** viraram tempo ligado e uso do disco; "GPU CLOCK" mostra o clock real da GPU. | cor de destaque (azul, verde, âmbar, violeta, vermelho — a Terra mantém as cores reais) · lado noturno · luzes das cidades · trajetórias do Sol e da Lua · Lua · segundos |
 | **Computador Antigo** | Não quebra mais em 240×320; sem textos sobrepostos em 320×240; cartões se adaptam à altura. | 4 paletas (Cinza clássico, Ardósia, Âmbar, Lilás) · barra de título · barra de status · segundos · cartões de GPU/VRAM · cartões de disco/swap |
 
@@ -284,10 +296,10 @@ Configurações antigas com Escuro, Claro, Neon ou Cyberpunk são migradas autom
 - **Meus Displays:** todos os displays detectados, com nome, modelo/protocolo (automático ou manual), nível de confiança, tema, orientação, brilho e desempenho próprios, firmware e capacidades, sensores do WeAct, padrões de teste, *Identificar* e *Reconectar* — mais os padrões para todos os displays e o início com o computador.
 - **Temas:** galeria com prévia ao vivo usando o mesmo renderizador do display.
 - **Aba do tema aplicado** (Padrão, GKrellM, Planet, Computador Antigo, Brother Away ou Kojiro): todas as opções do tema, com prévia própria — no Kojiro, o editor visual completo. Ao aplicar outro tema, a aba troca sozinha e um aviso oferece "Personalizar".
-- **Desempenho:** perfil (Automático, Econômico, Equilibrado, Fluido) e números reais do serviço: CPU, memória, quadros por segundo, tempo de transferência, dados enviados.
+- **Desempenho:** perfil (Automático, Econômico, Equilibrado, Fluido) e números reais do serviço: CPU, memória, quadros por segundo (com o alvo real do tema aplicado), tempo de transferência, dados enviados.
 - **Diagnóstico:** estado atual, *Diagnosticar meu display* com correções seguras, *Recuperar o display agora*, reiniciar o serviço, eventos recentes e exportar relatório.
 
-Alterações são aplicadas com **Aplicar** e valem em até 1 s; *Descartar* volta ao que está salvo. Funciona com teclado e leitor de tela, nos modos claro e escuro do sistema.
+Alterações são aplicadas com **Aplicar** e valem em até 1 s; *Descartar* volta ao que está salvo. Depois de atualizar o pacote, feche e abra a janela para a prévia usar a versão nova. Funciona com teclado e leitor de tela, nos modos claro e escuro do sistema.
 
 <details>
 <summary><b>Abas dos outros temas</b></summary>
@@ -325,9 +337,9 @@ Atualizações preservam as configurações e **respeitam o serviço desativado*
 
 | Tipo | Pacotes |
 | --- | --- |
-| Execução | `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit` |
+| Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit` |
 | Janela | `python-gobject`, `python-cairo`, `glib2`, `gtk4`, `libadwaita` ≥ 1.6, `hicolor-icon-theme` |
-| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
+| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
 | Build | `gettext`, `git` |
 
 ---
@@ -381,7 +393,7 @@ Exemplo de `systemctl status`:
 ```mermaid
 flowchart LR
     U["Descoberta<br/>sysfs a cada 2 s"] --> H
-    T["Coleta<br/>telemetria 1 s"] --> S[("SYSTEM_STATS<br/>compartilhado")]
+    T["Coleta<br/>telemetria 0,5–2 s (perfil)"] --> S[("SYSTEM_STATS<br/>compartilhado")]
     S --> R1["Sessão A: tema"] --> X1["Transporte A"] --> D1(["AX206"])
     S --> R2["Sessão B: tema"] --> X2["Transporte B"] --> D2(["WeAct 0,96&quot;"])
     H["Supervisor"] -. heartbeats .-> T
@@ -409,9 +421,12 @@ Erro transitório degrada; dois seguidos ou desconexão reabrem o driver, redete
 ```ini
 Type=notify · WatchdogSec=30 · Restart=on-failure · RestartSteps=6 · RestartMaxDelaySec=300
 DynamicUser=yes · SupplementaryGroups=big-screen-monitor · DevicePolicy=closed
-ProtectSystem=strict · ProtectHome=yes · CapabilityBoundingSet= · SystemCallFilter=@system-service
+ProtectSystem=strict · ProtectHome=read-only · CapabilityBoundingSet= · SystemCallFilter=@system-service
+RestrictAddressFamilies=AF_UNIX AF_NETLINK · NoNewPrivileges=yes
 Nice=10 · CPUWeight=20 · IOSchedulingClass=idle · MemoryMax=320M
 ```
+
+`ProtectHome=read-only` (o padrão do systemd para `DynamicUser`) deixa as montagens do `/home` visíveis para a lista de partições e os elementos de disco, sem permitir escrita. Sem sockets de rede, as interfaces são lidas do `/sys/class/net`.
 
 Sinais: `SIGTERM` encerra mostrando "Monitoramento parado" (em vez de uma imagem congelada), `SIGUSR1` reconecta, `SIGHUP` recarrega as configurações.
 
@@ -436,7 +451,18 @@ Sinais: `SIGTERM` encerra mostrando "Monitoramento parado" (em vez de uma imagem
 | Envio | quadro inteiro (768 KB, 115 ms) | só o que mudou (canto: ~4 ms) |
 | Volta após desconexão | nunca | 1,1–2,1 s |
 
-**FPS adaptativo:** o perfil Automático limita os temas animados a 8 fps (as poses são desenhadas "em dois"), reduz para manter o pipeline abaixo de 60% de ocupação e cai para 4 fps na bateria.
+**Perfis de desempenho:**
+
+| Perfil | Temas animados (Brother Away, Kojiro animado) | Temas de painel (Padrão, GKrellM, Planet, Computador Antigo) | Kojiro estático | Coleta de telemetria |
+| --- | --- | --- | --- | --- |
+| Econômico | até 4 fps | 1 desenho/s | 1/s | a cada 2 s |
+| Automático | até 8 fps, adaptativo | 2/s | 1/s | a cada 1 s |
+| Equilibrado | até 8 fps | 2/s | 1/s | a cada 1 s |
+| Fluido | até 15 fps | 4/s | 2/s | a cada 0,5 s |
+
+O Automático limita os temas animados a 8 fps (as poses são desenhadas "em dois"), reduz para manter o pipeline abaixo de 60% de ocupação, respeita o limite de cada transporte lento e cai para 4 fps na bateria. Os desenhos dos temas de painel são alinhados ao relógio, então os segundos nunca atrasam. Com vários displays, vale o perfil mais rápido entre eles para a coleta.
+
+**Displays seriais lentos (Turing rev. A, ~190 KB/s):** uma tela cheia de 480×320 leva ~1,6 s, por isso só os pixels que mudaram são enviados (retângulos recortados ao pixel). Medido no GKrellM 480×320: 23 KB e ~125 ms por atualização (antes 66 KB e ~360 ms).
 
 ### Traduções
 
@@ -458,6 +484,10 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 | Aviso de permissões | Uma regra udev local em `/etc/udev/rules.d/` pode estar sobrepondo a do pacote (por exemplo, `MODE="0666"`). Remova-a e reconecte o display. |
 | Serviço sem watchdog/isolamento | Há uma cópia antiga em `/etc/systemd/system/big-screen-monitor-display.service`; remova-a e rode `sudo systemctl daemon-reload`. O diagnóstico avisa. |
 | Quero gastar menos | **Desempenho → Econômico**, ou desligue a animação do Brother Away. |
+| GKrellM com letras pequenas ou listas encurtadas | Há mais módulos ligados do que cabem na tela. Desligue módulos que não usa na aba **GKrellM**, reduza "Partições listadas" ou use colunas automáticas. |
+| Partição do `/home` não aparece | Confira se o serviço usa o arquivo do pacote: `systemctl show -p ProtectHome big-screen-monitor-display` deve dizer `read-only`. Uma cópia antiga em `/etc/systemd/system/` sobrepõe o pacote (veja acima). |
+| Rede ou E/S de disco parados | `main.py --status`: o campo `sensor_errors` deve estar vazio. Desde a 4.2.1 as interfaces são lidas do `/sys`; atualize o pacote. |
+| Prévia da janela diferente do display | A janela foi aberta antes de uma atualização: feche e abra de novo. |
 | Pedir ajuda | **Diagnóstico → Exportar diagnóstico** gera um relatório com o estado e os logs. |
 
 ---
@@ -465,13 +495,13 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 617 testes, sem hardware
+python3 -m pytest -q tests                                  # 633 testes, sem hardware
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py
 ```
 
-Os testes cobrem configurações, conversão e retângulos, todos os temas em 10 resoluções nas duas orientações e em tela redonda, os bytes de cada protocolo comparados com a referência, detecção e níveis de confiança, vários displays com hot-plug e falha isolada, drivers com USB/serial falsos, máquina de estados, pipeline com falhas injetadas (desconexão, timeout, travamento, falha persistente), assistente Polkit, as 14 histórias do Brother Away e um dia simulado. A CI roda em `.github/workflows/tests.yml`.
+Os testes cobrem configurações, conversão e retângulos, todos os temas em 10 resoluções nas duas orientações e em tela redonda, os bytes de cada protocolo comparados com a referência, o layout do GKrellM (todos os módulos e partições em 480×320, listas encurtadas sem sobreposição), partições btrfs dentro do isolamento do serviço, perfis de desempenho, retângulos recortados ao pixel, detecção e níveis de confiança, vários displays com hot-plug e falha isolada, drivers com USB/serial falsos, máquina de estados, pipeline com falhas injetadas (desconexão, timeout, travamento, falha persistente), assistente Polkit, as 14 histórias do Brother Away e um dia simulado. A CI roda em `.github/workflows/tests.yml`.
 
 ### Estrutura
 
