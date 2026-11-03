@@ -1,31 +1,45 @@
-## arg 1:  the new package version
-pre_install() {
-	systemctl stop big-screen-monitor-display.service 2>/dev/null || true
+_service=big-screen-monitor-display.service
+
+_refresh_system() {
+	# pacman hooks run after this scriptlet; the group must exist before
+	# the service starts, so sysusers and udev are applied here explicitly.
+	systemd-sysusers big-screen-monitor-display.conf 2>/dev/null || true
+	udevadm control --reload-rules 2>/dev/null || true
+	# Apply the new permissions to panels that are already plugged in.
+	for _vendor in 1908 1cbe 1a86 454d; do
+		udevadm trigger --action=add --subsystem-match=usb --attr-match=idVendor=${_vendor} 2>/dev/null || true
+	done
+	udevadm trigger --action=add --subsystem-match=tty 2>/dev/null || true
+	# One-time import of the old per-user settings (newest file wins).
+	/usr/lib/big-screen-monitor-display/bsm-helper migrate >/dev/null 2>&1 || true
+	systemctl daemon-reload
+	if [ -e "/etc/systemd/system/${_service}" ]; then
+		echo ":: /etc/systemd/system/${_service} overrides the packaged service."
+		echo "   Remove it to use the watchdog and sandbox of this version."
+	fi
 }
 
 ## arg 1:  the new package version
 post_install() {
-	chmod +x /usr/bin/big-screen-monitor-display.sh
-	chmod +x /usr/share/big-screen-monitor-display/main.py
-
-	# Configura o serviço systemd
-	systemctl daemon-reload
-	systemctl enable --now big-screen-monitor-display.service
-	systemctl start big-screen-monitor-display.service
+	_refresh_system
+	systemctl enable --now "${_service}"
 }
 
+## arg 1:  the new package version
 ## arg 2:  the old package version
 post_upgrade() {
-	post_install
+	_refresh_system
+	# Respect the user's choice: never re-enable a disabled service on upgrade.
+	systemctl try-restart "${_service}" 2>/dev/null || true
 }
 
 ## arg 1:  the old package version
 pre_remove() {
-	systemctl stop big-screen-monitor-display.service 2>/dev/null || true
-	systemctl disable big-screen-monitor-display.service 2>/dev/null || true
+	systemctl disable --now "${_service}" 2>/dev/null || true
 }
 
 ## arg 1:  the old package version
 post_remove() {
 	systemctl daemon-reload
+	udevadm control --reload-rules 2>/dev/null || true
 }

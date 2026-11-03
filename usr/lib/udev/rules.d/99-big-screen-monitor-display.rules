@@ -1,6 +1,0 @@
-# Big Screen Monitor Display - udev rules for USB display devices
-# AX206 Digital Photo Frame (SCSI mode)
-SUBSYSTEM=="usb", ATTR{idVendor}=="1908", ATTR{idProduct}=="0102", MODE="0666", TAG+="uaccess"
-
-# QinHeng Electronics UsbMonitor / Turing Smart Screen (CDC-ACM serial)
-SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="5722", MODE="0666", TAG+="uaccess", SYMLINK+="ttyTuring%n"

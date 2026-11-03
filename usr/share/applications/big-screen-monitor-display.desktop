@@ -1,13 +1,11 @@
 [Desktop Entry]
 Name=Big Screen Monitor Display
-Comment=Configure settings for Big Screen Monitor Display
+Comment=Configure the USB hardware monitor display, themes and Brother Away
+Comment[pt_BR]=Configure o display USB de monitoramento, os temas e o Brother Away
 Exec=/usr/bin/big-screen-monitor-config.sh
 Type=Application
 Terminal=false
 Icon=big-screen-monitor-display
-Categories=Settings;System;Monitor;Utility;
-Keywords=monitor;display;lcd;hardware;gpu;cpu;settings;config;
-
-[Desktop Action Settings]
-Name=Run
-Exec=/usr/bin/big-screen-monitor-display.sh
+StartupWMClass=big-screen-monitor-display
+Categories=Settings;HardwareSettings;
+Keywords=monitor;display;lcd;hardware;gpu;cpu;settings;config;theme;brother;away;

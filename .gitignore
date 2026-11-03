@@ -1,2 +1,5 @@
 __pycache__/
 .serena/
+locale-build/
+.pytest_cache/
+.ruff_cache/

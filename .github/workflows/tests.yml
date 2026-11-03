@@ -1,0 +1,24 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext librsvg2-bin fontconfig fonts-dejavu-core
+          pip install pytest pillow numpy psutil pyusb pyserial
+      - name: Run tests
+        run: python -m pytest -q tests
+      - name: Validate translations
+        run: |
+          for po in locale/*.po; do if [ -s "$po" ]; then msgfmt -c -o /dev/null "$po"; fi; done

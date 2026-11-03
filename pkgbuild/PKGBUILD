@@ -1,10 +1,44 @@
 pkgname=big-screen-monitor-display
-pkgdesc="Big Screen Monitor Display - System Monitor Dashboard for USB LCD Displays"
-depends=('python' 'python-pillow' 'python-psutil' 'python-pyusb' 'python-pyserial' 'python-numpy' 'librsvg' 'lm_sensors' 'python-pystray')
+pkgdesc="Big Screen Monitor Display - hardware monitor and animated themes for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
+depends=(
+    # runtime
+    'python'              # >= 3.10
+    'python-pillow'       # rendering
+    'python-numpy'        # RGB565 conversion and dirty rectangles
+    'python-psutil'       # CPU, memory, disk, network, battery
+    'python-pyusb'        # AX206 and Turing USB panels (libusb)
+    'libusb'
+    'python-pyserial'     # serial panels: Turing rev. A/C, XuanFang, Kipye, WeAct (CDC-ACM)
+    'pciutils'            # lspci: GPU names
+    'librsvg'             # rsvg-convert: icons, distro logo, splash, SVG wallpapers
+    'fontconfig'          # fc-match: system fonts chosen for Kojiro widgets
+    'systemd'             # service, watchdog, sysusers, udev
+    'polkit'              # pkexec + bsm-helper authorization
+    # configuration window
+    'python-gobject'
+    'python-cairo'        # Kojiro Design Studio canvas
+    'glib2'
+    'gtk4'
+    'libadwaita'          # >= 1.6
+    'hicolor-icon-theme'
+)
+optdepends=(
+    'lm_sensors: detect and configure extra hardware sensors'
+    'python-pystray: tray icon when running the monitor manually'
+    'libcanberra: sound after applying settings'
+    'pipewire-audio: Brother Away sound effects (pw-play)'
+    'libpulse: Brother Away sound effects (paplay)'
+    'alsa-utils: sound effects (aplay) and GKrellM volume module'
+    'adwaita-fonts: font used by the GKrellM theme'
+    'playerctl: media module of the GKrellM theme'
+    'docker: container count in the GKrellM theme'
+    'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
+)
+makedepends=('gettext' 'git')
 pkgver=$(date +%y.%m.%d)
 pkgrel=$(date +%H%M)
 arch=('any')
-license=('GPL3')
+license=('GPL-3.0-or-later')
 url="https://github.com/biglinux/$pkgname"
 provides=("$pkgname")
 source=("git+https://github.com/biglinux/$pkgname.git")
@@ -29,41 +63,29 @@ package() {
         fi
     fi
 
-    # Install usr/ tree
-    if [ -d "${InternalDir}/usr" ]; then
-        cp -r "${InternalDir}/usr" "${pkgdir}/"
-    fi
+    # Application, service, udev, sysusers, polkit and desktop files
+    cp -r "${InternalDir}/usr" "${pkgdir}/"
+    # Never ship development caches
+    find "${pkgdir}" \( -name "__pycache__" -o -name ".ruff_cache" -o -name ".pytest_cache" \) \
+        -type d -prune -exec rm -rf {} +
 
-    # Allow the configuration window to restart only its own service without
-    # opening a password prompt. The sudoers file is validated by the package
-    # permissions below and is limited to the wheel group.
-    if [ -d "${InternalDir}/etc" ]; then
-        cp -r "${InternalDir}/etc" "${pkgdir}/"
-    fi
+    # Compiled translations (empty catalogs are skipped)
+    for po in "${InternalDir}/locale/"*.po; do
+        [ -s "$po" ] || continue
+        lang=$(basename "$po" .po)
+        install -d "${pkgdir}/usr/share/locale/${lang}/LC_MESSAGES"
+        msgfmt -o "${pkgdir}/usr/share/locale/${lang}/LC_MESSAGES/${pkgname}.mo" "$po"
+    done
 
-    # Install locale (.po files)
-    if [ -d "${InternalDir}/locale" ] && [ -n "$(ls -A ${InternalDir}/locale/*.po 2>/dev/null)" ]; then
-        install -d "${pkgdir}/usr/share/${pkgname}/locale"
-        install -m644 "${InternalDir}/locale/"*.po \
-            "${pkgdir}/usr/share/${pkgname}/locale/"
-    fi
-
-    # Fix permissions for executables
-    if [ -d "${pkgdir}/usr/bin" ]; then
-        chmod 755 "${pkgdir}/usr/bin/"*
-    fi
-
-    # Specific file permissions
-    if [ -f "${pkgdir}/usr/share/${pkgname}/main.py" ]; then
-        chmod +x "${pkgdir}/usr/share/${pkgname}/main.py"
-    fi
-
-    # Ensure systemd service has correct permissions
-    if [ -d "${pkgdir}/usr/lib/systemd/system" ]; then
-        chmod 644 "${pkgdir}/usr/lib/systemd/system/"*
-    fi
-
-    if [ -f "${pkgdir}/etc/sudoers.d/big-screen-monitor-display" ]; then
-        chmod 440 "${pkgdir}/etc/sudoers.d/big-screen-monitor-display"
-    fi
+    # Permissions
+    chmod 755 "${pkgdir}/usr/bin/"*
+    chmod 755 "${pkgdir}/usr/share/${pkgname}/main.py" "${pkgdir}/usr/share/${pkgname}/config_gui.py"
+    chmod 755 "${pkgdir}/usr/lib/${pkgname}/bsm-helper"
+    chmod 644 "${pkgdir}/usr/lib/systemd/system/"*.service
+    chmod 644 "${pkgdir}/usr/lib/udev/rules.d/"*.rules
+    chmod 644 "${pkgdir}/usr/lib/sysusers.d/"*.conf
+    chmod 644 "${pkgdir}/usr/share/polkit-1/actions/"*.policy
+    chmod 644 "${pkgdir}/usr/share/polkit-1/rules.d/"*.rules
+    # Settings live in /etc/big-screen-monitor-display/settings.json, created by
+    # bsm-helper and never shipped, so upgrades always keep them.
 }

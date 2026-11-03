@@ -1,6 +1,0 @@
-# Permit members of wheel to control only this project's systemd service.
-# The exact command arguments prevent use of systemctl for other units.
-Cmnd_Alias BIG_SCREEN_MONITOR_SERVICE = /usr/bin/systemctl restart big-screen-monitor-display.service, \
-    /usr/bin/systemctl enable big-screen-monitor-display.service, \
-    /usr/bin/systemctl disable big-screen-monitor-display.service
-%wheel ALL=(root) NOPASSWD: BIG_SCREEN_MONITOR_SERVICE
