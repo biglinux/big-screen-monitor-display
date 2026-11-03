@@ -21,4 +21,4 @@ jobs:
         run: python -m pytest -q tests
       - name: Validate translations
         run: |
-          for po in locale/*.po; do [ -s "$po" ] && msgfmt -c -o /dev/null "$po"; done
+          for po in locale/*.po; do if [ -s "$po" ]; then msgfmt -c -o /dev/null "$po"; fi; done
