@@ -2,6 +2,7 @@ pkgname=big-screen-monitor-display
 pkgdesc="Big Screen Monitor Display - hardware monitor and animated themes for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
 depends=(
     # runtime
+    'bash'                # /usr/bin launchers
     'python'              # >= 3.10
     'python-pillow'       # rendering
     'python-numpy'        # RGB565 conversion and dirty rectangles

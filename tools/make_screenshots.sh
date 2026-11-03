@@ -14,6 +14,7 @@ python3 "$APP" --render standard --size 480x320 --set std_scheme=nord --set std_
 python3 "$APP" --render standard --size 320x480 --set std_scheme=dracula --out "$OUT/theme-standard-portrait.png" >/dev/null
 python3 "$APP" --render gkrellm --size 800x480 --set gk_show_cores=true --out "$OUT/theme-gkrellm.png" >/dev/null
 python3 "$APP" --render gkrellm --size 320x480 --set gk_theme_color=classic --out "$OUT/theme-gkrellm-portrait.png" >/dev/null
+python3 "$APP" --render gkrellm --size 480x320 --set 'gk_disk_count="4"' --set gk_show_inet=false --set gk_show_cores=false --out "$OUT/theme-gkrellm-480.png" >/dev/null
 python3 "$APP" --render planet --size 480x320 --out "$OUT/theme-planet.png" >/dev/null
 python3 "$APP" --render planet --size 480x320 --set planet_accent=amber --out "$OUT/theme-planet-amber.png" >/dev/null
 python3 "$APP" --render old_computer --size 480x320 --out "$OUT/theme-old_computer.png" >/dev/null
