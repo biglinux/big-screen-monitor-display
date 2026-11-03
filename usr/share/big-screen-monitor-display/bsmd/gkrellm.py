@@ -203,7 +203,8 @@ class Canvas:
         x0, x1 = x + self.pad, x + w - self.pad
         d.rectangle((x0, y, x1, y + h), fill=c["chart_bottom"], outline=c["bevel_lo"])
         filled = x0 + (x1 - x0) * min(1.0, max(0.0, percent / 100))
-        d.rectangle((x0 + 1, y + 1, filled, y + h - 1), fill=tuple(v // 2 for v in c["accent"]))
+        if filled >= x0 + 1:    # nothing to fill at 0 % (e.g. swap present but unused)
+            d.rectangle((x0 + 1, y + 1, filled, y + h - 1), fill=tuple(v // 2 for v in c["accent"]))
         label = fit(text, self.font, x1 - x0 - self.pad * 2)
         d.text((x0 + self.pad, y + 1), label, font=self.font, fill=c["text"])
         return y + h + 3

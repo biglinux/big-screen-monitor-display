@@ -1,6 +1,7 @@
 """Standard, GKrellM, Planet and Old Computer at every size and option."""
 
 import itertools
+import shutil
 
 import pytest
 
@@ -73,6 +74,14 @@ def test_gkrellm_columns_and_sizes(columns):
                gk_show_cores=True, gk_show_inet=True, gk_show_battery=True, gk_show_docker=True)
 
 
+def test_gkrellm_meters_at_zero_percent(monkeypatch):
+    """Regression: swap present but unused (0 %) drew an inverted bar and raised ValueError."""
+    for key, value in {"swap_total_mb": 2048, "swap_used_mb": 0, "swap_percent": 0.0, "ram_percent": 0.0}.items():
+        monkeypatch.setitem(telemetry.SYSTEM_STATS, key, value)
+    for size in ((320, 240), (800, 480)):
+        render("gkrellm", size)
+
+
 def test_gkrellm_never_draws_invented_values():
     """The 3.x module showed fixed voltages when no sensor existed."""
     stats = {"sensors": [], "gpus": []}
@@ -110,6 +119,7 @@ def test_old_computer_options_and_small_sizes(scheme):
         render("old_computer", size, oc_scheme=scheme, oc_show_gpu=False)
 
 
+@pytest.mark.skipif(shutil.which("rsvg-convert") is None, reason="needs rsvg-convert (librsvg)")
 def test_svg_icon_recolour_with_yellowish_colours():
     """Regression: '#ffff00' used to become '#ffff0000' and the icon vanished."""
     for colour in ((255, 255, 0), (255, 240, 120), (250, 204, 21)):

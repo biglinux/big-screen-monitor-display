@@ -13,10 +13,12 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install pytest pillow numpy psutil pyusb pyserial
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext librsvg2-bin fontconfig fonts-dejavu-core
+          pip install pytest pillow numpy psutil pyusb pyserial
       - name: Run tests
         run: python -m pytest -q tests
       - name: Validate translations
         run: |
-          sudo apt-get install -y gettext
           for po in locale/*.po; do [ -s "$po" ] && msgfmt -c -o /dev/null "$po"; done
