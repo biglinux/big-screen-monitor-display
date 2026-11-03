@@ -1,26 +1,68 @@
 [Unit]
-Description=Big Screen Monitor Display - System Monitor
-After=network.target
+Description=Big Screen Monitor Display - USB LCD hardware monitor
+Documentation=https://github.com/biglinux/big-screen-monitor-display
+After=systemd-udevd.service systemd-sysusers.service
+# Restarts are spaced out by RestartSteps/RestartMaxDelaySec instead of a
+# start limit, so an unplugged or broken panel never causes a tight loop and
+# the service still comes back on its own once the problem is gone.
 StartLimitIntervalSec=0
 
 [Service]
-Type=simple
-User=root
-SupplementaryGroups=uucp
-WorkingDirectory=/usr/share/big-screen-monitor-display
-ExecStart=/usr/bin/big-screen-monitor-display.sh
-Environment=PYTHONUNBUFFERED=1
+Type=notify
+NotifyAccess=main
+ExecStart=/usr/bin/python3 -I /usr/share/big-screen-monitor-display/main.py --service
+Environment=PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 
-# Reinicia sempre que o serviço falhar
-Restart=always
+# Health: the process pings the watchdog only while telemetry and the
+# rendering and transport of every display all make progress. A stuck
+# pipeline is killed and restarted.
+WatchdogSec=30
+Restart=on-failure
 RestartSec=5
-StartLimitBurst=0
+RestartSteps=6
+RestartMaxDelaySec=300
+TimeoutStartSec=60
+TimeoutStopSec=15
 
-# Proteger o sistema
-ProtectSystem=full
-ProtectHome=read-only
-PrivateTmp=true
-NoNewPrivileges=true
+# Unprivileged: a transient user that can only reach the panels (udev gives
+# the known panel nodes to group big-screen-monitor; see 70-*.rules).
+DynamicUser=yes
+SupplementaryGroups=big-screen-monitor
+StateDirectory=big-screen-monitor-display
+RuntimeDirectory=big-screen-monitor-display
+RuntimeDirectoryMode=0755
+DevicePolicy=closed
+DeviceAllow=char-usb_device rw
+DeviceAllow=char-ttyACM rw
+DeviceAllow=char-ttyUSB rw
+
+# Stay out of the way of interactive work.
+Nice=10
+CPUWeight=20
+IOSchedulingClass=idle
+MemoryHigh=192M
+MemoryMax=320M
+
+# Sandboxing
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
 
 [Install]
 WantedBy=multi-user.target

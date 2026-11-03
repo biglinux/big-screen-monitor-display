@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>BigLinux</vendor>
+  <vendor_url>https://github.com/biglinux/big-screen-monitor-display</vendor_url>
+  <icon_name>big-screen-monitor-display</icon_name>
+  <action id="br.com.biglinux.big-screen-monitor-display.manage">
+    <description>Configure the Big Screen Monitor Display service</description>
+    <description xml:lang="pt_BR">Configurar o serviço Big Screen Monitor Display</description>
+    <message>Authentication is required to change the USB display settings</message>
+    <message xml:lang="pt_BR">É necessário autenticar para alterar as configurações do display USB</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
+  </action>
+  <!-- Visual changes by the user sitting at the computer: no administrator password.
+       The helper validates every input; service control stays in "manage". -->
+  <action id="br.com.biglinux.big-screen-monitor-display.apply-settings">
+    <description>Apply display settings</description>
+    <description xml:lang="pt_BR">Aplicar as configurações do display</description>
+    <message>Authentication is required to change the USB display</message>
+    <message xml:lang="pt_BR">É necessário autenticar para alterar o display USB</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">apply-settings</annotate>
+  </action>
+  <action id="br.com.biglinux.big-screen-monitor-display.display-command">
+    <description>Send a test pattern or reconnect a display</description>
+    <description xml:lang="pt_BR">Enviar padrão de teste ou reconectar um display</description>
+    <message>Authentication is required to change the USB display</message>
+    <message xml:lang="pt_BR">É necessário autenticar para alterar o display USB</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">display-command</annotate>
+  </action>
+  <action id="br.com.biglinux.big-screen-monitor-display.import-wallpaper">
+    <description>Import a wallpaper for the USB display</description>
+    <description xml:lang="pt_BR">Importar um papel de parede para o display USB</description>
+    <message>Authentication is required to change the USB display</message>
+    <message xml:lang="pt_BR">É necessário autenticar para alterar o display USB</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">import-wallpaper</annotate>
+  </action>
+  <action id="br.com.biglinux.big-screen-monitor-display.remove-wallpaper">
+    <description>Remove a wallpaper of the USB display</description>
+    <description xml:lang="pt_BR">Remover um papel de parede do display USB</description>
+    <message>Authentication is required to change the USB display</message>
+    <message xml:lang="pt_BR">É necessário autenticar para alterar o display USB</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">remove-wallpaper</annotate>
+  </action>
+</policyconfig>
