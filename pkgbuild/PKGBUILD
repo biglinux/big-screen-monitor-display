@@ -31,6 +31,7 @@ optdepends=(
     'alsa-utils: sound effects (aplay) and GKrellM volume module'
     'adwaita-fonts: font used by the GKrellM theme'
     'playerctl: media module of the GKrellM theme'
+    'docker: container count in the GKrellM theme'
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
 )
 makedepends=('gettext' 'git')
