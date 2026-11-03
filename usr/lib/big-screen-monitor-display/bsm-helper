@@ -1,0 +1,130 @@
+#!/usr/bin/python3 -IB
+"""Privileged helper for Big Screen Monitor Display (run through pkexec).
+
+Only these fixed verbs exist - no argument is ever passed to a shell:
+
+    bsm-helper apply-settings      validated JSON on stdin -> /etc/.../settings.json
+    bsm-helper service VERB        VERB in start|stop|restart|enable|disable
+    bsm-helper recover             ask the running service to reconnect (SIGUSR1)
+    bsm-helper migrate             import the newest legacy per-user settings once
+    bsm-helper display-command     validated JSON on stdin -> command spool of the
+                                   running service (test pattern, identify, reconnect)
+    bsm-helper import-wallpaper    PNG on stdin (already normalised by the window, as the
+                                   user) -> structural check -> /etc/.../wallpapers/<id>.png
+    bsm-helper remove-wallpaper ID delete an imported wallpaper
+
+Images are never decoded here (as root): ``check_png`` only walks the chunk
+structure; the unprivileged service is the one that decodes them.
+"""
+
+import json
+import os
+import subprocess
+import sys
+import time
+
+APP_DIR = "/usr/share/big-screen-monitor-display"
+SERVICE = "big-screen-monitor-display.service"
+SPOOL_DIR = "/run/big-screen-monitor-display/commands"
+SYSTEMCTL = "/usr/bin/systemctl"
+MAX_INPUT = 512 * 1024
+MAX_IMAGE = 8 * 1024 * 1024
+SERVICE_VERBS = {"start": ["start"], "stop": ["stop"], "restart": ["restart"],
+                 "enable": ["enable", "--now"], "disable": ["disable"]}
+
+
+def fail(message, code=2):
+    print(json.dumps({"ok": False, "error": message}))
+    sys.exit(code)
+
+
+def log(message):
+    caller = os.environ.get("PKEXEC_UID", "?")
+    print(f"bsm-helper (uid {caller}): {message}", file=sys.stderr)
+
+
+def systemctl(*args):
+    result = subprocess.run([SYSTEMCTL, *args], capture_output=True, text=True, timeout=30, check=False)
+    return result.returncode, (result.stderr or result.stdout).strip()
+
+
+def main(argv):
+    if os.geteuid() != 0:
+        fail("must run as root (use pkexec)")
+    if not argv:
+        fail("missing verb")
+    sys.path.insert(0, APP_DIR)
+    from bsmd import settings
+
+    verb = argv[0]
+    if verb == "apply-settings" and len(argv) == 1:
+        raw = sys.stdin.buffer.read(MAX_INPUT + 1)
+        if len(raw) > MAX_INPUT:
+            fail("input too large")
+        try:
+            data = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, ValueError) as error:
+            fail(f"invalid JSON: {error}")
+        clean, problems = settings.save(data, settings.SYSTEM_CONFIG)
+        log(f"settings written ({len(clean)} keys, {len(problems)} corrected)")
+        print(json.dumps({"ok": True, "problems": problems}))
+        return 0
+    if verb == "service" and len(argv) == 2 and argv[1] in SERVICE_VERBS:
+        code, output = systemctl(*SERVICE_VERBS[argv[1]], SERVICE)
+        log(f"systemctl {argv[1]} -> {code}")
+        print(json.dumps({"ok": code == 0, "error": output if code else ""}))
+        return 0 if code == 0 else 1
+    if verb == "recover" and len(argv) == 1:
+        code, output = systemctl("kill", "--signal=SIGUSR1", "--kill-whom=main", SERVICE)
+        log(f"recover -> {code}")
+        print(json.dumps({"ok": code == 0, "error": output if code else ""}))
+        return 0 if code == 0 else 1
+    if verb == "display-command" and len(argv) == 1:
+        raw = sys.stdin.buffer.read(4097)
+        try:
+            command = settings.validate_command(json.loads(raw.decode("utf-8"))) if len(raw) <= 4096 else None
+        except (UnicodeDecodeError, ValueError):
+            command = None
+        if command is None:
+            fail("invalid display command")
+        # The spool belongs to the service user; it exists only while the
+        # service runs. Never follow a symlink planted in its place.
+        if os.path.islink(SPOOL_DIR) or not os.path.isdir(SPOOL_DIR):
+            fail("the service is not running")
+        name = os.path.join(SPOOL_DIR, f"{time.time_ns()}-{os.getpid()}.json")
+        fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(command, handle)
+        log(f"display-command {command['action']} -> {command['display']}")
+        print(json.dumps({"ok": True}))
+        return 0
+    if verb == "import-wallpaper" and len(argv) == 1:
+        from bsmd.kojiro import store
+        raw = sys.stdin.buffer.read(MAX_IMAGE + 1)
+        try:
+            image_id = store.save_wallpaper(raw, store.wallpapers_dir(settings.SYSTEM_CONFIG))
+        except (store.StoreError, OSError) as error:
+            fail(f"wallpaper rejected: {error}")
+        log(f"import-wallpaper -> {image_id}")
+        print(json.dumps({"ok": True, "id": image_id}))
+        return 0
+    if verb == "remove-wallpaper" and len(argv) == 2:
+        from bsmd.kojiro import store
+        try:
+            store.delete_wallpaper(argv[1], store.wallpapers_dir(settings.SYSTEM_CONFIG))
+        except (store.StoreError, OSError) as error:
+            fail(str(error))
+        log(f"remove-wallpaper {argv[1]}")
+        print(json.dumps({"ok": True}))
+        return 0
+    if verb == "migrate" and len(argv) == 1:
+        source = settings.migrate_legacy(settings.SYSTEM_CONFIG)
+        log(f"migrate -> {source or 'nothing to do'}")
+        print(json.dumps({"ok": True, "source": source}))
+        return 0
+    fail("unknown or malformed command")
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

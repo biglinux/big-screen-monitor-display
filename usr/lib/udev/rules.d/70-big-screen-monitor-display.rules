@@ -1,0 +1,55 @@
+# Big Screen Monitor Display - USB display access
+# Numbered below 73 so that TAG+="uaccess" is seen by 73-seat-late.rules.
+# The service (DynamicUser) reaches the panels through the
+# "big-screen-monitor" group only; the user at the seat gets access through
+# "uaccess" (preview / manual runs). No rule uses MODE="0666", no rule
+# matches a whole vendor, and the service is not in "uucp", so other serial
+# devices (Arduino, modems, consoles) stay out of its reach.
+# Identifiers: bsmd/displays/registry.py, docs/14-deteccao.md.
+
+# ------------------------------------------------------------ libusb panels
+# AX206 digital photo frame with dpf-ax firmware
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1908", ATTR{idProduct}=="0102", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess", ENV{BSMD_PANEL}="1"
+
+# Turing Smart Screen native USB (2.8" round, 4.6", 5.2", 8", 8.8", 9.2", 12.3").
+# 1cbe is a shared vendor id: only these product ids are matched.
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1cbe", \
+    ATTR{idProduct}=="0028|0046|0050|0080|0088|0092|0123", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess", ENV{BSMD_PANEL}="1"
+
+# ------------------------------------------------------------ serial panels
+# Turing 3.5" rev. A / UsbPCMonitor / XuanFang rev. B (shared CDC-ACM ids)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="5722", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess", SYMLINK+="ttyTuring%n"
+
+# WeAct Studio Display FS V1 (3.5" and 0.96")
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="fe0c", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+
+# Kipye Qiye Smart Display 3.5" (rev. D)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="454d", ATTRS{idProduct}=="4e41", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+
+# Turing rev. C (2.1"/2.8"/5"/8.8"): asleep, identified by serial number...
+SUBSYSTEM=="tty", ATTRS{serial}=="CT21INCH|CT88INCH|USB7INCH", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="ca21", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+# ...and awake, as a Linux USB gadget: only with the panel's serial number,
+# never every gadget-serial device.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0525", ATTRS{idProduct}=="a4a7", ATTRS{serial}=="20080411", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="0121|0106", ATTRS{serial}=="20080411", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+
+# ------------------------------------------------------------ power
+# Never autosuspend the panels: suspend/resume cycles can reset their firmware.
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{BSMD_PANEL}=="1", \
+    TEST=="power/control", ATTR{power/control}="on"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", \
+    ATTR{idVendor}=="1a86", ATTR{idProduct}=="5722|fe0c|ca21", TEST=="power/control", ATTR{power/control}="on"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="454d", ATTR{idProduct}=="4e41", \
+    TEST=="power/control", ATTR{power/control}="on"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{serial}=="CT21INCH|CT88INCH|USB7INCH|20080411", \
+    TEST=="power/control", ATTR{power/control}="on"
