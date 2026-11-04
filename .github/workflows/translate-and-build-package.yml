@@ -47,7 +47,10 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
+      # A translation API failure (e.g. OpenAI 429) must not block the
+      # package build: the hooks below still run with the catalogs we have.
       - name: Translate Package
+        continue-on-error: true
         shell: bash #-O extglob {0}
         env:
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
@@ -69,6 +72,7 @@ jobs:
           if [ -n "$(git commit -m "translate $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then exit 0; fi
 
       - name: Push changes
+        continue-on-error: true
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
