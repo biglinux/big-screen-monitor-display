@@ -70,12 +70,16 @@ package() {
     find "${pkgdir}" \( -name "__pycache__" -o -name ".ruff_cache" -o -name ".pytest_cache" \) \
         -type d -prune -exec rm -rf {} +
 
-    # Compiled translations (empty catalogs are skipped)
+    # Compiled translations (empty catalogs are skipped; a broken machine
+    # translation is skipped too instead of failing the whole package)
     for po in "${InternalDir}/locale/"*.po; do
         [ -s "$po" ] || continue
         lang=$(basename "$po" .po)
         install -d "${pkgdir}/usr/share/locale/${lang}/LC_MESSAGES"
-        msgfmt -o "${pkgdir}/usr/share/locale/${lang}/LC_MESSAGES/${pkgname}.mo" "$po"
+        msgfmt -o "${pkgdir}/usr/share/locale/${lang}/LC_MESSAGES/${pkgname}.mo" "$po" || {
+            echo "==> WARNING: skipping invalid catalog ${lang}.po"
+            rm -rf "${pkgdir}/usr/share/locale/${lang}"
+        }
     done
 
     # Permissions
