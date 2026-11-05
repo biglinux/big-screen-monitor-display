@@ -132,7 +132,14 @@ KOJIRO = ThemeInfo(
     animated=True, resolutions=N_("any (layout adapts with anchors)"),
     features=("wallpaper", "editor", "widgets", "presets"), preferences=("kojiro",))
 
-REGISTRY = {info.id: info for info in [STANDARD] + LEGACY + [BROTHER_AWAY, KOJIRO]}
+BIG_MEDIA_PLAYER = ThemeInfo(
+    "big_media_player", N_("Big Media Player — Retro Music Experience"),
+    N_("Seven retro media player skins that follow the music and videos playing on the computer (MPRIS), "
+       "with album art, progress, system volume and optional telemetry."),
+    animated=True, resolutions=N_("any (responsive: micro, portrait, landscape, ultrawide)"),
+    features=("mpris", "volume", "skins", "telemetry", "visualizer"), preferences=("bmp_*",))
+
+REGISTRY = {info.id: info for info in [STANDARD] + LEGACY + [BROTHER_AWAY, KOJIRO, BIG_MEDIA_PLAYER]}
 # 3.x theme ids, now colour schemes of the Standard theme.
 LEGACY_ALIASES = ("dark", "light", "neon", "cyberpunk")
 
@@ -160,6 +167,14 @@ def create(theme_id, ctx=None):
     if info.id == "kojiro":
         from .kojiro.engine import KojiroTheme
         return KojiroTheme(info, ctx)
+    if info.id == "big_media_player":
+        try:
+            from .bigmedia import BigMediaPlayerTheme
+            return BigMediaPlayerTheme(info, ctx)
+        except Exception:  # noqa: BLE001 - never leave the panel without a theme
+            import logging
+            logging.getLogger("bsmd").exception("Big Media Player failed to load; using %s", FALLBACK)
+            return StandardTheme(REGISTRY[FALLBACK], ctx)
     return LegacyTheme(info, ctx)
 
 
@@ -180,7 +195,8 @@ def render_for_panel(theme, width, height, settings, ctx):
 
 def _render_rect(theme, width, height, settings, ctx):
     from . import compact
-    if compact.needed(width, height) and theme.info.id != "kojiro":    # Kojiro has its own micro layout
+    # Kojiro and Big Media Player have their own micro layouts.
+    if compact.needed(width, height) and theme.info.id not in ("kojiro", "big_media_player"):
         if theme.info.id != "brother_away":
             return compact.render(width, height, settings, theme.info.id)
         settings = dict(settings, overlay_size="compact")   # the scene scales, the overlay must shrink
@@ -191,6 +207,9 @@ def background_color(settings):
     """Main background colour of the configured theme (splash screens)."""
     if settings.get("theme") == "kojiro":
         return (8, 10, 20)
+    if settings.get("theme") == "big_media_player":
+        from .bigmedia import skins
+        return skins.get(settings.get("bmp_skin")).pal["body"]
     if settings.get("theme") in ("standard", *LEGACY_ALIASES):
         from .dashboard import SCHEMES
         scheme = settings.get("std_scheme") if settings.get("theme") == "standard" else settings.get("theme")
