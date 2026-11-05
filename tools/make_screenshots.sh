@@ -34,3 +34,17 @@ python3 "$APP" --render brother_away --size 480x320 --out "$OUT/ba-raft-perplexe
 r philosopher 15 16.5 philosopher
 r crab 13 10.0 crab_glasses
 r big-800x480 2 17.0 "" 800x480
+# Big Media Player: every skin with the labelled demonstration data of the preview.
+for skin in bigamp bigmatch bigative bigalplayer bigmediaplayer bigxmms2 bigx; do
+    python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=$skin --out "$OUT/bmp-$skin.png" >/dev/null
+done
+python3 "$APP" --render big_media_player --size 800x480 --set bmp_skin=bigamp --set bmp_vis_style=led --out "$OUT/bmp-bigamp-800.png" >/dev/null
+python3 "$APP" --render big_media_player --size 320x480 --set bmp_skin=bigmatch --out "$OUT/bmp-portrait.png" >/dev/null
+python3 "$APP" --render big_media_player --size 160x80 --set bmp_skin=bigx --out "$OUT/bmp-micro.png" >/dev/null
+python3 "$APP" --render big_media_player --size 1920x480 --set bmp_skin=bigative --out "$OUT/bmp-ultrawide.png" >/dev/null
+python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=bigmediaplayer --set bmp_vinyl=true \
+    --set bmp_tele_position=overlay --set bmp_tele_mode=always --out "$OUT/bmp-vinyl-overlay.png" >/dev/null
+python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=bigxmms2 --set bmp_preview_demo=false \
+    --out "$OUT/bmp-idle.png" >/dev/null
+python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=bigx --set bmp_preview_demo=false \
+    --set bmp_idle_mode=clock --out "$OUT/bmp-idle-clock.png" >/dev/null

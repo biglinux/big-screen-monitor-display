@@ -1,5 +1,5 @@
 pkgname=big-screen-monitor-display
-pkgdesc="Big Screen Monitor Display - hardware monitor and animated themes for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
+pkgdesc="Big Screen Monitor Display - hardware monitor, animated themes and the Big Media Player (MPRIS) for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
 depends=(
     # runtime
     'bash'                # /usr/bin launchers
@@ -32,6 +32,8 @@ optdepends=(
     'alsa-utils: sound effects (aplay) and GKrellM volume module'
     'adwaita-fonts: font used by the GKrellM theme'
     'playerctl: media module of the GKrellM theme'
+    'libpulse: Big Media Player system volume (pactl) and optional real spectrum (parec)'
+    'wireplumber: Big Media Player volume fallback without pactl (wpctl)'
     'docker: container count in the GKrellM theme'
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
 )
@@ -66,6 +68,8 @@ package() {
 
     # Application, service, udev, sysusers, polkit and desktop files
     cp -r "${InternalDir}/usr" "${pkgdir}/"
+    # Session autostart of the Big Media Player agent (exits at once when the theme is unused)
+    cp -r "${InternalDir}/etc" "${pkgdir}/"
     # Never ship development caches
     find "${pkgdir}" \( -name "__pycache__" -o -name ".ruff_cache" -o -name ".pytest_cache" \) \
         -type d -prune -exec rm -rf {} +
@@ -91,6 +95,7 @@ package() {
     chmod 644 "${pkgdir}/usr/lib/sysusers.d/"*.conf
     chmod 644 "${pkgdir}/usr/share/polkit-1/actions/"*.policy
     chmod 644 "${pkgdir}/usr/share/polkit-1/rules.d/"*.rules
+    chmod 644 "${pkgdir}/etc/xdg/autostart/"*.desktop
     # Settings live in /etc/big-screen-monitor-display/settings.json, created by
     # bsm-helper and never shipped, so upgrades always keep them.
 }

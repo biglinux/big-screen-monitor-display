@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Big Screen Monitor media agent
+Comment=Sends the media playing (MPRIS) and the system volume to the Big Media Player theme
+Exec=/usr/bin/python3 -I /usr/share/big-screen-monitor-display/main.py --media-agent
+Icon=big-screen-monitor-display
+NoDisplay=true
+Terminal=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=3
+X-KDE-autostart-phase=2
