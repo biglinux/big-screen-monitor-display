@@ -88,6 +88,15 @@ class RenderContext:
     def telemetry(self):
         return telemetry.snapshot()
 
+    def media(self):
+        """Shared media snapshot (Big Media Player): the service hub, or the
+        configuration window's in-process hub for previews; None without data."""
+        hub = getattr(self.runtime, "media_hub", None) if self.runtime is not None else None
+        if hub is None:
+            from .media import hub as hub_mod
+            hub = hub_mod.local()
+        return hub.view() if hub is not None else None
+
 
 # ---------------------------------------------------------------- sources
 
@@ -736,6 +745,7 @@ class Runtime:
         self._last_status_text = None
         self._proc = None
         self._removed_recoveries = 0
+        self.media_hub = None          # started when a display uses the Big Media Player theme
 
     # ------------------------------------------------------------ compatibility
     @property
@@ -827,9 +837,28 @@ class Runtime:
             return wanted if any(m.profile.id == wanted.id for m in candidate.matches) else None
         return candidate.auto_profile()
 
+    def _start_media_hub(self):
+        from .media.hub import MediaHub
+        from .media.ipc import SOCKET_NAME
+        path = os.path.join(os.path.dirname(self.status_file), SOCKET_NAME)
+        self.media_hub = MediaHub(path, on_change=self._wake_media_sessions)
+        if self.media_hub.start():
+            log.info("media socket listening at %s", path)
+        else:
+            self.incidents.record("media_socket", health.SEVERITY_WARNING,
+                                  f"media socket unavailable: {self.media_hub.server.error}",
+                                  action="Big Media Player shows its idle screen")
+
+    def _wake_media_sessions(self):
+        for session in list(self.sessions.values()):
+            if session.theme is not None and session.theme.info.id == "big_media_player":
+                session.wake_render.set()
+
     def wake_collector_needs(self):
         sessions = [s for s in list(self.sessions.values()) if s.theme is not None]
         ids = {s.theme.info.id for s in sessions}
+        if "big_media_player" in ids and self.media_hub is None:
+            self._start_media_hub()
         needs = [s.theme.needs for s in sessions if isinstance(getattr(s.theme, "needs", None), dict)]
         collector = self.collector
         collector.want_processes = bool(ids & {"standard", "gkrellm", "old_computer"}) or any(
@@ -901,6 +930,8 @@ class Runtime:
         if self.notifier:
             self.notifier.stopping()
         self.collector.stop()
+        if self.media_hub is not None:
+            self.media_hub.stop()
         sessions = list(self.sessions.values())
         for session in sessions:
             session.stop()
@@ -1091,6 +1122,7 @@ class Runtime:
             "incidents": self.incidents.recent(30),
             "sound_events": next((list(s.theme.sound_events) for s in sessions
                                   if getattr(s.theme, "sound_events", None)), []),
+            "media": self.media_hub.status() if self.media_hub is not None else None,
         }
 
     def write_status(self):

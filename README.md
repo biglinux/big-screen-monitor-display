@@ -6,16 +6,17 @@
 
 **Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-4.2.1-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-4.3.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-633%20passando-success)
+![Testes](https://img.shields.io/badge/testes-820%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
 [Novidades](#novidades) ·
+[Big Media Player](#big-media-player) ·
 [Kojiro](#kojiro) ·
 [Brother Away](#brother-away) ·
 [Temas](#temas) ·
@@ -40,6 +41,14 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 4.3.0 — Big Media Player
+
+- **Big Media Player**: o display vira um reprodutor retrô que acompanha a mídia que toca no computador — Spotify, VLC, Rhythmbox, YouTube no navegador e qualquer aplicativo **MPRIS** — com capa, título, artista, álbum, progresso, tempos, estado e o **volume real do sistema** (PipeWire/PulseAudio).
+- **Sete skins originais**: Bigamp, Bigmatch, Bigative, Bigalplayer, Big Media Player, BigXMMS2 e BIGX Multimedia System, inspiradas nos players dos anos 1990/2000 e desenhadas do zero.
+- **Controles de verdade** na nova aba da janela (play/pause, anterior, próximo, busca, aleatório, repetir, volume, mudo, escolha do player) e por atalhos de teclado com `--media`.
+- **Telemetria opcional** (hora, CPU, temperaturas, RAM, swap, disco, GPU) em 8 modos, telas de espera, modo vinil, cores da capa, modo noturno e visualizador decorativo ou espectro real.
+- **Seguro**: o serviço continua isolado; um agente na sessão do usuário envia dados validados por um socket local autenticado.
 
 ## ✨ Novidades da 4.2.1 — GKrellM completo e perfis de desempenho de verdade
 
@@ -127,6 +136,71 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 A detecção só lê o `sysfs` (VID, PID, número de série): displays reconhecidos iniciam sozinhos; um caso ambíguo ou um dispositivo serial desconhecido espera você escolher o modelo em **Meus Displays**.
 
 ---
+
+<a id="big-media-player"></a>
+
+## 🎵 Big Media Player — experiência musical retrô
+
+O display acompanha o player em uso no computador. Os botões desenhados no LCD
+refletem o estado e as capacidades reais do player; os controles que funcionam
+ficam na aba **Big Media Player** da janela (os displays suportados não têm
+toque).
+
+| | | |
+| --- | --- | --- |
+| ![Bigamp](docs/images/bmp-bigamp.png) | ![Bigmatch](docs/images/bmp-bigmatch.png) | ![Bigative](docs/images/bmp-bigative.png) |
+| **Bigamp** | **Bigmatch** | **Bigative** |
+| ![Bigalplayer](docs/images/bmp-bigalplayer.png) | ![Big Media Player](docs/images/bmp-bigmediaplayer.png) | ![BigXMMS2](docs/images/bmp-bigxmms2.png) |
+| **Bigalplayer** | **Big Media Player** | **BigXMMS2** |
+| ![BIGX](docs/images/bmp-bigx.png) | ![Retrato](docs/images/bmp-portrait.png) | ![Sem mídia](docs/images/bmp-idle.png) |
+| **BIGX Multimedia System** | retrato 320×480 | sem reprodução |
+
+As imagens usam os dados de demonstração da prévia (marcados **DEMO**).
+
+![Aba Big Media Player](docs/images/bmp-settings.png)
+
+**Aplicativos**: qualquer um que publique `org.mpris.MediaPlayer2.*` — Spotify,
+VLC, Rhythmbox, Elisa, Clementine, Strawberry, Audacious, Amarok, Lollypop, mpv
+(com `mpv-mpris`), Firefox e Chrome/Chromium (sessões de mídia, como YouTube).
+A miniatura de vídeo depende de o site fornecê-la.
+
+**Requisitos**: sessão gráfica com D-Bus; para o volume, `pactl` (PipeWire com
+`pipewire-pulse` ou PulseAudio), ou `wpctl`, ou `amixer`. O agente de mídia
+inicia com a sessão (`/etc/xdg/autostart/big-screen-monitor-media.desktop`) e
+sai sozinho quando nenhum display usa o tema.
+
+**Escolher o player**: *Automático* (recomendado) mantém o que está tocando e
+não deixa uma aba com um som curto roubar o display; *Último utilizado*; ou um
+player fixo. Também dá para ignorar aplicativos e escolher um player
+manualmente em *Tocando agora*.
+
+**Volume**: por padrão, a saída padrão do sistema (acompanha teclado, Plasma,
+GNOME e troca de saída para fone). Passo, máximo seguro (até 150 %) e uma
+saída específica são configuráveis; o volume próprio do aplicativo é opcional e
+rotulado `APP`.
+
+**Telemetria**: aba → *Telemetria*: modo (oculto, sempre, intermitente,
+alternado, só pausado, ocioso, alertas, automático), posição (rodapé, topo,
+sobre a capa) e itens.
+
+**Atalhos de teclado** (configure no KDE/GNOME):
+`big-screen-monitor-display.sh --media play_pause` · `next` · `previous` ·
+`volume_up` · `volume_down` · `mute` · `volume_set --value 35`.
+
+Documentação: [visão geral](docs/big-media-player-overview.md) ·
+[arquitetura](docs/big-media-player-architecture.md) ·
+[MPRIS](docs/big-media-player-mpris.md) · [volume](docs/big-media-player-volume.md) ·
+[skins e como criar uma](docs/big-media-player-skins.md) ·
+[configurações](docs/big-media-player-settings.md) ·
+[telemetria](docs/big-media-player-telemetry.md) ·
+[desempenho](docs/big-media-player-performance.md) ·
+[testes](docs/big-media-player-testing.md) ·
+[relatório final](docs/big-media-player-final-report.md).
+
+**Limitações**: sem toque nos displays (controle pela janela/atalhos); MPRIS
+não transporta áudio, então o visualizador padrão é decorativo (rotulado
+`DECO`) e o espectro real (`FFT`) exige escolha explícita e `parec`; com
+`wpctl`/ALSA o volume é lido a cada 2 s; não há descrição universal no MPRIS.
 
 <a id="kojiro"></a>
 
@@ -339,7 +413,7 @@ Atualizações preservam as configurações e **respeitam o serviço desativado*
 | --- | --- |
 | Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit` |
 | Janela | `python-gobject`, `python-cairo`, `glib2`, `gtk4`, `libadwaita` ≥ 1.6, `hicolor-icon-theme` |
-| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
+| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
 | Build | `gettext`, `git` |
 
 ---
@@ -360,6 +434,8 @@ Atualizações preservam as configurações e **respeitam o serviço desativado*
 | Testar sem display | `main.py --simulate 480x320,160x80,480x480:round --snapshot /tmp/frame.png` |
 | Medir desempenho | `main.py --benchmark --bench-sizes 160x80 480x320 800x480` |
 | Gerar uma imagem de tema | `main.py --render planet --size 800x480 --out planet.png` |
+| Controlar a mídia (atalhos) | `big-screen-monitor-display.sh --media play_pause` (também `next`, `previous`, `volume_up`, `mute`…) |
+| Agente de mídia manual | `main.py --media-agent --verbose` (normalmente iniciado com a sessão) |
 | Ver uma história em imagem | `main.py --render brother_away --scene shark --hour 11 --at 15 --out tubarao.png` |
 
 Exemplo de `systemctl status`:
@@ -488,6 +564,10 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 | Partição do `/home` não aparece | Confira se o serviço usa o arquivo do pacote: `systemctl show -p ProtectHome big-screen-monitor-display` deve dizer `read-only`. Uma cópia antiga em `/etc/systemd/system/` sobrepõe o pacote (veja acima). |
 | Rede ou E/S de disco parados | `main.py --status`: o campo `sensor_errors` deve estar vazio. Desde a 4.2.1 as interfaces são lidas do `/sys`; atualize o pacote. |
 | Prévia da janela diferente do display | A janela foi aberta antes de uma atualização: feche e abra de novo. |
+| Big Media Player: "Agente de mídia não está rodando" | Aba **Big Media Player → Diagnóstico → Iniciar**; confira se o tema está aplicado (o agente sai quando nenhum display o usa). |
+| Big Media Player: player não aparece | O aplicativo precisa publicar MPRIS. Firefox: `media.hardwaremediakeys.enabled` ligado. Veja a lista em *Diagnóstico → Players MPRIS*. |
+| Big Media Player: display mostra outro player | Use *Player* em *Tocando agora*, ou *Reprodução → Player mostrado → Sempre o mesmo* / *Aplicativos ignorados*. |
+| Big Media Player: volume indisponível | Instale `libpulse` (`pactl`) ou `wireplumber` (`wpctl`); o diagnóstico mostra o sistema de áudio detectado. |
 | Pedir ajuda | **Diagnóstico → Exportar diagnóstico** gera um relatório com o estado e os logs. |
 
 ---
@@ -495,7 +575,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 633 testes, sem hardware
+python3 -m pytest -q tests                                  # 820 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py
@@ -554,6 +634,11 @@ locale/ · pkgbuild/ · tests/ · tools/ · docs/
 | [Kojiro · papéis de parede](docs/kojiro-wallpapers.md) | [Kojiro · desempenho](docs/kojiro-performance.md) |
 | [Kojiro · elementos](docs/kojiro-widget-system.md) | [Kojiro · testes](docs/kojiro-testing.md) |
 | [Kojiro · editor](docs/kojiro-editor.md) | [Kojiro · relatório final](docs/kojiro-final-report.md) |
+| [Big Media Player · visão geral](docs/big-media-player-overview.md) | [Big Media Player · arquitetura](docs/big-media-player-architecture.md) |
+| [Big Media Player · MPRIS](docs/big-media-player-mpris.md) | [Big Media Player · volume](docs/big-media-player-volume.md) |
+| [Big Media Player · skins](docs/big-media-player-skins.md) | [Big Media Player · configurações](docs/big-media-player-settings.md) |
+| [Big Media Player · telemetria](docs/big-media-player-telemetry.md) | [Big Media Player · desempenho](docs/big-media-player-performance.md) |
+| [Big Media Player · testes](docs/big-media-player-testing.md) | [Big Media Player · relatório final](docs/big-media-player-final-report.md) |
 
 ---
 

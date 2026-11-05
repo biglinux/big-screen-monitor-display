@@ -32,6 +32,7 @@ from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, run
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from kojiro_page import KojiroPage  # noqa: E402
+from media_player_page import MediaPlayerPage  # noqa: E402
 
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
 # (theme id, page builder, icon) - one customisation tab per theme
@@ -42,8 +43,9 @@ THEME_PAGES = (
     ("old_computer", "_page_old_computer", "computer-symbolic"),
     ("brother_away", "_page_brother_away", "weather-clear-symbolic"),
     ("kojiro", "_page_kojiro", "image-x-generic-symbolic"),
+    ("big_media_player", "_page_big_media_player", "audio-x-generic-symbolic"),
 )
-SHORT_NAMES = {"brother_away": N_("Brother Away"), "kojiro": N_("Kojiro")}
+SHORT_NAMES = {"brother_away": N_("Brother Away"), "kojiro": N_("Kojiro"), "big_media_player": N_("Big Media Player")}
 OWN_PREVIEW = {"kojiro"}      # theme tabs that draw their own preview (the Design Studio)
 PREVIEW_SIZES = {"3.5": (480, 320), "5": (800, 480), "8.8": (480, 320), "2.1": (480, 480)}
 
@@ -600,6 +602,10 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.kojiro_page = KojiroPage(self, run_helper)
         return self.kojiro_page.widget
 
+    def _page_big_media_player(self):
+        self.media_page = MediaPlayerPage(self, run_helper)
+        return self.media_page.widget
+
     def _page_performance(self):
         page = Adw.PreferencesPage()
         group = self._group(_("Performance"))
@@ -675,6 +681,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             return
         self.values[key] = value
         self._refresh_dirty()
+        if key.startswith("bmp_") and hasattr(self, "media_page"):
+            self.media_page.values_changed()
 
     def _on_theme_toggled(self, check, theme_id):
         if check.get_active():
@@ -703,6 +711,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             value = self.values.get(key)
             if extra == "scale":
                 widget.set_value(value)
+            elif extra == "entry":
+                widget.set_text(value or "")
             elif extra is None:
                 widget.set_active(bool(value))
             else:
@@ -713,6 +723,9 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.displays_page.refresh(force=True)
         if hasattr(self, "kojiro_page"):
             self.kojiro_page.reload()
+        if hasattr(self, "media_page"):
+            self.media_page.sync_skin()
+            self.media_page.reload()
         self._refresh_dirty()
 
     def _revert(self):
@@ -755,6 +768,7 @@ class ConfigWindow(Adw.ApplicationWindow):
             self._update_theme_pages(announce=theme_changed)
             self._refresh_dirty()
             self._update_sound_agent(values)
+            self._update_media_agent(values)
             self.toast(_("Settings applied. The display updates in a moment."))
             if message:
                 self.toast(_("Some values were corrected: {details}").format(details=message))
@@ -774,6 +788,13 @@ class ConfigWindow(Adw.ApplicationWindow):
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except OSError as error:
             self.toast(_("Could not configure the sound agent: {error}").format(error=error))
+
+    def _update_media_agent(self, values):
+        """The session agent feeds the display; start it when a display uses the theme
+        (it is also autostarted at login and exits by itself when unused)."""
+        from bsmd.media import agent as media_agent
+        if media_agent.theme_in_use(values) and hasattr(self, "media_page"):
+            self.media_page.start_agent()
 
     def _helper_action(self, args, success):
         def worker():
@@ -818,6 +839,10 @@ class ConfigWindow(Adw.ApplicationWindow):
             preview._wake.set()
         if hasattr(self, "kojiro_page"):
             self.kojiro_page.set_active(name == "theme_kojiro")
+        if hasattr(self, "media_page"):
+            self.media_page.set_active(name == "theme_big_media_player")
+            if name == "themes" and self.values.get("theme") == "big_media_player":
+                self.media_page.ensure_core()       # real music in the gallery preview too
 
     def _update_theme_pages(self, announce=False):
         """Show only the customisation tab of the applied (saved) theme."""
@@ -972,6 +997,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             preview.stop()
         if hasattr(self, "kojiro_page"):
             self.kojiro_page.close()
+        if hasattr(self, "media_page"):
+            self.media_page.close()
         self.collector.stop()
         return False
 

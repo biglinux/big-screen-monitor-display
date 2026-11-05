@@ -6,6 +6,9 @@
     main.py --render THEME --size 480x320 --out frame.png [--orientation vertical]
     main.py --diagnose               human readable health report
     main.py --status                 print the service status JSON
+    main.py --media-agent            Big Media Player session agent (XDG autostart)
+    main.py --media ACTION [--value N]   control the player shown on the display
+                                     (play_pause, next, previous, volume_up, mute...)
 """
 
 import argparse
@@ -21,6 +24,34 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if BASE_DIR not in sys.path:
     # ``python3 -I`` (used by the unit) does not add the script directory.
     sys.path.insert(0, BASE_DIR)
+
+
+
+def _media_entry(argv):
+    """Session-side media commands start without the display pipeline (drivers, NumPy,
+    renderers): the agent lives all session long and should stay small."""
+    if not argv or argv[0] not in ("--media-agent", "--media"):
+        return None
+    import argparse as _argparse
+    parser = _argparse.ArgumentParser(prog="main.py")
+    parser.add_argument("--media-agent", action="store_true")
+    parser.add_argument("--keep", action="store_true")
+    parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--media", metavar="ACTION")
+    parser.add_argument("--value", type=float, default=0.0)
+    args = parser.parse_args(argv)
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+                        format="%(asctime)s %(levelname)s %(threadName)s: %(message)s")
+    from bsmd.media import agent
+    if args.media_agent:
+        return agent.run_agent(keep=args.keep)
+    return agent.run_command(args.media, args.value)
+
+
+if __name__ == "__main__":
+    _code = _media_entry(sys.argv[1:])
+    if _code is not None:
+        sys.exit(_code)
 
 from bsmd import __version__, drivers, i18n, runtime, settings, telemetry, themes  # noqa: E402
 from bsmd.sdnotify import Notifier  # noqa: E402
@@ -269,6 +300,12 @@ def main(argv=None):
     parser.add_argument("--bench-themes", nargs="*", metavar="THEME", help="with --benchmark: themes")
     parser.add_argument("--json", action="store_true", help="with --list-displays/--benchmark: JSON output")
     parser.add_argument("--sound-agent", action="store_true", help="play optional sounds in the user session")
+    parser.add_argument("--media-agent", action="store_true",
+                        help="Big Media Player agent for the desktop session (MPRIS, volume, album art)")
+    parser.add_argument("--keep", action="store_true", help="with --media-agent: run even if the theme is unused")
+    parser.add_argument("--media", metavar="ACTION", help="control media: play_pause, next, previous, stop, "
+                        "volume_up, volume_down, mute, volume_set, seek_by, shuffle, loop")
+    parser.add_argument("--value", type=float, default=0.0, help="with --media: percent or microseconds")
     parser.add_argument("--status", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--version", action="version", version=__version__)
@@ -283,6 +320,13 @@ def main(argv=None):
         return cmd_list_displays(args)
     if args.benchmark:
         return cmd_benchmark(args)
+    if args.media_agent:
+        setup_logging(args.verbose)
+        from bsmd.media import agent
+        return agent.run_agent(keep=args.keep)
+    if args.media:
+        from bsmd.media import agent
+        return agent.run_command(args.media, args.value)
     if args.sound_agent:
         from bsmd import sound
         return sound.run_agent()

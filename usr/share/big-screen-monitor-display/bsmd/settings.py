@@ -35,6 +35,14 @@ def _int(low, high):
 
 BOOL = ("bool", None)
 
+
+def _text(limit):
+    return ("text", limit)
+
+
+# Big Media Player skins (bsmd.bigmedia.skins; a test checks both lists agree).
+BMP_SKINS = ("bigamp", "bigmatch", "bigative", "bigalplayer", "bigmediaplayer", "bigxmms2", "bigx")
+
 GK_KEYS = (
     "gk_show_host", "gk_show_date", "gk_show_time", "gk_show_gpu", "gk_show_cpu",
     "gk_show_cores", "gk_show_temp", "gk_show_proc", "gk_show_disk", "gk_show_eth0",
@@ -45,7 +53,7 @@ GK_KEYS = (
 GK_DEFAULT_OFF = {"gk_show_cores", "gk_show_docker", "gk_show_ppp", "gk_show_vlan",
                   "gk_show_inet", "gk_show_battery"}
 
-THEME_IDS = ("standard", "gkrellm", "planet", "old_computer", "brother_away", "kojiro")
+THEME_IDS = ("standard", "gkrellm", "planet", "old_computer", "brother_away", "kojiro", "big_media_player")
 # 3.x themes that are now colour schemes of "standard" (migrated on load).
 LEGACY_STANDARD = ("dark", "light", "neon", "cyberpunk")
 STD_SCHEMES = ("dark", "light", "neon", "cyberpunk", "nord", "dracula", "solarized", "high_contrast")
@@ -137,6 +145,78 @@ SCHEMA = {
     "overlay_show_disk": (*BOOL, True),
     "overlay_show_gpu": (*BOOL, True),
     "overlay_auto_dim": (*BOOL, True),
+    # Big Media Player (MPRIS media theme)
+    "bmp_skin": (*_choice(*BMP_SKINS), "bigamp"),
+    "bmp_layout": (*_choice("auto", "full", "compact", "party", "info", "low_power"), "auto"),
+    "bmp_text_size": (*_choice("small", "normal", "large"), "normal"),
+    "bmp_art_size": (*_choice("small", "normal", "large"), "normal"),
+    "bmp_art_shape": (*_choice("skin", "square", "rounded", "circle"), "skin"),
+    "bmp_art_frame": (*_choice("skin", "metal", "neon", "none"), "skin"),
+    "bmp_art_glow": (*BOOL, False),
+    "bmp_art_background": (*BOOL, False),
+    "bmp_vinyl": (*BOOL, False),
+    "bmp_adaptive_colors": (*BOOL, False),
+    "bmp_lcd_effect": (*BOOL, True),
+    "bmp_glow": (*BOOL, True),
+    "bmp_transitions": (*BOOL, True),
+    "bmp_show_title": (*BOOL, True),
+    "bmp_show_artist": (*BOOL, True),
+    "bmp_show_album": (*BOOL, True),
+    "bmp_show_description": (*BOOL, True),
+    "bmp_show_source": (*BOOL, True),
+    "bmp_marquee": (*BOOL, True),
+    "bmp_marquee_speed": (*_choice("slow", "normal", "fast"), "normal"),
+    "bmp_logo": (*_choice("auto", "custom", "none"), "auto"),
+    "bmp_logo_style": (*_choice("logo", "logo_name", "name"), "logo_name"),
+    "bmp_logo_custom": (*_text(64), ""),
+    "bmp_player_mode": (*_choice("auto", "last", "fixed"), "auto"),
+    "bmp_player_fixed": (*_text(80), ""),
+    "bmp_player_ignore": (*_text(200), ""),
+    "bmp_auto_switch": (*BOOL, True),
+    "bmp_show_controls": (*BOOL, True),
+    "bmp_time_mode": (*_choice("total", "remaining"), "total"),
+    "bmp_show_percent": (*BOOL, False),
+    "bmp_show_volume": (*BOOL, True),
+    "bmp_volume_source": (*_choice("system", "player"), "system"),
+    "bmp_volume_percent": (*BOOL, True),
+    "bmp_show_output": (*BOOL, False),
+    "bmp_volume_step": (*_int(1, 20), 5),
+    "bmp_volume_max": (*_int(100, 150), 100),
+    "bmp_volume_sink": (*_text(200), ""),
+    "bmp_visualizer": (*_choice("off", "decorative", "spectrum"), "decorative"),
+    "bmp_vis_style": (*_choice("bars", "led", "vu", "scope"), "bars"),
+    "bmp_vis_sensitivity": (*_int(50, 200), 100),
+    "bmp_tele_mode": (*_choice("auto", "always", "hidden", "intermittent", "alternate", "paused", "idle",
+                               "alerts"), "auto"),
+    "bmp_tele_position": (*_choice("bottom", "top", "overlay"), "bottom"),
+    "bmp_tele_every": (*_int(10, 600), 30),
+    "bmp_tele_duration": (*_int(3, 60), 8),
+    "bmp_tele_idle_after": (*_int(10, 1800), 60),
+    "bmp_tele_alert_cpu": (*_int(50, 100), 90),
+    "bmp_tele_alert_temp": (*_int(50, 110), 85),
+    "bmp_tele_clock": (*BOOL, True),
+    "bmp_tele_cpu": (*BOOL, True),
+    "bmp_tele_cpu_temp": (*BOOL, True),
+    "bmp_tele_ram": (*BOOL, True),
+    "bmp_tele_swap": (*BOOL, True),
+    "bmp_tele_disk": (*BOOL, True),
+    "bmp_tele_gpu": (*BOOL, True),
+    "bmp_tele_gpu_temp": (*BOOL, True),
+    "bmp_tele_icons": (*BOOL, True),
+    "bmp_tele_separator": (*_choice("bar", "dot", "space"), "bar"),
+    "bmp_tele_opacity": (*_int(30, 100), 85),
+    "bmp_tele_animate": (*BOOL, True),
+    "bmp_idle_mode": (*_choice("screen", "last_art", "clock", "telemetry", "rest", "theme"), "screen"),
+    "bmp_idle_after": (*_int(5, 3600), 120),
+    "bmp_idle_dim": (*BOOL, False),
+    "bmp_idle_theme": (*_choice("standard", "gkrellm", "planet", "old_computer", "brother_away", "kojiro"),
+                       "standard"),
+    "bmp_preview_demo": (*BOOL, True),
+    "bmp_night": (*BOOL, False),
+    "bmp_night_start": (*_int(0, 23), 22),
+    "bmp_night_end": (*_int(0, 23), 7),
+    "bmp_night_skin": (*_choice("same", *BMP_SKINS), "same"),
+    "bmp_app_skins": (*_text(200), ""),
     # Host side sound (optional, off by default)
     "sound_enabled": (*BOOL, False),
     "sound_volume": (*_int(0, 100), 40),
@@ -263,6 +343,10 @@ def _coerce_spec(key, value, spec):
             # Legacy AX206 1..7 scale -> percent.
             number = int(10 + (number - 1) * 90 / 6)
         return max(low, min(high, number)), low <= number <= high
+    if kind == "text":
+        if isinstance(value, str) and len(value) <= constraint and value.isprintable():
+            return value.strip(), True
+        return default, False
     if kind == "choice":
         if key == "model" and value == "other":
             return "auto", True  # legacy "Outro (Genérico)"
