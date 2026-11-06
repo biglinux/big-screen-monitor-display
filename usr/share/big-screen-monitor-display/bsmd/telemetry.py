@@ -64,6 +64,11 @@ SYSTEM_STATS = {
     "load_avg": (0.0, 0.0, 0.0),
     "disk_io_kbs": 0.0,
     "cpu_freq_mhz": None,
+    "cpu_freq_max_mhz": None,
+    "cpu_power_w": None,
+    "cpu_power_status": "unavailable",
+    "cpu_power_source": "",
+    "cpu_temp_at": None,
     "cpu_model": "",
     "cpu_cores": (None, None),        # (physical, logical)
     "cpu_temp_crit": None,            # hwmon critical limit, when the chip reports one
@@ -237,6 +242,128 @@ def find_gpus(drm_glob="/sys/class/drm/card[0-9]"):
     return gpus or [_empty_gpu()]
 
 
+def highest_core_mhz(cpu_glob="/sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_freq",
+                     cpuinfo="/proc/cpuinfo"):
+    """Current clock of the fastest core in MHz (cpufreq), or None when not reported."""
+    best = 0
+    for path in glob.glob(cpu_glob):
+        try:
+            best = max(best, int(_read(path)))
+        except (OSError, ValueError):
+            continue
+    if best:
+        return best / 1000
+    try:
+        with open(cpuinfo, encoding="utf-8") as handle:
+            values = [float(line.split(":", 1)[1]) for line in handle if line.startswith("cpu MHz")]
+    except (OSError, ValueError, IndexError):
+        return None
+    return max(values) if values else None
+
+
+class EnergyCounter:
+    """CPU package energy counter (microjoules) turned into watts.
+
+    Sources, first that exists: RAPL package domains in powercap
+    (``intel-rapl:N`` named ``package-N``; Intel and AMD Zen alike), or an
+    AMD ``zenergy``/``amd_energy`` hwmon socket channel. Since CVE-2020-8694
+    the kernel makes ``energy_uj`` readable by root only; the package's udev
+    rule gives read access to the service group alone, so ``status`` may be
+    ``permission`` for other users (the configuration window).
+
+    ``status``: ok, warming (first sample), permission, unavailable, invalid.
+    """
+
+    MAX_WATTS = 1500.0       # beyond any desktop/server package: a bad sample
+
+    def __init__(self, sources, label, status="warming"):
+        self.sources = sources          # [(path, max_range_uj or None)]
+        self.label = label
+        self.status = status if sources else "unavailable"
+        self._last = None
+
+    @classmethod
+    def find(cls, powercap="/sys/class/powercap", hwmon_glob="/sys/class/hwmon/hwmon*"):
+        packages = []
+        for domain in sorted(glob.glob(os.path.join(powercap, "intel-rapl:[0-9]*"))):
+            if domain.count(":") != 1:
+                continue                                 # sub-domains (core, uncore, dram)
+            try:
+                name = _read(os.path.join(domain, "name"))
+            except OSError:
+                continue
+            energy = os.path.join(domain, "energy_uj")
+            if name.startswith("package") and os.path.exists(energy):
+                try:
+                    limit = int(_read(os.path.join(domain, "max_energy_range_uj")))
+                except (OSError, ValueError):
+                    limit = None
+                packages.append((energy, limit))
+        if packages:
+            return cls(packages, "RAPL " + ", ".join(os.path.basename(os.path.dirname(p)) for p, _ in packages))
+        for hwmon in sorted(glob.glob(hwmon_glob)):
+            try:
+                name = _read(os.path.join(hwmon, "name"))
+            except OSError:
+                continue
+            if name not in ("zenergy", "amd_energy"):
+                continue
+            for label_path in sorted(glob.glob(os.path.join(hwmon, "energy*_label"))):
+                try:
+                    if _read(label_path).startswith("Esocket"):
+                        return cls([(label_path[:-len("_label")] + "_input", None)], f"{name} Esocket")
+                except OSError:
+                    continue
+        return cls([], "", "unavailable")
+
+    def _read_total(self):
+        total = 0
+        for path, _limit in self.sources:
+            with open(path, encoding="ascii") as handle:
+                total += int(handle.read().strip())
+        return total
+
+    def sample(self, now):
+        """Watts since the previous sample, or None (status says why)."""
+        if not self.sources:
+            return None
+        try:
+            readings = []
+            for path, limit in self.sources:
+                with open(path, encoding="ascii") as handle:
+                    readings.append((int(handle.read().strip()), limit))
+        except PermissionError:
+            self.status = "permission"
+            return None
+        except (OSError, ValueError):
+            self.status = "invalid"
+            self._last = None
+            return None
+        previous, self._last = self._last, (now, readings)
+        if previous is None:
+            self.status = "warming"
+            return None
+        elapsed = now - previous[0]
+        if elapsed <= 0.05:
+            self._last = previous
+            return None
+        delta = 0
+        for (current, limit), (before, _l) in zip(readings, previous[1], strict=False):
+            step = current - before
+            if step < 0:
+                if not limit:
+                    self.status = "invalid"          # an unbounded counter only goes back on a reset
+                    return None
+                step += limit                        # bounded counter wrapped around
+            delta += step
+        watts = delta / elapsed / 1_000_000
+        if not 0 <= watts <= self.MAX_WATTS:
+            self.status = "invalid"
+            return None
+        self.status = "ok"
+        return watts
+
+
 def read_power_profile():
     for path, parse in (("/sys/firmware/acpi/platform_profile", lambda text: text),
                         ("/var/lib/power-profiles-daemon/state.ini", _ppd_profile)):
@@ -268,13 +395,19 @@ def _cpu_temperature(temps):
     return None
 
 
+# Real die temperature first; Tctl is the control value (offset on some AMD models).
+CPU_TEMP_LABELS = ("Tdie", "Tctl", "Package id 0")
+# CPU temperatures older than this are treated as unavailable by consumers that must
+# not show a frozen value (DeepCool coolers).
+FRESH_FOR = 6.0
+
+
 def find_cpu_temp_input(hwmon_glob="/sys/class/hwmon/hwmon*"):
     """Path of the CPU package temperature file, found once.
 
     Reading one sysfs file per second costs ~0.05 ms, while
     psutil.sensors_temperatures() reads every sensor of every device (~6 ms).
     """
-    preferred = ("Tctl", "Tdie", "Package id 0")
     for hwmon in sorted(glob.glob(hwmon_glob)):
         try:
             name = _read(os.path.join(hwmon, "name"))
@@ -283,16 +416,21 @@ def find_cpu_temp_input(hwmon_glob="/sys/class/hwmon/hwmon*"):
         if name not in ("coretemp", "k10temp", "zenpower"):
             continue
         fallback = None
+        found = {}
         for label_path in sorted(glob.glob(os.path.join(hwmon, "temp*_label"))):
             try:
                 label = _read(label_path)
             except OSError:
                 continue
             input_path = label_path[:-len("_label")] + "_input"
-            if label in preferred and os.path.exists(input_path):
-                return input_path
+            if label in CPU_TEMP_LABELS and os.path.exists(input_path):
+                found.setdefault(label, input_path)
             if fallback is None and label.startswith("Core 0") and os.path.exists(input_path):
                 fallback = input_path
+        # By preference, not by file order: AMD Tctl carries an offset on some models.
+        for label in CPU_TEMP_LABELS:
+            if label in found:
+                return found[label]
         first = os.path.join(hwmon, "temp1_input")
         return fallback or (first if os.path.exists(first) else None)
     return None
@@ -344,6 +482,7 @@ class Collector:
         self.want_disks = set()        # extra mountpoints whose usage/io/temperature a theme shows
         self.want_addrs = False        # local IP addresses and link speeds, every 30 s
         self._cpu_temp_path = None
+        self._energy = None
         self._fans = None
         self._disk_paths = {}
 
@@ -414,6 +553,7 @@ class Collector:
         self._guard("memory", self._sample_memory)
         self._guard("io", lambda: self._sample_io(now))
         self._guard("temperature", self._sample_temperature)
+        self._guard("cpu_power", lambda: self._sample_cpu_power(now))
         self._guard("gpu", self._sample_gpus)
         if self._due("slow", 5, now):
             self._guard("swap", self._sample_swap)
@@ -462,6 +602,7 @@ class Collector:
             SYSTEM_STATS["cpu_freq_mhz"] = freq.current if freq and freq.current else None
         except Exception:  # noqa: BLE001 - not every platform reports a frequency
             SYSTEM_STATS["cpu_freq_mhz"] = None
+        SYSTEM_STATS["cpu_freq_max_mhz"] = highest_core_mhz()
         try:
             SYSTEM_STATS["load_avg"] = os.getloadavg()
         except OSError:
@@ -544,6 +685,19 @@ class Collector:
                 del current[name]
         self._nics = nics
 
+    def _sample_cpu_power(self, now):
+        """Package power from an energy counter: P = dE / dt (never a guess)."""
+        if self._energy is None:
+            self._energy = EnergyCounter.find()
+        meter = self._energy
+        watts = meter.sample(now)
+        with STATS_LOCK:
+            SYSTEM_STATS["cpu_power_w"] = watts
+            SYSTEM_STATS["cpu_power_status"] = meter.status
+            SYSTEM_STATS["cpu_power_source"] = meter.label
+            if watts is not None:
+                SYSTEM_STATS["cpu_power_at"] = now
+
     def _sample_temperature(self):
         value = None
         if self._cpu_temp_path:
@@ -557,6 +711,8 @@ class Collector:
             with STATS_LOCK:
                 SYSTEM_STATS["cpu_temp"] = f"{value:.0f}°C"
                 SYSTEM_STATS["cpu_temp_value"] = value
+                SYSTEM_STATS["cpu_temp_at"] = time.monotonic()
+                SYSTEM_STATS["cpu_temp_source"] = self._cpu_temp_path or "psutil"
                 _push(CPU_TEMP_HISTORY, value)
 
     def _sample_sensor_list(self):

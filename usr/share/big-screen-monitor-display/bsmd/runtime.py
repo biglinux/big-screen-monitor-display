@@ -31,7 +31,8 @@ from PIL import Image, ImageDraw
 from . import __version__, frames, health, i18n, patterns, settings as settings_mod, telemetry, themes
 from .displays import discovery, registry
 from .displays.ax206 import AX206
-from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO, NOT_FOUND, PROTOCOL, TIMEOUT, DisplayError, Transfer
+from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO, NOT_FOUND, PROTOCOL, TELEMETRY, \
+    TIMEOUT, DisplayError, Transfer
 from .health import (DEGRADED, DISCONNECTED, FAILED, HEALTHY, RECOVERING, RETRYING, STARTING,
                      STOPPED)
 from .settings import atomic_write_json
@@ -198,6 +199,7 @@ class DisplaySession:
         self._threads = []
         self._theme_failures = 0
         self._sent_times = collections.deque(maxlen=256)
+        self.last_metrics = None
         self._applied = None
 
     # ------------------------------------------------------------ helpers
@@ -239,7 +241,8 @@ class DisplaySession:
             return
         if new.get("brightness") != old.get("brightness"):
             self.request("brightness", new["brightness"])
-        if any(new.get(key) != old.get(key) for key in ("profile", "model", "rev_c_size")):
+        if any(new.get(key) != old.get(key) for key in ("profile", "model", "rev_c_size", "dc_rotation",
+                                                        "dc_lead_zeros")):
             self.request("reconnect", "display model changed")
         if new.get("led_color") != old.get("led_color"):
             self.request("leds", new.get("led_color"))
@@ -308,6 +311,11 @@ class DisplaySession:
 
     def _content_fps(self):
         """Highest rate at which the panel content can change."""
+        if self._is_telemetry():
+            try:
+                return 1.0 / max(self.driver.min_interval, float(self.settings().get("dc_interval", "1")))
+            except (TypeError, ValueError):
+                return 1.0
         theme = self.theme
         if theme is not None and not theme.info.animated:
             # Static dashboards render a few times per second, per profile.
@@ -323,12 +331,50 @@ class DisplaySession:
         return patterns.render(name, size[0], size[1], label=self.name(), display_id=self.id,
                                shape=self.ctx.shape)
 
+    def _is_telemetry(self):
+        driver = self.driver
+        return driver is not None and getattr(driver.capabilities, "output", "raster") == TELEMETRY
+
+    def _telemetry_step(self, settings, beat):
+        """Telemetry devices (DeepCool): build a frame of validated CPU values instead of an image."""
+        from .displays.deepcool import metrics
+        driver = self.driver
+        beat.begin("metrics")
+        try:
+            stats = telemetry.snapshot()
+            values = metrics.gather(stats, self.clock(), settings.get("dc_freq_source", "max"))
+            frame = metrics.build_frame(driver.family, settings, values, self.clock())
+        except Exception as error:  # noqa: BLE001 - never stop the session
+            beat.end(False, repr(error))
+            log.exception("[%s] metrics failed", self.id)
+            self.stop_event.wait(1.0)
+            return
+        beat.end(True)
+        self.last_metrics = dict(frame.describe(), reasons=dict(values.reasons), updated=time.time(),
+                                 temp_source=stats.get("cpu_temp_source"),
+                                 power_source=stats.get("cpu_power_source"),
+                                 power_status=stats.get("cpu_power_status"))
+        self.mailbox.put(frame)
+        self.mailbox.wait_consumed(timeout=2.0)
+        try:
+            interval = max(driver.min_interval, float(settings.get("dc_interval", "1")))
+        except (TypeError, ValueError):
+            interval = 1.0
+        self.wake_render.wait(interval)
+        self.wake_render.clear()
+
     def _render_loop(self):
         beat = self.hb["render"]
         theme = None
         theme_key = None
         while not self.stop_event.is_set():
             settings = self.settings()
+            if self._is_telemetry():
+                if theme:
+                    theme.close()
+                    theme, theme_key, self.theme = None, None, None
+                self._telemetry_step(settings, beat)
+                continue
             size = self._render_size(settings) if self.driver else None
             if size is None:
                 beat.progress()
@@ -403,6 +449,13 @@ class DisplaySession:
                 else:
                     beat.progress()
                 continue
+            if not isinstance(frame, Image.Image):
+                # Telemetry frame (DeepCool): sent as it is, no image conversion.
+                if self._is_telemetry():
+                    self._io("present", lambda f=frame: self.driver.present(f))
+                continue
+            if self._is_telemetry():
+                continue                    # an image left over from before a profile change
             if now - self.last_full > self.runtime.FULL_REFRESH_EVERY:
                 self.driver.invalidate()
                 self.last_full = now
@@ -425,6 +478,8 @@ class DisplaySession:
                 command, *args = self.commands.get_nowait()
             except queue.Empty:
                 return
+            if command == "pattern" and self._is_telemetry():
+                continue                  # numeric coolers cannot show test images
             if command == "pattern":
                 self.pattern = (args[0], self.clock() + (args[1] if len(args) > 1 else 10.0))
                 self.wake_render.set()
@@ -505,7 +560,8 @@ class DisplaySession:
     def _close_display(self):
         driver, self.driver = self.driver, None
         if driver is not None:
-            if self.stop_event.is_set() and self.link.state in (HEALTHY, DEGRADED):
+            if self.stop_event.is_set() and self.link.state in (HEALTHY, DEGRADED) and \
+                    getattr(driver.capabilities, "output", "raster") != TELEMETRY:
                 try:
                     settings = self.settings()
                     driver.present(frames.to_native(stopped_frame(*frames.render_size(
@@ -599,7 +655,7 @@ class DisplaySession:
         self.backoff.reset()
         self.recovery_started = None
         self._apply_leds(settings.get("led_color", "off"))
-        if not self.intro_shown:
+        if not self.intro_shown and getattr(driver.capabilities, "output", "raster") != TELEMETRY:
             self.intro_shown = True
             self._show_intro(settings)
         self.wake_render.set()
@@ -688,6 +744,7 @@ class DisplaySession:
             "failed_attempts": self.failed_attempts,
             "sensors": dict(self.sensors),
             "pattern": self.pattern[0] if self.pattern else None,
+            "metrics": self.last_metrics,
             "incidents": [entry for entry in self.runtime.incidents.recent(60)
                           if entry.get("display") == self.id][-15:],
         }

@@ -37,6 +37,7 @@ from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, run
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
+from gui import deepcool_page  # noqa: E402
 from gui.brother_away_page import BrotherAwayPage  # noqa: E402
 from gui.dashboard import Dashboard  # noqa: E402
 from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
@@ -148,6 +149,7 @@ class PreviewRenderer:
         self.picture = picture
         self.max_fps = max_fps
         self.values = None
+        self.face = None            # telemetry devices (DeepCool): callable drawing the cooler's face
         self.theme = None
         self.theme_key = None
         self.ctx = runtime.RenderContext(preview=True)
@@ -210,6 +212,19 @@ class PreviewRenderer:
                 self._wake.clear()
                 continue
             self._stale = False
+            face = self.face
+            if face is not None:
+                try:
+                    texture = ui.texture_from_image(face())
+                except Exception as error:  # noqa: BLE001 - show the failure instead of crashing the window
+                    print(f"preview failed: {error!r}", file=sys.stderr)
+                    texture = None
+                if texture is not None:
+                    self.frames += 1
+                    GLib.idle_add(self.picture.set_paintable, texture)
+                self._wake.wait(1.0)
+                self._wake.clear()
+                continue
             width, height = self.size
             if str(values.get("orientation")).startswith("vertical") and width > height:
                 width, height = height, width
@@ -492,11 +507,18 @@ class ConfigWindow(Adw.ApplicationWindow):
 
     def _display_size(self, display_id):
         for display in (self.status or {}).get("displays") or []:
-            if display.get("id") == display_id and display.get("device"):
-                return display["device"]["width"], display["device"]["height"]
+            device = display.get("device") if display.get("id") == display_id else None
+            if device and device.get("width") and device.get("height"):
+                return device["width"], device["height"]
         return None
 
     def _update_preview(self, entry):
+        face = deepcool_page.face_renderer(self, entry["display"]) if entry["display"] else None
+        entry["renderer"].face = face
+        if face is not None:
+            entry["frame"].set_ratio(*deepcool_page.PREVIEW_SIZE)
+            entry["renderer"].update(settings.merged(self.values, entry["display"]), deepcool_page.PREVIEW_SIZE)
+            return
         size = self._display_size(entry["display"]) if entry["display"] else None
         if entry["display"]:
             values = settings.merged(self.values, entry["display"])
@@ -943,7 +965,7 @@ class ConfigWindow(Adw.ApplicationWindow):
 
     def _device_size(self):
         device = (self.status or {}).get("device")
-        if device:
+        if device and device.get("width") and device.get("height"):     # coolers report no pixel size
             return device["width"], device["height"]
         return PREVIEW_SIZES.get(self.values.get("size"), (480, 320))
 

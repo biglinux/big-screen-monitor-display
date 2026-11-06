@@ -6,10 +6,14 @@ _refresh_system() {
 	systemd-sysusers big-screen-monitor-display.conf 2>/dev/null || true
 	udevadm control --reload-rules 2>/dev/null || true
 	# Apply the new permissions to panels that are already plugged in.
-	for _vendor in 1908 1cbe 1a86 454d; do
+	for _vendor in 1908 1cbe 1a86 454d 3633; do
 		udevadm trigger --action=add --subsystem-match=usb --attr-match=idVendor=${_vendor} 2>/dev/null || true
 	done
 	udevadm trigger --action=add --subsystem-match=tty 2>/dev/null || true
+	# change (not add): re-applies the DeepCool hidraw rule without replaying add events of other HID devices
+	udevadm trigger --action=change --subsystem-match=hidraw 2>/dev/null || true
+	# RAPL energy counters: read access for the service group (CPU power on DeepCool coolers)
+	udevadm trigger --action=change --subsystem-match=powercap 2>/dev/null || true
 	# One-time import of the old per-user settings (newest file wins).
 	/usr/lib/big-screen-monitor-display/bsm-helper migrate >/dev/null 2>&1 || true
 	systemctl daemon-reload

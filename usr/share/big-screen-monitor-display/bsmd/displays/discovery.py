@@ -29,6 +29,7 @@ class UsbDevice:
     bus: int = 0
     address: int = 0
     ttys: tuple = ()
+    hidraws: tuple = ()          # /dev/hidrawN of the device's HID interfaces (DeepCool coolers)
 
     @property
     def ids(self):
@@ -114,13 +115,16 @@ def scan_usb(sysfs=SYSFS):
         ttys = sorted("/dev/" + os.path.basename(t) for t in glob.glob(os.path.join(entry, "*:*", "tty", "tty*")))
         ttys += sorted("/dev/" + os.path.basename(t) for t in glob.glob(os.path.join(entry, "*:*", "tty*"))
                        if os.path.basename(t).startswith("ttyUSB"))
+        hidraws = sorted("/dev/" + os.path.basename(h) for h in glob.glob(os.path.join(entry, "*:*", "*", "hidraw",
+                                                                                     "hidraw*")))
         try:
-            bus, address = int(_read(os.path.join(entry, "busnum")) or 0), int(_read(os.path.join(entry, "devnum")) or 0)
+            bus = int(_read(os.path.join(entry, "busnum")) or 0)
+            address = int(_read(os.path.join(entry, "devnum")) or 0)
         except ValueError:
             bus = address = 0
         devices.append(UsbDevice(name, int(vid, 16), int(pid, 16), _read(os.path.join(entry, "serial")),
                                  _read(os.path.join(entry, "manufacturer")), _read(os.path.join(entry, "product")),
-                                 bus, address, tuple(dict.fromkeys(ttys))))
+                                 bus, address, tuple(dict.fromkeys(ttys)), tuple(hidraws)))
     return devices
 
 
@@ -174,4 +178,5 @@ def choose_profile(candidate, override="auto"):
 def driver_options(settings):
     """Driver options from a display's effective settings."""
     return {"size": settings.get("rev_c_size", "auto"), "led_color": settings.get("led_color", "off"),
-            "sensors": True}
+            "sensors": True, "dc_lead_zeros": settings.get("dc_lead_zeros", True),
+            "dc_rotation": int(settings.get("dc_rotation", "0") or 0)}
