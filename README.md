@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-4.4.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.0.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-1229%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1237%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -41,6 +41,18 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.0.0 — Nova janela de configuração
+
+![Início da nova janela](docs/redesign/images/home-dark-1280.png)
+
+- **Janela redesenhada** na linguagem visual do AshyWall: barra lateral com Início, Meus Displays, Galeria de Temas, Kojiro Design Studio, Big Media Player, Brother Away, Desempenho, Diagnóstico e Preferências; recolhe em janelas estreitas.
+- **Início** com a prévia real do display, modelo, resolução, conexão, tema, estado e ações rápidas; telas próprias para primeiro uso, serviço parado, nenhum display, modelo a escolher e display sem resposta.
+- **Galerias de cartões** desenhados pelo motor real: temas (com página de detalhe, prévia grande e opções), displays (cada um com sua página), as 15 skins do Big Media Player e as **14 histórias** do Brother Away.
+- **Big Media Player** com cartão *Tocando agora* (capa real, progresso, controles e volume do sistema) e as opções numa página própria.
+- **Barra de alterações pendentes** com Descartar e Aplicar (Ctrl+S); atalhos Ctrl+1…9 e Ctrl+F; estilo claro/escuro/sistema.
+- **Mais leve**: abre em 0,5 s (antes 1,2 s) e usa 163 MB ao abrir (antes 278 MB); seções construídas sob demanda, varredura USB fora da thread da interface, prévias param fora da tela e com a janela em segundo plano. Detalhes em [docs/redesign](docs/redesign/05-relatorio-final.md).
+- Tradução pt-BR completa (1303 mensagens).
 
 ## ✨ Novidades da 4.4.0 — Big Media Player Modern Collection
 
@@ -379,36 +391,39 @@ Configurações antigas com Escuro, Claro, Neon ou Cyberpunk são migradas autom
 
 ## 🧭 Janela de configuração
 
-<p align="center"><img src="docs/images/gui-displays.png" width="70%" alt="Página Meus Displays"/><br/><sub>Meus Displays: cada display detectado com seu estado, confiança e opções próprias</sub></p>
-
 <table>
 <tr>
-<td align="center"><img src="docs/images/gui-theme-standard.png" alt="Aba do tema Padrão"/><br/><sub>Aba do tema Padrão, com prévia ao vivo</sub></td>
-<td align="center"><img src="docs/images/gui-themes.png" alt="Galeria de temas"/><br/><sub>Galeria de temas</sub></td>
+<td align="center"><img src="docs/redesign/images/themes-dark-1280.png" alt="Galeria de Temas"/><br/><sub>Galeria de Temas: miniaturas do renderizador real</sub></td>
+<td align="center"><img src="docs/redesign/images/themes-planet-dark-1280.png" alt="Página do tema Planet"/><br/><sub>Página de um tema: prévia grande e opções</sub></td>
 </tr>
 <tr>
-<td align="center"><img src="docs/images/gui-theme-brother_away.png" alt="Aba Brother Away com prévia animada"/><br/><sub>Aba Brother Away com prévia animada</sub></td>
-<td align="center"><img src="docs/images/gui-diagnostics.png" alt="Página de diagnóstico"/><br/><sub>Diagnóstico com o estado real do serviço</sub></td>
+<td align="center"><img src="docs/redesign/images/displays-detail-dark-1280.png" alt="Página de um display"/><br/><sub>Página de um display: o que ele mostra, ajustes próprios e hardware</sub></td>
+<td align="center"><img src="docs/redesign/images/big_media_player-light-1280.png" alt="Big Media Player"/><br/><sub>Big Media Player: Tocando agora e as 15 skins</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/redesign/images/brother_away-dark-1280.png" alt="Brother Away"/><br/><sub>Brother Away: a ilha e as 14 histórias</sub></td>
+<td align="center"><img src="docs/redesign/images/kojiro-dark-1280.png" alt="Kojiro Design Studio"/><br/><sub>Kojiro Design Studio</sub></td>
 </tr>
 </table>
 
-- **Meus Displays:** todos os displays detectados, com nome, modelo/protocolo (automático ou manual), nível de confiança, tema, orientação, brilho e desempenho próprios, firmware e capacidades, sensores do WeAct, padrões de teste, *Identificar* e *Reconectar* — mais os padrões para todos os displays e o início com o computador.
-- **Temas:** galeria com prévia ao vivo usando o mesmo renderizador do display.
-- **Aba do tema aplicado** (Padrão, GKrellM, Planet, Computador Antigo, Brother Away ou Kojiro): todas as opções do tema, com prévia própria — no Kojiro, o editor visual completo. Ao aplicar outro tema, a aba troca sozinha e um aviso oferece "Personalizar".
-- **Desempenho:** perfil (Automático, Econômico, Equilibrado, Fluido) e números reais do serviço: CPU, memória, quadros por segundo (com o alvo real do tema aplicado), tempo de transferência, dados enviados.
-- **Diagnóstico:** estado atual, *Diagnosticar meu display* com correções seguras, *Recuperar o display agora*, reiniciar o serviço, eventos recentes e exportar relatório.
+| Seção | O que tem |
+| --- | --- |
+| **Início** | prévia do que o display mostra, nome, modelo, resolução, conexão, tema, estado e desempenho reais; ações rápidas; avisos com a próxima ação (primeiro uso, serviço parado, nenhum display, modelo a escolher, display sem resposta) |
+| **Meus Displays** | um cartão por display; a página de cada um tem nome, uso, tema, orientação, brilho e desempenho próprios (ou "igual ao padrão"), modelo/protocolo, dados do hardware, sensores e testes (identificar, padrões, reconectar); abaixo, os padrões para todos os displays |
+| **Galeria de Temas** | os 7 temas em cartões, busca (Ctrl+F); cada tema abre com prévia grande, ampliação e todas as opções |
+| **Kojiro Design Studio** | o editor visual: canvas, camadas, inspetor, predefinições, ao vivo |
+| **Big Media Player** | Tocando agora (MPRIS real e volume do sistema), galeria das 15 skins com filtro Clássicas/Modernas, página *Personalizar* com todas as opções |
+| **Brother Away** | prévia da ilha, as 14 histórias para assistir na prévia, animação, humor, som e telemetria |
+| **Desempenho** | perfis com o efeito de cada um e as medições do serviço |
+| **Diagnóstico** | estado, *Diagnosticar*, recuperar, reiniciar, exportar relatório, eventos |
+| **Preferências** | iniciar com o computador, estilo da janela, idioma, som ao aplicar, atalhos, restaurar padrões, sobre |
 
-Alterações são aplicadas com **Aplicar** e valem em até 1 s; *Descartar* volta ao que está salvo. Depois de atualizar o pacote, feche e abra a janela para a prévia usar a versão nova. Funciona com teclado e leitor de tela, nos modos claro e escuro do sistema.
-
-<details>
-<summary><b>Abas dos outros temas</b></summary>
-<br/>
-<p align="center">
-<img src="docs/images/gui-theme-gkrellm.png" width="32%" alt="Aba GKrellM"/>
-<img src="docs/images/gui-theme-planet.png" width="32%" alt="Aba Planet"/>
-<img src="docs/images/gui-theme-old_computer.png" width="32%" alt="Aba Computador Antigo"/>
-</p>
-</details>
+Cada alteração aparece na prévia na hora; a barra inferior mostra quantas
+estão pendentes, com **Descartar** e **Aplicar** (Ctrl+S). Aplicar vale em até
+1 s, sem reiniciar o serviço; operações administrativas continuam pedindo
+autorização pelo Polkit. A janela segue o tema claro/escuro do sistema (ou o
+escolhido em Preferências), funciona com teclado e leitor de tela e se adapta
+a janelas estreitas.
 
 ---
 
@@ -600,7 +615,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 1229 testes, sem hardware (os de D-Bus usam um barramento privado)
+python3 -m pytest -q tests                                  # 1237 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py

@@ -1,30 +1,113 @@
-"""Distribution name and logo, detected from os-release and the installed icons."""
+"""System name and logo: the distribution (os-release) or, when the graphical
+session in front of the panel belongs to a desktop that has its own identity,
+that desktop's name and logo.
+
+Desktop identity files (``/usr/share/desktop-identity/*.conf``, os-release
+syntax) are installed by a desktop that presents itself under its own name on
+top of a base distribution, eg. Big WindowMaker on BigCommunity::
+
+    NAME="Big WindowMaker"
+    LOGO=big-wm
+    LOGO_FILE=/usr/share/icons/hicolor/scalable/apps/big-wm.svg
+    DESKTOP_NAMES=WindowMaker;wlmaker
+
+The active session of seat0 and its desktop are read the way sd-login does it,
+from logind's runtime files: no D-Bus, no process, nothing to keep running. The
+distribution itself (ID, ID_LIKE) is never replaced.
+"""
 
 import functools
 import glob
 import io
 import os
 import subprocess
+import time
 
 from PIL import Image
 
 OS_RELEASE = ("/etc/os-release", "/usr/lib/os-release")
+IDENTITY_DIRS = ("/etc/desktop-identity", "/usr/share/desktop-identity")
+LOGIND_DIR = "/run/systemd"
+IDENTITY_TTL = 15.0           # s; a login or a session switch shows up within this
+_identity_cache = [None, -1e9]
+
+
+def _parse(path):
+    info = {}
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if line.startswith("#"):
+                continue
+            key, sep, value = line.partition("=")
+            if sep:
+                info[key.strip()] = value.strip().strip('"').strip("'")
+    return info
 
 
 @functools.lru_cache(maxsize=1)
 def os_release():
-    info = {}
     for path in OS_RELEASE:
         try:
-            with open(path, encoding="utf-8") as handle:
-                for line in handle:
-                    key, sep, value = line.strip().partition("=")
-                    if sep:
-                        info[key] = value.strip().strip('"').strip("'")
-            break
+            return _parse(path)
         except OSError:
             continue
+    return {}
+
+
+def active_desktop(logind_dir=None):
+    """Desktop names (XDG_SESSION_DESKTOP, ":"-separated) of seat0's active session, or ()."""
+    base = logind_dir or os.environ.get("BSMD_LOGIND_DIR") or LOGIND_DIR
+    try:
+        session = _parse(os.path.join(base, "seats", "seat0")).get("ACTIVE", "")
+        if not session or "/" in session:
+            return ()
+        info = _parse(os.path.join(base, "sessions", session))
+    except (OSError, UnicodeDecodeError):
+        return ()
+    if info.get("CLASS", "user") != "user":
+        return ()               # greeter, lock screen of the display manager
+    return tuple(n for n in info.get("DESKTOP", "").split(":") if n)
+
+
+def desktop_identity(desktops, dirs=None):
+    """The identity file whose DESKTOP_NAMES matches one of ``desktops``, or None."""
+    if not desktops:
+        return None
+    wanted = {d.casefold() for d in desktops}
+    for directory in dirs or (os.environ["BSMD_IDENTITY_DIR"].split(":") if os.environ.get("BSMD_IDENTITY_DIR")
+                              else IDENTITY_DIRS):
+        for path in sorted(glob.glob(os.path.join(directory, "*.conf"))):
+            try:
+                info = _parse(path)
+            except (OSError, UnicodeDecodeError):
+                continue
+            names = {n.strip().casefold() for n in info.get("DESKTOP_NAMES", "").split(";") if n.strip()}
+            if info.get("NAME") and names & wanted:
+                return info
+    return None
+
+
+def identity(now=None):
+    """os-release, with NAME/PRETTY_NAME/LOGO of the active desktop's identity when it has one.
+
+    Keys added: ``BASE_NAME`` (the distribution's own name) and ``LOGO_FILE``."""
+    now = time.monotonic() if now is None else now
+    if _identity_cache[0] is not None and now - _identity_cache[1] < IDENTITY_TTL:
+        return _identity_cache[0]
+    info = dict(os_release())
+    info["BASE_NAME"] = info.get("NAME") or info.get("PRETTY_NAME") or "Linux"
+    desk = desktop_identity(active_desktop())
+    if desk:
+        info["NAME"] = info["PRETTY_NAME"] = desk["NAME"]
+        info["LOGO"] = desk.get("LOGO", "")
+        info["LOGO_FILE"] = desk.get("LOGO_FILE", "")
+    _identity_cache[0], _identity_cache[1] = info, now
     return info
+
+
+def reset_identity():
+    _identity_cache[0] = None
 
 
 def logo_path(name):
@@ -49,18 +132,25 @@ def logo_path(name):
     return max(candidates, key=size_of) if candidates else None
 
 
-@functools.lru_cache(maxsize=1)
 def distro_info():
-    info = os_release()
-    name = info.get("NAME") or info.get("PRETTY_NAME") or "Linux"
+    info = identity()
+    return _distro_info(info.get("NAME") or info.get("PRETTY_NAME") or "Linux", info.get("PRETTY_NAME", ""),
+                        info.get("LOGO", ""), info.get("LOGO_FILE", ""), info.get("ID", "linux"))
+
+
+@functools.lru_cache(maxsize=4)
+def _distro_info(name, pretty, logo_name, logo_file, distro_id):
     # "BigLinux based on Manjaro Linux" -> "BigLinux": the widget shows a short name.
     short = name.split(" based on ")[0].split(" GNU/Linux")[0].strip() or name
     logo = None
-    for candidate in (info.get("LOGO"), info.get("ID"), f"distributor-logo-{info.get('ID', '')}", "distributor-logo"):
+    for candidate in (logo_name, distro_id, f"distributor-logo-{distro_id}", "distributor-logo"):
         logo = logo_path(candidate)
         if logo:
             break
-    return {"name": short, "full_name": name, "pretty": info.get("PRETTY_NAME", name), "id": info.get("ID", "linux"), "logo": logo}
+        if candidate == logo_name and logo_file and os.path.isfile(logo_file):
+            logo = logo_file
+            break
+    return {"name": short, "full_name": name, "pretty": pretty or name, "id": distro_id, "logo": logo}
 
 
 @functools.lru_cache(maxsize=16)
