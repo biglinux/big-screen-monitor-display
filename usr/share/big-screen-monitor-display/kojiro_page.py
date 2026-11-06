@@ -109,7 +109,10 @@ class KojiroPage:
         self.state.portrait = self.preview_size[1] > self.preview_size[0]
         self.worker = PreviewWorker(self._frame)
         self.widget = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.widget.append(self._toolbar())
+        # The tool row scrolls sideways on narrow windows instead of widening the window.
+        self.widget.append(Gtk.ScrolledWindow(child=self._toolbar(), vscrollbar_policy=Gtk.PolicyType.NEVER,
+                                              hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                                              propagate_natural_height=True))
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL, wide_handle=True, vexpand=True)
         self.canvas = DesignCanvas(self.state, self._commit)
         self._canvas_actions()
@@ -126,6 +129,9 @@ class KojiroPage:
         paned.set_shrink_end_child(False)
         paned.set_position(640)
         self.widget.append(paned)
+        self.paned = paned
+        from gui import components as ui
+        ui.ADAPTIVE.add(paned)
         shortcuts = Gtk.ShortcutController(scope=Gtk.ShortcutScope.GLOBAL)
         shortcuts.add_shortcut(Gtk.Shortcut.new(Gtk.ShortcutTrigger.parse_string("<Control>s"),
                                                 Gtk.CallbackAction.new(self._save_shortcut)))
@@ -249,7 +255,7 @@ class KojiroPage:
         return False
 
     def _save_shortcut(self, *_args):
-        if self.window.stack.get_visible_child_name() == "theme_kojiro" and self.window.apply_button.get_sensitive():
+        if self.window.current_section == "kojiro" and self.window.apply_button.get_sensitive():
             self.window._apply()
             return True
         return False
@@ -309,34 +315,32 @@ class KojiroPage:
         align_menu.append_section(None, groupm)
         bar.append(Gtk.MenuButton(icon_name="view-grid-symbolic", menu_model=align_menu,
                                   tooltip_text=_("Align, distribute, order and group")))
-        bar.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
-        self.grid_toggle = Gtk.ToggleButton(icon_name="view-app-grid-symbolic", tooltip_text=_("Show grid"),
-                                            css_classes=["flat"])
+        # View options in one menu, so the studio fits narrower windows.
+        view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, margin_top=8, margin_bottom=8,
+                       margin_start=8, margin_end=8)
+        self.grid_toggle = Gtk.CheckButton(label=_("Show grid"))
         self.grid_toggle.connect("toggled", lambda b: self._canvas_flag("show_grid", b.get_active()))
-        bar.append(self.grid_toggle)
-        self.snap_toggle = Gtk.ToggleButton(icon_name="object-select-symbolic", active=True,
-                                            tooltip_text=_("Snap to edges, centres and other widgets"),
-                                            css_classes=["flat"])
+        self.snap_toggle = Gtk.CheckButton(label=_("Snap to edges, centres and other widgets"), active=True)
         self.snap_toggle.connect("toggled", lambda b: self._canvas_flag("snap", b.get_active()))
-        bar.append(self.snap_toggle)
-        self.margin_toggle = Gtk.ToggleButton(icon_name="zoom-fit-best-symbolic", active=True,
-                                              tooltip_text=_("Show safe margins"), css_classes=["flat"])
+        self.margin_toggle = Gtk.CheckButton(label=_("Show safe margins"), active=True)
         self.margin_toggle.connect("toggled", lambda b: self._canvas_flag("show_margins", b.get_active()))
-        bar.append(self.margin_toggle)
+        self.demo_toggle = Gtk.CheckButton(label=_("Demo data"),
+                                           tooltip_text=_("Moving sample values instead of this computer's data"))
+        self.demo_toggle.connect("toggled", self._demo_toggled)
+        for widget in (self.grid_toggle, self.snap_toggle, self.margin_toggle, self.demo_toggle):
+            view.append(widget)
+        bar.append(Gtk.MenuButton(icon_name="view-reveal-symbolic", popover=Gtk.Popover(child=view),
+                                  tooltip_text=_("View: grid, snapping, margins, demo data")))
         bar.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
         self.size_combo = Gtk.DropDown(tooltip_text=_("Preview resolution"))
         self.size_combo.connect("notify::selected", self._size_changed)
         bar.append(self.size_combo)
         rotate = self._button("object-rotate-right-symbolic", _("Switch portrait / landscape"), self._rotate_preview)
         bar.append(rotate)
-        self.demo_toggle = Gtk.ToggleButton(label=_("Demo data"), css_classes=["flat"],
-                                            tooltip_text=_("Moving sample values instead of this computer's data"))
-        self.demo_toggle.connect("toggled", self._demo_toggled)
-        bar.append(self.demo_toggle)
         spacer = Gtk.Box(hexpand=True)
         bar.append(spacer)
         live = Gtk.Box(spacing=6)
-        live.append(Gtk.Label(label=_("Live on the display")))
+        live.append(Gtk.Label(label=_("Live")))
         self.live_switch = Gtk.Switch(valign=Gtk.Align.CENTER,
                                       tooltip_text=_("Apply every change to the connected display automatically"))
         live.append(self.live_switch)
@@ -486,7 +490,7 @@ class KojiroPage:
 
     # ---------------------------------------------------------- inspector
     def _inspector(self):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, width_request=380)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, width_request=320)
         self.inspector = Adw.ViewStack(vexpand=True)
         switcher = Adw.InlineViewSwitcher(stack=self.inspector, margin_start=8, margin_end=8, margin_top=4,
                                           display_mode=Adw.InlineViewSwitcherDisplayMode.ICONS)

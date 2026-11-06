@@ -22,6 +22,7 @@ from bsmd import runtime, settings, themes  # noqa: E402
 from bsmd.bigmedia import skins  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from bsmd.media import agent as media_agent, artwork, hub, model  # noqa: E402
+from gui import components as ui  # noqa: E402
 
 THEME_ID = "big_media_player"
 SKIN_INSPIRATION = {
@@ -53,8 +54,11 @@ def _short(text, limit=60):
 
 
 class MediaPlayerPage:
-    def __init__(self, window, run_helper):
+    def __init__(self, window, run_helper, nav=None):
         self.window = window
+        self.nav = nav
+        self.options_page = None
+        self._cover_key = None
         self.run_helper = run_helper
         self.core = None
         self.local_hub = None
@@ -68,7 +72,8 @@ class MediaPlayerPage:
         self._dropdown_lock = False
         self._thumbs = {}
         self.active = False
-        self.widget = self._build()
+        self._build()
+        self.widget = self.page
         GLib.timeout_add(1000, self._tick)
 
     # ------------------------------------------------------------ media core
@@ -79,7 +84,7 @@ class MediaPlayerPage:
         try:
             self.conn = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         except GLib.Error as error:
-            self.status_row.set_subtitle(_("No session D-Bus: {error}").format(error=error.message))
+            ui.set_pill(self.np_state, _("No session D-Bus: {error}").format(error=error.message), "error")
             return False
         self.local_hub = hub.MediaHub()
         hub.set_local(self.local_hub)
@@ -149,14 +154,38 @@ class MediaPlayerPage:
     # ------------------------------------------------------------ building
     def _build(self):
         w = self.window
+        self.banner = w.theme_banner(THEME_ID)
+        self.preview = w.live_preview(THEME_ID, _("Preview of the Big Media Player"), height=300)
+        hero = self._now_playing_group()
+        gallery = self._gallery_group()
+        customise = Gtk.Button(icon_name="emblem-system-symbolic", tooltip_text=_("All player options"))
+        customise.set_child(Adw.ButtonContent(icon_name="emblem-system-symbolic", label=_("Customise")))
+        customise.connect("clicked", lambda *_a: self.open_options())
+        content = ui.page_layout(self.banner, ui.adaptive_split(hero, self.preview, threshold=900), gallery,
+                                 maximum=1300)
+        self.page = ui.navigation_page(_("Big Media Player"), content, tag="big_media_player",
+                                       header_end=[customise])
+        shortcuts = Gtk.ShortcutController(scope=Gtk.ShortcutScope.MANAGED)
+        for accel, action, value in (("<Control>space", "play_pause", 0), ("<Control>Right", "next", 0),
+                                     ("<Control>Left", "previous", 0), ("<Control>Up", "volume_up", 0),
+                                     ("<Control>Down", "volume_down", 0), ("<Control>m", "mute", 0)):
+            shortcuts.add_shortcut(Gtk.Shortcut.new(Gtk.ShortcutTrigger.parse_string(accel),
+                                                    Gtk.CallbackAction.new(lambda *_a, a=action, v=value:
+                                                                           self.command(a, v) or True)))
+        self.page.add_controller(shortcuts)
+        self.grid.connect("map", lambda _g: self._render_thumbs())
+
+    def open_options(self):
+        """Every option of the player, grouped, on its own page."""
+        if self.options_page is None:
+            prefs = self._build_options()
+            self.options_page = ui.navigation_page(_("Customise the Player"), prefs, tag="bmp-options")
+        if self.nav is not None:
+            self.nav.push(self.options_page)
+
+    def _build_options(self):
+        w = self.window
         page = Adw.PreferencesPage()
-        preview = w._group(_("Big Media Player"),
-                           _("Classic and modern players that follow the music and videos playing on this "
-                             "computer (MPRIS)."))
-        preview.add(w.pictures[THEME_ID])
-        page.add(preview)
-        page.add(self._now_playing_group())
-        page.add(self._gallery_group())
 
         look = w._group(_("Appearance"))
         look.add(w._combo("bmp_layout", _("Layout"), [
@@ -294,14 +323,6 @@ class MediaPlayerPage:
         page.add(idle)
 
         page.add(self._advanced_group())
-        shortcuts = Gtk.ShortcutController(scope=Gtk.ShortcutScope.MANAGED)
-        for accel, action, value in (("<Control>space", "play_pause", 0), ("<Control>Right", "next", 0),
-                                     ("<Control>Left", "previous", 0), ("<Control>Up", "volume_up", 0),
-                                     ("<Control>Down", "volume_down", 0), ("<Control>m", "mute", 0)):
-            shortcuts.add_shortcut(Gtk.Shortcut.new(Gtk.ShortcutTrigger.parse_string(accel),
-                                                    Gtk.CallbackAction.new(lambda *_a, a=action, v=value:
-                                                                           self.command(a, v) or True)))
-        page.add_controller(shortcuts)
         return page
 
     def _entry(self, key, title, placeholder=""):
@@ -313,73 +334,100 @@ class MediaPlayerPage:
         row.connect("apply", lambda r: self.window._set(key, r.get_text().strip()))
         row.connect("changed", lambda r: self.window._set(key, r.get_text().strip())
                     if len(r.get_text()) <= settings.SCHEMA[key][1] else None)
-        self.window._widgets[key] = (row, "entry")
+        self.window._register(key, row, "entry")
         return row
 
     def _now_playing_group(self):
-        group = self.window._group(_("Now playing"), _("Real controls for the player shown on the display "
-                                                       "(the USB panels have no touch input). "
-                                                       "Shortcuts: Ctrl+Space, Ctrl+←/→, Ctrl+↑/↓, Ctrl+M."))
-        self.status_row = Adw.ActionRow(title=_("Looking for media players…"), subtitle="")
-        self.status_row.set_title_lines(2)
-        self.status_icon = Gtk.Image.new_from_icon_name("audio-x-generic-symbolic")
-        self.status_row.add_prefix(self.status_icon)
-        group.add(self.status_row)
+        """Now playing card: real cover, metadata, progress, transport and system volume."""
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        card.add_css_class("card")
+        card.add_css_class("hero-card")
+        top = Gtk.Box(spacing=16)
+        self.cover = Gtk.Picture(content_fit=Gtk.ContentFit.COVER, can_shrink=True)
+        self.cover.set_size_request(112, 112)
+        self.cover_frame = Gtk.Overlay(child=self.cover, overflow=Gtk.Overflow.HIDDEN, valign=Gtk.Align.START)
+        self.cover_frame.add_css_class("cover-art")
+        self.cover_icon = Gtk.Image(icon_name="audio-x-generic-symbolic", pixel_size=48)
+        self.cover_icon.add_css_class("dim-label")
+        self.cover_frame.add_overlay(self.cover_icon)
+        ui.set_label(self.cover, _("Album art"))
+        texts = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, hexpand=True, valign=Gtk.Align.CENTER)
+        self.np_state = ui.pill(_("Looking for media players…"))
+        self.np_state.set_halign(Gtk.Align.START)
+        self.np_title = Gtk.Label(xalign=0, wrap=True, lines=2, ellipsize=3)
+        self.np_title.add_css_class("track-title")
+        self.np_artist = Gtk.Label(xalign=0, wrap=True, lines=2, ellipsize=3)
+        self.np_album = Gtk.Label(xalign=0, ellipsize=3)
+        self.np_album.add_css_class("dim-label")
+        for widget in (self.np_state, self.np_title, self.np_artist, self.np_album):
+            texts.append(widget)
+        top.append(self.cover_frame)
+        top.append(texts)
+        card.append(top)
+
+        seek = Gtk.Box(spacing=10)
+        self.elapsed_label = Gtk.Label(label="--:--", css_classes=["numeric", "caption"])
+        self.time_label = Gtk.Label(label="--:--", css_classes=["numeric", "caption", "dim-label"])
+        self.seek = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 1, 1)
+        self.seek.set_hexpand(True)
+        self.seek.set_draw_value(False)
+        ui.set_label(self.seek, _("Position"))
+        self.seek.connect("change-value", self._on_seek)
+        seek.append(self.elapsed_label)
+        seek.append(self.seek)
+        seek.append(self.time_label)
+        card.append(seek)
+
+        box = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
+        self.buttons = {}
+        for action, icon, tip in (("shuffle", "media-playlist-shuffle-symbolic", _("Shuffle")),
+                                  ("previous", "media-skip-backward-symbolic", _("Previous")),
+                                  ("play_pause", "media-playback-start-symbolic", _("Play/Pause (Ctrl+Space)")),
+                                  ("next", "media-skip-forward-symbolic", _("Next")),
+                                  ("stop", "media-playback-stop-symbolic", _("Stop")),
+                                  ("loop", "media-playlist-repeat-symbolic", _("Repeat"))):
+            button = Gtk.Button(icon_name=icon, tooltip_text=tip, valign=Gtk.Align.CENTER)
+            button.add_css_class("circular")
+            button.add_css_class("flat")
+            ui.set_label(button, tip)
+            button.connect("clicked", lambda _b, a=action: self.command(a))
+            self.buttons[action] = button
+            box.append(button)
+        play = self.buttons["play_pause"]
+        play.remove_css_class("flat")
+        play.add_css_class("suggested-action")
+        play.set_size_request(48, 48)
+        card.append(box)
+
+        volume = Gtk.Box(spacing=8)
+        self.mute_button = Gtk.ToggleButton(icon_name="audio-volume-high-symbolic", tooltip_text=_("Mute (Ctrl+M)"),
+                                            valign=Gtk.Align.CENTER)
+        self.mute_button.add_css_class("flat")
+        ui.set_label(self.mute_button, _("Mute"))
+        self.mute_button.connect("toggled", self._on_mute)
+        self.volume = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
+        self.volume.set_hexpand(True)
+        self.volume.set_draw_value(True)
+        self.volume.set_value_pos(Gtk.PositionType.RIGHT)
+        ui.set_label(self.volume, _("System volume"))
+        self.volume.connect("value-changed", self._on_volume)
+        volume.append(self.mute_button)
+        volume.append(self.volume)
+        card.append(volume)
+        self.volume_caption = ui.caption(_("System volume · default output"))
+        card.append(self.volume_caption)
 
         self.player_row = Adw.ComboRow(title=_("Player"), subtitle=_("Automatic follows the player in use"))
         self.player_row.set_model(Gtk.StringList.new([_("Automatic")]))
         self.player_row.connect("notify::selected", self._on_player_selected)
-        group.add(self.player_row)
-
-        transport = Adw.ActionRow(title=_("Playback"))
-        box = Gtk.Box(spacing=6, valign=Gtk.Align.CENTER)
-        self.buttons = {}
-        for action, icon, tip in (("previous", "media-skip-backward-symbolic", _("Previous")),
-                                  ("play_pause", "media-playback-start-symbolic", _("Play/Pause")),
-                                  ("stop", "media-playback-stop-symbolic", _("Stop")),
-                                  ("next", "media-skip-forward-symbolic", _("Next")),
-                                  ("shuffle", "media-playlist-shuffle-symbolic", _("Shuffle")),
-                                  ("loop", "media-playlist-repeat-symbolic", _("Repeat"))):
-            button = Gtk.Button(icon_name=icon, tooltip_text=tip, css_classes=["circular"])
-            button.update_property([Gtk.AccessibleProperty.LABEL], [tip])
-            button.connect("clicked", lambda _b, a=action: self.command(a))
-            self.buttons[action] = button
-            box.append(button)
-        self.buttons["play_pause"].add_css_class("suggested-action")
-        transport.add_suffix(box)
-        group.add(transport)
-
-        seek = Adw.ActionRow(title=_("Position"))
-        self.time_label = Gtk.Label(label="--:-- / --:--", css_classes=["numeric", "dim-label"])
-        self.seek = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 1, 1)
-        self.seek.set_hexpand(True)
-        self.seek.set_size_request(240, -1)
-        self.seek.set_draw_value(False)
-        self.seek.update_property([Gtk.AccessibleProperty.LABEL], [_("Position")])
-        self.seek.connect("change-value", self._on_seek)
-        seek.add_suffix(self.seek)
-        seek.add_suffix(self.time_label)
-        group.add(seek)
-
-        volume = Adw.ActionRow(title=_("System volume"), subtitle=_("Default output"))
-        self.volume_row = volume
-        vbox = Gtk.Box(spacing=6, valign=Gtk.Align.CENTER)
-        self.mute_button = Gtk.ToggleButton(icon_name="audio-volume-muted-symbolic", tooltip_text=_("Mute"))
-        self.mute_button.connect("toggled", self._on_mute)
-        down = Gtk.Button(icon_name="list-remove-symbolic", tooltip_text=_("Volume down"))
-        down.connect("clicked", lambda *_a: self.command("volume_down"))
-        up = Gtk.Button(icon_name="list-add-symbolic", tooltip_text=_("Volume up"))
-        up.connect("clicked", lambda *_a: self.command("volume_up"))
-        self.volume = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
-        self.volume.set_size_request(200, -1)
-        self.volume.set_value_pos(Gtk.PositionType.RIGHT)
-        self.volume.update_property([Gtk.AccessibleProperty.LABEL], [_("System volume")])
-        self.volume.connect("value-changed", self._on_volume)
-        for widget in (self.mute_button, down, self.volume, up):
-            vbox.append(widget)
-        volume.add_suffix(vbox)
-        group.add(volume)
-        return group
+        players = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
+        players.add_css_class("boxed-list")
+        players.append(self.player_row)
+        card.append(players)
+        # kept for the code that still reads them
+        self.status_row = None
+        self.volume_row = None
+        return card
 
     def _modern_group(self):
         w = self.window
@@ -426,9 +474,12 @@ class MediaPlayerPage:
         return group
 
     def _gallery_group(self):
-        group = self.window._group(_("Skins"), _("Seven classic homages and eight modern designs. Select one to see "
-                                                 "it in the preview; Apply sends it to the display."))
-        filters = Gtk.Box(css_classes=["linked"], halign=Gtk.Align.START, margin_bottom=6)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        head = Gtk.Box(spacing=12)
+        title = Gtk.Label(label=_("Skins"), xalign=0, hexpand=True)
+        title.add_css_class("title-4")
+        head.append(title)
+        filters = Gtk.Box(css_classes=["linked"], valign=Gtk.Align.CENTER)
         self.filter_buttons = {}
         first_filter = None
         for key, label in (("all", _("All")), ("classic", _("Classic")), ("modern", _("Modern"))):
@@ -441,39 +492,25 @@ class MediaPlayerPage:
             button.connect("toggled", self._on_filter, key)
             self.filter_buttons[key] = button
             filters.append(button)
-        group.set_header_suffix(filters)
-        first = None
+        head.append(filters)
+        box.append(head)
+        box.append(ui.caption(_("Seven classic homages and eight modern designs, drawn by the real renderer. "
+                                "Choose one; Apply sends it to the display.")))
+        self.grid = ui.CardGrid(self._on_skin_card, _("Skins"), max_columns=4)
         self.skin_checks = {}
-        self.skin_rows = {}
-        self.thumb_pictures = {}
         for skin_id in skins.SKIN_IDS:
             skin = skins.SKINS[skin_id]
             hint = SKIN_INSPIRATION.get(skin_id) or MODERN_INSPIRATION.get(skin_id, "")
-            collection = _(COLLECTION_LABELS[skin.collection])
-            row = Adw.ActionRow(title=GLib.markup_escape_text(skin.name),
-                                subtitle=GLib.markup_escape_text(f"{_(skin.description)}\n{collection} · {_(hint)}"))
-            row.set_subtitle_lines(3)
-            self.skin_rows[skin_id] = row
-            check = Gtk.CheckButton(valign=Gtk.Align.CENTER)
-            if first is None:
-                first = check
-            else:
-                check.set_group(first)
-            check.set_active(self.window.values.get("bmp_skin") == skin_id)
-            check.connect("toggled", self._on_skin, skin_id)
-            check.update_property([Gtk.AccessibleProperty.LABEL], [skin.name])
-            row.add_prefix(check)
-            row.set_activatable_widget(check)
-            picture = Gtk.Picture(content_fit=Gtk.ContentFit.CONTAIN, can_shrink=True)
-            picture.set_size_request(*THUMB)
-            picture.set_alternative_text(_("Preview of {theme}").format(theme=skin.name))
-            row.add_suffix(picture)
-            self.thumb_pictures[skin_id] = picture
-            self.skin_checks[skin_id] = check
-            group.add(row)
-        self.fit_row = Adw.ActionRow(title=_("Display size"))
-        group.add(self.fit_row)
-        return group
+            card = ui.Card(skin.name, f"{_(COLLECTION_LABELS[skin.collection])} · {_(hint)}",
+                           icon="audio-x-generic-symbolic")
+            card.set_tooltip_text(_(skin.description))
+            self.grid.add_card(skin_id, card)
+            self.skin_checks[skin_id] = card
+        self.sync_skin()
+        box.append(self.grid)
+        self.fit_row = ui.caption("")
+        box.append(self.fit_row)
+        return box
 
     def _advanced_group(self):
         group = self.window._group(_("Diagnostics"), _("State of the media integration."))
@@ -504,12 +541,11 @@ class MediaPlayerPage:
     def _on_filter(self, button, key):
         if not button.get_active():
             return
-        for skin_id, row in self.skin_rows.items():
-            row.set_visible(key == "all" or skins.SKINS[skin_id].collection == key)
+        self.grid.filter(lambda skin_id: key == "all" or skins.SKINS[skin_id].collection == key)
 
-    def _on_skin(self, check, skin_id):
-        if check.get_active():
-            self.window._set("bmp_skin", skin_id)
+    def _on_skin_card(self, skin_id):
+        self.window._set("bmp_skin", skin_id)
+        self.sync_skin()
 
     def _on_player_selected(self, row, _pspec):
         if self._dropdown_lock:
@@ -608,8 +644,18 @@ class MediaPlayerPage:
         if self.active:
             self._probe_agent()
             self._refresh_now()
-            self._refresh_diagnostics()
+            if hasattr(self, "diag"):
+                self._refresh_diagnostics()
+            else:
+                self._refresh_fit()
         return True
+
+    def _refresh_fit(self):
+        size = self.window._device_size()
+        from bsmd.bigmedia import layout
+        compact = layout.is_micro(*size)
+        self.fit_row.set_label(_("{w}×{h}: every skin fits{note}").format(
+            w=size[0], h=size[1], note=_(" (compact layout with alternating pages)") if compact else ""))
 
     def _probe_agent(self):
         if self.conn is None:
@@ -643,28 +689,27 @@ class MediaPlayerPage:
             self.player_row.set_selected(index)
         outputs = self.core.volume.outputs
         out_labels = [_("Default output")] + [description for _name, description in outputs]
-        out_model = self.output_row.get_model()
-        if [out_model.get_string(i) for i in range(out_model.get_n_items())] != out_labels:
+        out_model = self.output_row.get_model() if hasattr(self, "output_row") else None
+        if out_model is not None and [out_model.get_string(i) for i in range(out_model.get_n_items())] != out_labels:
             self.output_row.set_model(Gtk.StringList.new(out_labels))
             wanted = self.window.values.get("bmp_volume_sink", "")
             self.output_row.set_selected(next((i + 1 for i, (n, _d) in enumerate(outputs) if n == wanted), 0))
         self._dropdown_lock = False
         if player is None:
-            self.status_row.set_title(_("No MPRIS media player found."))
-            self.status_row.set_subtitle(_("Start playing in Spotify, VLC, Rhythmbox, a browser with media "
-                                           "integration or any MPRIS compatible application."))
-            self.status_icon.set_from_icon_name("dialog-information-symbolic")
+            ui.set_pill(self.np_state, _("No media player"), None)
+            self.np_title.set_label(_("No MPRIS media player found."))
+            self.np_artist.set_label(_("Start playing in Spotify, VLC, Rhythmbox, a browser with media integration "
+                                       "or any MPRIS compatible application."))
+            self.np_album.set_label("")
         else:
-            title = player["title"] or _("Unknown title")
-            self.status_row.set_title(GLib.markup_escape_text(_short(title, 80)))
-            details = [model.secondary_line(player)] if model.secondary_line(player) != player["identity"] else []
-            if player["album"] and player["album"] not in details:
-                details.append(player["album"])
-            details.append(f"{player['identity']} · {_(STATUS_LABELS.get(player['status'], player['status']))}")
-            self.status_row.set_subtitle(GLib.markup_escape_text(" — ".join(filter(None, details))))
-            self.status_icon.set_from_icon_name({"Playing": "media-playback-start-symbolic",
-                                                 "Paused": "media-playback-pause-symbolic"}.get(
-                player["status"], "media-playback-stop-symbolic"))
+            status_text = _(STATUS_LABELS.get(player["status"], player["status"]))
+            ui.set_pill(self.np_state, f"{player['identity']} · {status_text}",
+                        "success" if player["status"] == "Playing" else None)
+            self.np_title.set_label(player["title"] or _("Unknown title"))
+            self.np_artist.set_label(player["artist"] or player["description"] or "")
+            self.np_album.set_label(player["album"] or "")
+            self.np_album.set_visible(bool(player["album"]))
+        self._update_cover(player)
         caps = player["can"] if player else {key: False for key in model.CAPS}
         playing = bool(player and player["status"] == "Playing")
         self.buttons["play_pause"].set_icon_name("media-playback-pause-symbolic" if playing else
@@ -687,7 +732,8 @@ class MediaPlayerPage:
             total = model.fmt_time(length, hours)
         else:
             total = _("LIVE") if player and model.is_live(player) else "--:--"
-        self.time_label.set_label(f"{model.fmt_time(position, hours)} / {total}")
+        self.elapsed_label.set_label(model.fmt_time(position, hours))
+        self.time_label.set_label(total)
         self.seek.set_sensitive(bool(player and caps["seek"] and length))
         if length and (not self._seeking or time.monotonic() - self._seeking > 1.5):
             self.seek.set_range(0, length / 1_000_000)
@@ -698,14 +744,32 @@ class MediaPlayerPage:
         if volume["available"]:
             self.volume.set_value(volume["percent"])
             self.mute_button.set_active(bool(volume["muted"]))
-            self.volume_row.set_subtitle(volume["output"] or _("Default output"))
+            self.mute_button.set_icon_name("audio-volume-muted-symbolic" if volume["muted"] else
+                                           "audio-volume-high-symbolic")
+            self.volume_caption.set_label(_("System volume · {output}").format(
+                output=volume["output"] or _("default output")))
         else:
-            self.volume_row.set_subtitle(_("The system volume could not be accessed.") +
-                                         (f" ({volume['error']})" if volume["error"] else ""))
+            self.volume_caption.set_label(_("The system volume could not be accessed.") +
+                                          (f" ({volume['error']})" if volume["error"] else ""))
         self.volume.set_sensitive(volume["available"])
         self.mute_button.set_sensitive(volume["available"])
         self._volume_lock = False
         return False
+
+    def _update_cover(self, player):
+        """Real album art from the media core (never a stand-in picture)."""
+        art_id = player.get("art") if player else None
+        if art_id == self._cover_key:
+            return
+        self._cover_key = art_id
+        image = self.core.images.get(art_id) if (art_id and self.core is not None) else None
+        self.cover.set_paintable(ui.texture_from_image(image) if image is not None else None)
+        self.cover_icon.set_visible(image is None)
+        if image is None:
+            self._cover_key = None          # the art may still be downloading: try again next tick
+
+    def status_changed(self):
+        pass
 
     def _refresh_diagnostics(self):
         if self.agent_ok:
@@ -745,36 +809,28 @@ class MediaPlayerPage:
                                                                                      size=size / 1048576))
             errors = list(self.core.errors)[-5:] + list((self.agent_info.get("agent") or {}).get("errors") or [])[-3:]
             self.diag["errors"].set_subtitle("\n".join(errors[-6:]) or _("None"))
-        size = self.window._device_size()
-        from bsmd.bigmedia import layout
-        compact = layout.is_micro(*size)
-        self.fit_row.set_subtitle(_("{w}×{h}: every skin fits{note}").format(
-            w=size[0], h=size[1], note=_(" (compact layout with alternating pages)") if compact else ""))
+        self._refresh_fit()
 
     # ------------------------------------------------------------ gallery thumbnails
     def _render_thumbs(self):
         size = self.window._device_size()
         values = dict(self.window.values, theme=THEME_ID)
-        key = (size, tuple(sorted((k, str(v)) for k, v in values.items() if k.startswith("bmp_") and k != "bmp_skin")))
-        if self._thumbs.get("key") == key:
-            return
-        self._thumbs["key"] = key
-
-        def worker():
-            for skin_id in skins.SKIN_IDS:
+        signature = hash(tuple(sorted((k, repr(v)) for k, v in values.items()
+                                      if k.startswith("bmp_") and k != "bmp_skin")))
+        for skin_id in skins.SKIN_IDS:
+            def work(skin_id=skin_id):
                 ctx = runtime.RenderContext(preview=True)
                 theme = themes.create(THEME_ID, ctx)
                 try:
                     image = themes.render_for_panel(theme, size[0], size[1], dict(values, bmp_skin=skin_id), ctx)
-                except Exception:  # noqa: BLE001 - a thumbnail must not break the window
-                    continue
-                image.thumbnail((THUMB[0] * 2, THUMB[1] * 2))
-                data = GLib.Bytes.new(image.tobytes())
-                texture = Gdk.MemoryTexture.new(image.width, image.height, Gdk.MemoryFormat.R8G8B8, data,
-                                                image.width * 3)
-                GLib.idle_add(self.thumb_pictures[skin_id].set_paintable, texture)
-        threading.Thread(target=worker, name="bmp-thumbs", daemon=True).start()
+                finally:
+                    theme.close()
+                image.thumbnail(ui.THUMB_RENDER)
+                return image
+            self.window.thumbnailer.request(("skin", skin_id, size, signature), work,
+                                            self.skin_checks[skin_id].set_texture)
 
     def sync_skin(self):
-        for skin_id, check in self.skin_checks.items():
-            check.set_active(self.window.values.get("bmp_skin") == skin_id)
+        for skin_id, card in self.skin_checks.items():
+            card.set_selected(self.window.values.get("bmp_skin") == skin_id, _("Selected"))
+
