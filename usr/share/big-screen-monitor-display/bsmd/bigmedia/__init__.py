@@ -566,7 +566,8 @@ class BigMediaPlayerTheme:
             return
         from ..kojiro import assets
         info = assets.distro_info()
-        # "BigCommunity, based in BigLinux" -> "BigCommunity": the title bar is narrow.
+        # "BigCommunity, based in BigLinux" -> "BigCommunity": the title bar is narrow. In a
+        # desktop with its own identity (Big WindowMaker), its name instead.
         d.distro = info["name"].split(",")[0].split(" based ")[0].strip()[:24]
         d.logo = True       # resolved lazily by logo_image(size)
         self._logo_mode = (mode, settings.get("bmp_logo_custom", ""), distro_logo_path())
@@ -1060,12 +1061,23 @@ def find_icon(name, roots=("/usr/share/icons",)):
 
 
 def distro_logo_path():
-    """Logo of the installed distribution (searched once), or None for the generic mark."""
-    if not _LOGO_PATH:
-        from ..kojiro import assets
-        info = assets.os_release()
-        _LOGO_PATH.append(next((p for p in (find_icon(n) for n in logo_candidates(info)) if p), None))
-    return _LOGO_PATH[0]
+    """Logo of the system (the desktop's own identity, else the distribution), or None.
+
+    Searched once per identity: a login into another desktop changes it."""
+    import os
+    from ..kojiro import assets
+    info = assets.identity()
+    key = (info.get("LOGO", ""), info.get("LOGO_FILE", ""), info.get("ID", ""), info.get("NAME", ""))
+    if not _LOGO_PATH or _LOGO_PATH[0][0] != key:
+        logo_file = info.get("LOGO_FILE", "")
+        path = None
+        if logo_file:
+            # A desktop identity: its icon from the theme, else its own file.
+            path = find_icon(info.get("LOGO", "")) or (logo_file if os.path.isfile(logo_file) else None)
+        if path is None:
+            path = next((p for p in (find_icon(n) for n in logo_candidates(info)) if p), None)
+        _LOGO_PATH[:] = [(key, path)]
+    return _LOGO_PATH[0][1]
 
 
 def _icon(name):

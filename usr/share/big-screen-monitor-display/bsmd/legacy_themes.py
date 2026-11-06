@@ -190,8 +190,11 @@ def load_distro_logo(logo_name, size):
                 return logo
         except Exception:
             continue
-    _LOGO_CACHE[cache_key] = None  # negative cache: do not spawn rsvg-convert every frame
-    return None
+    # Not in pixmaps: the icon theme (a desktop logo such as big-wm lives in hicolor).
+    from .kojiro import assets
+    logo = assets.load_logo(assets.logo_path(logo_name), size) if logo_name else None
+    _LOGO_CACHE[cache_key] = logo  # also the negative cache: no rsvg-convert every frame
+    return logo
 
 def get_svg_icon(name, size, color=None):
     cache_key = f"{name}_{size}_{color}"
@@ -230,15 +233,11 @@ def get_svg_icon(name, size, color=None):
     return None
 
 def get_os_release():
+    """os-release with the name and logo of the active desktop when it has its own
+    identity (kojiro.assets.identity: one source for every theme)."""
+    from .kojiro import assets
     info = {"PRETTY_NAME": "Linux", "LOGO": ""}
-    try:
-        with open("/etc/os-release") as f:
-            for line in f:
-                if "=" in line:
-                    k, v = line.strip().split("=", 1)
-                    info[k] = v.strip('"')
-    except Exception:
-        pass
+    info.update(assets.identity())
     return info
 
 def get_text_width(d, text, font):
