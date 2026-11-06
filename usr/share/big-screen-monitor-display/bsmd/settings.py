@@ -41,7 +41,9 @@ def _text(limit):
 
 
 # Big Media Player skins (bsmd.bigmedia.skins; a test checks both lists agree).
-BMP_SKINS = ("bigamp", "bigmatch", "bigative", "bigalplayer", "bigmediaplayer", "bigxmms2", "bigx")
+BMP_CLASSIC = ("bigamp", "bigmatch", "bigative", "bigalplayer", "bigmediaplayer", "bigxmms2", "bigx")
+BMP_MODERN = ("big_vinyl", "big_pure", "big_ember", "big_groove", "big_lounge", "big_wave", "big_flow", "big_stage")
+BMP_SKINS = BMP_CLASSIC + BMP_MODERN
 
 GK_KEYS = (
     "gk_show_host", "gk_show_date", "gk_show_time", "gk_show_gpu", "gk_show_cpu",
@@ -147,7 +149,7 @@ SCHEMA = {
     "overlay_auto_dim": (*BOOL, True),
     # Big Media Player (MPRIS media theme)
     "bmp_skin": (*_choice(*BMP_SKINS), "bigamp"),
-    "bmp_layout": (*_choice("auto", "full", "compact", "party", "info", "low_power"), "auto"),
+    "bmp_layout": (*_choice("auto", "full", "compact", "party", "info", "cinema", "low_power"), "auto"),
     "bmp_text_size": (*_choice("small", "normal", "large"), "normal"),
     "bmp_art_size": (*_choice("small", "normal", "large"), "normal"),
     "bmp_art_shape": (*_choice("skin", "square", "rounded", "circle"), "skin"),
@@ -217,6 +219,20 @@ SCHEMA = {
     "bmp_night_end": (*_int(0, 23), 7),
     "bmp_night_skin": (*_choice("same", *BMP_SKINS), "same"),
     "bmp_app_skins": (*_text(200), ""),
+    # Animation level for every skin ("auto" keeps the 4.3 behaviour).
+    "bmp_animations": (*_choice("auto", "off", "economy", "balanced", "fluid"), "auto"),
+    "bmp_volume_osd": (*_choice("modern", "all", "off"), "modern"),
+    # Modern Collection (bsmd.bigmedia.modern); the classic skins ignore these.
+    "bmp_palette": (*_choice("skin", "cover", "custom", "mono", "contrast"), "skin"),
+    "bmp_accent_color": (*_text(7), ""),
+    "bmp_modern_radius": (*_choice("skin", "square", "soft", "round"), "skin"),
+    "bmp_modern_shadow": (*_int(0, 100), 60),
+    "bmp_modern_texture": (*_int(0, 100), 50),
+    "bmp_modern_disc": (*_choice("skin", "show", "hide"), "skin"),
+    "bmp_modern_spin": (*BOOL, True),
+    "bmp_modern_font": (*_choice("skin", "system", "dejavu"), "skin"),
+    "bmp_pure_tone": (*_choice("white", "beige", "grey", "graphite"), "white"),
+    "bmp_track_banner": (*BOOL, False),
     # Host side sound (optional, off by default)
     "sound_enabled": (*BOOL, False),
     "sound_volume": (*_int(0, 100), 40),

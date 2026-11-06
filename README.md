@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-4.3.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-4.4.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-820%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1229%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -41,6 +41,17 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 4.4.0 — Big Media Player Modern Collection
+
+![As oito skins modernas](docs/images/bmp-modern-gallery.png)
+
+- **Oito skins modernas** no mesmo Big Media Player — agora são **15**: Big Vinyl (capa sobre um disco que gira), Big Pure (branco minimalista, também bege, cinza e grafite), Big Ember (preto premium com luz âmbar), Big Groove (couro e degradê magenta-laranja), Big Lounge (vidro quente sobre a capa desfocada), Big Wave (waveform que se pinta conforme a música), Big Flow (cartão de streaming) e Big Stage (capa cinematográfica de ponta a ponta).
+- **Mesmos dados reais em todas**: MPRIS, volume e saída de áudio do sistema, telemetria, logo da distribuição — nada de favoritos, filas ou saídas inventadas.
+- **Cores da capa** com contraste garantido, destaque próprio, monocromático e alto contraste; cantos, sombras, textura, disco, fonte e modo **Cinema**.
+- **Animações em 5 níveis** (desligadas a fluidas), sempre limitadas pelo que o display aguenta; **volume ampliado** ao mudar o volume e faixa de **nova música**.
+- **Galeria** com filtro Clássicas/Modernas e miniaturas ao vivo; skin por aplicativo e por horário aceitam as novas.
+- Mesmo custo das clássicas (~1–3 ms por quadro, ~1 % dos pixels alterados por quadro), e as 7 clássicas renderizam pixel a pixel iguais à 4.3. Detalhes em [Modern Collection](docs/big-media-player-modern.md).
 
 ## ✨ Novidades da 4.3.0 — Big Media Player
 
@@ -139,7 +150,7 @@ A detecção só lê o `sysfs` (VID, PID, número de série): displays reconheci
 
 <a id="big-media-player"></a>
 
-## 🎵 Big Media Player — experiência musical retrô
+## 🎵 Big Media Player — 7 skins clássicas e 8 modernas
 
 O display acompanha o player em uso no computador. Os botões desenhados no LCD
 refletem o estado e as capacidades reais do player; os controles que funcionam
@@ -156,6 +167,20 @@ toque).
 | **BIGX Multimedia System** | retrato 320×480 | sem reprodução |
 
 As imagens usam os dados de demonstração da prévia (marcados **DEMO**).
+
+### Modern Collection (4.4)
+
+| | | | |
+| --- | --- | --- | --- |
+| ![Big Vinyl](docs/images/bmp-modern-vinyl.png) | ![Big Pure](docs/images/bmp-modern-pure.png) | ![Big Ember](docs/images/bmp-modern-ember.png) | ![Big Groove](docs/images/bmp-modern-groove.png) |
+| **Big Vinyl** | **Big Pure** | **Big Ember** | **Big Groove** |
+| ![Big Lounge](docs/images/bmp-modern-lounge.png) | ![Big Wave](docs/images/bmp-modern-wave.png) | ![Big Flow](docs/images/bmp-modern-flow.png) | ![Big Stage](docs/images/bmp-modern-stage.png) |
+| **Big Lounge** | **Big Wave** | **Big Flow** | **Big Stage** |
+
+Galeria com filtro **Todas · Clássicas · Modernas** e grupo **Coleção Moderna**
+(cores da capa, destaque, tons do Pure, cantos, sombras, textura, disco, fonte):
+
+![Galeria de skins](docs/images/bmp-modern-gui-gallery.png)
 
 ![Aba Big Media Player](docs/images/bmp-settings.png)
 
@@ -575,7 +600,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 820 testes, sem hardware (os de D-Bus usam um barramento privado)
+python3 -m pytest -q tests                                  # 1229 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py
@@ -639,6 +664,8 @@ locale/ · pkgbuild/ · tests/ · tools/ · docs/
 | [Big Media Player · skins](docs/big-media-player-skins.md) | [Big Media Player · configurações](docs/big-media-player-settings.md) |
 | [Big Media Player · telemetria](docs/big-media-player-telemetry.md) | [Big Media Player · desempenho](docs/big-media-player-performance.md) |
 | [Big Media Player · testes](docs/big-media-player-testing.md) | [Big Media Player · relatório final](docs/big-media-player-final-report.md) |
+| [Modern Collection · skins e layouts](docs/big-media-player-modern.md) | [Modern Collection · configurações](docs/big-media-player-modern-settings.md) |
+| [Modern Collection · desempenho, testes e relatório](docs/big-media-player-modern-report.md) | |
 
 ---
 

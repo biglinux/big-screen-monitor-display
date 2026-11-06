@@ -1,5 +1,5 @@
 pkgname=big-screen-monitor-display
-pkgdesc="Big Screen Monitor Display - hardware monitor, animated themes and the Big Media Player (MPRIS) for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
+pkgdesc="Big Screen Monitor Display - hardware monitor, animated themes and the Big Media Player (MPRIS, 15 classic and modern skins) for USB LCD displays (AX206, Turing, XuanFang, Kipye, WeAct)"
 depends=(
     # runtime
     'bash'                # /usr/bin launchers

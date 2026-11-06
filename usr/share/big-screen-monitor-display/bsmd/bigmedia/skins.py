@@ -1,4 +1,4 @@
-"""The seven Big Media Player skins.
+"""The Big Media Player skins: seven classic homages here, eight modern ones in :mod:`.modern`.
 
 Each skin is an original homage to the look of a period media player (see
 docs/big-media-player-skins.md): materials, colours, geometry and type are
@@ -19,13 +19,18 @@ from PIL import Image, ImageDraw
 from ..i18n import N_, _
 from . import paint as P
 
-SKIN_IDS = ("bigamp", "bigmatch", "bigative", "bigalplayer", "bigmediaplayer", "bigxmms2", "bigx")
+CLASSIC_IDS = ("bigamp", "bigmatch", "bigative", "bigalplayer", "bigmediaplayer", "bigxmms2", "bigx")
+MODERN_IDS = ("big_vinyl", "big_pure", "big_ember", "big_groove", "big_lounge", "big_wave", "big_flow", "big_stage")
+SKIN_IDS = CLASSIC_IDS + MODERN_IDS
+COLLECTIONS = {"classic": CLASSIC_IDS, "modern": MODERN_IDS}
 
 
 class Skin:
     id = "base"
     name = "Skin"
     description = ""
+    collection = "classic"
+    modern = False
     # metrics in px for a 320 px short side
     pad = 6
     frame = 3
@@ -110,6 +115,9 @@ class Skin:
         if d.art_glow:
             d.halo(img, box, radius, shape, self.c("accent", d), 7, filled=True)
         img.paste(tile[0], (x0, y0), tile[1])
+        self._art_frame(img, box, radius, shape, d)
+
+    def _art_frame(self, img, box, radius, shape, d):
         frame = d.art_frame if d.art_frame != "skin" else self.default_frame
         draw = ImageDraw.Draw(img)
         if frame == "metal":
@@ -1292,6 +1300,11 @@ class BigX(Skin):
 
 
 SKINS = {cls.id: cls() for cls in (Bigamp, Bigmatch, Bigative, Bigalplayer, BigMediaPlayer, BigXMMS2, BigX)}
+
+# The Modern Collection lives in its own package (bsmd.bigmedia.modern); it subclasses Skin above.
+from .modern import MODERN_SKINS  # noqa: E402
+
+SKINS.update((cls.id, cls()) for cls in MODERN_SKINS)
 
 
 def get(skin_id):
