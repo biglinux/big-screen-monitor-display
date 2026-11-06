@@ -142,7 +142,10 @@ msgid "Switch portrait / landscape"
 msgstr "Switch portrait / landscape"
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 343
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 376
 msgid "Live"
 msgstr "Live"
 
@@ -188,8 +191,8 @@ msgstr "This display uses the common Kojiro layout. A copy will be made that you
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 435
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1204
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 510
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 974
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 550
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 996
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -226,11 +229,11 @@ msgstr "Background"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 510
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/preferences_page.py, line: 67
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 190
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 314
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 636
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 683
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 713
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 730
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 351
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 658
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 705
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 735
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 752
 msgid "Appearance"
 msgstr "Appearance"
 
@@ -240,7 +243,10 @@ msgid "General"
 msgstr "General"
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 513
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 283
 msgid "Advanced"
 msgstr "Advanced"
 
@@ -567,9 +573,12 @@ msgid "Smooth transitions"
 msgstr "Smooth transitions"
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 737
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 740
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1095
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 254
 msgid "Alerts"
 msgstr "Alerts"
 
@@ -623,7 +632,10 @@ msgstr "Top of the list is drawn on top. Click to select."
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 827
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 133
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_editor.py, line: 616
 msgid "group"
 msgstr "group"
@@ -788,9 +800,9 @@ msgstr "Adjustments"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 896
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 114
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 332
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 570
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 120
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 369
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 592
 msgid "Brightness"
 msgstr "Brightness"
 
@@ -905,8 +917,8 @@ msgstr "The image could not be imported"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1006
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 609
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 102
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1082
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 103
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1104
 msgid "Unknown error"
 msgstr "Unknown error"
 
@@ -958,7 +970,10 @@ msgstr "Background effect"
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1079
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 419
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 207
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 811
 msgid "None"
@@ -1446,12 +1461,22 @@ msgid "Refresh"
 msgstr "Refresh"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 44
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 47
+msgid "Numeric display"
+msgstr "Numeric display"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 47
+msgid "LCD screen (information mode)"
+msgstr "LCD screen (information mode)"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 50
 msgid "USB serial"
 msgstr "USB serial"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 44
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 50
 msgid "Simulated"
 msgstr "Simulated"
 
@@ -1460,89 +1485,104 @@ msgstr "Simulated"
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 58
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 64
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/preferences_page.py, line: 112
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 252
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1309
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1348
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 267
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1331
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1370
 msgid "Big Screen Monitor Display"
 msgstr "Big Screen Monitor Display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 60
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 66
 msgid "Your hardware, your information, your style."
 msgstr "Your hardware, your information, your style."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 63
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 69
 msgid "Checking…"
 msgstr "Checking…"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 76
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 82
 msgid "What the display shows"
 msgstr "What the display shows"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 79
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 844
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 85
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 216
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 866
 msgid "Display"
 msgstr "Display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 81
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 87
 msgid "Choose the display shown here"
 msgstr "Choose the display shown here"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 82
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 88
 msgid "Display shown"
 msgstr "Display shown"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 86
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 306
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 92
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 185
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 343
 msgid "Name"
 msgstr "Name"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 86
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 92
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 193
 msgid "Model"
 msgstr "Model"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 86
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 365
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 92
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 402
 msgid "Resolution"
 msgstr "Resolution"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 87
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 366
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 93
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 403
 msgid "Connection"
 msgstr "Connection"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 87
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 318
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 93
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 218
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 355
 msgid "Theme"
 msgstr "Theme"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 87
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 365
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 93
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 315
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 402
 msgid "State"
 msgstr "State"
 
@@ -1551,225 +1591,231 @@ msgstr "State"
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 88
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 336
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 571
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 837
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 94
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 275
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 373
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 593
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 859
 msgid "Performance"
 msgstr "Performance"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 101
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 107
 msgid "Quick actions"
 msgstr "Quick actions"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 107
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 113
 msgid "Change theme"
 msgstr "Change theme"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 108
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 114
 msgid "Display settings"
 msgstr "Display settings"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 109
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 430
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 115
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 445
 msgid "Kojiro Design Studio"
 msgstr "Kojiro Design Studio"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 110
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 116
 msgid "Look for displays"
 msgstr "Look for displays"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 111
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 224
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 238
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 246
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 251
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 874
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1167
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 117
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 230
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 244
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 252
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 257
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 896
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1189
 msgid "Diagnose"
 msgstr "Diagnose"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 115
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 164
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 121
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 170
 msgid "Default for every display; a display can override it."
 msgstr "Default for every display; a display can override it."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 120
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 288
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 126
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 303
 msgid "Home"
 msgstr "Home"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 165
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 489
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 529
 msgid "This display has no adjustable brightness."
 msgstr "This display has no adjustable brightness."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 167
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 235
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 173
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 241
 msgid "No display connected"
 msgstr "No display connected"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 177
 #, python-brace-format
 msgid "DEMO · {w}×{h} preview"
 msgstr "DEMO · {w}×{h} preview"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 182
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 188
 msgid "not applied yet"
 msgstr "not applied yet"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 188
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 194
 #, python-brace-format
 msgid "{fps:.1f} frames per second"
 msgstr "{fps:.1f} frames per second"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 191
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 197
 msgid "Demonstration"
 msgstr "Demonstration"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 198
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1116
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 204
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1138
 msgid "Service stopped"
 msgstr "Service stopped"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 202
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 208
 #, python-brace-format
 msgid "Service running · {count} display(s)"
 msgstr "Service running · {count} display(s)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 205
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 211
 msgid "Service running · waiting for a display"
 msgstr "Service running · waiting for a display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 212
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 218
 msgid "Welcome!"
 msgstr "Welcome!"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 213
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 219
 msgid "Connect your USB display, choose a theme in the gallery and press Apply. The display updates in about a second, without restarting anything."
 msgstr "Connect your USB display, choose a theme in the gallery and press Apply. The display updates in about a second, without restarting anything."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 215
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 221
 msgid "Choose a Theme"
 msgstr "Choose a Theme"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 216
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 222
 msgid "Not now"
 msgstr "Not now"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 219
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1151
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 225
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1173
 msgid "The monitor service is not running"
 msgstr "The monitor service is not running"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 220
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 226
 msgid "Nothing is sent to the displays while it is stopped. Starting it needs an administrator password."
 msgstr "Nothing is sent to the displays while it is stopped. Starting it needs an administrator password."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 222
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1153
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 228
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1175
 msgid "Start Service"
 msgstr "Start Service"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 223
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1154
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 229
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1176
 msgid "Service started."
 msgstr "Service started."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 229
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 235
 msgid "A display needs your choice"
 msgstr "A display needs your choice"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 230
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 236
 msgid "A device was found but its model could not be identified with certainty. Choose the model in My Displays; nothing is sent to it before that."
 msgstr "A device was found but its model could not be identified with certainty. Choose the model in My Displays; nothing is sent to it before that."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 232
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 238
 msgid "Choose Model"
 msgstr "Choose Model"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 236
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 242
 msgid "Connect the panel over USB. If it is already connected, try another cable or port and look again."
 msgstr "Connect the panel over USB. If it is already connected, try another cable or port and look again."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 238
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 120
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 244
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 122
 msgid "Look Again"
 msgstr "Look Again"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 241
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 247
 msgid "The display is not responding"
 msgstr "The display is not responding"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 242
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 248
 msgid "The service keeps retrying on its own. You can reconnect it now or run the diagnosis to find the cause."
 msgstr "The service keeps retrying on its own. You can reconnect it now or run the diagnosis to find the cause."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 244
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 400
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 250
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 299
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 437
 msgid "Reconnect"
 msgstr "Reconnect"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 249
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 255
 msgid "Transient communication errors"
 msgstr "Transient communication errors"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 250
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/dashboard.py, line: 256
 msgid "The display works, but some transfers failed and were repeated."
 msgstr "The display works, but some transfers failed and were repeated."
 
@@ -1898,7 +1944,7 @@ msgstr "Back"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/preferences_page.py, line: 89
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/main.py, line: 140
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 347
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 362
 msgid "Quit"
 msgstr "Quit"
 
@@ -1945,7 +1991,7 @@ msgstr "About…"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/preferences_page.py, line: 121
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 343
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 358
 msgid "Preferences"
 msgstr "Preferences"
 
@@ -2033,7 +2079,7 @@ msgstr "Select it for every display; Apply sends it"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/theme_gallery.py, line: 144
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 113
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 115
 msgid "Displays"
 msgstr "Displays"
 
@@ -2041,7 +2087,7 @@ msgstr "Displays"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/theme_gallery.py, line: 148
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 746
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 768
 msgid "Animation"
 msgstr "Animation"
 
@@ -2064,9 +2110,481 @@ msgstr "Every option of this theme has its own section."
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/theme_gallery.py, line: 181
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 449
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 464
 msgid "Theme selected. Press Apply to send it to the display."
 msgstr "Theme selected. Press Apply to send it to the display."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 72
+#, python-brace-format
+msgid "{preset} (from {theme})"
+msgstr "{preset} (from {theme})"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 92
+#, python-brace-format
+msgid "Compatibility with the theme: {state}"
+msgstr "Compatibility with the theme: {state}"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 123
+msgid "No HID node found for this cooler."
+msgstr "No HID node found for this cooler."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 135
+msgid "The service group has no access: reinstall the package or replug the cooler so the udev rule applies."
+msgstr "The service group has no access: reinstall the package or replug the cooler so the udev rule applies."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 176
+#, python-brace-format
+msgid "{name} display face"
+msgstr "{name} display face"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 178
+msgid "A drawing of what the cooler shows, from the values the service sends. The cooler draws its own digits: no image is sent to it."
+msgstr "A drawing of what the cooler shows, from the values the service sends. The cooler draws its own digits: no image is sent to it."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 184
+msgid "This cooler"
+msgstr "This cooler"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 188
+msgid "Use this cooler"
+msgstr "Use this cooler"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 195
+msgid "Maker"
+msgstr "Maker"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 196
+msgid "Display type"
+msgstr "Display type"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 197
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 403
+msgid "Protocol"
+msgstr "Protocol"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 199
+msgid "About this model"
+msgstr "About this model"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 200
+msgid "Metrics shown"
+msgstr "Metrics shown"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 201
+msgid "Compatibility with the theme"
+msgstr "Compatibility with the theme"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 204
+msgid "Compatibility with every theme"
+msgstr "Compatibility with every theme"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 205
+msgid "How each theme is represented on this cooler"
+msgstr "How each theme is represented on this cooler"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 220
+msgid "With \"Follow the theme\", the cooler shows what best represents it."
+msgstr "With \"Follow the theme\", the cooler shows what best represents it."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 221
+msgid "Follow the theme"
+msgstr "Follow the theme"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 223
+msgid "Presentation"
+msgstr "Presentation"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 226
+msgid "Showing now"
+msgstr "Showing now"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 229
+msgid "Alternate every 5 seconds"
+msgstr "Alternate every 5 seconds"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 231
+msgid "Configurable field"
+msgstr "Configurable field"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 233
+msgid "Used by the CPU Custom presentation. A value the computer cannot measure is never shown."
+msgstr "Used by the CPU Custom presentation. A value the computer cannot measure is never shown."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 237
+msgid "Fields"
+msgstr "Fields"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 237
+#, python-brace-format
+msgid "This cooler always shows {fields}; the presentation does not change them."
+msgstr "This cooler always shows {fields}; the presentation does not change them."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 242
+msgid "CPU information"
+msgstr "CPU information"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 244
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 689
+msgid "Temperature unit"
+msgstr "Temperature unit"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 244
+msgid "Celsius (°C)"
+msgstr "Celsius (°C)"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 244
+msgid "Fahrenheit (°F)"
+msgstr "Fahrenheit (°F)"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 248
+msgid "Frequency"
+msgstr "Frequency"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 248
+msgid "Fastest core"
+msgstr "Fastest core"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 248
+msgid "Average of all cores"
+msgstr "Average of all cores"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 251
+msgid "Current values"
+msgstr "Current values"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 256
+msgid "Temperature alarm"
+msgstr "Temperature alarm"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 257
+msgid "Lights the cooler's alarm indicator at the threshold."
+msgstr "Lights the cooler's alarm indicator at the threshold."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 262
+msgid "Alarm threshold (°C)"
+msgstr "Alarm threshold (°C)"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 268
+msgid "Firmware alarm"
+msgstr "Firmware alarm"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 268
+#, python-brace-format
+msgid "Built into the cooler: {limits}. It stays active and is never changed by this program."
+msgstr "Built into the cooler: {limits}. It stays active and is never changed by this program."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 272
+msgid "Alarm"
+msgstr "Alarm"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 272
+msgid "This cooler has no alarm indicator."
+msgstr "This cooler has no alarm indicator."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 276
+msgid "Update interval"
+msgstr "Update interval"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 279
+msgid "Each update is one small USB packet; faster updates use a little more CPU."
+msgstr "Each update is one small USB packet; faster updates use a little more CPU."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 280
+msgid "Updates"
+msgstr "Updates"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 285
+msgid "Screen rotation"
+msgstr "Screen rotation"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 289
+msgid "Leading zeros"
+msgstr "Leading zeros"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 289
+msgid "Shows 045 instead of 45."
+msgstr "Shows 045 instead of 45."
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 294
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 381
+#, python-brace-format
+msgid "Automatic ({model})"
+msgstr "Automatic ({model})"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 296
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 383
+msgid "Model / protocol"
+msgstr "Model / protocol"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 298
+msgid "Choose manually only if detection is wrong."
+msgstr "Choose manually only if detection is wrong."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 299
+msgid "Closes and reopens this cooler only"
+msgstr "Closes and reopens this cooler only"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 307
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 516
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 902
+msgid "Diagnostics"
+msgstr "Diagnostics"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 308
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 311
+msgid "Copy the diagnostics"
+msgstr "Copy the diagnostics"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 315
+msgid "USB"
+msgstr "USB"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 315
+msgid "Permissions"
+msgstr "Permissions"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 316
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/gkrellm.py, line: 395
+msgid "Sensors"
+msgstr "Sensors"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 316
+msgid "Unavailable values"
+msgstr "Unavailable values"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 317
+msgid "Other DeepCool programs"
+msgstr "Other DeepCool programs"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 317
+msgid "Last update"
+msgstr "Last update"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 318
+msgid "Validation"
+msgstr "Validation"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 351
+msgid "enabled"
+msgstr "enabled"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 351
+msgid "installed"
+msgstr "installed"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 354
+#, python-brace-format
+msgid "{name} is running (process {pid}, {project}). Close it before using the cooler here."
+msgstr "{name} is running (process {pid}, {project}). Close it before using the cooler here."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 356
+msgid "Nothing was stopped: you decide."
+msgstr "Nothing was stopped: you decide."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 358
+msgid "None found."
+msgstr "None found."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 376
+msgid "DEMO · sample values"
+msgstr "DEMO · sample values"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 384
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 473
+#, python-brace-format
+msgid "for {seconds:.0f} s"
+msgstr "for {seconds:.0f} s"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 385
+msgid "The service is not driving this cooler."
+msgstr "The service is not driving this cooler."
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 392
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 482
+#, python-brace-format
+msgid "USB {ids} at port {path}"
+msgstr "USB {ids} at port {path}"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 394
+#, python-brace-format
+msgid "product \"{name}\""
+msgstr "product \"{name}\""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 398
+msgid "SE variant (no report id)"
+msgstr "SE variant (no report id)"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 399
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 264
+msgid "Not connected"
+msgstr "Not connected"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 403
+#, python-brace-format
+msgid "USB device {path}: access granted to the service group by the package's udev rule."
+msgstr "USB device {path}: access granted to the service group by the package's udev rule."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 408
+#, python-brace-format
+msgid "Temperature: {source}"
+msgstr "Temperature: {source}"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 410
+#, python-brace-format
+msgid "Power: {source} ({status})"
+msgstr "Power: {source} ({status})"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 417
+#, python-brace-format
+msgid "Sent as 0 because the cooler has no blank value: {fields}"
+msgstr "Sent as 0 because the cooler has no blank value: {fields}"
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 421
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1197
+#, python-brace-format
+msgid "{seconds:.0f} s ago"
+msgstr "{seconds:.0f} s ago"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 424
+msgid "B — implemented from documented protocols and verified against reference data; not yet tested on a real cooler by this project."
+msgstr "B — implemented from documented protocols and verified against reference data; not yet tested on a real cooler by this project."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 427
+#, python-brace-format
+msgid "Reference projects: {state}"
+msgstr "Reference projects: {state}"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 431
+#, python-brace-format
+msgid "{sent} updates · {ms:.1f} ms per update · {recoveries} recoveries"
+msgstr "{sent} updates · {ms:.1f} ms per update · {recoveries} recoveries"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 442
+msgid "Shown when the service is driving the cooler."
+msgstr "Shown when the service is driving the cooler."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 453
+#, python-brace-format
+msgid "On the field now: {metric}"
+msgstr "On the field now: {metric}"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 471
+msgid "Diagnostics copied."
+msgstr "Diagnostics copied."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 481
+msgid "Unknown DeepCool device."
+msgstr "Unknown DeepCool device."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/gui/deepcool_page.py, line: 483
+msgid "Nothing is sent to it."
+msgstr "Nothing is sent to it."
 
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 87
@@ -2116,7 +2634,7 @@ msgstr "All player options"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 162
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1009
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1031
 msgid "Customise"
 msgstr "Customise"
 
@@ -2145,7 +2663,7 @@ msgstr "Complete"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 192
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 776
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 798
 msgid "Compact"
 msgstr "Compact"
 
@@ -2177,8 +2695,8 @@ msgstr "Low power (no animation)"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 197
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 421
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 682
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 344
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 688
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 381
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 710
 msgid "Automatic"
 msgstr "Automatic"
 
@@ -2196,7 +2714,7 @@ msgstr "Economical"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 573
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 595
 msgid "Balanced"
 msgstr "Balanced"
 
@@ -2204,7 +2722,7 @@ msgstr "Balanced"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 573
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 595
 msgid "Fluid"
 msgstr "Fluid"
 
@@ -2217,8 +2735,8 @@ msgstr "Never faster than the display can receive; Off also stops scrolling text
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 639
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 689
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 661
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 711
 msgid "Text size"
 msgstr "Text size"
 
@@ -2227,9 +2745,9 @@ msgstr "Text size"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 202
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 640
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 690
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 692
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 662
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 712
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 714
 msgid "Small"
 msgstr "Small"
 
@@ -2239,11 +2757,11 @@ msgstr "Small"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 202
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 224
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 640
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 690
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 692
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 750
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 771
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 662
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 712
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 714
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 772
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 793
 msgid "Normal"
 msgstr "Normal"
 
@@ -2252,9 +2770,9 @@ msgstr "Normal"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 201
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 203
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 640
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 690
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 692
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 662
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 712
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 714
 msgid "Large"
 msgstr "Large"
 
@@ -2286,7 +2804,7 @@ msgstr "Square"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 205
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 642
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 664
 msgid "Rounded"
 msgstr "Rounded"
 
@@ -2410,7 +2928,7 @@ msgstr "Fast"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 226
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 652
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 674
 msgid "Distribution logo"
 msgstr "Distribution logo"
 
@@ -2464,7 +2982,7 @@ msgstr "PNG, JPEG, WebP or SVG"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 231
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 387
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 424
 msgid "Choose…"
 msgstr "Choose…"
 
@@ -2482,7 +3000,7 @@ msgstr "Player shown"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 239
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 572
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 594
 msgid "Automatic (recommended)"
 msgstr "Automatic (recommended)"
 
@@ -2571,7 +3089,7 @@ msgstr "Used only in this window when no player is found; marked DEMO."
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 254
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 769
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 791
 msgid "Volume"
 msgstr "Volume"
 
@@ -2697,7 +3215,7 @@ msgstr "Only on alerts"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 277
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 374
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 777
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 799
 msgid "Position"
 msgstr "Position"
 
@@ -2735,7 +3253,7 @@ msgstr "Temperature alert (°C)"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 284
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 784
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 806
 msgid "Clock"
 msgstr "Clock"
 
@@ -2753,8 +3271,8 @@ msgstr "RAM"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 286
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 661
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 703
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 683
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 725
 msgid "Swap"
 msgstr "Swap"
 
@@ -2765,8 +3283,8 @@ msgstr "Swap"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 286
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/dashboard.py, line: 251
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 661
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 785
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 683
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 807
 msgid "Disk"
 msgstr "Disk"
 
@@ -2774,7 +3292,7 @@ msgstr "Disk"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 286
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 703
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 725
 msgid "GPU"
 msgstr "GPU"
 
@@ -3197,7 +3715,7 @@ msgstr "All"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 485
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 761
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 783
 msgid "Classic"
 msgstr "Classic"
 
@@ -3210,14 +3728,6 @@ msgstr "Modern"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 497
 msgid "Seven classic homages and eight modern designs, drawn by the real renderer. Choose one; Apply sends it to the display."
 msgstr "Seven classic homages and eight modern designs, drawn by the real renderer. Choose one; Apply sends it to the display."
-
-#
-# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 516
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 880
-msgid "Diagnostics"
-msgstr "Diagnostics"
 
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 516
@@ -3298,7 +3808,7 @@ msgstr "Media session reloaded."
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 640
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1042
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1064
 #, python-brace-format
 msgid "Could not start the media agent: {error}"
 msgstr "Could not start the media agent: {error}"
@@ -3420,337 +3930,314 @@ msgid "{files} image(s), {size:.1f} MB"
 msgstr "{files} image(s), {size:.1f} MB"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 58
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 59
 msgid "Invalid command."
 msgstr "Invalid command."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 61
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1136
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 62
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1158
 msgid "The service is not running."
 msgstr "The service is not running."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 88
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 89
 #, python-brace-format
 msgid "Serial device {ids}"
 msgstr "Serial device {ids}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 110
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 111
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 112
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 113
 msgid "Look for displays again"
 msgstr "Look for displays again"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 114
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 116
 msgid "Each display can have its own name, theme, orientation, brightness and performance. Detection only reads USB identifiers: nothing is sent to a device to find out what it is."
 msgstr "Each display can have its own name, theme, orientation, brightness and performance. Detection only reads USB identifiers: nothing is sent to a device to find out what it is."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 117
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 119
 msgid "No display found"
 msgstr "No display found"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 118
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 120
 msgid "Connect the panel over USB, then look again. Supported models are listed in the documentation (Compatibility)."
 msgstr "Connect the panel over USB, then look again. Supported models are listed in the documentation (Compatibility)."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 126
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 128
 msgid "Other serial devices"
 msgstr "Other serial devices"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 127
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 129
 msgid "Not recognised automatically. If one of them is a display, choose its model; otherwise leave it alone."
 msgstr "Not recognised automatically. If one of them is a display, choose its model; otherwise leave it alone."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 131
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 133
+msgid "Other DeepCool devices"
+msgstr "Other DeepCool devices"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 134
+msgid "Identified by their USB ids, but their protocol is not implemented here. Nothing is sent to them."
+msgstr "Identified by their USB ids, but their protocol is not implemented here. Nothing is sent to them."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 139
 msgid "My Displays"
 msgstr "My Displays"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 199
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 208
 #, python-brace-format
 msgid "{count} display(s) found."
 msgstr "{count} display(s) found."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 200
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 209
 msgid "No display found. Check the cable and the USB port."
 msgstr "No display found. Check the cable and the USB port."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 218
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 228
 msgid "Choose Model…"
 msgstr "Choose Model…"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 233
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 257
 msgid "Disabled"
 msgstr "Disabled"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 261
 msgid "Needs a model choice"
 msgstr "Needs a model choice"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 239
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 263
 msgid "Detected"
 msgstr "Detected"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 240
-msgid "Not connected"
-msgstr "Not connected"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 298
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 335
 #, python-brace-format
 msgid "What {name} shows"
 msgstr "What {name} shows"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 303
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 340
 msgid "This display"
 msgstr "This display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 304
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 341
 msgid "These values apply only to this display and take precedence over the defaults."
 msgstr "These values apply only to this display and take precedence over the defaults."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 309
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 346
 msgid "Use this display"
 msgstr "Use this display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 316
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 323
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 337
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 353
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 360
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 374
 #, python-brace-format
 msgid "Same as default ({value})"
 msgstr "Same as default ({value})"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 320
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 357
 msgid "Theme options (colours, modules) are shared and set in the Theme Gallery."
 msgstr "Theme options (colours, modules) are shared and set in the Theme Gallery."
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 322
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 567
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 359
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 589
 msgid "Orientation"
 msgstr "Orientation"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 327
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 364
 #, python-brace-format
 msgid "Same as default ({value}%)"
 msgstr "Same as default ({value}%)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 342
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 379
 msgid "Hardware"
 msgstr "Hardware"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 344
-#, python-brace-format
-msgid "Automatic ({model})"
-msgstr "Automatic ({model})"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 346
-msgid "Model / protocol"
-msgstr "Model / protocol"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 348
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 385
 msgid "Choose manually only if detection is wrong or ambiguous."
 msgstr "Choose manually only if detection is wrong or ambiguous."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 353
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 390
 msgid "Panel size"
 msgstr "Panel size"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 353
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 390
 msgid "Detect"
 msgstr "Detect"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 359
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 396
 msgid "Backplate LEDs"
 msgstr "Backplate LEDs"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 363
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 400
 msgid "Only the flagship model has LEDs."
 msgstr "Only the flagship model has LEDs."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 366
-msgid "Protocol"
-msgstr "Protocol"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 367
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 404
 msgid "Transfer"
 msgstr "Transfer"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 367
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 404
 msgid "Details"
 msgstr "Details"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 375
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 412
 msgid "Room sensors"
 msgstr "Room sensors"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 379
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 416
 msgid "Tests"
 msgstr "Tests"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 380
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 417
 msgid "A pattern stays on for a few seconds, then the theme returns."
 msgstr "A pattern stays on for a few seconds, then the theme returns."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 381
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 418
 msgid "Identify"
 msgstr "Identify"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 381
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 418
 msgid "Shows this display's name on it"
 msgstr "Shows this display's name on it"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 386
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 423
 msgid "Show a test pattern"
 msgstr "Show a test pattern"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 400
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 437
 msgid "Closes and reopens this display only"
 msgstr "Closes and reopens this display only"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 432
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 472
 msgid "Waiting for a model choice"
 msgstr "Waiting for a model choice"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 433
-#, python-brace-format
-msgid "for {seconds:.0f} s"
-msgstr "for {seconds:.0f} s"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 442
-#, python-brace-format
-msgid "USB {ids} at port {path}"
-msgstr "USB {ids} at port {path}"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 445
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 485
 #, python-brace-format
 msgid "serial port {port}"
 msgstr "serial port {port}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 456
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 496
 #, python-brace-format
 msgid "{encoding}, {mode}"
 msgstr "{encoding}, {mode}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 458
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 498
 msgid "partial updates"
 msgstr "partial updates"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 458
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 498
 msgid "whole frames"
 msgstr "whole frames"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 460
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 500
 #, python-brace-format
 msgid "{fps:.1f} fps · {ms:.0f} ms per transfer · {recoveries} recoveries"
 msgstr "{fps:.1f} fps · {ms:.0f} ms per transfer · {recoveries} recoveries"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 466
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 506
 #, python-brace-format
 msgid "Serial number {serial}"
 msgstr "Serial number {serial}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 471
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 511
 #, python-brace-format
 msgid "Firmware: {version}"
 msgstr "Firmware: {version}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 478
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 518
 #, python-brace-format
 msgid "{value:.1f} °C"
 msgstr "{value:.1f} °C"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 480
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 520
 #, python-format, python-brace-format
 msgid "{value:.0f}% humidity"
 msgstr "{value:.0f}% humidity"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 490
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 530
 msgid "Not connected · preview"
 msgstr "Not connected · preview"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 503
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 543
 msgid "Which display is this?"
 msgstr "Which display is this?"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 504
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 544
 #, python-brace-format
 msgid "{device} ({ids}) was not recognised. Choose its model only if you are sure: the service will then talk to it with that protocol. Nothing is sent before you press Apply."
 msgstr "{device} ({ids}) was not recognised. Choose its model only if you are sure: the service will then talk to it with that protocol. Nothing is sent before you press Apply."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 511
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 551
 msgid "Use this model"
 msgstr "Use this model"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 519
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 559
 msgid "Model chosen. Press Apply to start using the display."
 msgstr "Model chosen. Press Apply to start using the display."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 526
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 566
 msgid "Sent to the display."
 msgstr "Sent to the display."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 527
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 567
 msgid "The display did not receive the command"
 msgstr "The display did not receive the command"
 
@@ -4023,7 +4510,7 @@ msgid "Note: the panels do not report what they display; a successful transfer m
 msgstr "Note: the panels do not report what they display; a successful transfer means the device accepted the data."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/runtime.py, line: 1141
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/runtime.py, line: 1198
 msgid "Monitoring stopped"
 msgstr "Monitoring stopped"
 
@@ -4046,11 +4533,6 @@ msgid "{count} procs"
 msgstr "{count} procs"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/gkrellm.py, line: 395
-msgid "Sensors"
-msgstr "Sensors"
-
-#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/gkrellm.py, line: 398
 msgid "no sensors"
 msgstr "no sensors"
@@ -4059,7 +4541,7 @@ msgstr "no sensors"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/gkrellm.py, line: 413
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 701
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 723
 msgid "Disk I/O"
 msgstr "Disk I/O"
 
@@ -4195,9 +4677,14 @@ msgstr "No media playing"
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 994
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 698
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
 msgid "Time"
 msgstr "Time"
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/displays/deepcool/preview.py, line: 60
+msgid "DEMO"
+msgstr "DEMO"
 
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/compact.py, line: 57
@@ -4266,1099 +4753,1088 @@ msgid "also possible: {name} ({confidence})"
 msgstr "also possible: {name} ({confidence})"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 81
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 82
 #, python-brace-format
 msgid "The administrative helper is not installed ({path})."
 msgstr "The administrative helper is not installed ({path})."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 92
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 93
 msgid "Authorization was cancelled or denied."
 msgstr "Authorization was cancelled or denied."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 275
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 290
 msgid "Start with the computer"
 msgstr "Start with the computer"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 276
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 291
 msgid "Runs the monitor service at boot"
 msgstr "Runs the monitor service at boot"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 320
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 335
 msgid "Sections"
 msgstr "Sections"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 342
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 357
 msgid "Restore Defaults…"
 msgstr "Restore Defaults…"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 346
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 361
 msgid "About Big Screen Monitor Display"
 msgstr "About Big Screen Monitor Display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 350
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 370
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 365
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 385
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 352
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 367
 msgid "Main Menu"
 msgstr "Main Menu"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 362
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 377
 msgid "Open the diagnostics"
 msgstr "Open the diagnostics"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 447
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 462
 msgid "This theme is not in use on any display."
 msgstr "This theme is not in use on any display."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 447
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 462
 msgid "Use It"
 msgstr "Use It"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 565
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 587
 msgid "Defaults for all displays"
 msgstr "Defaults for all displays"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 566
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 588
 msgid "Used by every display that does not set its own value."
 msgstr "Used by every display that does not set its own value."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 568
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 590
 msgid "Horizontal (landscape)"
 msgstr "Horizontal (landscape)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 568
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 590
 msgid "Vertical (portrait)"
 msgstr "Vertical (portrait)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 569
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 591
 msgid "Horizontal, upside down"
 msgstr "Horizontal, upside down"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 569
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 591
 msgid "Vertical, upside down"
 msgstr "Vertical, upside down"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 572
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 594
 msgid "Economy"
 msgstr "Economy"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 574
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 596
 msgid "Automatic detection"
 msgstr "Automatic detection"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 575
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 597
 msgid "All supported models"
 msgstr "All supported models"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 575
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 597
 msgid "Only AX206 (USB photo frame)"
 msgstr "Only AX206 (USB photo frame)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 576
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 598
 msgid "Only Turing Smart Screen 3.5\" (USB serial)"
 msgstr "Only Turing Smart Screen 3.5\" (USB serial)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 577
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 599
 msgid "Limits which detected displays start automatically."
 msgstr "Limits which detected displays start automatically."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 578
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 600
 msgid "Preview size"
 msgstr "Preview size"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 580
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 602
 msgid "Used for the previews while no display is connected."
 msgstr "Used for the previews while no display is connected."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 591
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 613
 msgid "Discard"
 msgstr "Discard"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 591
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 613
 msgid "Discard unsaved changes"
 msgstr "Discard unsaved changes"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 594
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 616
 msgid "Apply"
 msgstr "Apply"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 594
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 616
 msgid "Save and send to the displays (Ctrl+S)"
 msgstr "Save and send to the displays (Ctrl+S)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 637
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 731
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 659
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 753
 msgid "Colour scheme"
 msgstr "Colour scheme"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 641
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 663
 msgid "Bar style"
 msgstr "Bar style"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 642
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 664
 msgid "Flat"
 msgstr "Flat"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 642
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 664
 msgid "Segmented"
 msgstr "Segmented"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 643
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 665
 msgid "Coloured labels"
 msgstr "Coloured labels"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 644
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 666
 msgid "Alert colours"
 msgstr "Alert colours"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 645
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 667
 msgid "Bars turn orange above 75% and red above 90%."
 msgstr "Bars turn orange above 75% and red above 90%."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 646
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 668
 msgid "History in the background"
 msgstr "History in the background"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 647
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 669
 msgid "A faint graph of the last 30 seconds behind each item."
 msgstr "A faint graph of the last 30 seconds behind each item."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 650
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 672
 msgid "Header"
 msgstr "Header"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 651
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 673
 msgid "Show header"
 msgstr "Show header"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 653
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 698
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 675
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
 msgid "Host name and kernel"
 msgstr "Host name and kernel"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 654
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 698
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 676
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
 msgid "Date"
 msgstr "Date"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 655
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 677
 msgid "24-hour clock"
 msgstr "24-hour clock"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 656
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 717
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 736
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 678
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 739
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 758
 msgid "Show seconds"
 msgstr "Show seconds"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 659
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 681
 msgid "Information"
 msgstr "Information"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 660
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 682
 msgid "CPU usage and temperature"
 msgstr "CPU usage and temperature"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 660
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 702
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 682
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 724
 msgid "Memory"
 msgstr "Memory"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 662
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 684
 msgid "GPU usage and temperature"
 msgstr "GPU usage and temperature"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 663
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 685
 msgid "Video memory (VRAM)"
 msgstr "Video memory (VRAM)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 663
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 685
 msgid "Network traffic"
 msgstr "Network traffic"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 665
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 687
 msgid "Show values as"
 msgstr "Show values as"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 666
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 688
 msgid "Used / total"
 msgstr "Used / total"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 666
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 688
 msgid "Percentage"
 msgstr "Percentage"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 667
-msgid "Temperature unit"
-msgstr "Temperature unit"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 670
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 692
 msgid "Side panel"
 msgstr "Side panel"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 670
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 692
 msgid "Below the information in portrait orientation."
 msgstr "Below the information in portrait orientation."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 671
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 693
 msgid "Content"
 msgstr "Content"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 672
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 694
 msgid "Top processes"
 msgstr "Top processes"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 672
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 694
 msgid "Graphs"
 msgstr "Graphs"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 672
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 694
 msgid "Nothing"
 msgstr "Nothing"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 673
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 695
 msgid "Processes listed"
 msgstr "Processes listed"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 675
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 697
 msgid "Order processes by"
 msgstr "Order processes by"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 676
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 699
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 698
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 721
 msgid "CPU usage"
 msgstr "CPU usage"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 676
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 698
 msgid "Memory usage"
 msgstr "Memory usage"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 677
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 699
 msgid "Footer"
 msgstr "Footer"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 677
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 699
 msgid "Uptime, load, process count and power profile."
 msgstr "Uptime, load, process count and power profile."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 684
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 706
 msgid "Visual style"
 msgstr "Visual style"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 685
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 707
 msgid "Classic (green phosphor)"
 msgstr "Classic (green phosphor)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 687
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 709
 msgid "Columns"
 msgstr "Columns"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 691
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 713
 msgid "Chart height"
 msgstr "Chart height"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 693
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 715
 msgid "Partitions listed"
 msgstr "Partitions listed"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 696
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 718
 msgid "Modules"
 msgstr "Modules"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 696
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 718
 msgid "Modules that do not fit on the display are skipped."
 msgstr "Modules that do not fit on the display are skipped."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 699
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 721
 msgid "Uptime"
 msgstr "Uptime"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 699
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 721
 msgid "CPU cores"
 msgstr "CPU cores"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 700
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 722
 msgid "Processes and load"
 msgstr "Processes and load"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 700
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 722
 msgid "Temperatures"
 msgstr "Temperatures"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 701
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 723
 msgid "Main network interface"
 msgstr "Main network interface"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 702
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 724
 msgid "Other network interfaces"
 msgstr "Other network interfaces"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 703
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 725
 msgid "Partitions"
 msgstr "Partitions"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 704
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 726
 msgid "Battery"
 msgstr "Battery"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 704
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 726
 msgid "Fans and power"
 msgstr "Fans and power"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 705
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 727
 msgid "Docker containers"
 msgstr "Docker containers"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 705
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 727
 msgid "Removable media"
 msgstr "Removable media"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 706
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 728
 msgid "Media player"
 msgstr "Media player"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 714
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 736
 msgid "Accent colour"
 msgstr "Accent colour"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 715
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 737
 msgid "Blue"
 msgstr "Blue"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 715
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 737
 msgid "Green"
 msgstr "Green"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 715
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 732
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 737
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 754
 msgid "Amber"
 msgstr "Amber"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 715
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 737
 msgid "Violet"
 msgstr "Violet"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 716
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 738
 msgid "Red"
 msgstr "Red"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 719
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 741
 msgid "Globe"
 msgstr "Globe"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 742
 msgid "Night side"
 msgstr "Night side"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 742
 msgid "Shade the half of the Earth without sunlight."
 msgstr "Shade the half of the Earth without sunlight."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 721
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 743
 msgid "City lights"
 msgstr "City lights"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 722
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 744
 msgid "Sun and Moon tracks"
 msgstr "Sun and Moon tracks"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 723
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 745
 msgid "Where they were and will be over 24 hours."
 msgstr "Where they were and will be over 24 hours."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 724
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 746
 msgid "Moon"
 msgstr "Moon"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 732
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 754
 msgid "Classic grey"
 msgstr "Classic grey"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 732
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 754
 msgid "Slate (dark)"
 msgstr "Slate (dark)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 733
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 755
 msgid "Plum"
 msgstr "Plum"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 734
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 756
 msgid "Title bar"
 msgstr "Title bar"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 735
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 757
 msgid "Status bar"
 msgstr "Status bar"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 738
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 760
 msgid "Cards"
 msgstr "Cards"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 738
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 760
 msgid "CPU and memory are always shown."
 msgstr "CPU and memory are always shown."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 739
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 761
 msgid "GPU and video memory"
 msgstr "GPU and video memory"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 740
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 762
 msgid "Disk and swap"
 msgstr "Disk and swap"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 747
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 769
 msgid "Animate"
 msgstr "Animate"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 748
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 770
 msgid "When off, a still island is shown and only the data updates."
 msgstr "When off, a still island is shown and only the data updates."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 749
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 771
 msgid "Events"
 msgstr "Events"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 750
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 771
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 772
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 793
 msgid "Rare"
 msgstr "Rare"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 750
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 771
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 772
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 793
 msgid "Frequent"
 msgstr "Frequent"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 751
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 773
 msgid "Day and night cycle"
 msgstr "Day and night cycle"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 751
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 773
 msgid "Follows the computer clock."
 msgstr "Follows the computer clock."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 752
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 774
 msgid "Weather"
 msgstr "Weather"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 752
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 774
 msgid "Wind, rain, storms, fog and rainbows (simulated)."
 msgstr "Wind, rain, storms, fog and rainbows (simulated)."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 753
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 775
 msgid "Story continuity"
 msgstr "Story continuity"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 754
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 776
 msgid "The raft and the souvenirs are kept between sessions."
 msgstr "The raft and the souvenirs are kept between sessions."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 755
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 777
 msgid "React to the computer"
 msgstr "React to the computer"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 756
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 778
 msgid "Heat, busy memory, full disk and a busy GPU change the island."
 msgstr "Heat, busy memory, full disk and a busy GPU change the island."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 759
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 781
 msgid "Humour and speech"
 msgstr "Humour and speech"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 760
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 782
 msgid "Humour"
 msgstr "Humour"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 761
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 783
 msgid "Family"
 msgstr "Family"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 761
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 783
 msgid "Sarcastic"
 msgstr "Sarcastic"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 762
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 784
 msgid "Classic catchphrases"
 msgstr "Classic catchphrases"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 763
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 785
 msgid "Tributes such as \"AWAAAAAY!\" and \"morô?\"."
 msgstr "Tributes such as \"AWAAAAAY!\" and \"morô?\"."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 764
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 786
 msgid "Speech balloons"
 msgstr "Speech balloons"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 767
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 789
 msgid "Sound"
 msgstr "Sound"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 767
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 789
 msgid "Played by this computer: the display has no speaker. Off by default."
 msgstr "Played by this computer: the display has no speaker. Off by default."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 768
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 790
 msgid "Retro sound effects"
 msgstr "Retro sound effects"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 770
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 792
 msgid "Speech sounds"
 msgstr "Speech sounds"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 774
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 796
 msgid "Telemetry overlay"
 msgstr "Telemetry overlay"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 774
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 796
 msgid "Clock, CPU, RAM, disk and GPU over the scene."
 msgstr "Clock, CPU, RAM, disk and GPU over the scene."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 775
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 797
 msgid "Show overlay"
 msgstr "Show overlay"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 776
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 798
 msgid "Size"
 msgstr "Size"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 776
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 798
 msgid "Expanded"
 msgstr "Expanded"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 778
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 800
 msgid "Top left"
 msgstr "Top left"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 778
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 800
 msgid "Top right"
 msgstr "Top right"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 779
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 801
 msgid "Bottom left"
 msgstr "Bottom left"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 779
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 801
 msgid "Bottom right"
 msgstr "Bottom right"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 780
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 802
 msgid "Background opacity"
 msgstr "Background opacity"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 781
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 803
 msgid "Shrink during stories"
 msgstr "Shrink during stories"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 782
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 804
 msgid "The overlay becomes compact while something important happens."
 msgstr "The overlay becomes compact while something important happens."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 783
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 805
 msgid "Visible information"
 msgstr "Visible information"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 823
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 845
 msgid "Profile for all displays"
 msgstr "Profile for all displays"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 824
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 846
 msgid "How often the displays are redrawn and the hardware is read. These are limits set by the profile, not measurements; what the service measures is shown below. A display can use its own profile in My Displays."
 msgstr "How often the displays are redrawn and the hardware is read. These are limits set by the profile, not measurements; what the service measures is shown below. A display can use its own profile in My Displays."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 827
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 849
 msgid "Measured now"
 msgstr "Measured now"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 827
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 849
 msgid "Reported by the running service."
 msgstr "Reported by the running service."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 829
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 851
 msgid "Service CPU"
 msgstr "Service CPU"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 829
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 851
 msgid "Service memory"
 msgstr "Service memory"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 829
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 851
 msgid "Frames per second"
 msgstr "Frames per second"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 830
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 852
 msgid "Transfer time"
 msgstr "Transfer time"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 830
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 852
 msgid "Data sent"
 msgstr "Data sent"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 830
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 852
 msgid "Frames skipped"
 msgstr "Frames skipped"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 842
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 864
 msgid "Current state"
 msgstr "Current state"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 844
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 866
 msgid "Service"
 msgstr "Service"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 845
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 867
 msgid "Last confirmed transfer"
 msgstr "Last confirmed transfer"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 845
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 867
 msgid "Automatic recoveries"
 msgstr "Automatic recoveries"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 846
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 868
 msgid "Pipeline"
 msgstr "Pipeline"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 852
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 874
 msgid "Tools"
 msgstr "Tools"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 854
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 876
 msgid "Recover the display now"
 msgstr "Recover the display now"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 854
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 876
 msgid "Reconnects and redraws without restarting the service."
 msgstr "Reconnects and redraws without restarting the service."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 855
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 877
 msgid "Recovery requested."
 msgstr "Recovery requested."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 856
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 878
 msgid "Restart the service"
 msgstr "Restart the service"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 856
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 878
 msgid "Use if the display stays frozen."
 msgstr "Use if the display stays frozen."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 857
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 879
 msgid "Service restarted."
 msgstr "Service restarted."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 858
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1247
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 880
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1269
 msgid "Export diagnostics"
 msgstr "Export diagnostics"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 858
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 880
 msgid "Saves a report to share when asking for help."
 msgstr "Saves a report to share when asking for help."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 866
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 888
 msgid "Diagnosis"
 msgstr "Diagnosis"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 872
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 894
 msgid "Recent events"
 msgstr "Recent events"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 874
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 896
 msgid "Check service, permissions, displays and settings"
 msgstr "Check service, permissions, displays and settings"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 932
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 954
 #, python-brace-format
 msgid "Unsaved changes ({count})"
 msgstr "Unsaved changes ({count})"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 933
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 955
 msgid "Applying…"
 msgstr "Applying…"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 967
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 989
 msgid "Changes discarded."
 msgstr "Changes discarded."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 970
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 992
 msgid "Restore defaults?"
 msgstr "Restore defaults?"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 971
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 993
 msgid "Every theme, display and performance option goes back to its original value, including the names and themes of each display and the Kojiro layout. Nothing changes on the displays until you press Apply."
 msgstr "Every theme, display and performance option goes back to its original value, including the names and themes of each display and the Kojiro layout. Nothing changes on the displays until you press Apply."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 975
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 997
 msgid "Restore"
 msgstr "Restore"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 984
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1006
 msgid "Defaults loaded. Press Apply to use them."
 msgstr "Defaults loaded. Press Apply to use them."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1006
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1028
 msgid "Settings applied. The display updates in a moment."
 msgstr "Settings applied. The display updates in a moment."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1013
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1035
 #, python-brace-format
 msgid "Some values were corrected: {details}"
 msgstr "Some values were corrected: {details}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1018
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1040
 msgid "Could not apply the settings"
 msgstr "Could not apply the settings"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1030
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1052
 #, python-brace-format
 msgid "Could not configure the sound agent: {error}"
 msgstr "Could not configure the sound agent: {error}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1047
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1069
 msgid "Operation failed"
 msgstr "Operation failed"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1068
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1090
 msgid "The service will start with the computer."
 msgstr "The service will start with the computer."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1069
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1091
 msgid "The service will no longer start with the computer."
 msgstr "The service will no longer start with the computer."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1074
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1096
 msgid "Could not change the startup setting"
 msgstr "Could not change the startup setting"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1083
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1105
 msgid "Close"
 msgstr "Close"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1118
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1140
 msgid "Waiting for a display"
 msgstr "Waiting for a display"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1120
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1142
 #, python-brace-format
 msgid "Running · {count} display(s)"
 msgstr "Running · {count} display(s)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1141
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1163
 #, python-brace-format
 msgid "{fps:.1f} (target {target:g})"
 msgstr "{fps:.1f} (target {target:g})"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1145
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1167
 #, python-brace-format
 msgid "{frames} frames"
 msgstr "{frames} frames"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1152
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1174
 msgid "Run the diagnosis to find out why, or start the service."
 msgstr "Run the diagnosis to find out why, or start the service."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1164
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1186
 msgid "Everything is working"
 msgstr "Everything is working"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1166
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1188
 msgid "Attention needed"
 msgstr "Attention needed"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1170
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1192
 #, python-brace-format
 msgid "Running for {time}"
 msgstr "Running for {time}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1175
-#, python-brace-format
-msgid "{seconds:.0f} s ago"
-msgstr "{seconds:.0f} s ago"
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1176
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1198
 msgid "Nothing sent yet"
 msgstr "Nothing sent yet"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1178
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1200
 msgid "A thread stopped making progress."
 msgstr "A thread stopped making progress."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1179
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1201
 msgid "Telemetry, rendering and transfer are progressing."
 msgstr "Telemetry, rendering and transfer are progressing."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1202
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1224
 msgid "No events recorded."
 msgstr "No events recorded."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1216
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1238
 msgid "The diagnosis failed"
 msgstr "The diagnosis failed"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1228
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1250
 msgid "OK"
 msgstr "OK"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1228
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1250
 msgid "Problem"
 msgstr "Problem"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1232
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1254
 msgid "Restart service"
 msgstr "Restart service"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1232
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1254
 msgid "Recover"
 msgstr "Recover"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1232
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1254
 msgid "Enable"
 msgstr "Enable"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1233
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1255
 msgid "Import"
 msgstr "Import"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1259
 msgid "Done."
 msgstr "Done."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1243
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1265
 msgid "No problems found."
 msgstr "No problems found."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1244
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1266
 #, python-brace-format
 msgid "{count} item(s) need attention."
 msgstr "{count} item(s) need attention."
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1266
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1288
 msgid "(journal not readable by this user)"
 msgstr "(journal not readable by this user)"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1272
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1294
 #, python-brace-format
 msgid "Report saved to {path}"
 msgstr "Report saved to {path}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1274
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1296
 msgid "Could not save the report"
 msgstr "Could not save the report"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1352
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1374
 msgid "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
 msgstr "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
