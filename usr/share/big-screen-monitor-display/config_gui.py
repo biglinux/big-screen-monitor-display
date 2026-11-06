@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Big Screen Monitor Display - configuration window (GTK4 / libadwaita).
 
-The window edits a copy of the settings, previews it live with the very same
-theme renderer the service uses, and applies it through the polkit helper.
-The service reloads the file within a second, so no restart is needed.
+Layout (AshyWall design family): a sidebar with grouped sections, and a
+content area where each section is an ``Adw.NavigationView`` (galleries
+push detail pages). Sections are built the first time they are shown.
+
+Editing model: every control edits ``self.values`` (a copy of the settings);
+previews follow at once; a bar at the bottom shows pending changes, and
+"Apply" saves them through the polkit helper (validated, atomic). The
+service reloads the file within a second, so nothing restarts.
 """
 
 import copy
@@ -25,29 +30,47 @@ import gi  # noqa: E402
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
+from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, runtime, settings, sound,  # noqa: E402
                   telemetry, themes)
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
-from kojiro_page import KojiroPage  # noqa: E402
-from media_player_page import MediaPlayerPage  # noqa: E402
+from gui import components as ui  # noqa: E402
+from gui.brother_away_page import BrotherAwayPage  # noqa: E402
+from gui.dashboard import Dashboard  # noqa: E402
+from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
+from gui.theme_gallery import ThemeGallery  # noqa: E402
 
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
-# (theme id, page builder, icon) - one customisation tab per theme
-THEME_PAGES = (
-    ("standard", "_page_standard", "utilities-system-monitor-symbolic"),
-    ("gkrellm", "_page_gkrellm", "utilities-terminal-symbolic"),
-    ("planet", "_page_planet", "weather-clear-night-symbolic"),
-    ("old_computer", "_page_old_computer", "computer-symbolic"),
-    ("brother_away", "_page_brother_away", "weather-clear-symbolic"),
-    ("kojiro", "_page_kojiro", "image-x-generic-symbolic"),
-    ("big_media_player", "_page_big_media_player", "audio-x-generic-symbolic"),
+# (key, sidebar group, title, icon) in sidebar order.
+SECTIONS = (
+    ("home", N_("Overview"), N_("Home"), "go-home-symbolic"),
+    ("displays", N_("Overview"), N_("My Displays"), "video-display-symbolic"),
+    ("themes", N_("Customise"), N_("Theme Gallery"), "view-grid-symbolic"),
+    ("kojiro", N_("Customise"), N_("Kojiro Design Studio"), "applications-graphics-symbolic"),
+    ("big_media_player", N_("Customise"), N_("Big Media Player"), "audio-x-generic-symbolic"),
+    ("brother_away", N_("Customise"), N_("Brother Away"), "weather-clear-symbolic"),
+    ("performance", N_("System"), N_("Performance"), "speedometer-symbolic"),
+    ("diagnostics", N_("System"), N_("Diagnostics"), "utilities-system-monitor-symbolic"),
+    ("preferences", N_("System"), N_("Preferences"), "preferences-system-symbolic"),
 )
-SHORT_NAMES = {"brother_away": N_("Brother Away"), "kojiro": N_("Kojiro"), "big_media_player": N_("Big Media Player")}
-OWN_PREVIEW = {"kojiro"}      # theme tabs that draw their own preview (the Design Studio)
+SECTION_TITLES = {key: title for key, _group, title, _icon in SECTIONS}
 PREVIEW_SIZES = {"3.5": (480, 320), "5": (800, 480), "8.8": (480, 320), "2.1": (480, 480)}
+# Expected effect of each profile (limits from the code, not measurements).
+PROFILE_EFFECT = {
+    "auto": N_("Up to {fps:g} frames per second in animated themes, less on slow serial panels, on battery or "
+               "when the computer is busy. Hardware data every {telemetry:g} s."),
+    "economy": N_("Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every "
+                  "{telemetry:g} s. Lowest CPU use."),
+    "balanced": N_("Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every "
+                   "{telemetry:g} s."),
+    "fluid": N_("Up to {fps:g} frames per second for smoother animation; dashboards every {period:g} s; hardware "
+                "data every {telemetry:g} s. Uses more CPU."),
+}
+PROFILE_TITLE = {"auto": N_("Automatic"), "economy": N_("Economy"), "balanced": N_("Balanced"), "fluid": N_("Fluid")}
+PROFILE_ICON = {"auto": "emblem-system-symbolic", "economy": "power-profile-power-saver-symbolic",
+                "balanced": "power-profile-balanced-symbolic", "fluid": "power-profile-performance-symbolic"}
 
 
 # ------------------------------------------------------------------ helpers
@@ -105,13 +128,25 @@ def set_accessible_label(widget, text):
     widget.update_property([Gtk.AccessibleProperty.LABEL], [text])
 
 
+class _Groups(list):
+    """Collects the PreferencesGroups a theme option builder creates."""
+
+    def add(self, group):
+        self.append(group)
+
+
 # ------------------------------------------------------------------ preview
 
 class PreviewRenderer:
-    """Renders the selected theme in a worker thread for a Gtk.Picture."""
+    """Renders a theme in a worker thread for a Gtk.Picture.
 
-    def __init__(self, picture):
+    Sleeps (no wake-ups at all) while ``active`` is False: the window turns
+    it on only while its picture is on screen.
+    """
+
+    def __init__(self, picture, max_fps=None):
         self.picture = picture
+        self.max_fps = max_fps
         self.values = None
         self.theme = None
         self.theme_key = None
@@ -121,14 +156,26 @@ class PreviewRenderer:
         self._wake = threading.Event()
         self._pending_story = None
         self.active = True
+        self.still = False
+        self._stale = True
         self._player = None
         self._sound_seq = 0
         self._rng = __import__("random").Random()
+        self.frames = 0
         threading.Thread(target=self._loop, name="preview", daemon=True).start()
 
     def update(self, values, size):
         self.values = dict(values)
         self.size = size
+        self._stale = True
+        self._wake.set()
+
+    def set_active(self, active, still=False):
+        """``active``: animate. ``still``: on screen but paused (window unfocused): draw the
+        current state once per change, then sleep."""
+        self.active = active
+        self.still = still
+        self._stale = True
         self._wake.set()
 
     def play_story(self, story):
@@ -158,10 +205,11 @@ class PreviewRenderer:
     def _loop(self):
         while not self._stop.is_set():
             values = self.values
-            if values is None or not self.active:
-                self._wake.wait(0.5)
+            if values is None or not (self.active or (self.still and self._stale)):
+                self._wake.wait()
                 self._wake.clear()
                 continue
+            self._stale = False
             width, height = self.size
             if str(values.get("orientation")).startswith("vertical") and width > height:
                 width, height = height, width
@@ -178,15 +226,18 @@ class PreviewRenderer:
             try:
                 image = themes.render_for_panel(self.theme, width, height, values, self.ctx)
                 interval = self.theme.frame_interval(values, self.ctx)
+                if self.max_fps:
+                    # Overview previews: dashboards (no animation) once per second, the clock's pace.
+                    fps = self.max_fps if self.theme.info.animated else min(self.max_fps, 1.0)
+                    interval = max(interval, 1.0 / fps)
             except Exception as error:  # noqa: BLE001 - show the failure instead of crashing the window
                 print(f"preview failed: {error!r}", file=sys.stderr)
                 self._wake.wait(1.0)
                 self._wake.clear()
                 continue
             self._play_sounds(values)
-            data = GLib.Bytes.new(image.tobytes())
-            texture = Gdk.MemoryTexture.new(image.width, image.height, Gdk.MemoryFormat.R8G8B8, data,
-                                            image.width * 3)
+            texture = ui.texture_from_image(image)
+            self.frames += 1
             GLib.idle_add(self.picture.set_paintable, texture)
             remaining = max(0.05, interval - (time.monotonic() - started))
             self._wake.wait(min(remaining, 1.0))
@@ -200,101 +251,269 @@ class ConfigWindow(Adw.ApplicationWindow):
         super().__init__(**kwargs)
         self.set_title(_("Big Screen Monitor Display"))
         self.set_default_size(1180, 800)
+        self.set_size_request(360, 480)
+        ui.load_css()
+        apply_style(load_gui_settings().get("style", "system"))
         self.saved = settings.load()
         self.values = copy.deepcopy(self.saved)
         self.status = runtime.read_status()
+        self.service_fresh = self._status_fresh()
         self._loading = True
         self._widgets = {}
-
-        self.toasts = Adw.ToastOverlay()
-        self.set_content(self.toasts)
-        toolbar = Adw.ToolbarView()
-        self.toasts.set_child(toolbar)
-
-        header = Adw.HeaderBar()
-        self.stack = Adw.ViewStack()
-        switcher = Adw.ViewSwitcher(stack=self.stack, policy=Adw.ViewSwitcherPolicy.WIDE)
-        header.set_title_widget(switcher)
-        header.pack_end(self._menu_button())
-        toolbar.add_top_bar(header)
-
-        self.banner = Adw.Banner()
-        self.banner.set_button_label(_("Diagnose"))
-        self.banner.connect("button-clicked", lambda *_: self._show_diagnostics())
-        toolbar.add_top_bar(self.banner)
-
-        toolbar.set_content(self.stack)
-        toolbar.add_bottom_bar(self._action_bar())
-
-        # One preview for the gallery (follows the selection) and one per theme tab.
-        self.pictures = {"themes": self._picture(_("Preview of the selected theme"))}
-        for theme_id, _builder, _icon in THEME_PAGES:
-            if theme_id in OWN_PREVIEW:
-                continue
-            self.pictures[theme_id] = self._picture(
-                _("Preview of {theme}").format(theme=_(themes.REGISTRY[theme_id].name)))
-        self.previews = {name: PreviewRenderer(picture) for name, picture in self.pictures.items()}
-        self.preview_ba = self.previews["brother_away"]
+        self._previews = []
+        self._banners = {}
+        self._closed = False
+        self.welcome_dismissed = False
+        self.current_section = None
+        self.sections = {}
+        self.thumbnailer = ui.Thumbnailer()
+        self.worker = ui.SerialWorker()
         self.collector = telemetry.Collector(interval=2.0)
         self.collector.want_sensors = True      # GKrellM preview lists real sensors
         self.collector.start()
 
-        self.stack.add_titled_with_icon(self._page_display(), "display", _("My Displays"), "video-display-symbolic")
-        self.stack.add_titled_with_icon(self._page_themes(), "themes", _("Themes"), "applications-graphics-symbolic")
-        # Each theme has its own customisation tab, shown only while that theme is applied.
-        self.theme_pages = {}
-        for theme_id, builder, icon in THEME_PAGES:
-            self.theme_pages[theme_id] = self.stack.add_titled_with_icon(
-                getattr(self, builder)(), f"theme_{theme_id}", _(SHORT_NAMES.get(theme_id, themes.REGISTRY[theme_id].name)),
-                icon)
-        self.stack.add_titled_with_icon(self._page_performance(), "performance", _("Performance"),
-                                        "speedometer-symbolic")
-        self.stack.add_titled_with_icon(self._page_diagnostics(), "diagnostics", _("Diagnostics"),
-                                        "dialog-information-symbolic")
-        self.stack.connect("notify::visible-child-name", self._on_page_changed)
+        self.startup_row = Adw.SwitchRow(title=_("Start with the computer"),
+                                         subtitle=_("Runs the monitor service at boot"))
+        self.startup_row.connect("notify::active", self._on_startup_toggled)
+        self.worker.submit("startup", lambda: diagnostics.systemctl_query("is-enabled"),
+                           self._startup_state)
+
+        self.displays_page = DisplaysPage(self, run_helper)
+        self.displays_page.add_defaults(self._global_display_group())
+
+        self.content_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE, transition_duration=120,
+                                       hhomogeneous=False, vhomogeneous=False)
+        content = Adw.ToolbarView(content=self.content_stack)
+        content.add_bottom_bar(self._pending_bar())
+        self.content_page = Adw.NavigationPage(child=content, title=_("Home"))
+        self.split = Adw.NavigationSplitView(sidebar=self._build_sidebar(), content=self.content_page,
+                                             min_sidebar_width=220, max_sidebar_width=280)
+        ui.ADAPTIVE.attach(self, collapse_targets=[(self.split, "collapsed", True)])
+        self.toasts = Adw.ToastOverlay(child=self.split)
+        self.set_content(self.toasts)
+        self._install_actions()
 
         self._loading = False
-        self._update_theme_pages()
+        self.show_section("home")
         self._refresh_dirty()
         self._refresh_status()
-        self._on_page_changed()
-        GLib.timeout_add_seconds(2, self._refresh_status)
+        self._status_source = GLib.timeout_add_seconds(2, self._refresh_status)
         self.connect("close-request", self._on_close)
+        # Previews pause while the window is in the background or minimised.
+        self.connect("notify::is-active", lambda *_: self._focus_changed())
+        self.connect("notify::suspended", lambda *_: self._focus_changed())
 
-    # ---------------------------------------------------------- building
-    def _picture(self, description):
-        picture = Gtk.Picture(content_fit=Gtk.ContentFit.CONTAIN, can_shrink=True)
-        picture.set_size_request(-1, 220)
-        picture.set_alternative_text(description)
-        picture.add_css_class("card")
-        return picture
+    def _focused(self):
+        suspended = self.get_suspended() if hasattr(self, "get_suspended") else False
+        return (self.is_active() or os.environ.get("BSM_PREVIEW_ALWAYS")) and not suspended
 
-    def _menu_button(self):
+    def _focus_changed(self):
+        focused = self._focused()
+        for entry in self._previews:
+            mapped = entry.get("mapped", False)
+            entry["renderer"].set_active(mapped and focused, still=mapped)
+
+    # ---------------------------------------------------------- sidebar
+    def _build_sidebar(self):
+        self.sidebar = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
+        self.sidebar.add_css_class("navigation-sidebar")
+        set_accessible_label(self.sidebar, _("Sections"))
+        self.sidebar_rows = {}
+        self.sidebar_suffix = {}
+        for key, group, title, icon in SECTIONS:
+            box = Gtk.Box(spacing=12)
+            box.append(Gtk.Image(icon_name=icon))
+            box.append(Gtk.Label(label=_(title), xalign=0, hexpand=True))
+            suffix = Gtk.Label(visible=False)
+            suffix.add_css_class("dim-label")
+            suffix.add_css_class("numeric")
+            box.append(suffix)
+            row = Gtk.ListBoxRow(child=box)
+            row.key, row.group = key, group
+            set_accessible_label(row, _(title))
+            self.sidebar_rows[key] = row
+            self.sidebar_suffix[key] = suffix
+            self.sidebar.append(row)
+        self.sidebar.set_header_func(self._sidebar_header)
+        self.sidebar.connect("row-activated", lambda _l, row: self.show_section(row.key))
+
         menu = Gio.Menu()
-        menu.append(_("Restore defaults"), "win.restore")
-        menu.append(_("About"), "app.about")
-        menu.append(_("Quit"), "app.quit")
-        button = Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=menu, tooltip_text=_("Main menu"))
-        set_accessible_label(button, _("Main menu"))
-        action = Gio.SimpleAction.new("restore", None)
-        action.connect("activate", lambda *_: self._confirm_restore())
-        self.add_action(action)
-        return button
+        main = Gio.Menu()
+        main.append(_("Restore Defaults…"), "win.restore")
+        main.append(_("Preferences"), "win.section::preferences")
+        menu.append_section(None, main)
+        app = Gio.Menu()
+        app.append(_("About Big Screen Monitor Display"), "app.about")
+        app.append(_("Quit"), "app.quit")
+        menu.append_section(None, app)
+        header = Adw.HeaderBar()
+        header.set_title_widget(Adw.WindowTitle(title=_("Big Screen Monitor")))
+        header.pack_end(Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=menu, primary=True,
+                                       tooltip_text=_("Main Menu")))
 
-    def _action_bar(self):
-        bar = Gtk.ActionBar()
-        self.changes_label = Gtk.Label(css_classes=["dim-label"])
-        bar.pack_start(self.changes_label)
-        self.revert_button = Gtk.Button(label=_("Discard"), tooltip_text=_("Discard unsaved changes"))
-        self.revert_button.connect("clicked", lambda *_: self._revert())
-        self.apply_button = Gtk.Button(label=_("Apply"), css_classes=["suggested-action"])
-        self.apply_button.set_tooltip_text(_("Save and apply to the display without restarting"))
-        self.apply_button.connect("clicked", lambda *_: self._apply())
-        self.apply_spinner = Adw.Spinner(visible=False) if hasattr(Adw, "Spinner") else Gtk.Spinner(visible=False)
-        bar.pack_end(self.apply_button)
-        bar.pack_end(self.apply_spinner)
-        bar.pack_end(self.revert_button)
-        return bar
+        self.status_dot = Gtk.Box(valign=Gtk.Align.CENTER)
+        self.status_dot.add_css_class("sidebar-dot")
+        self.status_label = Gtk.Label(xalign=0, wrap=True, hexpand=True)
+        self.status_label.add_css_class("caption")
+        status = Gtk.Box(spacing=10)
+        status.add_css_class("sidebar-status")
+        status.append(self.status_dot)
+        status.append(self.status_label)
+        status_button = Gtk.Button(child=status, tooltip_text=_("Open the diagnostics"))
+        status_button.add_css_class("flat")
+        status_button.connect("clicked", lambda _b: self.show_section("diagnostics"))
+
+        toolbar = Adw.ToolbarView(content=Gtk.ScrolledWindow(child=self.sidebar,
+                                                             hscrollbar_policy=Gtk.PolicyType.NEVER))
+        toolbar.add_top_bar(header)
+        toolbar.add_bottom_bar(status_button)
+        return Adw.NavigationPage(child=toolbar, title=_("Big Screen Monitor"))
+
+    @staticmethod
+    def _sidebar_header(row, before):
+        if before is not None and before.group == row.group:
+            row.set_header(None)
+            return
+        label = Gtk.Label(label=_(row.group), xalign=0, margin_start=12, margin_top=12 if before else 6,
+                          margin_bottom=6)
+        label.add_css_class("heading")
+        label.add_css_class("dim-label")
+        row.set_header(label)
+
+    # ---------------------------------------------------------- sections
+    def section_keys(self):
+        return [key for key, *_rest in SECTIONS]
+
+    def show_section(self, key):
+        if key not in SECTION_TITLES:
+            return
+        if key not in self.sections:
+            nav = Adw.NavigationView()
+            nav.add(self._build_section(key, nav))
+            self.sections[key] = nav
+            self.content_stack.add_named(nav, key)
+        previous, self.current_section = self.current_section, key
+        self.content_stack.set_visible_child_name(key)
+        self.content_page.set_title(_(SECTION_TITLES[key]))
+        self.sidebar.select_row(self.sidebar_rows[key])
+        self.split.set_show_content(True)
+        if previous == "kojiro" and key != "kojiro":
+            self.kojiro_page.set_active(False)
+        if key == "kojiro":
+            self.kojiro_page.set_active(True)
+        if hasattr(self, "media_page"):
+            self.media_page.set_active(key == "big_media_player")
+        if key == "home":
+            self.dashboard.update()
+        elif key == "diagnostics":
+            self._refresh_diagnostics()
+        elif key == "performance":
+            self._refresh_perf()
+
+    def _build_section(self, key, nav):
+        if key == "home":
+            self.dashboard = Dashboard(self)
+            return self.dashboard.page
+        if key == "displays":
+            self.displays_page.nav = nav
+            return self.displays_page.page
+        if key == "themes":
+            self.theme_gallery = ThemeGallery(self, nav)
+            return self.theme_gallery.page
+        if key == "kojiro":
+            from kojiro_page import KojiroPage
+            self.kojiro_page = KojiroPage(self, run_helper)
+            box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            box.append(self.theme_banner("kojiro"))
+            self.kojiro_page.widget.set_vexpand(True)
+            box.append(self.kojiro_page.widget)
+            return ui.navigation_page(_("Kojiro Design Studio"), box, tag="kojiro")
+        if key == "big_media_player":
+            from media_player_page import MediaPlayerPage
+            self.media_page = MediaPlayerPage(self, run_helper, nav)
+            return self.media_page.page
+        if key == "brother_away":
+            self.brother_away_page = BrotherAwayPage(self)
+            return self.brother_away_page.page
+        if key == "performance":
+            return self._page_performance()
+        if key == "diagnostics":
+            return self._page_diagnostics()
+        self.preferences_page = PreferencesPage(self)
+        return self.preferences_page.page
+
+    def theme_banner(self, theme_id):
+        """'This theme is not on any display' banner with a one-click choice."""
+        banner = Adw.Banner(title=_("This theme is not in use on any display."), button_label=_("Use It"))
+        banner.connect("button-clicked", lambda _b: (self._set("theme", theme_id),
+                                                     self.toast(_("Theme selected. Press Apply to send it to the "
+                                                                  "display."))))
+        self._banners[theme_id] = banner
+        self._update_banner(theme_id)
+        return banner
+
+    @staticmethod
+    def _theme_used(theme_id, values):
+        return values.get("theme") == theme_id or any(
+            isinstance(entry, dict) and entry.get("theme") == theme_id
+            for entry in (values.get("displays") or {}).values())
+
+    def _update_banner(self, theme_id):
+        banner = self._banners.get(theme_id)
+        if banner is not None:
+            banner.set_revealed(not self._theme_used(theme_id, self.values))
+
+    # ---------------------------------------------------------- previews
+    def live_preview(self, theme_id, description, height=300, follow_display=False, max_fps=None):
+        """A display preview rendered by the real theme engine; it renders only while on screen."""
+        frame = ui.DisplayPreview(description, height=height)
+        renderer = PreviewRenderer(frame.picture, max_fps)
+        renderer.active = False
+        entry = {"frame": frame, "renderer": renderer, "theme": theme_id, "display": None,
+                 "follow": follow_display}
+        entry["mapped"] = False
+
+        def visible_changed(_frame, visible):
+            entry["mapped"] = visible
+            renderer.set_active(visible and self._focused(), still=visible)
+        frame.connect("visible-changed", visible_changed)
+        self._previews.append(entry)
+        self._update_preview(entry)
+        return frame
+
+    def renderer_of(self, frame):
+        return next(entry["renderer"] for entry in self._previews if entry["frame"] is frame)
+
+    def set_preview_display(self, frame, display_id):
+        for entry in self._previews:
+            if entry["frame"] is frame:
+                entry["display"] = display_id
+                self._update_preview(entry)
+
+    def _display_size(self, display_id):
+        for display in (self.status or {}).get("displays") or []:
+            if display.get("id") == display_id and display.get("device"):
+                return display["device"]["width"], display["device"]["height"]
+        return None
+
+    def _update_preview(self, entry):
+        size = self._display_size(entry["display"]) if entry["display"] else None
+        if entry["display"]:
+            values = settings.merged(self.values, entry["display"])
+        elif entry["theme"]:
+            values = dict(self.values, theme=entry["theme"])
+        else:
+            values = self.values
+        size = size or self._device_size()
+        width, height = size
+        if str(values.get("orientation")).startswith("vertical") and width > height:
+            width, height = height, width
+        entry["frame"].set_ratio(width, height)
+        entry["renderer"].update(values, size)
+
+    # ---------------------------------------------------------- building helpers
+    def _register(self, key, widget, extra):
+        self._widgets.setdefault(key, []).append((widget, extra))
 
     def _combo(self, key, title, options, subtitle=None):
         labels = [label for _value, label in options]
@@ -305,7 +524,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         current = self.values.get(key)
         row.set_selected(values.index(current) if current in values else 0)
         row.connect("notify::selected", lambda r, _p: self._set(key, values[r.get_selected()]))
-        self._widgets[key] = (row, values)
+        self._register(key, row, values)
         return row
 
     def _switch(self, key, title, subtitle=None):
@@ -314,7 +533,7 @@ class ConfigWindow(Adw.ApplicationWindow):
             row.set_subtitle(subtitle)
         row.set_active(bool(self.values.get(key)))
         row.connect("notify::active", lambda r, _p: self._set(key, r.get_active()))
-        self._widgets[key] = (row, None)
+        self._register(key, row, None)
         return row
 
     def _scale(self, key, title, low, high, step, subtitle=None):
@@ -324,7 +543,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, low, high, step)
         scale.set_value(self.values.get(key, low))
         scale.set_hexpand(True)
-        scale.set_size_request(220, -1)
+        scale.set_size_request(200, -1)
         scale.set_valign(Gtk.Align.CENTER)
         scale.set_draw_value(True)
         scale.set_value_pos(Gtk.PositionType.RIGHT)
@@ -332,7 +551,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         scale.connect("value-changed", lambda s: self._set(key, int(s.get_value())))
         row.add_suffix(scale)
         row.set_activatable_widget(scale)
-        self._widgets[key] = (scale, "scale")
+        self._register(key, scale, "scale")
         return row
 
     @staticmethod
@@ -342,79 +561,78 @@ class ConfigWindow(Adw.ApplicationWindow):
             group.set_description(description)
         return group
 
-    def _page_display(self):
-        self.displays_page = DisplaysPage(self, run_helper)
-        page = self.displays_page.page
-        group = self._group(_("All displays"), _("Defaults for every display; each display above can override them."))
-        self.connection_row = Adw.ActionRow(title=_("Service"), subtitle=_("Checking..."))
-        self.connection_icon = Gtk.Image.new_from_icon_name("content-loading-symbolic")
-        self.connection_row.add_prefix(self.connection_icon)
-        group.add(self.connection_row)
+    def _global_display_group(self):
+        group = self._group(_("Defaults for all displays"),
+                            _("Used by every display that does not set its own value."))
         group.add(self._combo("orientation", _("Orientation"), [
             ("horizontal", _("Horizontal (landscape)")), ("vertical", _("Vertical (portrait)")),
             ("horizontal_flipped", _("Horizontal, upside down")), ("vertical_flipped", _("Vertical, upside down"))]))
         group.add(self._scale("brightness", _("Brightness"), 0, 100, 5))
+        group.add(self._combo("performance_profile", _("Performance"), [
+            ("auto", _("Automatic (recommended)")), ("economy", _("Economy")),
+            ("balanced", _("Balanced")), ("fluid", _("Fluid"))]))
         group.add(self._combo("model", _("Automatic detection"), [
             ("auto", _("All supported models")), ("ax206", _("Only AX206 (USB photo frame)")),
             ("turing", _("Only Turing Smart Screen 3.5\" (USB serial)"))],
             _("Limits which detected displays start automatically.")))
         group.add(self._combo("size", _("Preview size"), [
             ("3.5", "3.5\""), ("5", "5\""), ("8.8", "8.8\""), ("2.1", "2.1\" / 2.8\"")],
-            _("Used for the preview while no display is connected.")))
-        page.add(group)
-
-        startup = self._group(_("Startup"))
-        self.startup_row = Adw.SwitchRow(title=_("Start with the computer"),
-                                         subtitle=_("Runs the monitor service at boot"))
-        self.startup_row.set_active(diagnostics.systemctl_query("is-enabled") == "enabled")
-        self.startup_row.connect("notify::active", self._on_startup_toggled)
-        startup.add(self.startup_row)
-        page.add(startup)
-        return page
-
-    def _page_themes(self):
-        page = Adw.PreferencesPage()
-        preview = self._group(_("Preview"))
-        preview.add(self.pictures["themes"])
-        page.add(preview)
-        gallery = self._group(_("Gallery"), _("Choose a look for the display. After applying, the theme gets "
-                                              "its own tab with every option."))
-        self.theme_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE, css_classes=["boxed-list"])
-        self.theme_checks = {}
-        first = None
-        for info in themes.available():
-            row = Adw.ActionRow(title=GLib.markup_escape_text(_(info.name)),
-                                subtitle=GLib.markup_escape_text(_(info.description)))
-            check = Gtk.CheckButton(valign=Gtk.Align.CENTER)
-            if first is None:
-                first = check
-            else:
-                check.set_group(first)
-            check.set_active(self.values.get("theme") == info.id)
-            check.connect("toggled", self._on_theme_toggled, info.id)
-            set_accessible_label(check, _(info.name))
-            row.add_prefix(check)
-            row.set_activatable_widget(check)
-            if info.animated:
-                badge = Gtk.Label(label=_("Animated"), css_classes=["accent", "caption-heading"])
-                row.add_suffix(badge)
-            self.theme_checks[info.id] = check
-            self.theme_list.append(row)
-        gallery.add(self.theme_list)
-        page.add(gallery)
-
-        return page
-
-    # ---------------------------------------------------------- theme tabs
-    def _theme_preview_group(self, theme_id, title, description):
-        group = self._group(title, description)
-        group.add(self.pictures[theme_id])
+            _("Used for the previews while no display is connected.")))
         return group
 
-    def _page_standard(self):
-        page = Adw.PreferencesPage()
-        page.add(self._theme_preview_group("standard", _("Standard"),
-                                           _("One clean dashboard, measured so that nothing overlaps.")))
+    def _pending_bar(self):
+        bar = Gtk.Box(spacing=12)
+        bar.add_css_class("toolbar")
+        bar.add_css_class("pending-bar")
+        icon = Gtk.Image(icon_name="document-edit-symbolic")
+        icon.add_css_class("accent")
+        self.changes_label = Gtk.Label(xalign=0, hexpand=True, wrap=True)
+        self.changes_label.add_css_class("heading")
+        self.revert_button = Gtk.Button(label=_("Discard"), tooltip_text=_("Discard unsaved changes"))
+        self.revert_button.connect("clicked", lambda *_: self._revert())
+        self.apply_spinner = Adw.Spinner(visible=False)
+        self.apply_button = Gtk.Button(label=_("Apply"), tooltip_text=_("Save and send to the displays (Ctrl+S)"))
+        self.apply_button.add_css_class("suggested-action")
+        self.apply_button.connect("clicked", lambda *_: self._apply())
+        for widget in (icon, self.changes_label, self.apply_spinner, self.revert_button, self.apply_button):
+            bar.append(widget)
+        self.pending_revealer = Gtk.Revealer(child=bar, transition_type=Gtk.RevealerTransitionType.SLIDE_UP,
+                                             reveal_child=False)
+        return self.pending_revealer
+
+    def _install_actions(self):
+        for name, callback in (("restore", lambda *_: self._confirm_restore()),
+                               ("apply", lambda *_: self.apply_button.get_sensitive() and self._apply()),
+                               ("search", lambda *_: self._search_themes()),
+                               ("back", lambda *_: self._go_back())):
+            action = Gio.SimpleAction.new(name, None)
+            action.connect("activate", callback)
+            self.add_action(action)
+        section = Gio.SimpleAction.new("section", GLib.VariantType.new("s"))
+        section.connect("activate", lambda _a, param: self.show_section(param.get_string()))
+        self.add_action(section)
+        story = Gio.SimpleAction.new("story", GLib.VariantType.new("s"))
+        story.connect("activate", lambda _a, param: (self.show_section("brother_away"),
+                                                     self.brother_away_page.play(param.get_string())))
+        self.add_action(story)
+
+    def _search_themes(self):
+        self.show_section("themes")
+        self.sections["themes"].pop_to_tag("themes")
+        self.theme_gallery.search_button.set_active(True)
+        self.theme_gallery.search.grab_focus()
+
+    def _go_back(self):
+        nav = self.sections.get(self.current_section)
+        if nav is not None and nav.get_navigation_stack().get_n_items() > 1:
+            nav.pop()
+
+    # ---------------------------------------------------------- theme options
+    def theme_option_groups(self, theme_id):
+        return list(getattr(self, f"_options_{theme_id}")())
+
+    def _options_standard(self):
+        page = _Groups()
         look = self._group(_("Appearance"))
         look.add(self._combo("std_scheme", _("Colour scheme"),
                              [(key, _(scheme["name"])) for key, scheme in dashboard.SCHEMES.items()]))
@@ -460,10 +678,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         page.add(side)
         return page
 
-    def _page_gkrellm(self):
-        page = Adw.PreferencesPage()
-        page.add(self._theme_preview_group("gkrellm", "GKrellM",
-                                           _("Stacked monitors in the style of the classic GKrellM.")))
+    def _options_gkrellm(self):
+        page = _Groups()
         look = self._group(_("Appearance"))
         look.add(self._combo("gk_theme_color", _("Visual style"), [
             ("urlicht", "Urlicht (Neon Blue)"), ("classic", _("Classic (green phosphor)")),
@@ -492,10 +708,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         page.add(modules)
         return page
 
-    def _page_planet(self):
-        page = Adw.PreferencesPage()
-        page.add(self._theme_preview_group("planet", _("Planet"),
-                                           _("The Earth as it is lit right now, with the real Sun and Moon positions.")))
+    def _options_planet(self):
+        page = _Groups()
         look = self._group(_("Appearance"))
         look.add(self._combo("planet_accent", _("Accent colour"), [
             ("blue", _("Blue")), ("green", _("Green")), ("amber", _("Amber")), ("violet", _("Violet")),
@@ -511,10 +725,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         page.add(globe)
         return page
 
-    def _page_old_computer(self):
-        page = Adw.PreferencesPage()
-        page.add(self._theme_preview_group("old_computer", _("Old Computer"),
-                                           _("A system monitor window from the classic desktop era.")))
+    def _options_old_computer(self):
+        page = _Groups()
         look = self._group(_("Appearance"))
         look.add(self._combo("oc_scheme", _("Colour scheme"), [
             ("classic", _("Classic grey")), ("slate", _("Slate (dark)")), ("amber", _("Amber")),
@@ -529,29 +741,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         page.add(cards)
         return page
 
-    def _page_brother_away(self):
-        page = Adw.PreferencesPage()
-        preview = self._group(_("Brother Away — The Perplexed Castaway!"),
-                              _("A castaway with opinions about everything, on the island inside your display."))
-        preview.add(self.pictures["brother_away"])
-        actions = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER, margin_top=8)
-        story_button = Gtk.MenuButton(label=_("Watch a story"), css_classes=["pill"])
-        menu = Gio.Menu()
-        for story_id, label in (("coconut_tree", _("The rebellious palm tree")), ("shark", _("The mocking shark")),
-                                ("raft", _("The impossible raft")), ("ufo", _("The extraterrestrial encounter")),
-                                ("philosopher", _("The philosopher palm tree")),
-                                ("crab_glasses", _("The crab and the glasses")),
-                                ("gull_lunch", _("The seagull's lunch")),
-                                ("message_bottle", _("Message in a bottle"))):
-            menu.append(label, f"win.story::{story_id}")
-        story_button.set_menu_model(menu)
-        action = Gio.SimpleAction.new("story", GLib.VariantType.new("s"))
-        action.connect("activate", lambda _a, param: self.preview_ba.play_story(param.get_string()))
-        self.add_action(action)
-        actions.append(story_button)
-        preview.add(actions)
-        page.add(preview)
-
+    def _options_brother_away(self):
+        page = _Groups()
         anim = self._group(_("Animation"))
         anim.add(self._switch("ba_animation", _("Animate"),
                               _("When off, a still island is shown and only the data updates.")))
@@ -598,106 +789,157 @@ class ConfigWindow(Adw.ApplicationWindow):
         page.add(hud)
         return page
 
-    def _page_kojiro(self):
-        self.kojiro_page = KojiroPage(self, run_helper)
-        return self.kojiro_page.widget
-
-    def _page_big_media_player(self):
-        self.media_page = MediaPlayerPage(self, run_helper)
-        return self.media_page.widget
-
+    # ---------------------------------------------------------- performance
     def _page_performance(self):
-        page = Adw.PreferencesPage()
-        group = self._group(_("Performance"))
-        group.add(self._combo("performance_profile", _("Profile"), [
-            ("auto", _("Automatic (recommended)")), ("economy", _("Economy")),
-            ("balanced", _("Balanced")), ("fluid", _("Fluid"))],
-            _("Automatic adapts the frame rate to the panel speed, the computer and battery use.")))
-        page.add(group)
+        cards = Gtk.FlowBox(homogeneous=True, min_children_per_line=1, max_children_per_line=4,
+                            selection_mode=Gtk.SelectionMode.NONE, column_spacing=12, row_spacing=12)
+        self.profile_buttons = {}
+        first = None
+        for key in ("auto", "economy", "balanced", "fluid"):
+            effect = _(PROFILE_EFFECT[key]).format(
+                fps=runtime.FPS_PROFILES[key], telemetry=runtime.TELEMETRY_INTERVAL[key],
+                period=min(1.0, 0.5 * themes.STATIC_PERIOD_FACTOR[key]))
+            box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            head = Gtk.Box(spacing=8)
+            head.append(Gtk.Image(icon_name=PROFILE_ICON[key]))
+            title = Gtk.Label(label=_(PROFILE_TITLE[key]), xalign=0)
+            title.add_css_class("heading")
+            head.append(title)
+            box.append(head)
+            box.append(ui.caption(effect))
+            button = Gtk.ToggleButton(child=box)
+            button.add_css_class("card")
+            button.add_css_class("choice-card")
+            set_accessible_label(button, f"{_(PROFILE_TITLE[key])}. {effect}")
+            if first is None:
+                first = button
+            else:
+                button.set_group(first)
+            button.set_active(self.values.get("performance_profile") == key)
+            button.connect("toggled", lambda b, k=key: b.get_active() and self._set("performance_profile", k))
+            self.profile_buttons[key] = button
+            cards.append(button)
+        self._register("performance_profile", self.profile_buttons, "profile")
+        profile_group = self._group(_("Profile for all displays"),
+                                    _("How often the displays are redrawn and the hardware is read. These are limits "
+                                      "set by the profile, not measurements; what the service measures is shown "
+                                      "below. A display can use its own profile in My Displays."))
         live = self._group(_("Measured now"), _("Reported by the running service."))
         self.perf_rows = {}
         for key, title in (("cpu", _("Service CPU")), ("ram", _("Service memory")), ("fps", _("Frames per second")),
                            ("usb", _("Transfer time")), ("data", _("Data sent")), ("drop", _("Frames skipped"))):
             row = Adw.ActionRow(title=title, subtitle="—")
+            row.add_css_class("property")
             row.set_subtitle_selectable(True)
             self.perf_rows[key] = row
             live.add(row)
-        page.add(live)
-        return page
+        content = ui.page_layout(profile_group, cards, live, maximum=1100)
+        return ui.navigation_page(_("Performance"), content, tag="performance")
 
+    # ---------------------------------------------------------- diagnostics
     def _page_diagnostics(self):
-        page = Adw.PreferencesPage()
+        self.diag_card = ui.StateCard()
         state = self._group(_("Current state"))
         self.diag_rows = {}
         for key, title in (("service", _("Service")), ("device", _("Display")),
                            ("last", _("Last confirmed transfer")), ("recoveries", _("Automatic recoveries")),
                            ("pipeline", _("Pipeline"))):
             row = Adw.ActionRow(title=title, subtitle="—")
+            row.add_css_class("property")
             self.diag_rows[key] = row
             state.add(row)
-        page.add(state)
 
         tools = self._group(_("Tools"))
-        diagnose = Adw.ButtonRow(title=_("Diagnose my display")) if hasattr(Adw, "ButtonRow") else None
-        if diagnose is not None:
-            diagnose.add_css_class("suggested-action")
-            diagnose.connect("activated", lambda *_: self._run_diagnostics())
-            tools.add(diagnose)
-        else:
-            button = Gtk.Button(label=_("Diagnose my display"), css_classes=["suggested-action"])
-            button.connect("clicked", lambda *_: self._run_diagnostics())
-            tools.add(button)
-        for title, subtitle, callback in (
+        for title, subtitle, icon, callback in (
                 (_("Recover the display now"), _("Reconnects and redraws without restarting the service."),
-                 lambda *_: self._helper_action(["recover"], _("Recovery requested."))),
-                (_("Restart the service"), _("Use if the display stays frozen."),
+                 "view-refresh-symbolic", lambda *_: self._helper_action(["recover"], _("Recovery requested."))),
+                (_("Restart the service"), _("Use if the display stays frozen."), "system-reboot-symbolic",
                  lambda *_: self._helper_action(["service", "restart"], _("Service restarted."))),
                 (_("Export diagnostics"), _("Saves a report to share when asking for help."),
-                 lambda *_: self._export())):
+                 "document-save-symbolic", lambda *_: self._export())):
             row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
+            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
             row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
             row.connect("activated", callback)
             tools.add(row)
-        page.add(tools)
 
         self.results_group = self._group(_("Diagnosis"))
         self.results_group.set_visible(False)
-        page.add(self.results_group)
         self._result_rows = []
+        self.diag_spinner = Adw.Spinner(visible=False)
+        self.results_group.set_header_suffix(self.diag_spinner)
 
         self.incidents_group = self._group(_("Recent events"))
         self._incident_rows = []
-        page.add(self.incidents_group)
+        diagnose = Gtk.Button(label=_("Diagnose"), tooltip_text=_("Check service, permissions, displays and "
+                                                                  "settings"))
+        diagnose.add_css_class("suggested-action")
+        diagnose.connect("clicked", lambda *_: self._run_diagnostics())
+        content = ui.page_layout(self.diag_card, self.results_group, state, tools, self.incidents_group,
+                                 maximum=900)
+        return ui.navigation_page(_("Diagnostics"), content, tag="diagnostics", header_end=[diagnose])
 
-        feedback = self._group(_("Feedback"))
-        feedback.add(self._switch("ui_sound_feedback", _("Sound after applying"),
-                                  _("Plays a short system sound when settings are applied.")))
-        page.add(feedback)
-        return page
+    def diagnose(self):
+        self.show_section("diagnostics")
+        self._run_diagnostics()
 
     # ---------------------------------------------------------- state
     def _set(self, key, value):
         if self._loading:
             return
         self.values[key] = value
+        self._sync_widgets(key)
         self._refresh_dirty()
         if key.startswith("bmp_") and hasattr(self, "media_page"):
             self.media_page.values_changed()
 
-    def _on_theme_toggled(self, check, theme_id):
-        if check.get_active():
-            self._set("theme", theme_id)
+    def _sync_widgets(self, key):
+        """Several controls may edit the same key (dashboard and defaults): keep them equal."""
+        entries = self._widgets.get(key, [])
+        if len(entries) < 2:
+            return
+        loading, self._loading = self._loading, True
+        try:
+            for widget, extra in entries:
+                self._set_widget(widget, extra, self.values.get(key))
+        finally:
+            self._loading = loading
+
+    @staticmethod
+    def _set_widget(widget, extra, value):
+        if extra == "scale":
+            if widget.get_value() != value:
+                widget.set_value(value)
+        elif extra == "entry":
+            if widget.get_text() != (value or ""):
+                widget.set_text(value or "")
+        elif extra == "profile":
+            if value in widget and not widget[value].get_active():
+                widget[value].set_active(True)
+        elif extra is None:
+            if widget.get_active() != bool(value):
+                widget.set_active(bool(value))
+        else:
+            index = extra.index(value) if value in extra else 0
+            if widget.get_selected() != index:
+                widget.set_selected(index)
 
     def _refresh_dirty(self):
         dirty = {k for k in self.values if self.values[k] != self.saved.get(k)}
-        self.apply_button.set_sensitive(bool(dirty))
-        self.revert_button.set_sensitive(bool(dirty))
-        self.changes_label.set_label(_("Unsaved changes") if dirty else "")
-        size = self._device_size()
-        self.previews["themes"].update(self.values, size)
-        for theme_id, _builder, _icon in THEME_PAGES:
-            if theme_id in self.previews:
-                self.previews[theme_id].update(dict(self.values, theme=theme_id), size)
+        applying = self.apply_spinner.get_visible()
+        self.apply_button.set_sensitive(bool(dirty) and not applying)
+        self.revert_button.set_sensitive(bool(dirty) and not applying)
+        self.changes_label.set_label(_("Unsaved changes ({count})").format(count=len(dirty)) if dirty else
+                                     (_("Applying…") if applying else ""))
+        self.pending_revealer.set_reveal_child(bool(dirty) or applying)
+        for entry in self._previews:
+            self._update_preview(entry)
+        for theme_id in self._banners:
+            self._update_banner(theme_id)
+        if hasattr(self, "theme_gallery"):
+            self.theme_gallery.values_changed()
+        if hasattr(self, "dashboard") and self.current_section == "home":
+            self.dashboard.update()
 
     def _device_size(self):
         device = (self.status or {}).get("device")
@@ -707,18 +949,9 @@ class ConfigWindow(Adw.ApplicationWindow):
 
     def _reload_widgets(self):
         self._loading = True
-        for key, (widget, extra) in self._widgets.items():
-            value = self.values.get(key)
-            if extra == "scale":
-                widget.set_value(value)
-            elif extra == "entry":
-                widget.set_text(value or "")
-            elif extra is None:
-                widget.set_active(bool(value))
-            else:
-                widget.set_selected(extra.index(value) if value in extra else 0)
-        for theme_id, check in self.theme_checks.items():
-            check.set_active(self.values.get("theme") == theme_id)
+        for key, entries in self._widgets.items():
+            for widget, extra in entries:
+                self._set_widget(widget, extra, self.values.get(key))
         self._loading = False
         self.displays_page.refresh(force=True)
         if hasattr(self, "kojiro_page"):
@@ -731,14 +964,17 @@ class ConfigWindow(Adw.ApplicationWindow):
     def _revert(self):
         self.values = copy.deepcopy(self.saved)
         self._reload_widgets()
+        self.toast(_("Changes discarded."))
 
     def _confirm_restore(self):
         dialog = Adw.AlertDialog(heading=_("Restore defaults?"),
-                                 body=_("All options go back to their original values. "
-                                        "Nothing changes on the display until you press Apply."))
+                                 body=_("Every theme, display and performance option goes back to its original "
+                                        "value, including the names and themes of each display and the Kojiro "
+                                        "layout. Nothing changes on the displays until you press Apply."))
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("restore", _("Restore"))
         dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
         dialog.connect("response", lambda _d, response: response == "restore" and self._restore())
         dialog.present(self)
 
@@ -749,27 +985,30 @@ class ConfigWindow(Adw.ApplicationWindow):
 
     def _apply(self):
         values = copy.deepcopy(self.values)
-        self.apply_button.set_sensitive(False)
         self.apply_spinner.set_visible(True)
-        if isinstance(self.apply_spinner, Gtk.Spinner):
-            self.apply_spinner.start()
+        self._refresh_dirty()
 
         def worker():
             ok, message = save_settings(values)
             GLib.idle_add(self._applied, ok, message, values)
 
         threading.Thread(target=worker, daemon=True).start()
+        return True
 
     def _applied(self, ok, message, values):
         self.apply_spinner.set_visible(False)
         if ok:
             theme_changed = values.get("theme") != self.saved.get("theme")
             self.saved = values
-            self._update_theme_pages(announce=theme_changed)
             self._refresh_dirty()
             self._update_sound_agent(values)
             self._update_media_agent(values)
-            self.toast(_("Settings applied. The display updates in a moment."))
+            toast = Adw.Toast(title=_("Settings applied. The display updates in a moment."), timeout=4)
+            if theme_changed and values.get("theme") in ("kojiro", "big_media_player", "brother_away"):
+                target = values["theme"]
+                toast.set_button_label(_("Customise"))
+                toast.connect("button-clicked", lambda *_: self.show_section(target))
+            self.toasts.add_toast(toast)
             if message:
                 self.toast(_("Some values were corrected: {details}").format(details=message))
             if values.get("ui_sound_feedback"):
@@ -777,6 +1016,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         else:
             self._refresh_dirty()
             self._error(_("Could not apply the settings"), message)
+        return False
 
     def _update_sound_agent(self, values):
         enabled = bool(values.get("sound_enabled"))
@@ -793,14 +1033,25 @@ class ConfigWindow(Adw.ApplicationWindow):
         """The session agent feeds the display; start it when a display uses the theme
         (it is also autostarted at login and exits by itself when unused)."""
         from bsmd.media import agent as media_agent
-        if media_agent.theme_in_use(values) and hasattr(self, "media_page"):
-            self.media_page.start_agent()
+        if media_agent.theme_in_use(values):
+            main_py = os.path.join(BASE_DIR, "main.py")
+            try:
+                subprocess.Popen([sys.executable, main_py, "--media-agent"], start_new_session=True,
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except OSError as error:
+                self.toast(_("Could not start the media agent: {error}").format(error=error))
 
     def _helper_action(self, args, success):
         def worker():
             ok, message = run_helper(args)
-            GLib.idle_add(lambda: self.toast(success) if ok else self._error(_("Operation failed"), message))
+            GLib.idle_add(lambda: (self.toast(success) if ok else self._error(_("Operation failed"), message))
+                          and False)
         threading.Thread(target=worker, daemon=True).start()
+
+    def _startup_state(self, state, _error):
+        self._loading, loading = True, self._loading
+        self.startup_row.set_active(state == "enabled")
+        self._loading = loading
 
     def _on_startup_toggled(self, row, _pspec):
         if self._loading:
@@ -832,69 +1083,59 @@ class ConfigWindow(Adw.ApplicationWindow):
         dialog.add_response("ok", _("Close"))
         dialog.present(self)
 
-    def _on_page_changed(self, *_args):
-        name = self.stack.get_visible_child_name()
-        for key, preview in self.previews.items():
-            preview.active = name == ("themes" if key == "themes" else f"theme_{key}")
-            preview._wake.set()
-        if hasattr(self, "kojiro_page"):
-            self.kojiro_page.set_active(name == "theme_kojiro")
-        if hasattr(self, "media_page"):
-            self.media_page.set_active(name == "theme_big_media_player")
-            if name == "themes" and self.values.get("theme") == "big_media_player":
-                self.media_page.ensure_core()       # real music in the gallery preview too
-
-    def _update_theme_pages(self, announce=False):
-        """Show only the customisation tab of the applied (saved) theme."""
-        applied = self.saved.get("theme")
-        per_display = {entry.get("theme") for entry in (self.saved.get("displays") or {}).values()
-                       if isinstance(entry, dict)}
-        for theme_id, page in self.theme_pages.items():
-            page.set_visible(theme_id == applied or theme_id in per_display)
-        if self.stack.get_visible_child_name() not in (None, f"theme_{applied}") and \
-                self.stack.get_visible_child_name().startswith("theme_"):
-            self.stack.set_visible_child_name("themes")
-        if announce and applied in self.theme_pages:
-            toast = Adw.Toast(title=_("Theme applied. Customise it in the “{name}” tab.").format(
-                name=_(SHORT_NAMES.get(applied, themes.REGISTRY[applied].name))), timeout=6)
-            toast.set_button_label(_("Customise"))
-            toast.connect("button-clicked", lambda *_: self.stack.set_visible_child_name(f"theme_{applied}"))
-            self.toasts.add_toast(toast)
-
     # ---------------------------------------------------------- status
-    def _refresh_status(self):
-        self.status = runtime.read_status()
-        status = self.status
-        self.displays_page.refresh()
+    def _status_fresh(self):
         path = runtime.find_status_file()
-        fresh = status is not None and path is not None and time.time() - os.path.getmtime(path) < 15
-        if not fresh:
-            self.connection_row.set_subtitle(_("The service is not running."))
-            self.connection_icon.set_from_icon_name("dialog-warning-symbolic")
-            self.banner.set_title(_("The monitor service is not running."))
-            self.banner.set_revealed(True)
-            for row in self.diag_rows.values():
-                row.set_subtitle("—")
-            self.diag_rows["service"].set_subtitle(diagnostics.systemctl_query("is-active"))
-            return True
-        state = status.get("state")
-        description = diagnostics.describe_state(status)
-        ok = state == "healthy"
-        self.connection_row.set_subtitle(description)
-        self.connection_icon.set_from_icon_name("emblem-ok-symbolic" if ok else "dialog-warning-symbolic")
-        self.banner.set_title(description)
-        self.banner.set_revealed(state in ("disconnected", "retrying", "failed") or bool(status.get("stalled")))
+        try:
+            return self.status is not None and path is not None and time.time() - os.path.getmtime(path) < 15
+        except OSError:
+            return False
+
+    def _refresh_status(self):
+        if self._closed:
+            return False
+        self.status = runtime.read_status()
+        self.service_fresh = self._status_fresh()
+        self.displays_page.refresh()
+        self._update_sidebar_status()
+        if self.current_section == "home" and hasattr(self, "dashboard"):
+            self.dashboard.update()
+        if hasattr(self, "diag_rows") and self.current_section == "diagnostics":
+            self._refresh_diagnostics()
+        if hasattr(self, "perf_rows") and self.current_section == "performance":
+            self._refresh_perf()
+        return True
+
+    def _update_sidebar_status(self):
+        status = self.status if self.service_fresh else None
+        for kind in ("success", "warning", "error"):
+            self.status_dot.remove_css_class(kind)
+        displays = (status or {}).get("displays") or []
+        connected = [d for d in displays if d.get("connected")]
+        if status is None:
+            kind, text = "error", _("Service stopped")
+        elif not connected:
+            kind, text = "warning", _("Waiting for a display")
+        elif status.get("state") == "healthy":
+            kind, text = "success", _("Running · {count} display(s)").format(count=len(connected))
+        else:
+            kind, text = "warning", diagnostics.describe_state(status)
+        self.status_dot.add_css_class(kind)
+        self.status_label.set_label(text)
+        count = self.sidebar_suffix["displays"]
+        count.set_visible(bool(displays))
+        count.set_label(str(len(connected)))
+        problems = self.sidebar_suffix["diagnostics"]
+        problems.set_visible(kind == "error")
+        problems.set_label("!")
+
+    def _refresh_perf(self):
+        status = self.status if self.service_fresh else None
+        if status is None:
+            for row in self.perf_rows.values():
+                row.set_subtitle(_("The service is not running."))
+            return
         stats, proc = status.get("stats", {}), status.get("process", {})
-        device = status.get("device") or {}
-        self.diag_rows["service"].set_subtitle(_("Running for {time}").format(time=_duration(status.get("uptime_s", 0))))
-        location = f" · {device['location']}" if device.get("location") else ""
-        self.diag_rows["device"].set_subtitle(description.rstrip(".") + location)
-        age = stats.get("last_transfer_age_s")
-        self.diag_rows["last"].set_subtitle(_("{seconds:.0f} s ago").format(seconds=age) if age is not None
-                                            else _("Nothing sent yet"))
-        self.diag_rows["recoveries"].set_subtitle(str(status.get("recoveries", 0)))
-        self.diag_rows["pipeline"].set_subtitle(_("A thread stopped making progress.") if status.get("stalled")
-                                                else _("Telemetry, rendering and transfer are progressing."))
         self.perf_rows["cpu"].set_subtitle(f"{proc.get('cpu_percent', 0):.1f} %")
         self.perf_rows["ram"].set_subtitle(f"{proc.get('rss_mb', 0):.0f} MB")
         self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:g})").format(
@@ -903,19 +1144,58 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "
                                             + _("{frames} frames").format(frames=stats.get("frames_sent", 0)))
         self.perf_rows["drop"].set_subtitle(str(stats.get("frames_dropped", 0)))
+
+    def _refresh_diagnostics(self):
+        status = self.status if self.service_fresh else None
+        if status is None:
+            self.diag_card.show("error", "dialog-error-symbolic", _("The monitor service is not running"),
+                                _("Run the diagnosis to find out why, or start the service."),
+                                [(_("Start Service"), lambda: self._helper_action(["service", "start"],
+                                                                                 _("Service started.")))])
+            for row in self.diag_rows.values():
+                row.set_subtitle("—")
+            self.worker.submit("is-active", lambda: diagnostics.systemctl_query("is-active"),
+                               lambda state, _e: self.diag_rows["service"].set_subtitle(state or "—"))
+            self._show_incidents([])
+            return
+        state = status.get("state")
+        description = diagnostics.describe_state(status)
+        if state == "healthy" and not status.get("stalled"):
+            self.diag_card.show("accent", "emblem-ok-symbolic", _("Everything is working"), description, [])
+        else:
+            self.diag_card.show("warning", "dialog-warning-symbolic", _("Attention needed"), description,
+                                [(_("Diagnose"), self._run_diagnostics)])
+        stats = status.get("stats", {})
+        device = status.get("device") or {}
+        self.diag_rows["service"].set_subtitle(_("Running for {time}").format(
+            time=_duration(status.get("uptime_s", 0))))
+        location = f" · {device['location']}" if device.get("location") else ""
+        self.diag_rows["device"].set_subtitle(description.rstrip(".") + location)
+        age = stats.get("last_transfer_age_s")
+        self.diag_rows["last"].set_subtitle(_("{seconds:.0f} s ago").format(seconds=age) if age is not None
+                                            else _("Nothing sent yet"))
+        self.diag_rows["recoveries"].set_subtitle(str(status.get("recoveries", 0)))
+        self.diag_rows["pipeline"].set_subtitle(_("A thread stopped making progress.") if status.get("stalled")
+                                                else _("Telemetry, rendering and transfer are progressing."))
         self._show_incidents(status.get("incidents", []))
-        return True
 
     def _show_incidents(self, incidents):
+        signature = tuple((i.get("time"), i.get("message")) for i in incidents[-12:])
+        if getattr(self, "_incident_signature", None) == signature and self._incident_rows:
+            return
+        self._incident_signature = signature
         for row in self._incident_rows:
             self.incidents_group.remove(row)
         self._incident_rows = []
         for incident in list(reversed(incidents))[:12]:
             icon = {"info": "emblem-ok-symbolic", "warning": "dialog-warning-symbolic"}.get(
                 incident.get("severity"), "dialog-error-symbolic")
-            row = Adw.ActionRow(title=incident.get("message", ""), subtitle=incident.get("time", "")[:19].replace("T", " "))
+            row = Adw.ActionRow(title=GLib.markup_escape_text(incident.get("message", "")),
+                                subtitle=incident.get("time", "")[:19].replace("T", " "))
             row.set_title_lines(2)
-            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+            image = Gtk.Image.new_from_icon_name(icon)
+            set_accessible_label(image, incident.get("severity", ""))
+            row.add_prefix(image)
             self.incidents_group.add(row)
             self._incident_rows.append(row)
         if not incidents:
@@ -923,24 +1203,26 @@ class ConfigWindow(Adw.ApplicationWindow):
             self.incidents_group.add(row)
             self._incident_rows.append(row)
 
-    def _show_diagnostics(self):
-        self.stack.set_visible_child_name("diagnostics")
-        self._run_diagnostics()
-
     def _run_diagnostics(self):
-        def worker():
-            report = diagnostics.run_checks()
-            GLib.idle_add(self._show_report, report)
-        threading.Thread(target=worker, daemon=True).start()
+        if not hasattr(self, "diag_spinner"):
+            self.show_section("diagnostics")
+        self.diag_spinner.set_visible(True)
+        self.results_group.set_visible(True)
+        self.worker.submit("diagnose", diagnostics.run_checks, self._show_report)
 
-    def _show_report(self, report):
+    def _show_report(self, report, error):
+        self.diag_spinner.set_visible(False)
+        if error is not None:
+            self._error(_("The diagnosis failed"), repr(error))
+            return
         for row in self._result_rows:
             self.results_group.remove(row)
         self._result_rows = []
         for check in report["checks"]:
             icon = "emblem-ok-symbolic" if check["ok"] else (
                 "dialog-error-symbolic" if check["severity"] == "error" else "dialog-warning-symbolic")
-            row = Adw.ActionRow(title=check["title"], subtitle=check["detail"])
+            row = Adw.ActionRow(title=GLib.markup_escape_text(check["title"]),
+                                subtitle=GLib.markup_escape_text(check["detail"]))
             row.set_subtitle_lines(3)
             image = Gtk.Image.new_from_icon_name(icon)
             set_accessible_label(image, _("OK") if check["ok"] else _("Problem"))
@@ -993,8 +1275,11 @@ class ConfigWindow(Adw.ApplicationWindow):
         threading.Thread(target=worker, daemon=True).start()
 
     def _on_close(self, *_args):
-        for preview in self.previews.values():
-            preview.stop()
+        self._closed = True
+        GLib.source_remove(self._status_source)
+        for entry in self._previews:
+            entry["renderer"].stop()
+        self.thumbnailer.stop()
         if hasattr(self, "kojiro_page"):
             self.kojiro_page.close()
         if hasattr(self, "media_page"):
@@ -1008,6 +1293,12 @@ def _duration(seconds):
     hours, rest = divmod(seconds, 3600)
     minutes = rest // 60
     return f"{hours} h {minutes:02d} min" if hours else f"{minutes} min"
+
+
+# 4.x tab names accepted by --page.
+LEGACY_PAGES = {"display": "displays", "theme_kojiro": "kojiro", "theme_big_media_player": "big_media_player",
+                "theme_brother_away": "brother_away", "theme_standard": "themes", "theme_gkrellm": "themes",
+                "theme_planet": "themes", "theme_old_computer": "themes"}
 
 
 class ConfigApp(Adw.Application):
@@ -1028,8 +1319,13 @@ class ConfigApp(Adw.Application):
                 action.connect("activate", callback)
                 self.add_action(action)
             self.set_accels_for_action("app.quit", ["<Control>q"])
+            self.set_accels_for_action("win.apply", ["<Control>s"])
+            self.set_accels_for_action("win.search", ["<Control>f"])
+            self.set_accels_for_action("win.back", ["<Alt>Left"])
+            for index, (key, *_rest) in enumerate(SECTIONS, start=1):
+                self.set_accels_for_action(f"win.section::{key}", [f"<Control>{index}"])
             if self.page:
-                window.stack.set_visible_child_name(self.page)
+                window.show_section(LEGACY_PAGES.get(self.page, self.page))
         window.present()
         if self.screenshot:
             GLib.timeout_add(2500, self._save_screenshot, window)
@@ -1053,7 +1349,8 @@ class ConfigApp(Adw.Application):
             developers=["Rafael Ruscher", "BigLinux Team"], copyright="© 2026 BigLinux Team",
             license_type=Gtk.License.GPL_3_0, website="https://github.com/biglinux/big-screen-monitor-display",
             issue_url="https://github.com/biglinux/big-screen-monitor-display/issues",
-            comments=_("Free hardware monitor for small USB displays, with themes and the Brother Away island."))
+            comments=_("Free hardware monitor for small USB displays, with themes, the Brother Away island, "
+                       "the Kojiro studio and the Big Media Player."))
         about.present(self.props.active_window)
 
 

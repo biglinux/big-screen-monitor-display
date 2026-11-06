@@ -102,7 +102,8 @@ def test_unknown_duration_is_never_invented():
     p = view.players[0]
     theme._fill_media(d, values(), view, view.snapshot, p, False, time.monotonic(), False)
     assert d.fraction is None and d.live
-    assert d.elapsed_text == "--:--" and d.total_text == "LIVE"
+    from bsmd.i18n import _
+    assert d.elapsed_text == "--:--" and d.total_text == _("LIVE")
     d2 = Frame(theme, values(), time.monotonic())
     theme._fill_media(d2, values(bmp_time_mode="remaining"), view, view.snapshot,
                       make_view([wire(position=50_000_000, length=200_000_000)]).players[0], False,
