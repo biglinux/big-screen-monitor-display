@@ -1,5 +1,7 @@
 # Big Media Player — configurações
 
+> Chaves da Modern Collection (4.4): [configurações da Modern Collection](big-media-player-modern-settings.md).
+
 As opções ficam em `/etc/big-screen-monitor-display/settings.json` (prefixo
 `bmp_`), validadas por `bsmd/settings.py` como as dos outros temas, e podem ser
 sobrescritas por display (exceto as globais). Na janela, a aba **Big Media

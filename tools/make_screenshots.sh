@@ -48,3 +48,15 @@ python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=bigxmms2 
     --out "$OUT/bmp-idle.png" >/dev/null
 python3 "$APP" --render big_media_player --size 480x320 --set bmp_skin=bigx --set bmp_preview_demo=false \
     --set bmp_idle_mode=clock --out "$OUT/bmp-idle-clock.png" >/dev/null
+# Big Media Player — Modern Collection (default settings, not this machine's).
+M="env BSM_CONFIG=/nonexistent/settings.json python3 $APP --render big_media_player"
+for skin in vinyl pure ember groove lounge wave flow stage; do
+    $M --size 480x320 --set bmp_skin=big_$skin --set bmp_show_output=true --out "$OUT/bmp-modern-$skin.png" >/dev/null
+done
+$M --size 320x480 --set bmp_skin=big_flow --out "$OUT/bmp-modern-portrait.png" >/dev/null
+$M --size 1920x480 --set bmp_skin=big_stage --out "$OUT/bmp-modern-ultrawide.png" >/dev/null
+$M --size 160x80 --set bmp_skin=big_wave --set bmp_tele_mode=hidden --out "$OUT/bmp-modern-micro.png" >/dev/null
+$M --size 800x480 --set bmp_skin=big_groove --out "$OUT/bmp-modern-groove-800.png" >/dev/null
+$M --size 480x320 --set bmp_skin=big_pure --set bmp_pure_tone=graphite --out "$OUT/bmp-modern-pure-graphite.png" >/dev/null
+$M --size 480x320 --set bmp_skin=big_lounge --set bmp_palette=contrast --out "$OUT/bmp-modern-contrast.png" >/dev/null
+python3 tools/make_bmp_gallery.py "$OUT/bmp-modern-gallery.png" modern 480x320 >/dev/null

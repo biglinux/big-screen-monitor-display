@@ -1,5 +1,8 @@
 # Big Media Player — skins
 
+> Esta página descreve as **sete skins clássicas**. As oito skins modernas
+> (4.4) estão em [Modern Collection](big-media-player-modern.md).
+
 Todas as skins mostram as mesmas áreas (A–F) e funcionam em todos os
 tamanhos; muda só a apresentação. Materiais, cores, geometria e tipografia são
 recriados por código (`bsmd/bigmedia/paint.py`): nenhum logo, bitmap, sprite,

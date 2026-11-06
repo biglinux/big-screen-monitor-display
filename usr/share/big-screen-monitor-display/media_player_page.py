@@ -33,6 +33,17 @@ SKIN_INSPIRATION = {
     "bigxmms2": N_("Inspired by XMMS2 terminal clients"),
     "bigx": N_("Inspired by the X Multimedia System (XMMS)"),
 }
+MODERN_INSPIRATION = {
+    "big_vinyl": N_("Record sleeve and turntable feel"),
+    "big_pure": N_("Minimal light product design"),
+    "big_ember": N_("Premium hi-fi with amber light"),
+    "big_groove": N_("Textured case and vivid gradient"),
+    "big_lounge": N_("Calm living-room media centre"),
+    "big_wave": N_("Minimal player with waveform"),
+    "big_flow": N_("Modern streaming now-playing card"),
+    "big_stage": N_("Cinematic live-show experience"),
+}
+COLLECTION_LABELS = {"classic": N_("Classic"), "modern": N_("Modern")}
 THUMB = (192, 128)
 STATUS_LABELS = {"Playing": N_("Playing"), "Paused": N_("Paused"), "Stopped": N_("Stopped")}
 
@@ -140,7 +151,8 @@ class MediaPlayerPage:
         w = self.window
         page = Adw.PreferencesPage()
         preview = w._group(_("Big Media Player"),
-                           _("Retro players that follow the music and videos playing on this computer (MPRIS)."))
+                           _("Classic and modern players that follow the music and videos playing on this "
+                             "computer (MPRIS)."))
         preview.add(w.pictures[THEME_ID])
         page.add(preview)
         page.add(self._now_playing_group())
@@ -149,8 +161,13 @@ class MediaPlayerPage:
         look = w._group(_("Appearance"))
         look.add(w._combo("bmp_layout", _("Layout"), [
             ("auto", _("Automatic for the display size")), ("full", _("Complete")), ("compact", _("Compact")),
-            ("party", _("Party (big art and visualizer)")), ("info", _("Information (more metadata)")),
+            ("party", _("Audio / party (big art and visualizer)")), ("info", _("Information (more metadata)")),
+            ("cinema", _("Cinema (picture edge to edge; modern skins)")),
             ("low_power", _("Low power (no animation)"))]))
+        look.add(w._combo("bmp_animations", _("Animations"), [
+            ("auto", _("Automatic")), ("off", _("Off (reduced motion)")), ("economy", _("Economical")),
+            ("balanced", _("Balanced")), ("fluid", _("Fluid"))],
+            _("Never faster than the display can receive; Off also stops scrolling text.")))
         look.add(w._combo("bmp_text_size", _("Text size"), [("small", _("Small")), ("normal", _("Normal")),
                                                           ("large", _("Large"))]))
         look.add(w._combo("bmp_art_size", _("Album art size"), [("small", _("Small")), ("normal", _("Normal")),
@@ -167,6 +184,7 @@ class MediaPlayerPage:
         look.add(w._switch("bmp_lcd_effect", _("LCD texture")))
         look.add(w._switch("bmp_transitions", _("Cover transition when the track changes")))
         page.add(look)
+        page.add(self._modern_group())
 
         meta = w._group(_("Metadata"), _("Only what the player reports is shown; nothing is invented."))
         for key, title in (("bmp_show_title", _("Title")), ("bmp_show_artist", _("Artist")),
@@ -213,6 +231,8 @@ class MediaPlayerPage:
         vol.add(w._scale("bmp_volume_step", _("Step of the volume keys"), 1, 20, 1))
         vol.add(w._scale("bmp_volume_max", _("Safe maximum"), 100, 150, 5,
                          _("Above 100 % the audio is amplified and may distort.")))
+        vol.add(w._combo("bmp_volume_osd", _("Enlarged volume after a change"), [
+            ("modern", _("Modern skins")), ("all", _("All skins")), ("off", _("Off"))]))
         self.output_row = Adw.ComboRow(title=_("Output followed"))
         self.output_row.set_model(Gtk.StringList.new([_("Default output")]))
         self.output_row.connect("notify::selected", self._on_output_selected)
@@ -267,8 +287,10 @@ class MediaPlayerPage:
         idle.add(w._scale("bmp_night_start", _("Night starts at"), 0, 23, 1))
         idle.add(w._scale("bmp_night_end", _("Night ends at"), 0, 23, 1))
         idle.add(w._combo("bmp_night_skin", _("Night skin"), [("same", _("Same skin"))] +
-                          [(sid, skins.SKINS[sid].name) for sid in skins.SKIN_IDS]))
-        idle.add(self._entry("bmp_app_skins", _("Skin per application"), "spotify=bigamp, firefox=bigmatch"))
+                          [(sid, skins.SKINS[sid].name) for sid in skins.SKIN_IDS],
+                          _("For example Big Pure by day and Big Lounge at night.")))
+        idle.add(self._entry("bmp_app_skins", _("Skin per application"),
+                             "spotify=big_flow, firefox=big_stage, vlc=big_ember, rhythmbox=big_vinyl"))
         page.add(idle)
 
         page.add(self._advanced_group())
@@ -359,17 +381,79 @@ class MediaPlayerPage:
         group.add(volume)
         return group
 
+    def _modern_group(self):
+        w = self.window
+        group = w._group(_("Modern Collection"), _("Options of the eight modern skins; the classic skins are not "
+                                                   "affected."))
+        group.add(w._combo("bmp_palette", _("Colours"), [
+            ("skin", _("Original colours of the skin")), ("cover", _("Taken from the album art")),
+            ("custom", _("Custom accent colour")), ("mono", _("Monochrome")), ("contrast", _("High contrast"))],
+            _("Text contrast is always kept readable.")))
+        accent = self._entry("bmp_accent_color", _("Accent colour (#RRGGBB)"), "#3584e4")
+        try:
+            button = Gtk.ColorDialogButton(dialog=Gtk.ColorDialog(with_alpha=False), valign=Gtk.Align.CENTER)
+            rgba = Gdk.RGBA()
+            if rgba.parse(self.window.values.get("bmp_accent_color") or "#3584e4"):
+                button.set_rgba(rgba)
+
+            def picked(btn, _pspec):
+                c = btn.get_rgba()
+                accent.set_text("#{:02x}{:02x}{:02x}".format(*(int(round(v * 255)) for v in (c.red, c.green, c.blue))))
+            button.connect("notify::rgba", picked)
+            accent.add_suffix(button)
+        except (AttributeError, TypeError):
+            pass                      # GTK < 4.10: the hexadecimal entry is enough
+        group.add(accent)
+        group.add(w._combo("bmp_pure_tone", _("Big Pure tone"), [
+            ("white", _("White")), ("beige", _("Beige")), ("grey", _("Light grey")),
+            ("graphite", _("Graphite (dark)"))]))
+        group.add(w._combo("bmp_modern_radius", _("Rounded corners"), [
+            ("skin", _("As the skin")), ("square", _("Square")), ("soft", _("Soft")), ("round", _("Round"))]))
+        group.add(w._scale("bmp_modern_shadow", _("Shadows (%)"), 0, 100, 5))
+        group.add(w._scale("bmp_modern_texture", _("Texture (%)"), 0, 100, 5,
+                           _("Leather of Big Groove, grain of Big Ember and Big Vinyl.")))
+        group.add(w._switch("bmp_glow", _("Light effects"), _("Amber glow, lit rims and play key halo.")))
+        group.add(w._combo("bmp_modern_disc", _("Record behind the cover"), [
+            ("skin", _("As the skin")), ("show", _("Always")), ("hide", _("Never"))]))
+        group.add(w._switch("bmp_modern_spin", _("Turn the record while playing"),
+                            _("Stops on pause; needs Balanced or Fluid animations.")))
+        group.add(w._combo("bmp_modern_font", _("Typeface"), [
+            ("skin", _("As the skin (falls back to an installed font)")), ("system", _("System sans-serif")),
+            ("dejavu", _("DejaVu Sans (bundled)"))]))
+        self.modern_anchor = group
+        group.add(w._switch("bmp_track_banner", _("New track banner"),
+                            _("Title and artist slide in over the cover for three seconds.")))
+        return group
+
     def _gallery_group(self):
-        group = self.window._group(_("Skins"), _("Seven original homages to classic players. Select one to see it "
-                                                 "in the preview; Apply sends it to the display."))
+        group = self.window._group(_("Skins"), _("Seven classic homages and eight modern designs. Select one to see "
+                                                 "it in the preview; Apply sends it to the display."))
+        filters = Gtk.Box(css_classes=["linked"], halign=Gtk.Align.START, margin_bottom=6)
+        self.filter_buttons = {}
+        first_filter = None
+        for key, label in (("all", _("All")), ("classic", _("Classic")), ("modern", _("Modern"))):
+            button = Gtk.ToggleButton(label=label)
+            if first_filter is None:
+                first_filter = button
+                button.set_active(True)
+            else:
+                button.set_group(first_filter)
+            button.connect("toggled", self._on_filter, key)
+            self.filter_buttons[key] = button
+            filters.append(button)
+        group.set_header_suffix(filters)
         first = None
         self.skin_checks = {}
+        self.skin_rows = {}
         self.thumb_pictures = {}
         for skin_id in skins.SKIN_IDS:
             skin = skins.SKINS[skin_id]
+            hint = SKIN_INSPIRATION.get(skin_id) or MODERN_INSPIRATION.get(skin_id, "")
+            collection = _(COLLECTION_LABELS[skin.collection])
             row = Adw.ActionRow(title=GLib.markup_escape_text(skin.name),
-                                subtitle=GLib.markup_escape_text(f"{_(skin.description)}\n{_(SKIN_INSPIRATION[skin_id])}"))
+                                subtitle=GLib.markup_escape_text(f"{_(skin.description)}\n{collection} · {_(hint)}"))
             row.set_subtitle_lines(3)
+            self.skin_rows[skin_id] = row
             check = Gtk.CheckButton(valign=Gtk.Align.CENTER)
             if first is None:
                 first = check
@@ -417,6 +501,12 @@ class MediaPlayerPage:
         return group
 
     # ------------------------------------------------------------ callbacks
+    def _on_filter(self, button, key):
+        if not button.get_active():
+            return
+        for skin_id, row in self.skin_rows.items():
+            row.set_visible(key == "all" or skins.SKINS[skin_id].collection == key)
+
     def _on_skin(self, check, skin_id):
         if check.get_active():
             self.window._set("bmp_skin", skin_id)
