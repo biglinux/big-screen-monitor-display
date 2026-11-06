@@ -243,7 +243,46 @@ def run_narrow(window):
     window.close()
 
 
-SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow}
+def run_deepcool(window):
+    """A DeepCool cooler (telemetry device, no pixels) next to a simulated panel."""
+    pump(1.5)
+    window.show_section("displays")
+    pump(2.0)
+    displays = window.displays_page
+    card = displays.grid.cards.get("usb-3-2")
+    check("cooler_card", card is not None)
+    pump(1.5)
+    check("cooler_card_text", card.subtitle.get_label() if card else "")
+    check("cooler_card_thumbnail", bool(card and card.picture.get_paintable() is not None))
+    displays.open_display("usb-3-2")
+    pump(0.8)
+    page = displays.details.get("usb-3-2")
+    detail = getattr(page, "deepcool", None)
+    check("cooler_detail", detail is not None and window.sections["displays"].get_visible_page() is page)
+    check("cooler_live_badge", detail.preview.badge.get_label() if detail else "")
+    check("cooler_values", detail.values_row.get_subtitle() if detail else "")
+    check("cooler_missing", detail.diag["missing"].get_subtitle() if detail else "")
+    displays._set("usb-3-2", "dc_preset", "guardian")
+    check("cooler_override", window.values["displays"]["usb-3-2"]["dc_preset"] == "guardian")
+    report = json.loads(detail.diagnostics_text()) if detail else {}
+    check("cooler_diagnostics", report.get("family") == "deepcool_ak_pro" and "rows" in report)
+    window._revert()
+    displays.open_display("simulated")
+    pump(0.6)
+    check("panel_detail_still_raster", getattr(displays.details.get("simulated"), "deepcool", None) is None)
+    window.show_section("home")
+    pump(0.5)
+    dashboard = window.dashboard
+    index = dashboard._ids.index("usb-3-2")
+    dashboard.display_combo.set_selected(index)
+    pump(2.5)
+    renderer = window.renderer_of(dashboard.preview)
+    check("dashboard_face", renderer.face is not None and renderer.frames > 0)
+    check("dashboard_resolution", dashboard.rows["resolution"].get_subtitle())
+    window.close()
+
+
+SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool}
 original = config_gui.ConfigWindow.__init__
 
 

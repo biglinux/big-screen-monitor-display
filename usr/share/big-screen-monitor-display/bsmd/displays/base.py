@@ -11,6 +11,14 @@ Driver contract (every family):
 * ``capabilities`` describes what the hardware offers; the GUI only shows
   what a device really supports.
 
+Two kinds of output (``capabilities.output``):
+
+* ``raster`` - the panel has a framebuffer; ``present(image)`` receives a
+  rendered PIL image (every theme works).
+* ``telemetry`` - the device draws its own numbers (DeepCool digital
+  coolers); ``present(frame)`` receives a :class:`bsmd.displays.deepcool.metrics.Frame`
+  of validated CPU values, never an image.
+
 Failures always raise :class:`DisplayError` with a kind the recovery state
 machine understands. Panels never confirm what they show: a successful
 transfer means the device accepted the data.
@@ -66,6 +74,9 @@ class Capabilities:
     transport: str = "serial"            # serial or usb
     max_payload: int = 0                 # bytes per transfer, 0 = unlimited
     notes: tuple = ()
+    output: str = "raster"               # raster (framebuffer) or telemetry (structured CPU values)
+    metrics: tuple = ()                  # telemetry: metrics the firmware shows, physical order
+    display: str = "lcd"                 # lcd or segment (numeric)
 
     def as_dict(self):
         return {key: (list(value) if isinstance(value, tuple) else value)
@@ -84,6 +95,35 @@ class DeviceInfo:
 
 def percent(value):
     return max(0, min(100, int(value)))
+
+
+RASTER, TELEMETRY = "raster", "telemetry"
+
+
+class TelemetryDriver:
+    """Base of drivers whose device shows structured values instead of images.
+
+    Subclasses implement ``open()``, ``present(frame)`` (returns a Transfer)
+    and ``close()``. Brightness, test patterns and invalidation do not apply.
+    """
+
+    DRIVER = "telemetry"
+
+    def __init__(self):
+        self.native_size = (0, 0)
+        self.capabilities = Capabilities(output=TELEMETRY, brightness=False, brightness_steps=0,
+                                         partial_update=False, encoding="metrics")
+        self.info = None
+        self.min_interval = 1.0
+
+    def set_brightness(self, _percent):
+        return None
+
+    def invalidate(self):
+        return None
+
+    def probe(self):
+        return True
 
 
 class RasterDriver:

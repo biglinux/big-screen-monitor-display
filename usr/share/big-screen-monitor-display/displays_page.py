@@ -26,6 +26,7 @@ from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from gui import components as ui  # noqa: E402
+from gui import deepcool_page  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -92,7 +93,8 @@ class DisplayEntry:
 def scan(assigned):
     """Discovery (sysfs, read-only): run in the worker thread."""
     devices = discovery.scan_usb()
-    return discovery.discover(devices, assigned=assigned), discovery.unknown_serial_devices(devices)
+    return (discovery.discover(devices, assigned=assigned), discovery.unknown_serial_devices(devices),
+            deepcool_page.unsupported_rows(devices))
 
 
 class DisplaysPage:
@@ -127,7 +129,13 @@ class DisplaysPage:
             description=_("Not recognised automatically. If one of them is a display, choose its model; "
                           "otherwise leave it alone."), visible=False)
         self.other_rows = []
-        self.content = ui.page_layout(intro, self.grid, self.empty, self.other_group, maximum=1200)
+        self.deepcool_group = Adw.PreferencesGroup(
+            title=_("Other DeepCool devices"),
+            description=_("Identified by their USB ids, but their protocol is not implemented here. Nothing is sent "
+                          "to them."), visible=False)
+        self.deepcool_rows = []
+        self.content = ui.page_layout(intro, self.grid, self.empty, self.other_group, self.deepcool_group,
+                                      maximum=1200)
         self.page = ui.navigation_page(_("My Displays"), self.content, tag="displays", header_end=[refresh])
 
     def add_defaults(self, group):
@@ -177,8 +185,9 @@ class DisplaysPage:
 
     def _scanned(self, result, error, force):
         if error is not None:
-            result = ([], [])
-        entries, unknown = self._collect(*result)
+            result = ([], [], [])
+        self._show_unsupported(result[2])
+        entries, unknown = self._collect(*result[:2])
         signature = (tuple(sorted(entries)), tuple(c.id for c in unknown),
                      tuple(sorted((k, bool(e.candidate), bool(e.status)) for k, e in entries.items())))
         if force or signature != self._signature:
@@ -202,7 +211,8 @@ class DisplaysPage:
     def _rebuild(self):
         self.grid.clear()
         for display_id, entry in self.entries.items():
-            card = ui.Card(entry.title, icon="video-display-symbolic")
+            icon = "power-profile-performance-symbolic" if self._family(entry) else "video-display-symbolic"
+            card = ui.Card(entry.title, icon=icon)
             self.grid.add_card(display_id, card)
         self.empty.set_visible(not self.entries)
         self.grid.set_visible(bool(self.entries))
@@ -224,6 +234,20 @@ class DisplaysPage:
         for display_id in [d for d in self.details if d not in self.entries]:
             self.details.pop(display_id)
 
+    def _show_unsupported(self, rows):
+        for row in self.deepcool_rows:
+            self.deepcool_group.remove(row)
+        self.deepcool_rows = []
+        for title, subtitle in rows:
+            row = Adw.ActionRow(title=GLib.markup_escape_text(title), subtitle=GLib.markup_escape_text(subtitle))
+            row.add_prefix(Gtk.Image.new_from_icon_name("dialog-information-symbolic"))
+            self.deepcool_group.add(row)
+            self.deepcool_rows.append(row)
+        self.deepcool_group.set_visible(bool(rows))
+
+    def _family(self, entry):
+        return deepcool_page.family_of(entry, self._entry_settings(entry.id))
+
     # ---------------------------------------------------------- cards
     def _state(self, entry):
         """(text, kind) of a display for its card and page."""
@@ -241,7 +265,7 @@ class DisplaysPage:
 
     def _size(self, entry):
         device = (entry.status or {}).get("device")
-        if device:
+        if device and device.get("width") and device.get("height"):
             return device["width"], device["height"]
         return None
 
@@ -252,6 +276,18 @@ class DisplaysPage:
         own = self._entry_settings(entry.id)
         effective = settings.merged(self.window.values, entry.id)
         state, _kind = self._state(entry)
+        family = self._family(entry)
+        if family is not None:
+            card.set_text(own.get("name") or entry.title, deepcool_page.card_subtitle(family, effective, state))
+            card.set_tooltip_text(deepcool_page.card_tooltip(family, entry, effective))
+            card.set_badge(state if _kind in ("error", "warning") else None)
+            metrics_ = (entry.status or {}).get("metrics") or {}
+            key = ("display", entry.id, family.id, repr(sorted(metrics_.get("fields", {}).items())),
+                   metrics_.get("main"), metrics_.get("alarm"), (entry.status or {}).get("state"),
+                   repr(sorted((k, repr(v)) for k, v in effective.items() if k.startswith("dc_") or k == "theme")))
+            self.window.thumbnailer.request(key, deepcool_page.thumbnail_work(family, effective, entry),
+                                            card.set_texture)
+            return
         size = self._size(entry)
         parts = [state]
         if size:
@@ -276,7 +312,8 @@ class DisplaysPage:
             return
         page = self.details.get(display_id)
         if page is None:
-            page = self._build_detail(entry)
+            family = self._family(entry)
+            page = deepcool_page.DeepCoolDetail(self, entry, family).page if family else self._build_detail(entry)
             self.details[display_id] = page
         self._update_detail(entry)
         if self.nav.get_visible_page() is not page:
@@ -423,6 +460,9 @@ class DisplaysPage:
     def _update_detail(self, entry):
         page = self.details.get(entry.id)
         if page is None:
+            return
+        if getattr(page, "deepcool", None) is not None:
+            page.deepcool.update(entry, *self._state(entry))
             return
         status = entry.status or {}
         rows = page.rows

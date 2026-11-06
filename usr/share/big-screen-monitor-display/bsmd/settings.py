@@ -64,7 +64,9 @@ ORIENTATIONS = ("horizontal", "vertical", "horizontal_flipped", "vertical_flippe
 # Display families (bsmd.displays.registry; kept here so the root helper
 # does not import the drivers). A test checks both lists agree.
 PROFILE_IDS = ("ax206", "turing_rev_a", "xuanfang_rev_b", "turing_rev_c", "kipye_rev_d", "weact_a",
-               "weact_b", "turing_usb")
+               "weact_b", "turing_usb",
+               "deepcool_ak", "deepcool_ag", "deepcool_ls", "deepcool_ak_pro", "deepcool_ak400_pro", "deepcool_ld",
+               "deepcool_mystique")
 LED_COLORS = ("off", "white", "red", "green", "blue", "cyan", "magenta", "yellow", "orange", "purple")
 
 # key -> (kind, constraint, default)
@@ -233,6 +235,17 @@ SCHEMA = {
     "bmp_modern_font": (*_choice("skin", "system", "dejavu"), "skin"),
     "bmp_pure_tone": (*_choice("white", "beige", "grey", "graphite"), "white"),
     "bmp_track_banner": (*BOOL, False),
+    # DeepCool digital coolers (per display; bsmd/displays/deepcool)
+    "dc_preset": (*_choice("auto", "essentials", "advanced", "guardian", "performance", "minimal", "custom"),
+                  "auto"),
+    "dc_main": (*_choice("auto", "temp", "usage", "power"), "auto"),
+    "dc_temp_unit": (*_choice("c", "f"), "c"),
+    "dc_alarm": (*BOOL, True),
+    "dc_alarm_temp": (*_int(60, 100), 90),
+    "dc_interval": (*_choice("0.5", "1", "2", "3", "5"), "1"),
+    "dc_freq_source": (*_choice("max", "average"), "max"),
+    "dc_rotation": (*_choice("0", "90", "180", "270"), "0"),
+    "dc_lead_zeros": (*BOOL, True),
     # Host side sound (optional, off by default)
     "sound_enabled": (*BOOL, False),
     "sound_volume": (*_int(0, 100), 40),

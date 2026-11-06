@@ -43,6 +43,23 @@ SUBSYSTEM=="tty", ATTRS{idVendor}=="0525", ATTRS{idProduct}=="a4a7", ATTRS{seria
 SUBSYSTEM=="tty", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="0121|0106", ATTRS{serial}=="20080411", \
     MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
 
+# ------------------------------------------------------------ DeepCool digital coolers (VID 3633)
+# Numeric coolers (AK, AG, LS, AK PRO, LD): only the hidraw node of these products,
+# never every hidraw device and never MODE="0666". Other 3633 products (cases, LP,
+# LQ, NYX) are not driven by this program and get no access.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3633", \
+    ATTRS{idProduct}=="0001|0002|0003|0004|0006|0008|000a|0010|0011|0012", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+# MYSTIQUE 240/360: vendor bulk interface through the USB device node (libusb).
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="3633", ATTR{idProduct}=="0009", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess", ENV{BSMD_PANEL}="1"
+
+# CPU package power for the coolers that show it. Since CVE-2020-8694 the kernel
+# makes RAPL's energy_uj readable by root only; read access goes to the service
+# group alone (not to every user), and only for the package domains.
+ACTION=="add|change", SUBSYSTEM=="powercap", KERNEL=="intel-rapl:[0-9]", \
+    RUN+="/usr/bin/chgrp big-screen-monitor /sys%p/energy_uj", RUN+="/usr/bin/chmod 0440 /sys%p/energy_uj"
+
 # ------------------------------------------------------------ power
 # Never autosuspend the panels: suspend/resume cycles can reset their firmware.
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{BSMD_PANEL}=="1", \
@@ -52,4 +69,7 @@ ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", \
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="454d", ATTR{idProduct}=="4e41", \
     TEST=="power/control", ATTR{power/control}="on"
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{serial}=="CT21INCH|CT88INCH|USB7INCH|20080411", \
+    TEST=="power/control", ATTR{power/control}="on"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="3633", \
+    ATTR{idProduct}=="0001|0002|0003|0004|0006|0008|0009|000a|0010|0011|0012", \
     TEST=="power/control", ATTR{power/control}="on"

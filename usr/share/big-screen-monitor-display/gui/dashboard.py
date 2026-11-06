@@ -40,9 +40,15 @@ def describe_display(status_display):
     source = status_display.get("source") or {}
     name = status_display.get("name") or device.get("model") or status_display.get("id")
     model = source.get("name") or device.get("model") or "—"
-    resolution = f"{device['width']} × {device['height']}" if device.get("width") else "—"
-    transport = {"usb": "USB", "serial": _("USB serial"), "memory": _("Simulated")}.get(source.get("transport"),
-                                                                                       source.get("transport") or "—")
+    caps = status_display.get("capabilities") or {}
+    if device.get("width"):
+        resolution = f"{device['width']} × {device['height']}"
+    elif caps.get("output") == "telemetry":
+        resolution = _("Numeric display") if caps.get("display") == "segment" else _("LCD screen (information mode)")
+    else:
+        resolution = "—"
+    names = {"usb": "USB", "hid": "USB HID", "serial": _("USB serial"), "memory": _("Simulated")}
+    transport = names.get(source.get("transport"), source.get("transport") or "—")
     where = source.get("usb_path") or source.get("port") or status_display.get("id")
     connection = f"{transport} · {where}" if where else transport
     return name, model, resolution, connection
