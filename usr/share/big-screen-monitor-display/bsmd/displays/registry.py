@@ -85,6 +85,9 @@ class Profile:
         if self.id == "weact_b":
             from .weact import WeActB
             return WeActB(port, options=options)
+        if self.id.startswith("deepcool_"):
+            from .deepcool import drivers as deepcool_drivers
+            return deepcool_drivers.create(self.id, candidate.device, options)
         raise ValueError(f"no driver for {self.id}")
 
 
@@ -145,6 +148,27 @@ PROFILES = (
             (Rule(0x1CBE, (0x0028, 0x0046, 0x0050, 0x0080, 0x0088, 0x0092, 0x0123), PROBABLE),),
             "B", REF, notes=(N_("Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."),)),
 )
+
+
+def _deepcool_profiles():
+    from .deepcool import models
+    result = []
+    for family in models.FAMILIES.values():
+        names = tuple(name for m in models.MODELS if m.family == family.id for name in m.names)
+        transport = "usb" if family.transport == "usb" else "hid"
+        result.append(Profile(family.id, f"DeepCool {family.name}", "DeepCool", names,
+                              N_("numeric CPU display") if family.display == "segment" else
+                              N_("2.8\" LCD, information mode"), family.protocol, transport,
+                              (Rule(models.VENDOR, models.SUPPORTED_PIDS[family.id], CONFIRMED),), "B",
+                              "https://github.com/Nortank12/deepcool-digital-linux" if transport == "hid" else
+                              "https://github.com/dinoyoshi/serial-lcd-panel-client",
+                              options=("dc_lead_zeros",) if family.id == "deepcool_ld" else
+                              (("dc_rotation",) if transport == "usb" else ()),
+                              notes=family.notes))
+    return tuple(result)
+
+
+PROFILES = PROFILES + _deepcool_profiles()
 BY_ID = {profile.id: profile for profile in PROFILES}
 LEGACY_MODELS = {"turing": "turing_rev_a"}
 

@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.0.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -41,6 +41,15 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.1.0 — Coolers DeepCool Digital
+
+- **Coolers DeepCool com visor** controlados pelo próprio serviço: AK400/AK500/AK500S/AK620 DIGITAL (e SE), AG300/400/500/620 DIGITAL, LS520/LS720 SE DIGITAL, AK400/AK500/AK620 DIGITAL PRO, LD240/LD360 e MYSTIQUE 240/360 (modo de informações e rotação).
+- **CPU em primeiro lugar**: temperatura (Tdie/Tctl/Package), uso, **potência** (RAPL, zenergy ou amd_energy) e frequência (núcleo mais rápido ou média). Um valor que o computador não mede nunca vira "0 W": fica indisponível, com o motivo no diagnóstico.
+- **Presets** CPU Essencial, Avançado, Guardião, Desempenho, Mínimo e Personalizado, ou *Seguir o tema*: cada tema é representado no cooler, com matriz de compatibilidade na janela.
+- **Meus Displays** mostra o cooler com a face desenhada (DEMO sem o serviço), modelo, tipo de visor, modo, alertas, desempenho e diagnóstico (USB, permissões, sensores, valores indisponíveis, outros programas DeepCool).
+- **Seguro**: detecção só por VID/PID, identidade conferida antes do primeiro byte, trava exclusiva do dispositivo, regras udev restritas aos modelos suportados (sem `0666`), alarmes do firmware preservados e nenhum envio de imagens ao MYSTIQUE.
+- Validação **B** (sem teste em hardware físico ainda). Detalhes em [docs/deepcool](docs/deepcool/08-relatorio-final.md).
 
 ## ✨ Novidades da 5.0.0 — Nova janela de configuração
 
@@ -153,6 +162,19 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **Kipye rev. D** | Kipye Qiye Smart Display 3,5" | 320×480 | serial | 🧪 **B** |
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
+
+### Coolers DeepCool Digital (5.1)
+
+| Família | Modelos | Visor | Transporte | Status |
+| --- | --- | --- | --- | --- |
+| **AK DIGITAL** | AK400, AK500, AK500S, AK620 (e SE) | 3 dígitos + barra de uso + alarme | USB HID | 🧪 **B** |
+| **AG DIGITAL** | AG300, AG400, AG500, AG620 | 2 dígitos + alarme | USB HID | 🧪 **B** |
+| **LS SE DIGITAL** | LS520 SE, LS720 SE | 3 dígitos (temp./potência) + barra | USB HID | 🧪 **B** |
+| **AK DIGITAL PRO** | AK400 PRO; AK500 PRO e AK620 PRO (com frequência) | potência, temperatura, uso (e MHz) | USB HID | 🧪 **B** |
+| **LD** | LD240, LD360 | potência, temperatura, uso | USB HID | 🧪 **B** |
+| **MYSTIQUE** | 240, 360 | LCD 2,8" no modo de informações | USB (libusb) | 🧪 **B** |
+
+Outros produtos DeepCool (gabinetes CH, LP, LQ, MORPHEUS, linha G2 NYX) são identificados e listados, mas nada é enviado a eles. Protocolos, permissões e testes pendentes em [docs/deepcool](docs/deepcool/03-protocolos.md).
 
 **A** = validado em hardware real · **B** = driver implementado e verificado contra o projeto de referência e mocks; aguardando teste físico (um mock nunca conta como aprovação). Pesquisados e ainda não suportados: NXElec BeadaPanel (**C**, protocolo publicado), ACEMAGIC S1 e Fuldho (**D**), GUITION e Waveshare USB-Monitor (**E**). Detalhes, IDs USB e níveis de confiança em [docs/11](docs/11-compatibilidade-hardware.md); como testar o seu painel em [docs/17](docs/17-testes-hardware.md).
 
@@ -597,6 +619,8 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 | Display "aguardando a escolha do modelo" | O identificador USB é compartilhado (ex.: `1a86:5722` sem número de série conhecido) ou o dispositivo serial não é reconhecido. Em **Meus Displays**, escolha o modelo e pressione *Aplicar*. |
 | Display atribuído manualmente dá "permissão" | Só os IDs da tabela recebem acesso pelo udev. Crie uma regra local para aquele dispositivo (veja [docs/14](docs/14-deteccao.md)). |
 | "Dispositivo ocupado" | Outro programa usa o display (por exemplo, `main.py` aberto manualmente). Feche-o. |
+| Cooler DeepCool "ocupado" ou piscando | Outro programa DeepCool (`deepcool-digital-linux`, `deepcool-digital-info`, …) controla o cooler. A página do cooler → *Diagnóstico* lista o que foi encontrado e o comando para desativar; o Big Screen Monitor nunca para serviços de terceiros sozinho. |
+| Potência da CPU indisponível no cooler | O contador RAPL só é legível pelo grupo do serviço depois da regra udev do pacote: reinstale o pacote ou rode `sudo udevadm trigger --subsystem-match=powercap --action=change`. Sem RAPL/zenergy (algumas VMs), a potência fica indisponível — nunca 0 W. |
 | Aviso de permissões | Uma regra udev local em `/etc/udev/rules.d/` pode estar sobrepondo a do pacote (por exemplo, `MODE="0666"`). Remova-a e reconecte o display. |
 | Serviço sem watchdog/isolamento | Há uma cópia antiga em `/etc/systemd/system/big-screen-monitor-display.service`; remova-a e rode `sudo systemctl daemon-reload`. O diagnóstico avisa. |
 | Quero gastar menos | **Desempenho → Econômico**, ou desligue a animação do Brother Away. |

@@ -105,6 +105,38 @@ def test_window_flows(tmp_path):
     assert checks["skin_cards"] == 15
 
 
+def cooler(display_id):
+    return {"id": display_id, "name": None, "connected": True, "state": "healthy", "state_since_s": 12,
+            "device": {"model": "AK620 DIGITAL PRO", "width": 0, "height": 0,
+                       "details": {"family": "AK500/AK620 DIGITAL PRO", "hidraw": "/dev/hidraw9"}},
+            "source": {"profile": "deepcool_ak_pro", "name": "AK500/AK620 DIGITAL PRO", "transport": "hid"},
+            "capabilities": {"output": "telemetry", "display": "segment", "brightness": False,
+                             "partial_update": False, "encoding": "metrics"},
+            "stats": {"fps": 1.0, "frames_sent": 30, "transfer_ms": 0.4}, "settings": {"theme": "standard"},
+            "recoveries": 0,
+            "metrics": {"family": "deepcool_ak_pro", "fields": {"power": None, "temp": 61.5, "usage": 37.0,
+                                                                 "freq": 4525.0},
+                        "main": None, "alarm": False, "fahrenheit": False, "missing": ["power"],
+                        "preset": "essentials", "source_theme": "standard", "updated": time.time(),
+                        "reasons": {"power": "no permission to read the CPU energy counter (the package's udev "
+                                             "rule grants it to the service)"},
+                        "temp_source": "k10temp Tctl", "power_source": "intel-rapl:0",
+                        "power_status": "permission"}}
+
+
+@needs_gui
+def test_deepcool_cooler_pages(tmp_path):
+    checks = drive(tmp_path, "deepcool", [simulated("simulated", (480, 320)), cooler("usb-3-2")])
+    for name in ("cooler_card", "cooler_card_thumbnail", "cooler_detail", "cooler_override", "cooler_diagnostics",
+                 "panel_detail_still_raster", "dashboard_face"):
+        assert checks[name] is True, name
+    assert "Numeric display" in checks["cooler_card_text"] and "CPU Essentials" in checks["cooler_card_text"]
+    assert checks["cooler_live_badge"] == "Live"
+    assert "CPU temperature: 62 °C" in checks["cooler_values"] and "CPU power: —" in checks["cooler_values"]
+    assert "permission" in checks["cooler_missing"] and "Sent as 0" in checks["cooler_missing"]
+    assert checks["dashboard_resolution"].startswith("Numeric display")
+
+
 @needs_gui
 def test_service_stopped_states(tmp_path):
     checks = drive(tmp_path, "stopped", None)
