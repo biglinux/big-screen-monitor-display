@@ -218,7 +218,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 506
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 149
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 161
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 418
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 467
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 499
@@ -288,7 +288,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 650
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 251
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 271
 msgid   "Style"
 msgstr  ""
 
@@ -836,7 +836,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 900
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 229
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 249
 msgid   "Bottom"
 msgstr  ""
 
@@ -844,7 +844,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 900
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 229
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 249
 msgid   "Top"
 msgstr  ""
 
@@ -882,7 +882,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1002
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 483
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 573
 msgid   "The image could not be imported"
 msgstr  ""
 
@@ -892,7 +892,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1002
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 483
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 573
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 79
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 831
 msgid   "Unknown error"
@@ -948,8 +948,8 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1075
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 161
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 657
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 178
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 747
 msgid   "None"
 msgstr  ""
 
@@ -989,12 +989,18 @@ msgid   "Automatic (bright or busy areas)"
 msgstr  ""
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1082
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 417
 msgid   "Always"
 msgstr  ""
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1082
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 417
 msgid   "Never"
 msgstr  ""
 
@@ -1010,7 +1016,10 @@ msgid   "Animations and alerts"
 msgstr  ""
 
 #
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1086
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 167
 msgid   "Animations"
 msgstr  ""
 
@@ -1119,7 +1128,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1161
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 150
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 162
 msgid   "Layout"
 msgstr  ""
 
@@ -1347,7 +1356,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1344
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 235
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 255
 msgid   "CPU"
 msgstr  ""
 
@@ -1417,7 +1426,7 @@ msgstr  ""
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/kojiro_page.py, line: 1371
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 650
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 740
 msgid   "none"
 msgstr  ""
 
@@ -1432,88 +1441,138 @@ msgid   "Refresh"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 71
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 82
 #, python-brace-format
 msgid   "No session D-Bus: {error}"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 129
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 563
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 140
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 653
 msgid   "No MPRIS media player found."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 130
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 141
 msgid   "This control is not available for the current media."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 131
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 142
 msgid   "Seeking is not available for this media."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 132
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 133
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 613
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 143
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 144
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 703
 msgid   "The system volume could not be accessed."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 134
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 145
 msgid   "This player does not expose its own volume."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 142
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 153
 msgid   "Big Media Player"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 143
-msgid   "Retro players that follow the music and videos playing on this "
-        "computer (MPRIS)."
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 154
+msgid   "Classic and modern players that follow the music and videos playing "
+        "on this computer (MPRIS)."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 151
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 224
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 163
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 244
 msgid   "Automatic for the display size"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 151
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 163
 msgid   "Complete"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 151
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 163
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 585
 msgid   "Compact"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 152
-msgid   "Party (big art and visualizer)"
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 164
+msgid   "Audio / party (big art and visualizer)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 152
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 164
 msgid   "Information (more metadata)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 153
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 165
+msgid   "Cinema (picture edge to edge; modern skins)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 166
 msgid   "Low power (no animation)"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 154
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 168
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 330
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 636
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 223
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 472
+msgid   "Automatic"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 168
+msgid   "Off (reduced motion)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 168
+msgid   "Economical"
+msgstr  ""
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 169
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 614
+msgid   "Balanced"
+msgstr  ""
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 169
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 614
+msgid   "Fluid"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 170
+msgid   "Never faster than the display can receive; Off also stops scrolling "
+        "text."
+msgstr  ""
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 171
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 421
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 473
 msgid   "Text size"
@@ -1522,8 +1581,8 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 154
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 156
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 173
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 422
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 474
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 476
@@ -1533,9 +1592,9 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 154
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 156
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 177
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 173
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 195
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 422
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 474
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 476
@@ -1547,8 +1606,8 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 155
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 157
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 172
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 174
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 422
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 474
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 476
@@ -1556,478 +1615,503 @@ msgid   "Large"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 156
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 173
 msgid   "Album art size"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 158
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 175
 msgid   "Album art shape"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 159
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 161
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 176
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 178
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 411
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 417
 msgid   "As the skin"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 159
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 176
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 411
 msgid   "Square"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 159
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 176
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 424
 msgid   "Rounded"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 159
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 176
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 411
 msgid   "Round"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 160
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 177
 msgid   "Album art frame"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 161
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 178
 msgid   "Metal"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 161
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 178
 msgid   "Neon"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 162
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 179
 msgid   "Glow around the album art"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 163
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 180
 msgid   "Blurred album art behind the text"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 164
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 181
 msgid   "Vinyl mode"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 164
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 181
 msgid   "The cover turns like a record while playing."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 165
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 182
 msgid   "Colours from the album art"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 166
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 183
 msgid   "Highlights take a colour of the cover, keeping the contrast readable."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 167
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 184
 msgid   "LCD texture"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 168
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 185
 msgid   "Cover transition when the track changes"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 189
 msgid   "Metadata"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 171
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 189
 msgid   "Only what the player reports is shown; nothing is invented."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 172
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 190
 msgid   "Title"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 172
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 190
 msgid   "Artist"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 173
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 191
 msgid   "Album"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 173
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 191
 msgid   "Description"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 174
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 192
 msgid   "Source application"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 176
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 194
 msgid   "Scroll long titles"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 177
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 195
 msgid   "Scrolling speed"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 177
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 195
 msgid   "Slow"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 178
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 196
 msgid   "Fast"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 179
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 197
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 434
 msgid   "Distribution logo"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 180
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
 msgid   "Detected automatically"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 180
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
 msgid   "Custom image"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 180
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 224
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 244
 msgid   "Hidden"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 181
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 199
 msgid   "Logo display"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 182
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
 msgid   "Logo and name"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 182
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
 msgid   "Logo only"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 182
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
 msgid   "Name only"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 183
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 201
 msgid   "Custom logo"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 183
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 201
 msgid   "PNG, JPEG, WebP or SVG"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 184
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 202
 msgid   "Choose…"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 190
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 312
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 208
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 334
 msgid   "Playback"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 191
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 209
 msgid   "Player shown"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 192
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 210
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 613
 msgid   "Automatic (recommended)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 192
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 210
 msgid   "Last used"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 192
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 210
 msgid   "Always the same player"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 193
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 211
 msgid   "Automatic keeps the playing player and ignores short clips from "
         "other tabs."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 194
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 212
 msgid   "Fixed player"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 194
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 212
 msgid   "Part of the name, e.g. spotify, vlc, firefox"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 195
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 213
 msgid   "Ignored applications"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 196
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 214
 msgid   "Comma separated, e.g. chromium, kdeconnect"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 197
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 215
 msgid   "Switch automatically"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 198
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 216
 msgid   "Follow another player when it starts playing while the current one "
         "is paused."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 199
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 217
 msgid   "Show the transport keys"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 218
 msgid   "Time on the right"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 200
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 218
 msgid   "Total duration"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 201
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 219
 msgid   "Remaining time"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 202
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 211
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 220
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 229
 msgid   "Show percentage"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 203
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 221
 msgid   "Demonstration data in the preview"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 204
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 222
 msgid   "Used only in this window when no player is found; marked DEMO."
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 207
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 225
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 578
 msgid   "Volume"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 208
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 226
 msgid   "Show volume"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 209
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 227
 msgid   "Volume shown"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 210
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 228
 msgid   "System output (recommended)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 210
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 228
 msgid   "Player's own volume, when available"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 212
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 230
 msgid   "Show output device name"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 213
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 231
 msgid   "Step of the volume keys"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 214
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 232
 msgid   "Safe maximum"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 215
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 233
 msgid   "Above 100 % the audio is amplified and may distort."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 216
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 234
+msgid   "Enlarged volume after a change"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 235
+msgid   "Modern skins"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 235
+msgid   "All skins"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 235
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 269
+msgid   "Off"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 236
 msgid   "Output followed"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 217
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 342
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 555
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 611
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 364
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 645
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 701
 msgid   "Default output"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 222
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 242
 msgid   "Telemetry"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 222
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 242
 msgid   "Hardware data from the same collector the other themes use."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 223
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 243
 msgid   "Mode"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 224
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 244
 msgid   "Always visible"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 225
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 245
 msgid   "Intermittent"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 225
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 245
 msgid   "Alternating with media details"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 226
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 246
 msgid   "Only when paused"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 226
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 246
 msgid   "After a while without track changes"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 227
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 247
 msgid   "Only on alerts"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 228
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 330
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 336
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 248
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 352
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 358
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 586
 msgid   "Position"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 229
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 249
 msgid   "Over the album art"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 230
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 250
 msgid   "Interval (s)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 231
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 251
 msgid   "Duration (s)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 232
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 252
 msgid   "Without track changes for (s)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 233
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 253
 msgid   "CPU alert (%)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 234
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 254
 msgid   "Temperature alert (°C)"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 235
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 255
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 593
 msgid   "Clock"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 236
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 256
 msgid   "CPU temperature"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 236
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 256
 msgid   "RAM"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 257
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 443
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 487
 msgid   "Swap"
@@ -2038,7 +2122,7 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 257
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/dashboard.py, line: 251
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 443
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 594
@@ -2048,398 +2132,560 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 237
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 257
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 487
 msgid   "GPU"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 238
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 258
 msgid   "GPU temperature"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 238
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 258
 msgid   "Icons"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 239
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 259
 msgid   "Slide-in animation"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 241
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 261
 msgid   "Separator"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 241
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 261
 msgid   "Space"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 242
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 262
 msgid   "Opacity over the art (%)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 245
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 248
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 265
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 268
 msgid   "Visualizer"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 246
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 266
 msgid   "MPRIS carries no audio. The decorative animation only follows play/"
         "pause and is labelled DECO. The real spectrum analyses what the "
         "speakers play (labelled FFT)."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 249
-msgid   "Off"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 249
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 269
 msgid   "Decorative animation"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 250
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 270
 msgid   "Real spectrum (records the output monitor)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 251
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 271
 msgid   "Bars"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 251
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 271
 msgid   "LED segments"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 252
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 272
 msgid   "VU meter"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 252
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 272
 msgid   "Line"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 253
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 273
 msgid   "Sensitivity (%)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 256
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 276
 msgid   "Without playback"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 257
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 277
 msgid   "Show"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 258
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 278
 msgid   "Waiting screen with logo and clock"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 258
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 278
 msgid   "Last track, dimmed"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 259
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 279
 msgid   "Big clock"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 259
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 279
 msgid   "Expanded telemetry"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 259
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 279
 msgid   "Rest (dark, small clock)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 260
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 280
 msgid   "Another theme"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 261
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 281
 msgid   "After a pause of (s)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 262
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 282
 msgid   "Other theme"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 264
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 284
 msgid   "Returns to the player as soon as playback starts."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 265
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 285
 msgid   "Dim the display"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 266
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 286
 msgid   "Night mode"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 266
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 286
 msgid   "Darker display and optional night skin."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 267
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 287
 msgid   "Night starts at"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 268
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 288
 msgid   "Night ends at"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 269
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 289
 msgid   "Night skin"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 269
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 289
 msgid   "Same skin"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 271
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 291
+msgid   "For example Big Pure by day and Big Lounge at night."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 292
 msgid   "Skin per application"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 298
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 320
 msgid   "Now playing"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 298
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 320
 msgid   "Real controls for the player shown on the display (the USB panels "
         "have no touch input). Shortcuts: Ctrl+Space, Ctrl+←/→, Ctrl+↑/↓, "
         "Ctrl+M."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 301
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 323
 msgid   "Looking for media players…"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 307
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 329
 msgid   "Player"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 307
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 329
 msgid   "Automatic follows the player in use"
 msgstr  ""
 
 #
-# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
-#
-# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 308
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 546
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/displays_page.py, line: 223
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 472
-msgid   "Automatic"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 315
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 337
 msgid   "Previous"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 316
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 338
 msgid   "Play/Pause"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 317
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 339
 msgid   "Stop"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 318
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 340
 msgid   "Next"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 319
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 341
 msgid   "Shuffle"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 320
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 342
 msgid   "Repeat"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 342
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 354
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 364
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 376
 msgid   "System volume"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 345
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 1031
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 367
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 1039
 msgid   "Mute"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 347
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 369
 msgid   "Volume down"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 349
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 371
 msgid   "Volume up"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 363
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 386
+msgid   "Modern Collection"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 386
+msgid   "Options of the eight modern skins; the classic skins are not "
+        "affected."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 388
+msgid   "Colours"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 389
+msgid   "Original colours of the skin"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 389
+msgid   "Taken from the album art"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 390
+msgid   "Custom accent colour"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 390
+msgid   "Monochrome"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 390
+msgid   "High contrast"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 391
+msgid   "Text contrast is always kept readable."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 392
+msgid   "Accent colour (#RRGGBB)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 407
+msgid   "Big Pure tone"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 408
+msgid   "White"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 408
+msgid   "Beige"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 408
+msgid   "Light grey"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 409
+msgid   "Graphite (dark)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 410
+msgid   "Rounded corners"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 411
+msgid   "Soft"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 412
+msgid   "Shadows (%)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 413
+msgid   "Texture (%)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 414
+msgid   "Leather of Big Groove, grain of Big Ember and Big Vinyl."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 415
+msgid   "Light effects"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 415
+msgid   "Amber glow, lit rims and play key halo."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 416
+msgid   "Record behind the cover"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 418
+msgid   "Turn the record while playing"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 419
+msgid   "Stops on pause; needs Balanced or Fluid animations."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 420
+msgid   "Typeface"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 421
+msgid   "As the skin (falls back to an installed font)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 421
+msgid   "System sans-serif"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 422
+msgid   "DejaVu Sans (bundled)"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 424
+msgid   "New track banner"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 425
+msgid   "Title and artist slide in over the cover for three seconds."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 429
 msgid   "Skins"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 363
-msgid   "Seven original homages to classic players. Select one to see it in "
-        "the preview; Apply sends it to the display."
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 429
+msgid   "Seven classic homages and eight modern designs. Select one to see it "
+        "in the preview; Apply sends it to the display."
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 434
+msgid   "All"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 385
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 434
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 570
+msgid   "Classic"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 434
+msgid   "Modern"
+msgstr  ""
+
+#
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 469
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 235
 #, python-brace-format
 msgid   "Preview of {theme}"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 390
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 474
 msgid   "Display size"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 395
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 479
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 252
 msgid   "Diagnostics"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 395
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 479
 msgid   "State of the media integration."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 397
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 481
 msgid   "Media agent (desktop session)"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 397
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 481
 msgid   "Display service"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 398
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 482
 msgid   "MPRIS players"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 398
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 482
 msgid   "Audio system"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 399
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 483
 msgid   "Album art cache"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 399
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 483
 msgid   "Recent problems"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 405
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 489
 msgid   "Start"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 409
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 493
 msgid   "Clear"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 412
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 496
 msgid   "Reload media session"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 413
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 497
 msgid   "Looks for players again and retries album art."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 457
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 547
 msgid   "Choose a logo"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 488
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 578
 msgid   "Logo imported. Press Apply to use it on the display."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 494
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 584
 msgid   "Album art cache cleared."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 502
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 592
 msgid   "Media session reloaded."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 514
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 604
 #, python-brace-format
 msgid   "Could not start the media agent: {error}"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 564
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 654
 msgid   "Start playing in Spotify, VLC, Rhythmbox, a browser with media "
         "integration or any MPRIS compatible application."
 msgstr  ""
@@ -2449,14 +2695,17 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 568
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 144
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 323
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 658
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 152
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 793
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 482
 msgid   "Unknown title"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 586
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 676
 msgid   "Not available for this media"
 msgstr  ""
 
@@ -2465,70 +2714,73 @@ msgstr  ""
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 599
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 244
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 384
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 689
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 252
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1205
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 546
 msgid   "LIVE"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 623
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 713
 #, python-brace-format
 msgid   "Running (pid {pid}); connected to: {sockets}"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 624
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 714
 msgid   "no display service"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 627
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 717
 msgid   "Not running. It starts with the session when a display uses the Big "
         "Media Player theme."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 633
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 723
 #, python-brace-format
 msgid   "Socket {path}: {state}; {count} message(s), {invalid} rejected"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 635
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 725
 msgid   "receiving"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 635
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 725
 msgid   "no agent data"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 638
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 728
 msgid   "The service has not started its media socket (theme not in use or "
         "service not running)."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 646
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 736
 msgid   "No MPRIS player on the bus."
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 654
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 744
 #, python-brace-format
 msgid   "{files} image(s), {size:.1f} MB"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 661
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 751
 #, python-brace-format
 msgid   "{w}×{h}: every skin fits{note}"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 662
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 752
 msgid   " (compact layout with alternating pages)"
 msgstr  ""
 
@@ -3220,71 +3472,81 @@ msgid   "no player"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 1141
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 1149
 msgid   "live stream"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 315
-msgid   "No media"
-msgstr  ""
-
+# #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 633
-msgid   "NO SIGNAL"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 709
-msgid   "Playing"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 709
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 744
-msgid   "Paused"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 709
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 745
-msgid   "Stopped"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 714
-msgid   "Vol"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 714
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1015
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1328
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 888
 msgid   "muted"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 749
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/stage.py, line: 76
+#, python-brace-format
+msgid   "Now playing · {source}"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 474
+msgid   "No media"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 807
+msgid   "NO SIGNAL"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 883
+msgid   "Playing"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 883
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 920
+msgid   "Paused"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 883
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 921
+msgid   "Stopped"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 888
+msgid   "Vol"
+msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 925
 msgid   "Media agent not running"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 751
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 927
 msgid   "No MPRIS player found"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 753
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 929
 msgid   "Waiting for playback"
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 754
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 930
 msgid   "No media playing"
 msgstr  ""
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 815
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 993
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 482
 msgid   "Time"
 msgstr  ""
@@ -4124,11 +4386,6 @@ msgstr  ""
 
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 570
-msgid   "Classic"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 570
 msgid   "Sarcastic"
 msgstr  ""
 
@@ -4240,16 +4497,6 @@ msgstr  ""
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 613
 msgid   "Economy"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 614
-msgid   "Balanced"
-msgstr  ""
-
-#
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 614
-msgid   "Fluid"
 msgstr  ""
 
 #
