@@ -56,6 +56,10 @@ def ensure_contrast(color, background, ratio=4.5):
 
 
 def font(size, bold=False, mono=False):
+    """``mono``: False (bundled sans), True (bundled mono) or a font family name
+    (modern skins, e.g. "Lato"; resolved by fontconfig with a DejaVu fallback)."""
+    if isinstance(mono, str):
+        return _font(mono, max(6, int(size)), bold)
     return _font("mono" if mono else "default", max(6, int(size)), bold)
 
 

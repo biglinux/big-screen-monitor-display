@@ -29,6 +29,11 @@ MARQUEE_SPEED = {"slow": 18, "normal": 32, "fast": 56}     # px per second at 32
 MARQUEE_PAUSE = 1.6
 ANIMATION_FPS = 10.0
 TRANSITION = 0.6
+# bmp_animations: frame-rate cap while something moves (always bounded by the panel's own target fps).
+MOTION_FPS = {"economy": 4.0, "balanced": ANIMATION_FPS, "fluid": 20.0}
+OSD_TIME = 2.2
+BANNER_TIME = 3.0
+PLAY_EASE = 0.45                 # s for the vinyl disc to slide out/in (modern skins)
 
 
 class Frame:
@@ -69,6 +74,37 @@ class Frame:
         self.vol_scale = 100
         self.bands = None
         self.vis_label = ""
+        # Modern Collection (unused by the classic skins).
+        self.pal = None
+        self.pal_key = None
+        self.style_key = None
+        self.face = False
+        self.base = 14.0
+        self.app = ""
+        self.output = ""
+        self.remaining_text = ""
+        self.art_image = None
+        self.art_key = None
+        self.play_t = 1.0
+        self.disc_angle = 0
+        self.radius_scale = 1.0
+        self.shadow = 0.6
+        self.texture = 0.5
+        self.glow = True
+        self.motion = "balanced"
+        self.osd = None
+        self.banner = None
+        self.shape = None
+        self.ambient = False
+
+    def shape_at(self, t):
+        """Envelope of the decorative waveform for this track (1.0 when unknown)."""
+        if not self.shape:
+            return 1.0
+        pos = max(0.0, min(1.0, t)) * (len(self.shape) - 1)
+        i = int(pos)
+        j = min(len(self.shape) - 1, i + 1)
+        return self.shape[i] + (self.shape[j] - self.shape[i]) * (pos - i)
 
     def logo_at(self, size):
         return self._theme.logo_image(size, self)
@@ -106,6 +142,13 @@ class BigMediaPlayerTheme:
         self.idle_entered = None
         self._demo_art = {}
         self._logo_cache = {}
+        self.palettes = collections.OrderedDict()
+        self.cover_palettes = collections.OrderedDict()
+        self.shapes = collections.OrderedDict()
+        self._play_t = None
+        self._play_mono = None
+        self._vol_seen = None
+        self._vol_changed = -1e9
 
     def close(self):
         if self.idle_theme is not None:
@@ -188,10 +231,21 @@ class BigMediaPlayerTheme:
         if self.idle_theme is not None:
             return self.idle_theme.frame_interval(settings, ctx)
         low_power = settings.get("bmp_layout") == "low_power" or settings.get("performance_profile") == "economy"
-        if self.animating and not low_power:
-            fps = min(ANIMATION_FPS, getattr(ctx, "target_fps", 8.0) or 8.0)
+        motion = self.motion(settings)
+        if self.animating and motion != "off":
+            fps = min(MOTION_FPS[motion], getattr(ctx, "target_fps", 8.0) or 8.0)
             return 1.0 / max(1.0, fps)
         return themes.static_interval(settings, ctx, base=0.5 if not low_power else 1.0)
+
+    @staticmethod
+    def motion(settings):
+        """Animation level: off | economy | balanced | fluid ("auto" keeps the 4.3 behaviour)."""
+        value = settings.get("bmp_animations", "auto")
+        if settings.get("bmp_layout") == "low_power":
+            return "off"
+        if value == "auto":
+            return "off" if settings.get("performance_profile") == "economy" else "balanced"
+        return value if value in MOTION_FPS or value == "off" else "balanced"
 
     # ------------------------------------------------------------ skin selection
     def _skin_id(self, settings, player, wall):
@@ -233,6 +287,9 @@ class BigMediaPlayerTheme:
 
     def _render_player(self, width, height, skin, settings, state, snapshot, player, demo, now, wall, idle):
         variant = self._variant(settings, width, height)
+        modern = getattr(skin, "modern", False)
+        if variant == "cinema" and not modern:
+            variant = "party"
         tele_mode = self._tele_mode(settings, width, height)
         if variant == "party" and tele_mode not in ("alerts", "hidden"):
             tele_mode = "alerts"
@@ -241,25 +298,36 @@ class BigMediaPlayerTheme:
         opts = {"title_bar": True, "tele": tele_pos, "vis": vis_on or variant == "party",
                 "controls": settings.get("bmp_show_controls", True), "volume": settings.get("bmp_show_volume", True),
                 "variant": variant, "text_size": settings.get("bmp_text_size"),
-                "art_size": settings.get("bmp_art_size")}
-        L = layout_mod.compute(width, height, skin, opts)
+                "art_size": settings.get("bmp_art_size"), "disc": settings.get("bmp_modern_disc", "skin")}
         d = Frame(self, settings, now)
         self._fill_logo(d, settings)
+        if modern:
+            from .modern import base as modern_base
+            text_scale = layout_mod.TEXT_SCALE.get(settings.get("bmp_text_size"), 1.0)
+            opts["badge_w"] = modern_base.badge_width(d.logo_style, d.distro, 13 * text_scale * min(width, height)
+                                                      / 300, width) if d.logo is not None else 0
+        L = skin.compute_layout(width, height, opts) if modern else layout_mod.compute(width, height, skin, opts)
         self._fill_media(d, settings, state, snapshot, player, demo, now, idle)
         art_image, art_key = self._art_source(state, player, demo, skin, idle)
-        if settings.get("bmp_adaptive_colors") and art_image is not None and art_key:
+        if modern:
+            self._prepare_modern(d, skin, settings, L, art_image, art_key, player, now)
+        elif settings.get("bmp_adaptive_colors") and art_image is not None and art_key:
             d.accent = self._accent(art_key, art_image, skin)
+        if self.motion(settings) == "off" and settings.get("bmp_animations") == "off":
+            d.marquee = False
         d.compact_buttons = bool(L.buttons) and P.width(L.buttons) < P.height(L.buttons) * 5.2
 
         img = self._chrome(skin, L, d, settings).copy()
         if L.mode == "micro":
             return self._render_micro(img, L, skin, d, settings, art_image, art_key, now, wall, tele_mode, idle)
         skin.title_info(img, L, d)
+        if modern:
+            skin.before_art(img, L, d)
         if L.art and idle and not d.title:
             skin.art(img, P.ibox(L.art), self._logo_art(L.art, d, skin), d)
         elif L.art:
             self._draw_art(img, L.art, skin, d, art_image, art_key, settings, now, player)
-        if settings.get("bmp_art_background") and art_image is not None and L.info and not idle:
+        if settings.get("bmp_art_background") and art_image is not None and L.info and not idle and not modern:
             self._blur_background(img, L.extras.get("text") or L.info, art_key, art_image)
         if idle:
             self._idle_info(img, L, skin, d, state, wall)
@@ -281,17 +349,108 @@ class BigMediaPlayerTheme:
             skin.buttons(img, L.buttons, d)
         if L.volume:
             skin.volume(img, L.volume, d)
+        if modern:
+            skin.extras(img, L, d)
         if L.tele:
             self._draw_tele(img, L, skin, d, settings, tele_mode, player, idle, now, wall)
+        self._overlays(img, L, skin, d, settings, idle, now)
         self._mark_track(player, now)
         return img
+
+    # ------------------------------------------------------------ modern collection
+    def _prepare_modern(self, d, skin, settings, L, art_image, art_key, player, now):
+        from .modern import base as modern_base
+        mode = settings.get("bmp_palette", "skin")
+        if mode == "skin" and settings.get("bmp_adaptive_colors"):
+            mode = "cover"
+        custom = modern_base.parse_hex(settings.get("bmp_accent_color")) if mode == "custom" else None
+        cover = cover_key = None
+        if mode == "cover" and art_image is not None and art_key:
+            cover = self.cover_palettes.get(art_key)
+            if cover is None:
+                cover = self.cover_palettes[art_key] = modern_base.cover_colors(art_image)
+                while len(self.cover_palettes) > 16:
+                    self.cover_palettes.popitem(last=False)
+            cover_key = art_key
+        tone = settings.get("bmp_pure_tone", "white")
+        key = (skin.id, mode, custom, cover_key, tone)
+        pal = self.palettes.get(key)
+        if pal is None:
+            pal = self.palettes[key] = skin.palette(mode, custom, cover, tone)
+            while len(self.palettes) > 16:
+                self.palettes.popitem(last=False)
+        d.pal, d.pal_key = pal, key
+        d.radius_scale = modern_base.RADIUS_SCALE.get(settings.get("bmp_modern_radius", "skin"), 1.0)
+        d.shadow = settings.get("bmp_modern_shadow", 60) / 100
+        d.texture = settings.get("bmp_modern_texture", 50) / 100
+        d.glow = bool(settings.get("bmp_glow", True))
+        d.style_key = (d.radius_scale, d.shadow, d.texture, d.glow)
+        face = settings.get("bmp_modern_font", "skin")
+        d.face = skin.faces[0] if face == "skin" else modern_base.FACES.get(face, False)
+        d.base = L.font
+        d.art_image, d.art_key = art_image, art_key
+        d.ambient = bool(art_image is not None and not pal.get("contrast")
+                         and (skin.ambient or settings.get("bmp_art_background")))
+        d.motion = motion = self.motion(settings)
+        playing = player is not None and player["status"] == "Playing"
+        # Disc slide (eased) and rotation: only while playing, only when motion allows it.
+        target = 1.0 if playing else 0.0
+        if self._play_t is None or motion == "off" or not settings.get("bmp_transitions", True):
+            self._play_t = target
+        else:
+            step = (now - (self._play_mono or now)) / PLAY_EASE
+            self._play_t = min(target, self._play_t + step) if target > self._play_t else \
+                max(target, self._play_t - step)
+            if self._play_t != target and L.extras.get("disc"):
+                self.animating = True
+        self._play_mono = now
+        d.play_t = self._play_t
+        if L.extras.get("disc") and playing and settings.get("bmp_modern_spin", True) and \
+                motion in ("balanced", "fluid"):
+            step = 6 if motion == "fluid" else 12
+            d.disc_angle = int((now * 200) % 360) // step * step          # 33 1/3 rpm
+            self.animating = True
+        if L.vis and player is not None:
+            seed = f"{player['bus']}|{player['title']}|{player['artist']}"
+            shape = self.shapes.get(seed)
+            if shape is None:
+                shape = self.shapes[seed] = modern_base.track_shape(seed)
+                while len(self.shapes) > 8:
+                    self.shapes.popitem(last=False)
+            d.shape = shape
+
+    def _overlays(self, img, L, skin, d, settings, idle, now):
+        """Temporary volume display and new-track banner."""
+        modern = getattr(skin, "modern", False)
+        state = (d.vol_percent, d.vol_muted)
+        if self._vol_seen is None:
+            self._vol_seen = state
+        elif state != self._vol_seen:
+            self._vol_seen = state
+            self._vol_changed = now
+        osd = settings.get("bmp_volume_osd", "modern")
+        if (osd == "all" or (osd == "modern" and modern)) and now - self._vol_changed < OSD_TIME and \
+                d.vol_percent is not None:
+            d.osd = now - self._vol_changed
+        if modern and settings.get("bmp_track_banner") and not idle and self.track_key is not None and \
+                now - self.track_changed < BANNER_TIME:
+            d.banner = (now - self.track_changed) if d.motion != "off" else 1.0
+            if d.motion != "off":
+                self.animating = True
+        if modern:
+            skin.overlay(img, L, d)
+        elif d.osd is not None:
+            from .modern import base as modern_base
+            modern_base.draw_volume_osd(img, L, d, skin.pal)
 
     def _render_micro(self, img, L, skin, d, settings, art_image, art_key, now, wall, tele_mode, idle):
         """Tiny panels: art + one scrolling line + progress; telemetry alternates as a page."""
         page_tele = tele_mode != "hidden" and (idle or (tele_mode in ("alternate", "always", "intermittent")
                                                         and int(wall // 6) % 3 == 2))
+        pal = d.pal or skin.pal
+        face = d.face if getattr(skin, "modern", False) else skin.mono
         draw = ImageDraw.Draw(img)
-        draw.rectangle((0, 0, L.W, L.H), fill=skin.pal["lcd_bg"])
+        draw.rectangle((0, 0, L.W, L.H), fill=pal["lcd_bg"])
         if L.art:
             if idle:
                 self._logo_tile(img, L.art, d, skin)
@@ -305,45 +464,45 @@ class BigMediaPlayerTheme:
             for _icon, label, value, alert in items[:max(1, int((L.H - y0) // (size * 1.25)))]:
                 text = f"{label} {value}" if label else value
                 P.put_text(img, (x0, y + size * 0.6), P.ellipsize(text, size, x1 - x0, mono=True), size,
-                           (240, 90, 70) if alert else skin.pal["lcd_fg"], mono=True)
+                           (240, 90, 70) if alert else pal["lcd_fg"], mono=True)
                 y += size * 1.25
             self.animating = False
             return img
         if idle:
             P.put_text(img, (x0, y0 + size * 0.7), time.strftime("%H:%M", time.localtime(wall)), size * 1.4,
-                       skin.pal["lcd_hi"], bold=True, mono=True)
+                       pal["lcd_hi"], bold=True, mono=True)
             P.put_text(img, (x0, y0 + size * 2.1), P.ellipsize(_("No media"), size * 0.85, x1 - x0), size * 0.85,
-                       skin.pal["lcd_dim2"])
+                       pal["lcd_dim2"])
             return img
         line_h = size * 1.25
         title_box = (x0, y0, x1, y0 + line_h)
-        bold = not skin.mono
-        offset = self.scroll_offset(d.title, size, x1 - x0, bold, skin.mono, False, False, now) if d.marquee else 0
+        bold = face is not True
+        offset = self.scroll_offset(d.title, size, x1 - x0, bold, face, False, False, now) if d.marquee else 0
         if d.marquee:
-            P.marquee(img, title_box, d.title or _("Unknown title"), size, d.accent or skin.pal["lcd_hi"], offset,
-                      bold=bold, mono=skin.mono)
+            P.marquee(img, title_box, d.title or _("Unknown title"), size, d.accent or pal["lcd_hi"], offset,
+                      bold=bold, mono=face)
         else:
             P.put_text(img, (x0, y0 + line_h / 2), P.ellipsize(d.title, size, x1 - x0, bold), size,
-                       skin.pal["lcd_hi"], bold=bold)
+                       pal["lcd_hi"], bold=bold)
         second = d.artist or d.source
         if second and L.lines >= 2:
             P.put_text(img, (x0, y0 + line_h * 1.5), P.ellipsize(second, size * 0.9, x1 - x0), size * 0.9,
-                       skin.pal["lcd_fg"])
+                       pal["lcd_fg"])
         if L.progress:
             px0, py0, px1, py1 = L.progress
-            draw.rectangle(L.progress, fill=P.shade(skin.pal["lcd_fg"], 0.25))
+            draw.rectangle(L.progress, fill=P.shade(pal["lcd_fg"], 0.25))
             if d.fraction is not None:
-                draw.rectangle((px0, py0, px0 + (px1 - px0) * d.fraction, py1), fill=d.accent or skin.pal["fill"])
+                draw.rectangle((px0, py0, px0 + (px1 - px0) * d.fraction, py1), fill=d.accent or pal["fill"])
         if L.times:
             tx0, ty0, tx1, ty1 = L.times
             ts = max(7, (ty1 - ty0) * 0.8)
             P.glyph(draw, {"Playing": "play", "Paused": "pause"}.get(d.status, "stop"),
                     (tx0, ty0 + (ty1 - ty0) * 0.2, tx0 + (ty1 - ty0) * 0.6, ty1 - (ty1 - ty0) * 0.2),
-                    skin.pal["lcd_fg"])
-            P.put_text(img, (tx0 + (ty1 - ty0) * 0.8, (ty0 + ty1) / 2), d.elapsed_text, ts, skin.pal["lcd_fg"],
+                    pal["lcd_fg"])
+            P.put_text(img, (tx0 + (ty1 - ty0) * 0.8, (ty0 + ty1) / 2), d.elapsed_text, ts, pal["lcd_fg"],
                        mono=True)
             vol = ("M" if d.vol_muted else d.vol_text) if d.vol_percent is not None else ""
-            P.put_text(img, (tx1, (ty0 + ty1) / 2), vol, ts, skin.pal["lcd_dim2"], mono=True, anchor="rm")
+            P.put_text(img, (tx1, (ty0 + ty1) / 2), vol, ts, pal["lcd_dim2"], mono=True, anchor="rm")
         return img
 
     # ------------------------------------------------------------ data -> frame
@@ -361,6 +520,8 @@ class BigMediaPlayerTheme:
             d.vol_label = "SYS" if source == "system" else "VOL"
             d.vol_scale = max(100, settings.get("bmp_volume_max", 100), volume["percent"] or 0)
         d.vol_text = f"{d.vol_percent}%" if d.vol_percent is not None else "--"
+        if settings.get("bmp_show_output") and source == "system" and volume.get("output"):
+            d.output = volume["output"]
         if player is None:
             return
         d.status = player["status"]
@@ -369,6 +530,7 @@ class BigMediaPlayerTheme:
         d.album = player["album"]
         d.description = player["description"]
         d.source = player["identity"] + (" · DEMO" if demo and player["identity"] != "DEMO" else "")
+        d.app = d.source
         if settings.get("bmp_show_output") and volume.get("output") and source == "system":
             d.source = f"{d.source} → {volume['output']}" if d.source else volume["output"]
         d.caps = dict(player["can"]) if not demo else {key: True for key in model.CAPS}
@@ -386,6 +548,8 @@ class BigMediaPlayerTheme:
             d.total_text = "-" + model.fmt_time(length - position, hours)
         else:
             d.total_text = model.fmt_time(length, hours)
+        if length is not None and position is not None:
+            d.remaining_text = "-" + model.fmt_time(max(0, length - position), hours)
         if settings.get("bmp_show_percent") and d.fraction is not None:
             d.total_text = f"{d.total_text} {int(d.fraction * 100)}%"
         if settings.get("bmp_time_mode") == "remaining" and length and position is not None:
@@ -435,7 +599,8 @@ class BigMediaPlayerTheme:
 
     # ------------------------------------------------------------ chrome cache
     def _chrome(self, skin, L, d, settings):
-        key = (skin.id, L.key(), d.logo_style, d.distro, d.lcd_effect, getattr(self, "_logo_mode", None))
+        key = (skin.id, L.key(), d.logo_style, d.distro, d.lcd_effect, getattr(self, "_logo_mode", None),
+               skin.chrome_key(d) if getattr(skin, "modern", False) else None)
         image = self.chromes.get(key)
         if image is None:
             image = Image.new("RGB", (L.W, L.H), skin.pal["body"])
@@ -462,7 +627,7 @@ class BigMediaPlayerTheme:
     def _demo_image(self):
         image = self._demo_art.get("demo")
         if image is None:
-            image = demo_art(240)
+            image = demo_art(480)
             self._demo_art["demo"] = image
         return image
 
@@ -476,9 +641,10 @@ class BigMediaPlayerTheme:
         if vinyl:
             angle = int((now * 40) % 360) // 3 * 3          # 33⅓ rpm feel, 3° steps
             self.animating = True
-        tile = self._art_tile(box, image, key, shape, radius, skin, angle, vinyl)
+        tile = self._art_tile(box, image, key, shape, radius, skin, angle, vinyl, getattr(skin, "art_fit", "auto"))
         # Short crossfade from the previous cover after a track change.
-        if settings.get("bmp_transitions", True) and self.previous_tile is not None and \
+        if settings.get("bmp_transitions", True) and self.motion(settings) != "off" and \
+                self.previous_tile is not None and \
                 now - self.track_changed < TRANSITION and self.previous_tile[0].size == tile[0].size:
             t = (now - self.track_changed) / TRANSITION
             tile = (Image.blend(self.previous_tile[0], tile[0], t), tile[1])
@@ -489,27 +655,35 @@ class BigMediaPlayerTheme:
         else:
             img.paste(tile[0], box[:2], tile[1])
 
-    def _art_tile(self, box, image, key, shape, radius, skin, angle, vinyl):
+    def _art_tile(self, box, image, key, shape, radius, skin, angle, vinyl, fit="auto"):
         w, h = P.width(box), P.height(box)
-        cache_key = (key, w, h, shape, radius, skin.id if image is None else "", angle)
+        cache_key = (key, w, h, shape, radius, skin.id if image is None else "", angle, fit)
         hit = self.art_tiles.get(cache_key)
         if hit is not None:
             self.art_tiles.move_to_end(cache_key)
             return hit
         if image is None:
             source = placeholder_art(min(w, h), skin.pal)
-        elif abs(image.width / image.height - 1) > 0.15:
+        elif fit != "cover" and abs(image.width / image.height - 1) > 0.15:
             source = P.contain_fit(image, (w, h), (0, 0, 0))      # video thumbnail: keep it whole
         else:
             source = P.cover_fit(image, (w, h))
         if source.size != (w, h):
             source = P.cover_fit(source, (w, h))
+        mask = None
         if vinyl:
             source = _vinyl(source, angle)
-        mask = None
-        if shape == "circle":
+            if source.size != (w, h):
+                # Non-square art box: centre the round record instead of stretching its mask.
+                side = min(w, h)
+                canvas = Image.new("RGB", (w, h), (0, 0, 0))
+                canvas.paste(source, ((w - side) // 2, (h - side) // 2))
+                mask = Image.new("L", (w, h), 0)
+                mask.paste(P.circle_mask(side), ((w - side) // 2, (h - side) // 2))
+                source = canvas
+        if mask is None and shape == "circle":
             mask = P.circle_mask(min(w, h)).resize((w, h))
-        elif radius:
+        elif mask is None and radius:
             mask = P.rounded_mask((w, h), radius)
         tile = (source, mask)
         self.art_tiles[cache_key] = tile
@@ -738,11 +912,13 @@ class BigMediaPlayerTheme:
         box = L.extras.get("text") or L.info
         if not box:
             return
+        pal = d.pal or skin.pal
+        face = d.face if getattr(skin, "modern", False) else skin.mono
         x0, y0, x1, y1 = P.inset(box, max(3, L.font * 0.4), 2)
         if d.title:          # "last art" mode: last track, dimmed
-            lines = [(d.title, skin.pal["lcd_dim2"], 1.05, True), (d.artist or d.source, skin.pal["lcd_dim2"], 0.9,
+            lines = [(d.title, pal["lcd_dim2"], 1.05, True), (d.artist or d.source, pal["lcd_dim2"], 0.9,
                                                                    False), (_("Paused") if d.status == "Paused" else
-                                                                            _("Stopped"), skin.pal["lcd_fg"], 0.9,
+                                                                            _("Stopped"), pal["lcd_fg"], 0.9,
                                                                             False)]
         else:
             if state is None or not state.connected:
@@ -751,19 +927,19 @@ class BigMediaPlayerTheme:
                 hint = _("No MPRIS player found")
             else:
                 hint = _("Waiting for playback")
-            lines = [(_("No media playing"), skin.pal["lcd_hi"], 1.15, True), (hint, skin.pal["lcd_dim2"], 0.85, False)]
+            lines = [(_("No media playing"), pal["lcd_hi"], 1.15, True), (hint, pal["lcd_dim2"], 0.85, False)]
             if not L.readout:
-                lines.insert(0, (time.strftime("%H:%M", time.localtime(wall)), skin.pal["lcd_fg"], 1.6, True))
+                lines.insert(0, (time.strftime("%H:%M", time.localtime(wall)), pal["lcd_fg"], 1.6, True))
         total = sum(L.font * f * 1.3 for _t, _c, f, _b in lines)
         y = y0 + max(0, ((y1 - y0) - total) / 2)
         for text, color, factor, bold in lines:
             size = L.font * factor
             if L.mode == "portrait":
-                P.put_text(img, ((x0 + x1) / 2, y + size * 0.65), P.ellipsize(text, size, x1 - x0, bold, skin.mono),
-                           size, color, bold=bold, mono=skin.mono, anchor="mm")
+                P.put_text(img, ((x0 + x1) / 2, y + size * 0.65), P.ellipsize(text, size, x1 - x0, bold, face),
+                           size, color, bold=bold, mono=face, anchor="mm")
             else:
-                P.put_text(img, (x0, y + size * 0.65), P.ellipsize(text, size, x1 - x0, bold, skin.mono), size, color,
-                           bold=bold, mono=skin.mono)
+                P.put_text(img, (x0, y + size * 0.65), P.ellipsize(text, size, x1 - x0, bold, face), size, color,
+                           bold=bold, mono=face)
             y += size * 1.3
 
     def _render_idle_full(self, width, height, skin, settings, mode, state, now, wall):
@@ -779,6 +955,8 @@ class BigMediaPlayerTheme:
             return img
         d = Frame(self, settings, now)
         self._fill_logo(d, settings)
+        if getattr(skin, "modern", False):
+            d.pal, d.pal_key, d.style_key, d.face = skin.pal, ("static", skin.id), (), skin.faces[0]
         L = layout_mod.Layout(width, height, "full", min(width, height) / 320, 14)
         L.title = (0, 0, width, max(12, round(skin.title_h * L.unit)))
         L.info = None
