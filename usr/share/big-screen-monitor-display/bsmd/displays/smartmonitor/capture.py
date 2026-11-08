@@ -64,10 +64,9 @@ THEME_OPTIONS = {
     "kojiro": {"settings": {}},
     # Without media (the panel cannot show titles or covers live) the player's own
     # full-screen telemetry mode, in the chosen skin.
-    # While a song plays: the player itself (time, progress, volume live). Without
-    # media: the player's own full-screen telemetry mode, in the chosen skin.
-    "big_media_player": {"settings": {"bmp_idle_mode": "telemetry", "bmp_idle_after": 600,
-                                      "bmp_preview_demo": False}},
+    # The player itself, with or without a song (see _player_settings).
+    "big_media_player": {"settings": {"bmp_idle_after": 600, "bmp_preview_demo": False},
+                         "adjust": "_player_settings"},
 }
 
 
@@ -495,6 +494,8 @@ class Scene:
         self.theme_id = theme_id
         options = THEME_OPTIONS.get(theme_id, {})
         self.settings = dict(settings, theme=theme_id, **options.get("settings", {}))
+        if options.get("adjust"):
+            self.settings = globals()[options["adjust"]](self.settings)
         self.base = fields.base_stats(stats)
         self.telemetry, self.themes, self.runtime = telemetry, themes, runtime
         self.clock = _Frozen()
@@ -663,7 +664,7 @@ class Capture:
             if media.get("present"):
                 for name, (setter, _count, _cand) in fields.STATES.items():
                     sources["state_" + name] = (setter(self.scene.base, 1), None)
-            if media.get("present") and self.scene.settings.get("bmp_visualizer") == "spectrum":
+            if media.get("present") and self.scene.settings.get("bmp_visualizer") == "spectrum" and fields.SPECTRUM:
                 # The visualizer's bars: out of the background, each drawn by a gauge widget.
                 sources["noise_spectrum"] = (fields._with_media(self.scene.base, bands=[0.75] * fields.SPECTRUM), None)
             if media.get("present") and not self.scene.settings.get("sm_bmp_track_refresh"):
@@ -1146,7 +1147,7 @@ class Capture:
             moving = np.abs(shots[1] - shots[0]).sum(axis=2) > 24
             # Every place the state shows (a button icon, a speaker), largest first.
             boxes = sorted(_boxes(moving, join=4), key=lambda b: (b[2] - b[0]) * (b[3] - b[1]), reverse=True)
-            for x0, y0, x1, y1 in boxes[:3]:
+            for rank, (x0, y0, x1, y1) in enumerate(boxes[:2]):
                 x0, y0 = max(0, int(x0) - 1), max(0, int(y0) - 1)
                 x1, y1 = min(SIZE[0], int(x1) + 1), min(SIZE[1], int(y1) + 1)
                 w, h = x1 - x0, y1 - y0
@@ -1163,7 +1164,7 @@ class Capture:
                     pixels = shot[y0:y1, x0:x1]
                     luma = pixels @ np.array([0.299, 0.587, 0.114])
                     groups = [region]
-                    if region.sum() > 20:
+                    if rank == 0 and region.sum() > 20:      # colours split only for the main icon
                         middle = np.median(luma[region])
                         light, dark = region & (luma > middle + 40), region & (luma <= middle + 40)
                         light2, dark2 = region & (luma >= middle), region & (luma < middle - 40)
@@ -1209,12 +1210,21 @@ class Capture:
         # A gauge only ever grows with its value (a figure reacting to the load does not).
         # (from level 1: an empty visualizer may draw a resting shape at 0)
         grows = lit_counts[1:]
-        if not colours or any(b < a * 0.97 for a, b in zip(grows, grows[1:])) or lit_counts[-1] < 20:
+        # ...and gradually: something only pushed aside when a number gains a digit
+        # (icons in a telemetry strip) changes in two or three steps, not ten.
+        gradual = len({round(c / max(1, lit_counts[-1]), 2) for c in grows}) >= 6
+        if not colours or not gradual or any(b < a * 0.97 for a, b in zip(grows, grows[1:])) or \
+                lit_counts[-1] < 20:
             return None
         colour = tuple(int(v) for v in np.median(np.concatenate(colours), axis=0))
         atlas = imgdat.Atlas((w,) * 10 + (1, 1), h, bytes(cells) + bytes(2 * h))
         number = imgdat.Number(0, (int(x0), int(y0), int(w), int(h)), colour, atlas, 0)
-        return (fields.FIELDS.get(name, (8,))[0] + 0.5, number, {"cand": cand, "scale": 1.0, "part": "level"}, -1)
+        binding = {"cand": cand, "scale": 1.0, "part": "level"}
+        priority = fields.FIELDS.get(name, (8,))[0] + 0.5
+        if name.startswith("band"):
+            binding["of"] = fields.SPECTRUM
+            priority = 80 + int(name[4:]) * 0.01       # after every value and the telemetry strip
+        return (priority, number, binding, -1)
 
     def _render_planned(self, plan, when=None, changes=None, settings=None):
         """Render with ``plan`` (base call index -> action) addressed by identity and
@@ -1406,14 +1416,30 @@ def _boxes(mask, join=6):
     return boxes
 
 
+def _player_settings(settings):
+    """The panel cannot alternate by itself: a telemetry strip that is not hidden is
+    always shown; an idle screen that hands over to another theme stays the player."""
+    adjusted = dict(settings)
+    if adjusted.get("bmp_tele_mode", "auto") != "hidden":
+        adjusted["bmp_tele_mode"] = "always"
+    if adjusted.get("bmp_idle_mode") == "theme":
+        adjusted["bmp_idle_mode"] = "screen"
+    return adjusted
+
+
 def _media_state(stats, art=None):
     """What the Big Media Player sees during a capture: one player with the track in
     ``stats["media"]`` (no player at all when nothing plays)."""
     from ...media import hub, model
     media = stats.get("media") if isinstance(stats.get("media"), dict) else {}
-    if not media.get("present"):
-        return hub.MediaState(None, connected=False)
     now = time.monotonic()
+    if not media.get("present"):
+        # The agent is there, nothing plays: the player says so (not "agent not running").
+        empty = {"players": [], "active": None, "volume": model.clean_volume({"available": True, "percent": 50,
+                                                                              "muted": False, "output": "",
+                                                                              "backend": "pulse"}),
+                 "agent": model.clean_agent({}), "sent_mono": now}
+        return hub.MediaState(empty, connected=True)
     art_id = "capturecover" if art is not None and media.get("art") else None     # ids are alphanumeric
     player = model.clean_player({
         "bus": "org.mpris.MediaPlayer2.capture", "identity": media.get("identity") or "Player", "desktop": "",
@@ -1536,7 +1562,7 @@ def story_moments(story, settings, parts=3, limit=90.0):
     return moments
 
 
-def capture(theme_id, settings, stats, art=None, scene=None):
+def capture(theme_id, settings, stats, art=None, scene=None, spectrum=None):
     """``(imgdat.Theme, bindings, dropped)`` for ``theme_id`` with ``settings``
     (``art``: the current cover, when the panel is flashed on every song;
     ``scene``: {"story", "part"} of a Brother Away story)."""
@@ -1546,7 +1572,26 @@ def capture(theme_id, settings, stats, art=None, scene=None):
     if scene and theme_id == "brother_away":
         moments = story_moments(scene["story"], settings)
         story = (scene["story"], moments[min(int(scene.get("part", 0)), len(moments) - 1)])
-    job = Capture(theme_id, settings, stats)
-    job.scene.art = art
-    job.scene.story = story
-    return job.run()
+    def run(count):
+        fields.set_spectrum(count)
+        # No room for a spectrum at all: the player without its visualizer, not "NO SIGNAL".
+        job = Capture(theme_id, dict(settings, bmp_visualizer="off") if count == 0 and spectrum_on else settings,
+                      stats)
+        job.scene.art = art
+        job.scene.story = story
+        return job.run()
+
+    media = (stats.get("media") or {}) if isinstance(stats.get("media"), dict) else {}
+    spectrum_on = theme_id == "big_media_player" and bool(media.get("present")) and \
+        settings.get("bmp_visualizer") == "spectrum"
+    if spectrum_on and spectrum is not None:
+        result = run(max(0, min(fields.SPECTRUM_MAX, int(spectrum))))     # known from the last song
+    else:
+        result = run(fields.SPECTRUM_MAX)
+        if spectrum_on:
+            kept = sum(1 for b in result[1].values() if b["cand"].startswith("band"))
+            if kept < fields.SPECTRUM_MAX:
+                # Not room for every band: draw the visualizer again with as many as fit
+                # (grouped frequencies), or without it, rather than half a spectrum.
+                result = run(kept if kept >= 3 else 0)
+    return result

@@ -362,7 +362,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 6
+CAPTURE_VERSION = 7
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
@@ -462,6 +462,13 @@ class Compiled:
         return sorted(int(c) for c in self.bindings) if self.bindings is not None else None
 
 
+def _song_free_key(theme_spec):
+    """The spec without the song: what decides how much room the visualizer has."""
+    spec_ = json.loads(json.dumps(theme_spec))
+    (spec_.get("media") or {}).pop("track", None)
+    return key(spec_)
+
+
 def cache_dir():
     from .driver import state_dir
     return os.path.join(state_dir(), "smartmonitor-cache")
@@ -540,9 +547,16 @@ def _compiled(theme_spec, settings, stats, progress=None):
         media = dict(stats.get("media") or {})
         art = media.pop("art_image", None)
         stats["media"] = media
+        hints_path = os.path.join(cache_dir(), "spectrum-hints.json")
+        base_key = _song_free_key(theme_spec)
+        try:
+            with open(hints_path, encoding="utf-8") as handle:
+                hints = json.load(handle)
+        except (OSError, ValueError):
+            hints = {}
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
                    "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out,
-                   "scene": theme_spec.get("scene")}
+                   "scene": theme_spec.get("scene"), "spectrum": hints.get(base_key)}
         if art is not None and settings.get("sm_bmp_track_refresh"):
             import base64
             import io
@@ -580,6 +594,14 @@ def _compiled(theme_spec, settings, stats, progress=None):
             dash = dashboard_spec(settings, stats)
             dash_key, data = dashboard_compiled(dash)
             return Compiled(dash_key, data, None, dash, {"fallback": "capture wrote nothing"})
+        if result.report.get("spectrum") is not None:
+            hints[base_key] = result.report["spectrum"]      # the next song: one capture, not two
+            try:
+                with open(hints_path + ".tmp", "w", encoding="utf-8") as handle:
+                    json.dump(dict(list(hints.items())[-20:]), handle)
+                os.replace(hints_path + ".tmp", hints_path)
+            except OSError:
+                pass
         log.info("SmartMonitor: theme %s adapted in %.1f s (%d values, %d bars, %d frames, %d bytes)",
                  theme_spec["theme"], time.monotonic() - started, result.report.get("numbers", 0),
                  result.report.get("bars", 0), result.report.get("frames", 1), len(result.data))

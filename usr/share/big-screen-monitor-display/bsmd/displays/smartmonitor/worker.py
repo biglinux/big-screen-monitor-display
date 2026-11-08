@@ -35,7 +35,7 @@ def main():
         from PIL import Image
         art = Image.open(io.BytesIO(base64.b64decode(request["art_png"]))).convert("RGB")
     theme, bindings, dropped = capture.capture(request["theme"], request["settings"], request["stats"], art,
-                                               request.get("scene"))
+                                               request.get("scene"), request.get("spectrum"))
     theme.rotation = int(request.get("rotation", 0))
     data = imgdat.compile_theme(theme)
     out = request["out"]
@@ -43,7 +43,7 @@ def main():
         handle.write(data)
     os.replace(out + ".dat.tmp", out + ".dat")
     report = {"bindings": bindings, "dropped": dropped, "numbers": len(theme.numbers), "bars": len(theme.bars),
-              "frames": 1 + len(theme.frames), "bytes": len(data)}
+              "frames": 1 + len(theme.frames), "bytes": len(data), "spectrum": fields.SPECTRUM}
     with open(out + ".json.tmp", "w", encoding="utf-8") as handle:
         json.dump(report, handle)
     os.replace(out + ".json.tmp", out + ".json")

@@ -479,3 +479,24 @@ def test_brother_away_scenes_follow_the_clock_and_the_setting():
     stats = {"hostname": "h"}
     assert layout.key(layout.spec(base, stats, day)) != \
         layout.key(layout.spec(base, stats, day + datetime.timedelta(minutes=30)))
+
+
+def test_player_settings_keep_footer_and_player():
+    from bsmd.displays.smartmonitor import capture
+    adjusted = capture._player_settings({"bmp_tele_mode": "auto", "bmp_idle_mode": "theme"})
+    assert adjusted["bmp_tele_mode"] == "always"
+    assert adjusted["bmp_idle_mode"] == "screen"
+    assert capture._player_settings({"bmp_tele_mode": "hidden"})["bmp_tele_mode"] == "hidden"
+
+
+def test_spectrum_regroup_keeps_loudest_of_each_group():
+    from bsmd.displays.smartmonitor import fields
+    assert fields.regroup([0.1, 0.9, 0.2, 0.3, 0.8, 0.0], 3) == [0.9, 0.3, 0.8]
+    assert fields.regroup([0.5], 0) == []
+    assert len(fields.regroup([0.4] * 32, 12)) == 12
+
+
+def test_spectrum_hint_ignores_the_song():
+    a = {"theme": "big_media_player", "media": {"present": True, "track": "x"}}
+    b = {"theme": "big_media_player", "media": {"present": True, "track": "y"}}
+    assert layout._song_free_key(a) == layout._song_free_key(b)

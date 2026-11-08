@@ -215,8 +215,10 @@ STATES = {
 }
 
 # The player's spectrum visualizer: the capture draws it with SPECTRUM bands, each a
-# gauge of its own (the agent sends 24; they are averaged in pairs for the panel).
+# gauge of its own (the agent sends 24; they are grouped for the panel). The count
+# shrinks when the panel has no room left for twelve (see set_spectrum).
 SPECTRUM = 12
+SPECTRUM_MAX = 12
 
 
 def _band_setter(index):
@@ -227,18 +229,34 @@ def _band_setter(index):
     return setter
 
 
-for _index in range(SPECTRUM):
-    CANDIDATES[f"band{_index}"] = (lambda i: lambda s, t, d: 100.0 * ((_media(s).get("bands") or [0.0] * SPECTRUM)
-                                                                       + [0.0] * SPECTRUM)[i])(_index)
-    PERCENT[f"band{_index}"] = (_band_setter(_index), f"band{_index}")
+def set_spectrum(count):
+    """Draw the visualizer with ``count`` bands in the next capture (0: none)."""
+    global SPECTRUM
+    SPECTRUM = count
+    for index in range(SPECTRUM_MAX):
+        PERCENT.pop(f"band{index}", None)
+    for index in range(count):
+        CANDIDATES[f"band{index}"] = (lambda i: lambda s, t, d: 100.0 * ((_media(s).get("bands") or [])
+                                                                           + [0.0] * SPECTRUM_MAX)[i])(index)
+        PERCENT[f"band{index}"] = (_band_setter(index), f"band{index}")
+
+
+set_spectrum(SPECTRUM_MAX)
+
+
+def regroup(bands, count):
+    """``bands`` (any number) as ``count`` bands, each the loudest of its group."""
+    if not bands or count <= 0:
+        return []
+    step = len(bands) / count
+    return [max(bands[int(i * step):max(int(i * step) + 1, int((i + 1) * step))]) for i in range(count)]
 
 
 def panel_bands(bands):
-    """The agent's spectrum (any number of bands) as SPECTRUM bands."""
-    if not bands:
-        return None
-    step = len(bands) / SPECTRUM
-    return [max(bands[int(i * step):max(int(i * step) + 1, int((i + 1) * step))]) for i in range(SPECTRUM)]
+    """The agent's spectrum (any number of bands) as the most the panel can show."""
+    return regroup(bands, SPECTRUM_MAX) or None
+
+
 CLOCK_CANDIDATES = ("hour", "hour12", "minute", "second", "day", "month", "year", "year2", "weekday", "month0")
 
 
@@ -344,7 +362,13 @@ def candidate_value(name, stats, now=None):
 def binding_value(binding, stats, now=None):
     """Integer for one channel. ``binding`` keys: cand, scale, part ("int", "frac",
     "tens", "ones", "word", "pct", "whole"), decimals, digits."""
-    value = candidate_value(binding["cand"], stats, now) * binding.get("scale", 1.0)
+    if binding["cand"].startswith("band") and binding.get("of"):
+        # A visualizer captured with fewer bands: regroup the live spectrum the same way.
+        bands = regroup((_media(stats).get("bands") or []), binding["of"])
+        index = int(binding["cand"][4:])
+        value = 100.0 * (bands[index] if index < len(bands) else 0.0)
+    else:
+        value = candidate_value(binding["cand"], stats, now) * binding.get("scale", 1.0)
     part = binding.get("part", "whole")
     decimals = binding.get("decimals", 0)
     if part == "state":
