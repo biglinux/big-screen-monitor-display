@@ -11,8 +11,9 @@ Runs as the logged-in user (XDG autostart), never as root:
                   (single instance, commands from the window, keyboard
                   shortcuts through ``main.py --media ACTION``).
 
-The agent exits by itself when no display uses the Big Media Player theme
-(the window starts it again when the theme is applied) and when the session
+The agent goes dormant when no display uses the Big Media Player theme (no
+MPRIS, no socket, no D-Bus name; only a settings check every few seconds) and
+wakes up by itself when the theme is applied again; it exits when the session
 bus goes away (logout).
 """
 
@@ -94,7 +95,7 @@ class MediaCore:
         self.loader = artwork.ArtLoader(self._on_art)
         self.spectrum = None          # created on first use: NumPy is only loaded for the real spectrum
         self._heartbeat = None
-        connection.connect("closed", self._on_closed)
+        self._closed_handler = connection.connect("closed", self._on_closed)
 
     # ------------------------------------------------------------ lifecycle
     def start(self):
@@ -107,9 +108,18 @@ class MediaCore:
         self.volume.stop()
         if self.spectrum is not None:
             self.spectrum.stop()
-        if self._heartbeat:
-            GLib.source_remove(self._heartbeat)
-            self._heartbeat = None
+        for attr in ("_heartbeat", "_publish_source", "_takeover_source"):
+            source = getattr(self, attr)
+            if source:
+                GLib.source_remove(source)
+                setattr(self, attr, None)
+
+    def close(self):
+        """Stop for good: also forget the connection (cores are recreated, not restarted)."""
+        self.stop()
+        if self._closed_handler:
+            self.conn.disconnect(self._closed_handler)
+            self._closed_handler = None
 
     def apply_settings(self, values):
         self.values = dict(values)
@@ -337,16 +347,27 @@ class MediaCore:
 # ---------------------------------------------------------------- agent process
 
 class Agent:
+    """One per session. *Active* while a display uses the theme: owns the D-Bus
+    name, watches MPRIS and feeds the service. *Dormant* otherwise: no D-Bus
+    name, no MPRIS, no socket, only a cheap settings check every few seconds,
+    so the display gets the music again as soon as the theme is applied, from
+    the window or any other way (the agent used to exit here, and nothing
+    brought it back until the next login)."""
+
     def __init__(self, keep=False):
         self.keep = keep
         self.loop = GLib.MainLoop()
         self.store = settings_mod.SettingsStore()
-        self.publisher = ipc.Publisher()
+        self.publisher = None
         self.core = None
         self.conn = None
         self.registration = None
         self.unused_since = None
         self.exit_code = 0
+
+    @property
+    def active(self):
+        return self.core is not None
 
     def run(self):
         try:
@@ -354,52 +375,97 @@ class Agent:
         except GLib.Error as error:
             log.error("no session bus: %s", error.message)
             return 1
-        values = self.store.get()
-        if not self.keep and not theme_in_use(values):
-            log.info("Big Media Player is not in use; media agent not needed")
-            return 0
         if agent_running(self.conn):
             log.info("media agent already running")
             return 0
-        self.core = MediaCore(self.conn, values, sink=self.publisher.publish, on_state=self._emit_changed)
-        self.publisher.on_connect = lambda path: GLib.idle_add(lambda: self.core.resend_all() and False)
-        # Export the object first, then take the name: a client never sees the name without it.
-        node = Gio.DBusNodeInfo.new_for_xml(INTROSPECTION)
-        self.registration = self.conn.register_object(OBJECT_PATH, node.interfaces[0], self._on_call, None, None)
-        reply = self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                                    "RequestName", GLib.Variant("(su)", (BUS_NAME, 4)),     # DO_NOT_QUEUE
-                                    GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE, 3000, None)
-        if reply.unpack()[0] not in (1, 4):      # PRIMARY_OWNER / ALREADY_OWNER
-            log.info("media agent already running")
-            self.conn.unregister_object(self.registration)
-            return 0
+        if self.keep or theme_in_use(self.store.get()):
+            if not self._activate():
+                log.info("media agent already running")
+                return 0
+        else:
+            log.info("media agent %s dormant: Big Media Player is not in use", __version__)
         self.conn.connect("closed", lambda *_: self.loop.quit())
-        self.publisher.start()
-        self.core.start()
         GLib.timeout_add_seconds(SETTINGS_EVERY, self._check_settings)
         for signum in (2, 15):
             GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, self._quit)
-        log.info("media agent %s running (sockets: %s)", __version__, ", ".join(self.publisher.paths))
         self.loop.run()
-        self.core.stop()
-        self.publisher.stop()
+        self._deactivate()
         return self.exit_code
+
+    def _activate(self):
+        """Take the D-Bus name and start feeding the display. False when another
+        agent is already active (this process is then not needed)."""
+        # Export the object first, then take the name: a client never sees the name without it.
+        node = Gio.DBusNodeInfo.new_for_xml(INTROSPECTION)
+        registration = self.conn.register_object(OBJECT_PATH, node.interfaces[0], self._on_call, None, None)
+        try:
+            reply = self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                                        "RequestName", GLib.Variant("(su)", (BUS_NAME, 4)),     # DO_NOT_QUEUE
+                                        GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE, 3000, None)
+            owned = reply.unpack()[0] in (1, 4)      # PRIMARY_OWNER / ALREADY_OWNER
+        except GLib.Error as error:
+            log.warning("media agent: RequestName failed: %s", error.message)
+            owned = False
+        if not owned:
+            self.conn.unregister_object(registration)
+            return False
+        publisher = ipc.Publisher()
+        core = MediaCore(self.conn, self.store.get(), sink=publisher.publish, on_state=self._emit_changed)
+        publisher.on_connect = lambda path: GLib.idle_add(self._resend)
+        self.core, self.publisher, self.registration = core, publisher, registration
+        self.unused_since = None
+        publisher.start()
+        core.start()
+        log.info("media agent %s running (sockets: %s)", __version__, ", ".join(publisher.paths))
+        return True
+
+    def _deactivate(self):
+        if self.core is not None:
+            self.core.close()
+            self.core = None
+        if self.publisher is not None:
+            self.publisher.stop()
+            self.publisher = None
+        if self.registration is not None:
+            self.conn.unregister_object(self.registration)
+            self.registration = None
+            try:
+                self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                                    "ReleaseName", GLib.Variant("(s)", (BUS_NAME,)), GLib.VariantType("(u)"),
+                                    Gio.DBusCallFlags.NONE, 2000, None)
+            except GLib.Error:
+                pass
+
+    def _resend(self):
+        if self.core is not None:
+            self.core.resend_all()
+        return False
 
     def _quit(self):
         self.loop.quit()
         return False
 
     def _check_settings(self):
-        if self.store.refresh():
-            self.core.apply_settings(self.store.get())
-        if not self.keep and not theme_in_use(self.store.get()):
-            now = time.monotonic()
-            self.unused_since = self.unused_since or now
-            if now - self.unused_since > IDLE_EXIT_AFTER:
-                log.info("Big Media Player no longer in use; media agent exiting")
+        changed = self.store.refresh()
+        values = self.store.get()
+        in_use = self.keep or theme_in_use(values)
+        if not self.active:
+            if in_use and not self._activate():
+                # Another agent took over (started by the window): one is enough.
+                log.info("another media agent is active; this one exits")
                 self.loop.quit()
                 return False
-        else:
+            return True
+        if changed:
+            self.core.apply_settings(values)
+        if in_use:
+            self.unused_since = None
+            return True
+        now = time.monotonic()
+        self.unused_since = self.unused_since or now
+        if now - self.unused_since > IDLE_EXIT_AFTER:
+            log.info("Big Media Player no longer in use; media agent dormant")
+            self._deactivate()
             self.unused_since = None
         return True
 
@@ -410,16 +476,20 @@ class Agent:
             pass
 
     def _on_call(self, _conn, _sender, _path, _iface, method, params, invocation):
+        core = self.core
+        if core is None:
+            invocation.return_dbus_error("org.freedesktop.DBus.Error.ServiceUnknown", "media agent is dormant")
+            return
         if method == "GetState":
-            extra = {"sockets": sorted(self.publisher.connected), "pid": os.getpid()}
-            invocation.return_value(GLib.Variant("(s)", (self.core.state_json(extra),)))
+            extra = {"sockets": sorted(self.publisher.connected) if self.publisher else [], "pid": os.getpid()}
+            invocation.return_value(GLib.Variant("(s)", (core.state_json(extra),)))
             return
         if method == "Command":
             action, bus, value = params.unpack()
 
             def reply(ok, message):
                 invocation.return_value(GLib.Variant("(bs)", (bool(ok), str(message or ""))))
-            self.core.command(action, bus, value, reply)
+            core.command(action, bus, value, reply)
             return
         invocation.return_dbus_error("org.freedesktop.DBus.Error.UnknownMethod", method)
 

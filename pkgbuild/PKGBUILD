@@ -34,6 +34,7 @@ optdepends=(
     'playerctl: media module of the GKrellM theme'
     'libpulse: Big Media Player system volume (pactl) and optional real spectrum (parec)'
     'wireplumber: Big Media Player volume fallback without pactl (wpctl)'
+    'mpv-mpris: show what mpv ("mpv Media Player") plays on the Big Media Player (mpv has no MPRIS of its own)'
     'docker: container count in the GKrellM theme'
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
 )
