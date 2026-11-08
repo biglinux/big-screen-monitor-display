@@ -108,6 +108,8 @@ class Bar:
     bg: tuple
     frame: tuple
     style: int = 1               # measured: 1..3 fill left to right; 0 draws nothing
+    fg_image: object = None      # optional PIL images of the box size: the bar full / empty
+    bg_image: object = None
 
 
 @dataclass
@@ -210,6 +212,24 @@ def compile_theme(theme):
         _put16(record, 17, sprite.delay_ms if len(sprite.frames) > 1 else 0)
         records.append(record)
         widget_id += 1
+    # Definition order is drawing order (measured): bars under the numbers drawn on them.
+    for bar in theme.bars:
+        record = bytearray(SLOT)
+        record[0] = PROGRESS
+        record[1] = widget_id
+        record[2] = bar.channel
+        _box(record, bar.box)
+        record[11] = bar.style
+        _put16(record, 12, rgb565(bar.bg))
+        _put16(record, 14, rgb565(bar.fg))
+        _put16(record, 16, rgb565(bar.frame))
+        for image, offset in ((bar.bg_image, 18), (bar.fg_image, 26)):
+            if image is not None:
+                _put16(record, offset, image.size[0])
+                _put16(record, offset + 2, image.size[1])
+                _put32(record, offset + 4, place(rgb565_bytes(image)))
+        records.append(record)
+        widget_id += 1
     for number in theme.numbers:
         record = bytearray(SLOT)
         record[0] = NUMBER
@@ -224,18 +244,6 @@ def compile_theme(theme):
         _put16(record, 20, number.atlas.height)
         for index, cell in enumerate(number.atlas.widths):
             _put16(record, 22 + index * 2, cell)
-        records.append(record)
-        widget_id += 1
-    for bar in theme.bars:
-        record = bytearray(SLOT)
-        record[0] = PROGRESS
-        record[1] = widget_id
-        record[2] = bar.channel
-        _box(record, bar.box)
-        record[11] = bar.style
-        _put16(record, 12, rgb565(bar.bg))
-        _put16(record, 14, rgb565(bar.fg))
-        _put16(record, 16, rgb565(bar.frame))
         records.append(record)
         widget_id += 1
     if theme.rotation:
@@ -277,7 +285,11 @@ def parse(data):
                         widths=tuple(int.from_bytes(raw[22 + 2 * k:24 + 2 * k], "big") for k in range(12)))
         elif kind == PROGRESS:
             item.update(channel=raw[2], style=raw[11], bg=int.from_bytes(raw[12:14], "big"),
-                        fg=int.from_bytes(raw[14:16], "big"), frame=int.from_bytes(raw[16:18], "big"))
+                        fg=int.from_bytes(raw[14:16], "big"), frame=int.from_bytes(raw[16:18], "big"),
+                        bg_image=(int.from_bytes(raw[18:20], "big"), int.from_bytes(raw[20:22], "big"),
+                                  int.from_bytes(raw[22:26], "big")),
+                        fg_image=(int.from_bytes(raw[26:28], "big"), int.from_bytes(raw[28:30], "big"),
+                                  int.from_bytes(raw[30:34], "big")))
         elif kind == ROTATE:
             item["rotation"] = raw[1]
         records.append(item)
@@ -321,9 +333,16 @@ def render(data, values=None, frame=0):
                 image.paste(_rgb565_image(data, record["offset"] + step * w * h * 2, w, h), (x, y))
         elif record["type"] == PROGRESS:
             value = max(0, min(100, int(values.get(record["channel"], 0))))
-            image.paste(_from565(record["bg"]), (x, y, x + w, y + h))
             fill = round(w * value / 100)
-            if fill:
+            bg_w, bg_h, bg_off = record["bg_image"]
+            fg_w, fg_h, fg_off = record["fg_image"]
+            if bg_off and (bg_w, bg_h) == (w, h):
+                image.paste(_rgb565_image(data, bg_off, w, h), (x, y))
+            else:
+                image.paste(_from565(record["bg"]), (x, y, x + w, y + h))
+            if fill and fg_off and (fg_w, fg_h) == (w, h):
+                image.paste(_rgb565_image(data, fg_off, w, h).crop((0, 0, fill, h)), (x, y))
+            elif fill:
                 image.paste(_from565(record["fg"]), (x, y, x + fill, y + h))
         elif record["type"] == NUMBER and record["channel"] in values:
             cells = []

@@ -348,6 +348,8 @@ class DisplaySession:
             stats = telemetry.snapshot()
             if own is not None:
                 values = None
+                if settings.get("theme") == "big_media_player":
+                    stats = dict(stats, media=self._media_summary(settings))
                 frame = own(settings, stats)
             else:
                 values = metrics.gather(stats, self.clock(), settings.get("dc_freq_source", "max"))
@@ -676,6 +678,34 @@ class DisplaySession:
             self._show_intro(settings)
         self.wake_render.set()
 
+    def _media_summary(self, settings):
+        """The playing track for a telemetry device that shows the Big Media Player."""
+        from .media import selection
+        try:
+            state = self.ctx.media()
+        except Exception:  # noqa: BLE001 - media is optional
+            state = None
+        snapshot = state.snapshot if state is not None and state.connected else None
+        if not snapshot or not snapshot.get("players"):
+            return {"present": False}
+        manager = selection.ActivePlayerManager.from_settings(settings)
+        player = next((p for p in snapshot["players"] if p["bus"] == snapshot.get("active")), None) or \
+            selection.pick(snapshot, manager, time.monotonic())
+        if player is None:
+            return {"present": False}
+        volume = snapshot.get("volume") or {}
+        summary = {"present": True, "status": player.get("status"), "title": player.get("title", ""),
+                   "artist": player.get("artist", ""), "album": player.get("album", ""),
+                   "identity": player.get("identity", ""), "length_us": player.get("length_us"),
+                   "position_us": player.get("position_us"), "position_mono": player.get("position_mono"),
+                   "rate": player.get("rate", 1.0), "art": player.get("art"),
+                   "volume": volume.get("percent"), "muted": volume.get("muted", False)}
+        if settings.get("sm_bmp_track_refresh") and player.get("art"):
+            art = state.art(player["art"])
+            if art is not None:
+                summary["art_image"] = art
+        return summary
+
     def _driver_progress(self, _what=""):
         """Long driver operations (a theme flash) report each step: keep the watchdog
         from taking it for a hang, and stop when the session is stopping."""
@@ -939,7 +969,11 @@ class Runtime:
     def wake_collector_needs(self):
         sessions = [s for s in list(self.sessions.values()) if s.theme is not None]
         ids = {s.theme.info.id for s in sessions}
-        if "big_media_player" in ids and self.media_hub is None:
+        # Telemetry devices (SmartMonitor) showing the player need the media socket too.
+        media_wanted = "big_media_player" in ids or any(
+            getattr(s, "_is_telemetry", lambda: False)() and s.settings().get("theme") == "big_media_player"
+            for s in list(self.sessions.values()))
+        if media_wanted and self.media_hub is None:
             self._start_media_hub()
         needs = [s.theme.needs for s in sessions if isinstance(getattr(s.theme, "needs", None), dict)]
         collector = self.collector

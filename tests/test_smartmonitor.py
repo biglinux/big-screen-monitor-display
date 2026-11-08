@@ -422,3 +422,46 @@ def test_bindings_turn_telemetry_into_panel_integers():
     # Twelve month names over two word widgets of nine words + a blank cell.
     assert fields.binding_value({"cand": "month0", "part": "word_chunk", "first": 0}, {}, when) == 9     # blank
     assert fields.binding_value({"cand": "month0", "part": "word_chunk", "first": 9}, {}, when) == 1     # "nov"
+
+
+# ---------------------------------------------------------------- Big Media Player on the panel
+
+def test_media_values_follow_the_playing_track():
+    from bsmd.displays.smartmonitor import fields
+    now = time.monotonic()
+    media = {"present": True, "status": "Playing", "position_us": 95_000_000, "position_mono": now - 10,
+             "rate": 1.0, "length_us": 354_000_000, "volume": 65}
+    stats = {"media": media}
+    assert fields.binding_value({"cand": "media_min", "part": "whole"}, stats) == 1          # 1:45
+    assert fields.binding_value({"cand": "media_sec", "part": "tens"}, stats) == 4
+    assert fields.binding_value({"cand": "media_volume", "part": "pct"}, stats) == 65
+    paused = {"media": dict(media, status="Paused")}
+    assert fields.binding_value({"cand": "media_sec", "part": "ones"}, paused) == 5          # 1:35, not moving
+    assert fields.binding_value({"cand": "media_pct", "part": "pct"}, {"media": {"present": False}}) == 0
+
+
+def test_player_spec_changes_with_media_and_optionally_with_songs(stats):
+    base = dict(settings.defaults(), theme="big_media_player")
+    song = {"present": True, "title": "A", "artist": "B", "album": "C", "art": "x1"}
+    idle = layout.spec(base, dict(stats, media={"present": False}))
+    playing = layout.spec(base, dict(stats, media=song))
+    assert layout.key(idle) != layout.key(playing)                                            # player <-> idle
+    other = layout.spec(base, dict(stats, media=dict(song, title="Z")))
+    assert layout.key(other) == layout.key(playing)                                           # songs: live only
+    follow = dict(base, sm_bmp_track_refresh=True)
+    assert layout.key(layout.spec(follow, dict(stats, media=song))) != \
+        layout.key(layout.spec(follow, dict(stats, media=dict(song, title="Z"))))             # opt-in: every song
+
+
+def test_media_changes_flash_at_most_every_two_minutes(make_driver, stats, monkeypatch):
+    panel = FakePanel()
+    drv = make_driver(panel)
+    follow = dict(settings.defaults(), theme="big_media_player", sm_bmp_track_refresh=True)
+    first = drv.build_frame(follow, dict(stats, media={"present": True, "title": "A"}))
+    drv.present(first)
+    assert drv.uploads == 1
+    drv.present(drv.build_frame(follow, dict(stats, media={"present": True, "title": "B"})))
+    assert drv.uploads == 1                                   # a new song 1 s later: no flash yet
+    drv.last_flash -= sm_driver.MEDIA_REFLASH_MIN + 1
+    second = drv.build_frame(follow, dict(stats, media={"present": True, "title": "B"}))
+    assert sm_driver.SmartMonitorHid._media_only_change(drv.picture, second)

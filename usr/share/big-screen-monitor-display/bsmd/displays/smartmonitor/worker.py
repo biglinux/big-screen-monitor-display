@@ -27,7 +27,14 @@ def main():
     hour = request.get("hour")
     if hour is not None:
         fields.T0 = fields.T0.replace(hour=int(hour))
-    theme, bindings, dropped = capture.capture(request["theme"], request["settings"], request["stats"])
+    art = None
+    if request.get("art_png"):
+        import base64
+        import io
+
+        from PIL import Image
+        art = Image.open(io.BytesIO(base64.b64decode(request["art_png"]))).convert("RGB")
+    theme, bindings, dropped = capture.capture(request["theme"], request["settings"], request["stats"], art)
     theme.rotation = int(request.get("rotation", 0))
     data = imgdat.compile_theme(theme)
     out = request["out"]

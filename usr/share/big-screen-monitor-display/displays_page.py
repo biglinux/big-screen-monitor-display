@@ -388,6 +388,18 @@ class DisplaysPage:
                                  own.get("performance_profile", GLOBAL),
                                  lambda value: self._set(display_id, "performance_profile", value)))
 
+            if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+                # The panel shows a flashed adaptation of the theme: song details cannot be live.
+                follow = Adw.SwitchRow(
+                    title=_("Big Media Player: cover and title of every song"),
+                    subtitle=_("Flashes the panel again on each new song (at most every 2 minutes): it restarts "
+                               "for about 10 seconds each time and its memory wears with use. Off: time, progress, "
+                               "volume and play/pause stay live without the song details."),
+                    active=bool(values.get("sm_bmp_track_refresh")))
+                follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
+                                                                         True if r.get_active() else None))
+                look.add(follow)
+
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None
             auto_label = _("Automatic ({model})").format(model=_(detected)) if detected else _("Automatic")

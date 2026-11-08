@@ -196,6 +196,9 @@ SCHEMA = {
     "bmp_tele_every": (*_int(10, 600), 30),
     "bmp_tele_duration": (*_int(3, 60), 8),
     "bmp_tele_idle_after": (*_int(10, 1800), 60),
+    # SmartMonitor HID panel: flash cover and title again on every new song (the
+    # panel restarts ~10 s each time and its flash wears; off by default).
+    "sm_bmp_track_refresh": (*BOOL, False),
     "bmp_tele_alert_cpu": (*_int(50, 100), 90),
     "bmp_tele_alert_temp": (*_int(50, 110), 85),
     "bmp_tele_clock": (*BOOL, True),

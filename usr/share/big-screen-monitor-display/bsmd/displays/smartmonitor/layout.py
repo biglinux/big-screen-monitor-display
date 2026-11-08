@@ -362,7 +362,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 1
+CAPTURE_VERSION = 2
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
@@ -409,8 +409,16 @@ def spec(settings, stats, now=None):
               if k in COMMON_KEYS or (prefixes and k.startswith(prefixes))}
     now = now or datetime.datetime.now()
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
-    return {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
-            "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+    result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
+              "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+    if theme_id == "big_media_player":
+        media = stats.get("media") if isinstance(stats.get("media"), dict) else {}
+        result["media"] = {"present": bool(media.get("present"))}
+        if media.get("present") and settings.get("sm_bmp_track_refresh"):
+            # Cover and title flashed with the picture: a new song is a new picture.
+            result["media"]["track"] = [media.get("title", ""), media.get("artist", ""), media.get("album", ""),
+                                        media.get("art") or ""]
+    return result
 
 
 class Compiled:
@@ -421,6 +429,7 @@ class Compiled:
         self.key, self.data, self.bindings, self.spec = key_, data, bindings, theme_spec
         self.report = report or {}
         self.source_key = None        # key of the spec it was made for (a fallback has another key)
+        self.source_spec = None
 
     @property
     def channels(self):
@@ -501,8 +510,18 @@ def _compiled(theme_spec, settings, stats, progress=None):
     if result is None:
         os.makedirs(cache_dir(), exist_ok=True)
         out = os.path.join(cache_dir(), key_)
+        stats = dict(stats)
+        media = dict(stats.get("media") or {})
+        art = media.pop("art_image", None)
+        stats["media"] = media
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
                    "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out}
+        if art is not None and settings.get("sm_bmp_track_refresh"):
+            import base64
+            import io
+            buffer = io.BytesIO()
+            art.convert("RGB").save(buffer, "PNG")
+            request["art_png"] = base64.b64encode(buffer.getvalue()).decode("ascii")
         worker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "worker.py")
         started = time.monotonic()
         try:

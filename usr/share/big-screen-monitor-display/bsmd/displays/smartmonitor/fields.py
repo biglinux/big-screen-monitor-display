@@ -18,7 +18,7 @@ import time
 # what depends on it. No two components share a value (14, 29, 35, 8, 11, 2026,
 # Sunday), so a number found on screen tells which component it is.
 T0 = datetime.datetime(2026, 11, 8, 14, 29, 35)
-T1 = datetime.datetime(2027, 3, 17, 9, 47, 58)
+T1 = datetime.datetime(2027, 3, 17, 9, 47, 57)     # odd seconds like T0: a blinking colon stays the same
 BOOT0 = 4380.0          # seconds of uptime at T0 -> 01:13
 BOOT1 = 135720.0        # -> 1 day 13:42 (37:42)
 
@@ -36,6 +36,29 @@ def _uptime(stats, now):
     return max(0.0, now - boot) if boot else 0.0
 
 
+def _media(stats):
+    media = stats.get("media")
+    return media if isinstance(media, dict) and media.get("present") else {}
+
+
+def _elapsed(stats, t):
+    """Seconds into the track now (interpolated while playing, as the player does)."""
+    media = _media(stats)
+    position = media.get("position_us")
+    if position is None:
+        return 0.0
+    seconds = position / 1e6
+    if media.get("status") == "Playing" and media.get("position_mono") is not None:
+        seconds += max(0.0, time.monotonic() - media["position_mono"]) * (media.get("rate") or 1.0)
+    length = media.get("length_us")
+    return min(seconds, length / 1e6) if length else seconds
+
+
+def _length(stats):
+    length = _media(stats).get("length_us")
+    return length / 1e6 if length else 0.0
+
+
 def _load(stats, index):
     load = stats.get("load_avg") or (0.0, 0.0, 0.0)
     return load[index] if len(load) > index else 0.0
@@ -50,6 +73,12 @@ CANDIDATES = {
     "cpu_power": lambda s, t, d: s.get("cpu_power_w") or 0.0,
     "ram_percent": lambda s, t, d: s.get("ram_percent") or 0.0,
     "ram_used_mb": lambda s, t, d: s.get("ram_used_mb") or 0.0,
+    "ram_used_pct": lambda s, t, d: (100.0 * (s.get("ram_used_mb") or 0) / s["ram_total_mb"]
+                                     if s.get("ram_total_mb") else 0.0),
+    "swap_used_pct": lambda s, t, d: (100.0 * (s.get("swap_used_mb") or 0) / s["swap_total_mb"]
+                                      if s.get("swap_total_mb") else 0.0),
+    "disk_used_pct": lambda s, t, d: (100.0 * (s.get("disk_used_gb") or 0) / s["disk_total_gb"]
+                                      if s.get("disk_total_gb") else 0.0),
     "swap_percent": lambda s, t, d: s.get("swap_percent") or 0.0,
     "swap_used_mb": lambda s, t, d: s.get("swap_used_mb") or 0.0,
     "disk_percent": lambda s, t, d: s.get("disk_percent") or 0.0,
@@ -75,6 +104,12 @@ CANDIDATES = {
     "uptime_hours_mod": lambda s, t, d: (_uptime(s, t) // 3600) % 24,
     "uptime_minutes": lambda s, t, d: (_uptime(s, t) // 60) % 60,
     "uptime_days": lambda s, t, d: _uptime(s, t) // 86400,
+    "media_min": lambda s, t, d: _elapsed(s, t) // 60,
+    "media_sec": lambda s, t, d: _elapsed(s, t) % 60,
+    "media_left_min": lambda s, t, d: max(0.0, _length(s) - _elapsed(s, t)) // 60,
+    "media_left_sec": lambda s, t, d: max(0.0, _length(s) - _elapsed(s, t)) % 60,
+    "media_pct": lambda s, t, d: 100.0 * _elapsed(s, t) / _length(s) if _length(s) else 0.0,
+    "media_volume": lambda s, t, d: _media(s).get("volume") or 0.0,
     "hour": lambda s, t, d: d.hour,
     "hour12": lambda s, t, d: (d.hour % 12) or 12,
     "minute": lambda s, t, d: d.minute,
@@ -110,7 +145,8 @@ FIELDS = {
     "cpu_temp": (12, (lambda s: {"cpu_temp_value": 53.0, "cpu_temp": _temp_text(53)},
                       lambda s: {"cpu_temp_value": 61.0, "cpu_temp": _temp_text(61)}), ("cpu_temp", "cpu_temp_f")),
     "ram_percent": (14, (lambda s: {"ram_percent": 24.0}, lambda s: {"ram_percent": 47.0}), ("ram_percent",)),
-    "ram_used": (15, (lambda s: {"ram_used_mb": 11571}, lambda s: {"ram_used_mb": 20700}), ("ram_used_mb",)),
+    "ram_used": (15, (lambda s: {"ram_used_mb": 11571}, lambda s: {"ram_used_mb": 20700}),
+                 ("ram_used_mb", "ram_used_pct")),
     "gpu_percent": (20, (lambda s: _with_gpu(s, percent=12.0), lambda s: _with_gpu(s, percent=41.0)),
                     ("gpu_percent",)),
     "gpu_temp": (21, (lambda s: _with_gpu(s, temp_value=54.0, temp=_temp_text(54)),
@@ -118,12 +154,13 @@ FIELDS = {
     "gpu_mem": (24, (lambda s: _with_gpu(s, mem_used_mb=1741), lambda s: _with_gpu(s, mem_used_mb=9216)),
                 ("gpu_mem_used_mb", "gpu_mem_percent")),
     "disk_percent": (30, (lambda s: {"disk_percent": 59.0}, lambda s: {"disk_percent": 71.0}), ("disk_percent",)),
-    "disk_used": (32, (lambda s: _disk(s, 262.4), lambda s: _disk(s, 371.8)), ("disk_used_gb",)),
+    "disk_used": (32, (lambda s: _disk(s, 262.4), lambda s: _disk(s, 371.8)), ("disk_used_gb", "disk_used_pct")),
     "net_rx": (34, (lambda s: {"net_rx_mbps": 2.9}, lambda s: {"net_rx_mbps": 6.3}), ("net_rx_mbps",)),
     "net_tx": (35, (lambda s: {"net_tx_mbps": 0.87}, lambda s: {"net_tx_mbps": 0.31}), ("net_tx_mbps",)),
     "cpu_freq": (40, (lambda s: {"cpu_freq_mhz": 3774.0}, lambda s: {"cpu_freq_mhz": 2210.0}), ("cpu_mhz",)),
     "swap_percent": (42, (lambda s: {"swap_percent": 3.0}, lambda s: {"swap_percent": 27.0}), ("swap_percent",)),
-    "swap_used": (43, (lambda s: {"swap_used_mb": 612}, lambda s: {"swap_used_mb": 9420}), ("swap_used_mb",)),
+    "swap_used": (43, (lambda s: {"swap_used_mb": 612}, lambda s: {"swap_used_mb": 9420}),
+                  ("swap_used_mb", "swap_used_pct")),
     "gpu_enc": (45, (lambda s: _with_gpu(s, enc_percent=9.0), lambda s: _with_gpu(s, enc_percent=33.0)),
                 ("gpu_enc",)),
     "gpu_clock": (46, (lambda s: _with_gpu(s, clock_mhz=1768.0), lambda s: _with_gpu(s, clock_mhz=914.0)),
@@ -131,6 +168,11 @@ FIELDS = {
     "gpu_power": (47, (lambda s: _with_gpu(s, power_w=27.0), lambda s: _with_gpu(s, power_w=64.0)), ("gpu_power",)),
     "disk_io": (50, (lambda s: {"disk_io_kbs": 2048.0}, lambda s: {"disk_io_kbs": 9300.0}), ("disk_io_kbs",)),
     "cpu_power": (52, (lambda s: {"cpu_power_w": 26.0}, lambda s: {"cpu_power_w": 61.0}), ("cpu_power",)),
+    "media_position": (5, (lambda s: _with_media(s, position_us=83_000_000),
+                           lambda s: _with_media(s, position_us=197_000_000)),
+                       ("media_min", "media_sec", "media_left_min", "media_left_sec", "media_pct")),
+    "media_volume": (6, (lambda s: _with_media(s, volume=35), lambda s: _with_media(s, volume=72)),
+                     ("media_volume",)),
     "uptime": (60, (lambda s: {"boot_time": T0.timestamp() - BOOT0}, lambda s: {"boot_time": T0.timestamp() - BOOT1}),
                ("uptime_hours", "uptime_hours_mod", "uptime_minutes", "uptime_days")),
     "load": (70, (lambda s: {"load_avg": (3.78, 3.96, 3.79)}, lambda s: {"load_avg": (1.21, 2.54, 6.07)}),
@@ -138,7 +180,45 @@ FIELDS = {
     "procs": (80, (lambda s: {"proc_count": 497}, lambda s: {"proc_count": 1208}), ("procs",)),
 }
 CLOCK_PRIORITY = 0
+
+# How to put a field at a given percentage (0..100) of its bar, and the candidate
+# that bar follows. Used to find bars and photograph them empty and full.
+PERCENT = {
+    "cpu_percent": (lambda s, p: {"cpu_percent": float(p)}, "cpu_percent"),
+    # Themes compute some bars from used/total: keep both views consistent.
+    "ram_percent": (lambda s, p: {"ram_percent": float(p), "ram_used_mb": (s.get("ram_total_mb") or 16384) * p / 100},
+                    "ram_percent"),
+    "swap_percent": (lambda s, p: {"swap_percent": float(p),
+                                   "swap_used_mb": (s.get("swap_total_mb") or 8192) * p / 100}, "swap_percent"),
+    "disk_percent": (lambda s, p: dict(_disk(s, (s.get("disk_total_gb") or 447.0) * p / 100), disk_percent=float(p)),
+                     "disk_percent"),
+    "gpu_percent": (lambda s, p: _with_gpu(s, percent=float(p)), "gpu_percent"),
+    "gpu_mem": (lambda s, p: _with_gpu(s, mem_used_mb=(_gpu(s).get("mem_total_mb") or 8192) * p / 100),
+                "gpu_mem_percent"),
+    "cpu_temp": (lambda s, p: {"cpu_temp_value": float(p), "cpu_temp": _temp_text(p)}, "cpu_temp"),
+    "gpu_temp": (lambda s, p: _with_gpu(s, temp_value=float(p), temp=_temp_text(p)), "gpu_temp"),
+    "media_position": (lambda s, p: _with_media(s, position_us=int(236_000_000 * p / 100)), "media_pct"),
+    "media_volume": (lambda s, p: _with_media(s, volume=float(p)), "media_volume"),
+}
 CLOCK_CANDIDATES = ("hour", "hour12", "minute", "second", "day", "month", "year", "year2", "weekday", "month0")
+
+
+MEDIA_SAMPLE = {"present": True, "status": "Playing", "title": "Sample Title", "artist": "Sample Artist",
+                "album": "Sample Album", "identity": "Player", "length_us": 236_000_000, "position_us": 83_000_000,
+                "position_mono": None, "rate": 0.0, "art": None, "volume": 35, "muted": False}
+
+
+def _with_media(stats, **changes):
+    media = dict(stats.get("media") or MEDIA_SAMPLE)
+    media.update(changes)
+    return {"media": media}
+
+
+def track_noise(stats):
+    """Another song: title, artist, album and cover change (left out unless the panel is
+    flashed again on every song)."""
+    return _with_media(stats, title="Other Song Name", artist="Different Band", album="Another Record",
+                       art=None, identity="Player")
 
 
 def noise(stats):
@@ -194,7 +274,19 @@ def base_stats(stats):
     base.update({"valid": True, "boot_time": T0.timestamp() - BOOT0, "proc_count": 497,
                  "load_avg": (3.78, 3.96, 3.79), "cpu_freq_mhz": 3774.0, "cpu_power_w": 26.0,
                  "cpu_power_status": "ok", "disk_io_kbs": 2048.0, "cpu_temp_at": T0.timestamp()})
-    for field in FIELDS.values():
+    media = stats.get("media") if isinstance(stats.get("media"), dict) else {}
+    if media.get("present"):
+        # The real track as the player shows it, frozen (rate 0) for the capture.
+        track = dict(MEDIA_SAMPLE)
+        track.update({k: v for k, v in media.items() if k != "art_image"})
+        track.update(rate=0.0, position_mono=None, position_us=83_000_000, length_us=236_000_000,
+                     status="Playing", volume=35)
+        base["media"] = track
+    else:
+        base["media"] = {"present": False}
+    for name, field in FIELDS.items():
+        if name.startswith("media_") and not media.get("present"):
+            continue
         base.update(field[1][0](base))
     if not base.get("ram_total_mb"):
         base["ram_total_mb"] = 47513
@@ -212,6 +304,9 @@ def binding_value(binding, stats, now=None):
     value = candidate_value(binding["cand"], stats, now) * binding.get("scale", 1.0)
     part = binding.get("part", "whole")
     decimals = binding.get("decimals", 0)
+    if part == "level":
+        # A gauge drawn from ten photographed levels: cell k shows level k.
+        return max(0, min(9, round(max(0.0, min(100.0, value)) / 100 * 9)))
     if part == "word_chunk":
         # Words first..first+8 live in cells 0..8 of this widget; cell 9 is blank.
         first = binding.get("first", 0)
@@ -231,4 +326,10 @@ def binding_value(binding, stats, now=None):
         result = abs(value)
     if part == "pct":
         result = max(0.0, min(100.0, result))
+        curve = binding.get("curve")
+        if curve:
+            # The theme's fill is not linear in the width (a gauge arc): follow its curve.
+            step = min(3, int(result // 25))
+            low, high = curve[step], curve[step + 1]
+            result = low + (high - low) * (result - step * 25) / 25
     return max(0, min(0xFFFF, round(result)))

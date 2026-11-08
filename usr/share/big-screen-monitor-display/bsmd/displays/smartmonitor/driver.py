@@ -29,6 +29,7 @@ log = logging.getLogger("bsmd.smartmonitor")
 
 SYSFS_USB = "/sys/bus/usb/devices"
 REENUMERATE_WAIT = 15.0       # the panel restarts after "reset" and after a flash
+MEDIA_REFLASH_MIN = 120.0     # flashes caused by songs / players starting and stopping
 RESTART_VANISH = 5.0          # measured: the panel drops off USB ~1 s after the last block
 ACK_TIMEOUT = 5.0
 BLOCK_RETRIES = 5
@@ -99,6 +100,7 @@ class SmartMonitorHid(TelemetryDriver):
         self.flashed = self._load_state()
         self.on_progress = None        # set by the runtime: called per block, returns True to abort
         self.picture = None            # layout.Compiled being shown
+        self.last_flash = -1e9
         self.last_frame = None
         self.uploads = 0
 
@@ -148,14 +150,23 @@ class SmartMonitorHid(TelemetryDriver):
         picture = self.picture
         if picture is not None and picture.source_key == frame.key:
             return picture
+        if picture is not None and self._media_only_change(picture, frame) and \
+                time.monotonic() - self.last_flash < MEDIA_REFLASH_MIN:
+            return picture        # a song or player change: not more than one flash every 2 minutes
 
         def progress():
             callback = self.on_progress
             return bool(callback is not None and callback("adapting the theme"))
         picture = layout.compiled(frame.spec, frame.settings, frame.stats, progress)
         picture.source_key = frame.key
+        picture.source_spec = frame.spec
         self.picture = picture
         return picture
+
+    @staticmethod
+    def _media_only_change(picture, frame):
+        old, new = dict(picture.source_spec or {}), dict(frame.spec)
+        return old.pop("media", None) != new.pop("media", None) and old == new
 
     def present(self, frame):
         start = time.monotonic()
@@ -300,6 +311,7 @@ class SmartMonitorHid(TelemetryDriver):
         started = time.monotonic()
         sent = self.upload(data)
         self.uploads += 1
+        self.last_flash = time.monotonic()
         self._save_state(picture.key, len(data))
         log.info("SmartMonitor picture flashed in %.1f s", time.monotonic() - started)
         self._await_restart()
