@@ -476,7 +476,8 @@ class Collector:
         self._stop = threading.Event()
         self._thread = None
         self._last = {}
-        self.want_processes = True     # the runtime turns it off for themes without a process list
+        self._want_processes = True    # the runtime turns it off for themes without a process list
+        self._procs_warmup = True      # first CPU% of a process is a baseline: resample after 1 s
         self.want_sensors = False      # full sensor list (GKrellM); costs ~6 ms, sampled every 5 s
         self.want_fans = False         # fan RPM/PWM (Kojiro), every 2 s
         self.want_disks = set()        # extra mountpoints whose usage/io/temperature a theme shows
@@ -485,6 +486,25 @@ class Collector:
         self._energy = None
         self._fans = None
         self._disk_paths = {}
+
+    @property
+    def want_processes(self):
+        return self._want_processes
+
+    @want_processes.setter
+    def want_processes(self, value):
+        value = bool(value)
+        if value == self._want_processes:
+            return
+        self._want_processes = value
+        # Turned back on (a theme with a process list appeared): sample on the next
+        # pass instead of up to 5 s later. Turned off: forget the list, so a theme
+        # shown later never paints processes that ended long ago.
+        self._last.pop("processes", None)
+        self._procs_warmup = value
+        if not value:
+            SYSTEM_STATS["procs"] = []
+            SYSTEM_STATS["procs_mem"] = []
 
     def start(self):
         if self._thread and self._thread.is_alive():
@@ -557,11 +577,14 @@ class Collector:
         self._guard("gpu", self._sample_gpus)
         if self._due("slow", 5, now):
             self._guard("swap", self._sample_swap)
-            if self.want_processes:
-                self._guard("processes", self._sample_processes)
             self._guard("battery", self._sample_battery)
             if self.want_sensors:
                 self._guard("sensors", self._sample_sensor_list)
+        if self._want_processes and self._due("processes", 5, now):
+            self._guard("processes", self._sample_processes)
+            if self._procs_warmup:
+                self._procs_warmup = False
+                self._last["processes"] = now - 4
         if self._due("disk", 10, now):
             self._guard("disk", self._sample_disk)
         if self.want_disks and self._due("disks", 2, now):

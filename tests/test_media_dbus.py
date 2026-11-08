@@ -21,7 +21,7 @@ if not shutil.which("dbus-daemon"):
     pytest.skip("dbus-daemon not installed", allow_module_level=True)
 
 from bsmd import runtime, settings, themes  # noqa: E402
-from bsmd.media import agent, hub, model, mpris, volume  # noqa: E402
+from bsmd.media import agent, hub, ipc, model, mpris, volume  # noqa: E402
 from mpris_fake import FakePlayer  # noqa: E402
 
 
@@ -221,3 +221,38 @@ def test_agent_control_interface_single_instance(bus_address, monkeypatch, tmp_p
     finally:
         proc.terminate()
         proc.wait(timeout=5)
+
+
+def test_agent_goes_dormant_and_wakes_up_with_the_theme(bus_address, monkeypatch, tmp_path):
+    """The agent used to exit when the theme was unused; if the theme came back
+    any other way than the window's Apply (or that launch failed), nothing fed the
+    display until the next login. Now it sleeps and wakes up by itself."""
+    monkeypatch.setattr(volume, "BACKENDS", ())
+    monkeypatch.setattr(ipc, "socket_candidates", lambda: [str(tmp_path / "media.sock")])
+    config = tmp_path / "settings.json"
+    monkeypatch.setenv("BSM_CONFIG", str(config))
+    settings.save(dict(settings.defaults(), theme="standard"), str(config))
+    probe = connect(bus_address)
+    first = agent.Agent()
+    first.conn = connect(bus_address)
+    second = agent.Agent()
+    second.conn = connect(bus_address)
+    try:
+        assert first._check_settings() is True and not first.active      # dormant, but alive
+        assert not agent.agent_running(probe)
+        settings.save(dict(settings.defaults(), theme="big_media_player", bmp_skin="bigamp"), str(config))
+        assert first._check_settings() is True and first.active
+        assert spin(lambda: agent.agent_running(probe))
+        # Theme switched away for longer than the grace period: back to sleep, name released.
+        monkeypatch.setattr(agent, "IDLE_EXIT_AFTER", -1.0)
+        settings.save(dict(settings.defaults(), theme="standard"), str(config))
+        assert first._check_settings() is True and not first.active
+        assert spin(lambda: not agent.agent_running(probe))
+        # Another agent became active meanwhile (the window started one): the dormant one leaves.
+        assert second._activate()
+        settings.save(dict(settings.defaults(), theme="big_media_player"), str(config))
+        assert first._check_settings() is False and not first.active
+        assert agent.agent_running(probe) and second.active
+    finally:
+        first._deactivate()
+        second._deactivate()

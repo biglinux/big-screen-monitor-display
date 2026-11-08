@@ -58,10 +58,10 @@ mas com IPC próprio porque o fluxo é inverso (sessão → serviço).
 
 | Evento | Comportamento |
 | --- | --- |
-| Login | `/etc/xdg/autostart/big-screen-monitor-media.desktop` inicia o agente; se nenhum display usa o tema, ele sai na hora |
-| Tema aplicado na janela | a janela inicia o agente |
-| Tema deixa de ser usado | o agente sai depois de 60 s |
-| Segunda instância | o nome D-Bus é único; a segunda sai com código 0 |
+| Login | `/etc/xdg/autostart/big-screen-monitor-media.desktop` inicia o agente; se nenhum display usa o tema, ele fica **dormente** (sem MPRIS, sem socket, sem nome D-Bus; só confere as configurações a cada 3 s) |
+| Tema aplicado (pela janela ou de qualquer outro jeito) | o agente dormente acorda em até 3 s; a janela também inicia um agente |
+| Tema deixa de ser usado | depois de 60 s o agente volta a ficar dormente (não sai mais: antes, se o tema voltasse sem a janela relançar o agente, nada chegava ao display até o próximo login) |
+| Segunda instância | o nome D-Bus é único; a segunda sai com código 0; um agente dormente que encontra outro ativo também sai |
 | Logout | o barramento de sessão fecha → o agente sai; o serviço marca o agente como ausente após 20 s sem heartbeat |
 | Serviço reinicia | o publicador reconecta (1, 2, 5, 10 s) e reenvia instantâneo e capas |
 | PipeWire/PulseAudio reinicia | `pactl subscribe` termina → relançado com recuo (1…30 s) |

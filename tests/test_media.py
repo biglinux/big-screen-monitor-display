@@ -381,3 +381,22 @@ def test_spectrum_peaks_in_the_right_band():
     assert abs(int(np.argmax(levels)) - expected) <= 1
     silence = spectrum.compute_bands(np.zeros(spectrum.CHUNK, dtype=np.int16))
     assert max(silence) == 0.0
+
+
+def test_pulse_backend_stop_does_not_respawn_pactl(monkeypatch):
+    """Cancelling the ``pactl subscribe`` read on stop() used to look like a lost
+    audio server and spawned a new pactl a moment later (one leaked per reload)."""
+    from gi.repository import GLib
+    scheduled = []
+    monkeypatch.setattr(GLib, "timeout_add_seconds", lambda *args: scheduled.append(args) or 1)
+
+    class CancelledStream:
+        def read_line_finish_utf8(self, _result):
+            raise GLib.Error("Operation was cancelled")
+
+    from bsmd.media import volume
+    backend = volume.PulseBackend(lambda: None)
+    backend.stop()
+    backend._on_line(CancelledStream(), None)
+    assert scheduled == [] and backend.proc is None
+    assert backend._restart() is False and backend.proc is None

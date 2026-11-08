@@ -177,16 +177,23 @@ class PulseBackend(Backend):
         self.json_ok = True
         self.target = "@DEFAULT_SINK@"
         self.descriptions = {}
+        self.stopped = False
 
     @staticmethod
     def available():
         return shutil.which("pactl") is not None
 
     def start(self):
+        self.stopped = False
         self._spawn()
         self.refresh()
 
     def stop(self):
+        # Mark first: cancelling the read ends _on_line, which must not respawn pactl.
+        self.stopped = True
+        if self.pending is not None:
+            GLib.source_remove(self.pending)
+            self.pending = None
         if self.cancel:
             self.cancel.cancel()
         if self.proc:
@@ -209,6 +216,8 @@ class PulseBackend(Backend):
             line, _length = stream.read_line_finish_utf8(result)
         except GLib.Error:
             line = None
+        if self.stopped:
+            return
         if line is None:
             # pactl ended: PipeWire/PulseAudio restarted or the session is going away.
             self.proc = None
@@ -223,6 +232,8 @@ class PulseBackend(Backend):
         stream.read_line_async(GLib.PRIORITY_DEFAULT, self.cancel, self._on_line)
 
     def _restart(self):
+        if self.stopped:
+            return False
         self._spawn()
         self.refresh()
         return False

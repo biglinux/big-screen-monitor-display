@@ -97,7 +97,7 @@ class MediaPlayerPage:
 
     def close(self):
         if self.core is not None:
-            self.core.stop()
+            self.core.close()
             self.core = None
         hub.set_local(None)
 
@@ -621,7 +621,7 @@ class MediaPlayerPage:
 
     def _reload_session(self):
         if self.core is not None:
-            self.core.stop()
+            self.core.close()
             self.core = None
         self.ensure_core()
         self.command("retry_art")
@@ -635,7 +635,7 @@ class MediaPlayerPage:
         main_py = os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.py")
         args = [sys.executable, main_py, "--media-agent"] + (["--keep"] if force else [])
         try:
-            subprocess.Popen(args, start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(args, start_new_session=True, stdout=subprocess.DEVNULL)  # stderr: the journal
         except OSError as error:
             self.window.toast(_("Could not start the media agent: {error}").format(error=error))
 

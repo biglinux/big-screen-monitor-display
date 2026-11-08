@@ -226,7 +226,9 @@ A miniatura de vídeo depende de o site fornecê-la.
 **Requisitos**: sessão gráfica com D-Bus; para o volume, `pactl` (PipeWire com
 `pipewire-pulse` ou PulseAudio), ou `wpctl`, ou `amixer`. O agente de mídia
 inicia com a sessão (`/etc/xdg/autostart/big-screen-monitor-media.desktop`) e
-sai sozinho quando nenhum display usa o tema.
+fica dormente (sem consumir MPRIS nem áudio) quando nenhum display usa o tema,
+acordando sozinho quando o tema volta a ser usado. O mpv precisa do plugin
+`mpv-mpris` para aparecer.
 
 **Escolher o player**: *Automático* (recomendado) mantém o que está tocando e
 não deixa uma aba com um som curto roubar o display; *Último utilizado*; ou um

@@ -171,6 +171,35 @@ def test_idle_hands_over_to_another_theme_and_comes_back():
     assert settings_["theme"] == "big_media_player"                 # the preference itself never changes
 
 
+def test_idle_theme_telemetry_needs_reach_the_collector():
+    """The Standard theme shown as idle screen lists processes: the collector must
+    sample them although the session theme is big_media_player."""
+    ctx = Ctx(make_view([wire()]))
+    theme = themes.create("big_media_player", ctx)
+    themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode="screen"), ctx)
+    assert not theme.needs["processes"] and not theme.needs["sensors"]
+    # Armed as soon as the idle mode is configured, before the panel switches over.
+    themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode="theme", bmp_idle_theme="standard"), ctx)
+    assert theme.idle_theme is None and theme.needs["processes"]
+    themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode="theme", bmp_idle_theme="gkrellm"), ctx)
+    assert theme.needs["processes"] and theme.needs["sensors"]
+    themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode="theme", bmp_idle_theme="planet"), ctx)
+    assert not theme.needs["processes"]
+
+
+def test_collector_resamples_processes_when_turned_back_on():
+    collector = telemetry.Collector()
+    collector.prime()
+    collector.want_processes = False
+    assert telemetry.SYSTEM_STATS["procs"] == []            # never a stale list from long ago
+    collector.sample_once(1000.0)
+    assert telemetry.SYSTEM_STATS["procs"] == []
+    collector.want_processes = True
+    collector.sample_once(1001.0)                            # at once, not up to 5 s later
+    assert telemetry.SYSTEM_STATS["procs"]
+    assert collector._last["processes"] == 1001.0 - 4        # CPU% baseline: resample 1 s later
+
+
 @pytest.mark.parametrize("mode", ["auto", "always", "hidden", "intermittent", "alternate", "paused", "idle",
                                   "alerts"])
 @pytest.mark.parametrize("position", ["bottom", "top", "overlay"])

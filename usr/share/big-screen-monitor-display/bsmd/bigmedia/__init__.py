@@ -30,6 +30,10 @@ MARQUEE_PAUSE = 1.6
 ANIMATION_FPS = 10.0
 TRANSITION = 0.6
 # bmp_animations: frame-rate cap while something moves (always bounded by the panel's own target fps).
+# Idle themes that show a process list / the full sensor list (mirrors the
+# runtime's own check on the session theme, which only sees "big_media_player").
+IDLE_PROCESS_THEMES = ("standard", "gkrellm", "old_computer")
+IDLE_SENSOR_THEMES = ("gkrellm",)
 MOTION_FPS = {"economy": 4.0, "balanced": ANIMATION_FPS, "fluid": 20.0}
 OSD_TIME = 2.2
 BANNER_TIME = 3.0
@@ -121,7 +125,7 @@ class BigMediaPlayerTheme:
         self.info = info
         self.ctx = ctx
         self.manager = selection.ActivePlayerManager()
-        self.needs = {"processes": False, "sensors": False, "fans": False, "disks": set(), "addrs": False}
+        self._idle_target = None         # theme shown after inactivity (bmp_idle_mode "theme")
         self.chromes = collections.OrderedDict()
         self.art_tiles = collections.OrderedDict()
         self.halos = collections.OrderedDict()
@@ -154,6 +158,25 @@ class BigMediaPlayerTheme:
         if self.idle_theme is not None:
             self.idle_theme.close()
             self.idle_theme = None
+
+    @property
+    def needs(self):
+        """Optional telemetry for the collector. The player itself needs none, but
+        the idle theme it hands the panel to may (the Standard theme's process list,
+        GKrellM's sensors, Kojiro widgets). They are requested as soon as that idle
+        mode is configured, so the data is ready when the panel switches over."""
+        needs = {"processes": False, "sensors": False, "fans": False, "disks": set(), "addrs": False}
+        target = self._idle_target
+        if target in IDLE_PROCESS_THEMES:
+            needs["processes"] = True
+        if target in IDLE_SENSOR_THEMES:
+            needs["sensors"] = True
+        inner = getattr(self.idle_theme, "needs", None) if self.idle_theme is not None else None
+        if isinstance(inner, dict):
+            for key in ("processes", "sensors", "fans", "addrs"):
+                needs[key] = needs[key] or bool(inner.get(key))
+            needs["disks"] = set(inner.get("disks") or ())
+        return needs
 
     # ------------------------------------------------------------ data
     def _media(self, ctx, settings):
@@ -199,6 +222,8 @@ class BigMediaPlayerTheme:
         idle_after = settings.get("bmp_idle_after", 120)
         idle = not has_media or inactive >= idle_after
         mode = settings.get("bmp_idle_mode", "screen")
+        target = settings.get("bmp_idle_theme", "standard") if mode == "theme" else None
+        self._idle_target = target if target != THEME_ID else None
         if has_media:
             self.last_player = player
         self.animating = False

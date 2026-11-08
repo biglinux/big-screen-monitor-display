@@ -1059,7 +1059,7 @@ class ConfigWindow(Adw.ApplicationWindow):
             main_py = os.path.join(BASE_DIR, "main.py")
             try:
                 subprocess.Popen([sys.executable, main_py, "--media-agent"], start_new_session=True,
-                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                 stdout=subprocess.DEVNULL)
             except OSError as error:
                 self.toast(_("Could not start the media agent: {error}").format(error=error))
 
