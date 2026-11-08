@@ -198,7 +198,7 @@ SCHEMA = {
     "bmp_tele_idle_after": (*_int(10, 1800), 60),
     # SmartMonitor HID panel: flash cover and title again on every new song (the
     # panel restarts ~10 s each time and its flash wears; off by default).
-    "sm_bmp_track_refresh": (*BOOL, False),
+    "sm_bmp_track_refresh": (*BOOL, True),
     # SmartMonitor HID panel: Brother Away tells its stories as scenes flashed one
     # after another every N minutes ("0": a single scene per time of day).
     "sm_ba_scene_minutes": (*_choice("0", "15", "30", "60"), "30"),

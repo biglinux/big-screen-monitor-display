@@ -441,7 +441,7 @@ def test_media_values_follow_the_playing_track():
 
 
 def test_player_spec_changes_with_media_and_optionally_with_songs(stats):
-    base = dict(settings.defaults(), theme="big_media_player")
+    base = dict(settings.defaults(), theme="big_media_player", sm_bmp_track_refresh=False)
     song = {"present": True, "title": "A", "artist": "B", "album": "C", "art": "x1"}
     idle = layout.spec(base, dict(stats, media={"present": False}))
     playing = layout.spec(base, dict(stats, media=song))
@@ -500,3 +500,21 @@ def test_spectrum_hint_ignores_the_song():
     a = {"theme": "big_media_player", "media": {"present": True, "track": "x"}}
     b = {"theme": "big_media_player", "media": {"present": True, "track": "y"}}
     assert layout._song_free_key(a) == layout._song_free_key(b)
+
+
+def test_a_song_starting_shows_the_player_without_the_long_wait(make_driver, stats):
+    drv = make_driver(FakePanel())
+    plain = dict(settings.defaults(), theme="big_media_player", sm_bmp_track_refresh=False)
+    drv.present(drv.build_frame(plain, dict(stats, media={"present": False})))
+    drv.last_flash -= sm_driver.MEDIA_TRACK_MIN + 1             # the service just started, then music
+    playing = drv.build_frame(plain, dict(stats, media={"present": True, "title": "A"}))
+    drv.present(playing)
+    assert drv.picture.source_key == playing.key
+    drv.last_flash -= sm_driver.MEDIA_TRACK_MIN + 1
+    stopped = drv.build_frame(plain, dict(stats, media={"present": False}))
+    drv.present(stopped)
+    assert drv.picture.source_key == playing.key                # stopping still waits the long interval
+
+
+def test_cover_and_title_of_every_song_is_on_by_default():
+    assert settings.defaults()["sm_bmp_track_refresh"] is True

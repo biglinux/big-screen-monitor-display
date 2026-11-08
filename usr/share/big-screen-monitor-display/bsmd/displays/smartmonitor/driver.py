@@ -152,7 +152,11 @@ class SmartMonitorHid(TelemetryDriver):
         if picture is not None and picture.source_key == frame.key:
             return picture
         following = bool(((frame.spec.get("media") or {}).get("track")))
-        wait = MEDIA_TRACK_MIN if following else MEDIA_REFLASH_MIN
+        appeared = (frame.spec.get("media") or {}).get("present") and \
+            not ((picture.source_spec or {}).get("media") or {}).get("present") if picture is not None else False
+        # A song starting (or every song, when followed) shows the player quickly; players
+        # coming and going otherwise are held back so a flapping one does not flash all day.
+        wait = MEDIA_TRACK_MIN if following or appeared else MEDIA_REFLASH_MIN
         if picture is not None and self._media_only_change(picture, frame) and \
                 time.monotonic() - self.last_flash < wait:
             return picture        # songs / players changing: not more than one flash per interval
