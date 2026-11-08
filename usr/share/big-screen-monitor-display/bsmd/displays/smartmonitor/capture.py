@@ -648,6 +648,9 @@ class Capture:
                        if media.get("present") or not name.startswith("media_")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
             sources["noise"] = (fields.noise(self.scene.base), None)
+            if media.get("present") and self.scene.settings.get("bmp_visualizer") == "spectrum":
+                # The visualizer's bars: out of the background, each drawn by a gauge widget.
+                sources["noise_spectrum"] = (fields._with_media(self.scene.base, bands=[0.75] * fields.SPECTRUM), None)
             if media.get("present") and not self.scene.settings.get("sm_bmp_track_refresh"):
                 # Title, artist and cover cannot follow the songs live: left out.
                 sources["noise_track"] = (fields.track_noise(self.scene.base), None)
@@ -1044,6 +1047,7 @@ class Capture:
                     setattr(bar, attr, Image.fromarray(picture.astype("uint8"), "RGB"))
             return []
         media_present = (self.scene.base.get("media") or {}).get("present")
+        spectrum = media_present and self.scene.settings.get("bmp_visualizer") == "spectrum"
         # Nothing that moves at all (no text, no dynamic shape): what a gauge is drawn on.
         empty_plan = dict(plan)
         empty_plan.update({i: "skip" for i in self.deps if self.base_calls[i].method != "text"})
@@ -1055,7 +1059,7 @@ class Capture:
             return self._empty
         self._empty_shot = empty
         for name, (setter, cand) in fields.PERCENT.items():
-            if name.startswith("media_") and not media_present:
+            if (name.startswith("media_") and not media_present) or (name.startswith("band") and not spectrum):
                 continue
             shots = {pct: np.asarray(self._render_planned(plan, changes=setter(self.scene.base, pct), settings=calm),
                                      dtype=np.int16) for pct in (0, 25, 50, 75, 98, 100)}
@@ -1065,7 +1069,7 @@ class Capture:
                                                  o[3] >= b[3] for o in boxes)]
             for x0, y0, x1, y1 in boxes:
                 w, h = x1 - x0, y1 - y0
-                if w < 12 or h < 2:
+                if w < 3 or h < 3:
                     continue
                 # Bars, and semicircle gauges: revealed left to right, an arc fills almost
                 # exactly like the theme draws it (the test below keeps only those).
@@ -1080,15 +1084,19 @@ class Capture:
                 if gauge is not None:
                     found.append(gauge)
                     continue
-                if any(b < a - 0.02 for a, b in zip(reach, reach[1:])):
-                    continue                # does not grow left to right
+                if w < 12 or reach[1] > 0.6 or any(b < a - 0.02 for a, b in zip(reach, reach[1:])):
+                    continue                # too narrow, grows upwards, or does not grow left to right
                 # At 50 % the theme must look like "full up to the reach, empty after it".
                 cut = max(1, round(reach[2] * w))
                 composite = shots[0][y0:y1, x0:x1].copy()
                 composite[:, :cut] = shots[100][y0:y1, x0:x1][:, :cut]
                 half = shots[50][y0:y1, x0:x1]
                 changed_px = (np.abs(shots[100] - shots[0]).sum(axis=2)[y0:y1, x0:x1] > 24).sum()
-                wrong_px = (np.abs(half - composite).sum(axis=2) > 48).sum()
+                wrong = np.abs(half - composite).sum(axis=2) > 48
+                # A slider knob sits at the end of the fill: ignore a band around it.
+                knob = max(4, min(h * 2, w // 10))
+                wrong[:, max(0, cut - knob):cut + knob] = False
+                wrong_px = wrong.sum()
                 if not changed_px or wrong_px > 0.25 * changed_px:
                     continue                # not something that fills from the left
                 # Full picture at 98 %: some themes still turn a bar red at 100 %.
@@ -1101,7 +1109,7 @@ class Capture:
                 binding = {"cand": cand, "scale": 1.0, "part": "pct"}
                 if any(abs(r - i / 4) > 0.05 for i, r in enumerate(reach)):
                     binding["curve"] = [round(r * 100, 1) for r in reach]      # value 0/25/50/75/100 -> reveal %
-                found.append((fields.FIELDS[name][0] + 0.5, bar, binding, -1))
+                found.append((fields.FIELDS.get(name, (8,))[0] + 0.5, bar, binding, -1))
         return found
 
     LEVELS = tuple(round(k * 100 / 9) for k in range(10))      # 0, 11, 22 ... 100
@@ -1131,12 +1139,14 @@ class Capture:
             if lit.any():
                 colours.append(crop[lit].reshape(-1, 3))
         # A gauge only ever grows with its value (a figure reacting to the load does not).
-        if not colours or any(b < a * 0.97 for a, b in zip(lit_counts, lit_counts[1:])) or lit_counts[-1] < 20:
+        # (from level 1: an empty visualizer may draw a resting shape at 0)
+        grows = lit_counts[1:]
+        if not colours or any(b < a * 0.97 for a, b in zip(grows, grows[1:])) or lit_counts[-1] < 20:
             return None
         colour = tuple(int(v) for v in np.median(np.concatenate(colours), axis=0))
         atlas = imgdat.Atlas((w,) * 10 + (1, 1), h, bytes(cells) + bytes(2 * h))
         number = imgdat.Number(0, (int(x0), int(y0), int(w), int(h)), colour, atlas, 0)
-        return (fields.FIELDS[name][0] + 0.5, number, {"cand": cand, "scale": 1.0, "part": "level"}, -1)
+        return (fields.FIELDS.get(name, (8,))[0] + 0.5, number, {"cand": cand, "scale": 1.0, "part": "level"}, -1)
 
     def _render_planned(self, plan, when=None, changes=None, settings=None):
         """Render with ``plan`` (base call index -> action) addressed by identity and
@@ -1334,7 +1344,9 @@ def _media_state(stats, art=None):
                 "volume": model.clean_volume({"available": True, "percent": media.get("volume") or 0,
                                               "muted": bool(media.get("muted")), "output": "", "backend": "pulse"}),
                 "agent": model.clean_agent({}), "sent_mono": now}
-    return hub.MediaState(snapshot, {art_id: art} if art_id else {}, connected=True)
+    bands = media.get("bands")
+    spectrum = {"bands": list(bands), "mono": now} if bands else None
+    return hub.MediaState(snapshot, {art_id: art} if art_id else {}, spectrum, connected=True)
 
 
 def _castaway_home(theme):

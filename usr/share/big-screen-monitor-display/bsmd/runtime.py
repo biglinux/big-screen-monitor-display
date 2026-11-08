@@ -700,6 +700,9 @@ class DisplaySession:
                    "position_us": player.get("position_us"), "position_mono": player.get("position_mono"),
                    "rate": player.get("rate", 1.0), "art": player.get("art"),
                    "volume": volume.get("percent"), "muted": volume.get("muted", False)}
+        if settings.get("bmp_visualizer") == "spectrum":
+            from .displays.smartmonitor import fields as sm_fields
+            summary["bands"] = sm_fields.panel_bands(state.spectrum_bands())
         if settings.get("sm_bmp_track_refresh") and player.get("art"):
             art = state.art(player["art"])
             if art is not None:

@@ -110,6 +110,8 @@ CANDIDATES = {
     "media_left_sec": lambda s, t, d: max(0.0, _length(s) - _elapsed(s, t)) % 60,
     "media_pct": lambda s, t, d: 100.0 * _elapsed(s, t) / _length(s) if _length(s) else 0.0,
     "media_volume": lambda s, t, d: _media(s).get("volume") or 0.0,
+    "media_len_min": lambda s, t, d: _length(s) // 60,
+    "media_len_sec": lambda s, t, d: _length(s) % 60,
     "hour": lambda s, t, d: d.hour,
     "hour12": lambda s, t, d: (d.hour % 12) or 12,
     "minute": lambda s, t, d: d.minute,
@@ -173,6 +175,9 @@ FIELDS = {
                        ("media_min", "media_sec", "media_left_min", "media_left_sec", "media_pct")),
     "media_volume": (6, (lambda s: _with_media(s, volume=35), lambda s: _with_media(s, volume=72)),
                      ("media_volume",)),
+    "media_length": (7, (lambda s: _with_media(s, length_us=236_000_000),
+                         lambda s: _with_media(s, length_us=312_000_000)),
+                     ("media_len_min", "media_len_sec", "media_left_min", "media_left_sec")),
     "uptime": (60, (lambda s: {"boot_time": T0.timestamp() - BOOT0}, lambda s: {"boot_time": T0.timestamp() - BOOT1}),
                ("uptime_hours", "uptime_hours_mod", "uptime_minutes", "uptime_days")),
     "load": (70, (lambda s: {"load_avg": (3.78, 3.96, 3.79)}, lambda s: {"load_avg": (1.21, 2.54, 6.07)}),
@@ -200,6 +205,31 @@ PERCENT = {
     "media_position": (lambda s, p: _with_media(s, position_us=int(236_000_000 * p / 100)), "media_pct"),
     "media_volume": (lambda s, p: _with_media(s, volume=float(p)), "media_volume"),
 }
+# The player's spectrum visualizer: the capture draws it with SPECTRUM bands, each a
+# gauge of its own (the agent sends 24; they are averaged in pairs for the panel).
+SPECTRUM = 12
+
+
+def _band_setter(index):
+    def setter(stats, pct):
+        bands = list((stats.get("media") or {}).get("bands") or [0.3] * SPECTRUM)
+        bands[index] = pct / 100
+        return _with_media(stats, bands=bands)
+    return setter
+
+
+for _index in range(SPECTRUM):
+    CANDIDATES[f"band{_index}"] = (lambda i: lambda s, t, d: 100.0 * ((_media(s).get("bands") or [0.0] * SPECTRUM)
+                                                                       + [0.0] * SPECTRUM)[i])(_index)
+    PERCENT[f"band{_index}"] = (_band_setter(_index), f"band{_index}")
+
+
+def panel_bands(bands):
+    """The agent's spectrum (any number of bands) as SPECTRUM bands."""
+    if not bands:
+        return None
+    step = len(bands) / SPECTRUM
+    return [max(bands[int(i * step):max(int(i * step) + 1, int((i + 1) * step))]) for i in range(SPECTRUM)]
 CLOCK_CANDIDATES = ("hour", "hour12", "minute", "second", "day", "month", "year", "year2", "weekday", "month0")
 
 
@@ -280,7 +310,7 @@ def base_stats(stats):
         track = dict(MEDIA_SAMPLE)
         track.update({k: v for k, v in media.items() if k != "art_image"})
         track.update(rate=0.0, position_mono=None, position_us=83_000_000, length_us=236_000_000,
-                     status="Playing", volume=35)
+                     status="Playing", volume=35, bands=[0.3] * SPECTRUM)
         base["media"] = track
     else:
         base["media"] = {"present": False}
