@@ -42,9 +42,9 @@ NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
 WORD = re.compile(r"[^\W\d_]+(?:-[^\W\d_]+)*")      # "Quarta-feira" is one word
 NICE_SCALES = (1.0, 1e3, 1e-3, 1024.0, 1 / 1024, 1 / 1048576, 8.0, 0.125, 125.0, 1 / 125, 1e6 / 8 / 1024, 100.0,
                0.01, 1 / 60, 1 / 3600, 1 / 86400, 1e-6, 1e6)
-MAX_NUMBERS = 26          # firmware limits minus a margin (imgdat.MAX_*)
-MAX_WIDGETS = 38
-MAX_CHANNELS = 25
+MAX_NUMBERS = imgdat.MAX_NUMBERS        # the largest values measured working on the panel
+MAX_WIDGETS = imgdat.MAX_WIDGETS
+MAX_CHANNELS = imgdat.MAX_CHANNELS
 
 # How a theme is best adapted: settings it is captured with, animation frames.
 THEME_OPTIONS = {
@@ -648,6 +648,9 @@ class Capture:
                        if media.get("present") or not name.startswith("media_")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
             sources["noise"] = (fields.noise(self.scene.base), None)
+            if media.get("present"):
+                for name, (setter, _count, _cand) in fields.STATES.items():
+                    sources["state_" + name] = (setter(self.scene.base, 1), None)
             if media.get("present") and self.scene.settings.get("bmp_visualizer") == "spectrum":
                 # The visualizer's bars: out of the background, each drawn by a gauge widget.
                 sources["noise_spectrum"] = (fields._with_media(self.scene.base, bands=[0.75] * fields.SPECTRUM), None)
@@ -705,7 +708,7 @@ class Capture:
             animated = options.get("frames", 1) > 1 or bool(options.get("sprites"))
             if call.method != "text" and animated:
                 continue                  # an animated scene's art (moves with time, reacts to load): keep it
-            if any(name.startswith("noise") for name in dynamic):
+            if any(name.startswith(("noise", "state_")) for name in dynamic):
                 plan[index] = "skip"      # shows data no field covers: never frozen, left out
                 continue
             if call.method == "text":
@@ -1110,6 +1113,54 @@ class Capture:
                 if any(abs(r - i / 4) > 0.05 for i, r in enumerate(reach)):
                     binding["curve"] = [round(r * 100, 1) for r in reach]      # value 0/25/50/75/100 -> reveal %
                 found.append((fields.FIELDS.get(name, (8,))[0] + 0.5, bar, binding, -1))
+        if media_present:
+            found.extend(self._state_icons(plan, calm, self._empty_shot))
+        return found
+
+    def _state_icons(self, plan, calm, empty):
+        """Icons with a few states (mute, play/pause): one widget, glyph cell k = state k."""
+        import numpy as np
+        found = []
+        base_shot = empty()
+        for name, (setter, count, cand) in fields.STATES.items():
+            shots = [np.asarray(self._render_planned(plan, changes=setter(self.scene.base, k), settings=calm),
+                                dtype=np.int16) for k in range(count)]
+            lits = [np.abs(shot - base_shot).sum(axis=2) > 24 for shot in shots]
+            moving = np.abs(shots[1] - shots[0]).sum(axis=2) > 24
+            # Every place the state shows (a button icon, a speaker), largest first.
+            boxes = sorted(_boxes(moving, join=4), key=lambda b: (b[2] - b[0]) * (b[3] - b[1]), reverse=True)
+            for x0, y0, x1, y1 in boxes[:3]:
+                x0, y0 = max(0, int(x0) - 1), max(0, int(y0) - 1)
+                x1, y1 = min(SIZE[0], int(x1) + 1), min(SIZE[1], int(y1) + 1)
+                w, h = x1 - x0, y1 - y0
+                if w < 3 or h < 3 or w * h > 20000:
+                    continue
+                # A widget has one colour: one widget per state and per colour of the icon
+                # (light / dark, e.g. a blue button with white pause bars), each blank in
+                # the other states.
+                blank = bytes(w * h)
+                for state, (shot, lit) in enumerate(zip(shots, lits)):
+                    region = lit[y0:y1, x0:x1]
+                    if not region.any():
+                        continue
+                    pixels = shot[y0:y1, x0:x1]
+                    luma = pixels @ np.array([0.299, 0.587, 0.114])
+                    groups = [region]
+                    if region.sum() > 20:
+                        middle = np.median(luma[region])
+                        light, dark = region & (luma > middle + 40), region & (luma <= middle + 40)
+                        light2, dark2 = region & (luma >= middle), region & (luma < middle - 40)
+                        for a, b in ((light, dark), (light2, dark2)):
+                            if a.sum() > 0.12 * region.sum() and b.sum() > 0.12 * region.sum():
+                                groups = [a, b]
+                                break
+                    for group in groups:
+                        colour = tuple(int(v) for v in np.median(pixels[group].reshape(-1, 3), axis=0))
+                        cells = b"".join((group.astype(np.uint8) * 255).tobytes() if k == state else blank
+                                         for k in range(10))
+                        atlas = imgdat.Atlas((w,) * 10 + (1, 1), h, cells + bytes(2 * h))
+                        number = imgdat.Number(0, (x0, y0, w, h), colour, atlas, 0)
+                        found.append((6.5, number, {"cand": cand, "scale": 1.0, "part": "state"}, -1))
         return found
 
     LEVELS = tuple(round(k * 100 / 9) for k in range(10))      # 0, 11, 22 ... 100
@@ -1268,8 +1319,8 @@ class Capture:
 
     def _theme(self, background, frames, candidates, kept, bindings, dropped):
         # Gauges (level widgets) first: the numbers printed on them are drawn on top.
-        numbers = [c[1] for c in kept if isinstance(c[1], imgdat.Number) and c[2].get("part") == "level"] + \
-                  [c[1] for c in kept if isinstance(c[1], imgdat.Number) and c[2].get("part") != "level"]
+        numbers = [c[1] for c in kept if isinstance(c[1], imgdat.Number) and c[2].get("part") in ("level", "state")] + \
+                  [c[1] for c in kept if isinstance(c[1], imgdat.Number) and c[2].get("part") not in ("level", "state")]
         bars = [c[1] for c in kept if isinstance(c[1], imgdat.Bar)]
         theme = imgdat.Theme(SIZE, background, numbers, bars, frames=frames,
                              frame_delay_ms=THEME_OPTIONS.get(self.scene.theme_id, {}).get("frame_delay_ms", 0))
@@ -1331,7 +1382,7 @@ def _media_state(stats, art=None):
     if not media.get("present"):
         return hub.MediaState(None, connected=False)
     now = time.monotonic()
-    art_id = "capture-art" if art is not None and media.get("art") else None
+    art_id = "capturecover" if art is not None and media.get("art") else None     # ids are alphanumeric
     player = model.clean_player({
         "bus": "org.mpris.MediaPlayer2.capture", "identity": media.get("identity") or "Player", "desktop": "",
         "status": media.get("status") or "Playing", "title": media.get("title") or "", "artist": media.get("artist")

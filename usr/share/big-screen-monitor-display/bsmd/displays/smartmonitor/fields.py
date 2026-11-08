@@ -110,6 +110,8 @@ CANDIDATES = {
     "media_left_sec": lambda s, t, d: max(0.0, _length(s) - _elapsed(s, t)) % 60,
     "media_pct": lambda s, t, d: 100.0 * _elapsed(s, t) / _length(s) if _length(s) else 0.0,
     "media_volume": lambda s, t, d: _media(s).get("volume") or 0.0,
+    "media_muted": lambda s, t, d: 1.0 if _media(s).get("muted") else 0.0,
+    "media_paused": lambda s, t, d: 0.0 if _media(s).get("status") == "Playing" else 1.0,
     "media_len_min": lambda s, t, d: _length(s) // 60,
     "media_len_sec": lambda s, t, d: _length(s) % 60,
     "hour": lambda s, t, d: d.hour,
@@ -205,6 +207,13 @@ PERCENT = {
     "media_position": (lambda s, p: _with_media(s, position_us=int(236_000_000 * p / 100)), "media_pct"),
     "media_volume": (lambda s, p: _with_media(s, volume=float(p)), "media_volume"),
 }
+# Things with a few states drawn as icons (mute, play/pause): photographed in each
+# state and shown by one widget whose glyph cell k is state k.
+STATES = {
+    "media_mute": (lambda s, k: _with_media(s, muted=bool(k)), 2, "media_muted"),
+    "media_play": (lambda s, k: _with_media(s, status="Paused" if k else "Playing"), 2, "media_paused"),
+}
+
 # The player's spectrum visualizer: the capture draws it with SPECTRUM bands, each a
 # gauge of its own (the agent sends 24; they are averaged in pairs for the panel).
 SPECTRUM = 12
@@ -310,7 +319,7 @@ def base_stats(stats):
         track = dict(MEDIA_SAMPLE)
         track.update({k: v for k, v in media.items() if k != "art_image"})
         track.update(rate=0.0, position_mono=None, position_us=83_000_000, length_us=236_000_000,
-                     status="Playing", volume=35, bands=[0.3] * SPECTRUM)
+                     status="Playing", volume=35, muted=False, bands=[0.3] * SPECTRUM)
         base["media"] = track
     else:
         base["media"] = {"present": False}
@@ -334,6 +343,8 @@ def binding_value(binding, stats, now=None):
     value = candidate_value(binding["cand"], stats, now) * binding.get("scale", 1.0)
     part = binding.get("part", "whole")
     decimals = binding.get("decimals", 0)
+    if part == "state":
+        return max(0, min(9, int(round(value))))
     if part == "level":
         # A gauge drawn from ten photographed levels: cell k shows level k.
         return max(0, min(9, round(max(0.0, min(100.0, value)) / 100 * 9)))

@@ -362,7 +362,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 3
+CAPTURE_VERSION = 4
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
