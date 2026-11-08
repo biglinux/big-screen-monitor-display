@@ -71,19 +71,19 @@ def test_dashboard_fits_the_firmware_budget_and_round_trips(stats):
     for gpu in (True, False):
         snap = dict(stats, gpus=[{"path": "/x", "name": "GPU", "percent": 40.0, "temp_value": 61.0,
                                   "mem_used_mb": 2048, "mem_total_mb": 8192}] if gpu else [])
-        spec = layout.spec(dict(settings.defaults(), name="Second"), snap)
+        spec = layout.dashboard_spec(dict(settings.defaults(), name="Second"), snap)
         theme = layout.build(spec)
         assert theme.check() == []
         assert len(theme.numbers) <= imgdat.MAX_NUMBERS
         assert len(theme.numbers) + len(theme.bars) <= imgdat.MAX_WIDGETS
-        _key, data = layout.compiled(spec)
+        _key, data = layout.dashboard_compiled(spec)
         assert protocol.THEME_MIN <= len(data) <= protocol.THEME_MAX
         assert int.from_bytes(data[:4], "little") == imgdat.HEADER_SLOT_COUNT
         records = imgdat.parse(data)
         assert records[0]["type"] == imgdat.BACKGROUND and records[0]["box"] == (0, 0, 480, 320)
         channels = {r["channel"] for r in records if r["type"] in (imgdat.NUMBER, imgdat.PROGRESS)}
         assert len(channels) <= imgdat.MAX_CHANNELS
-        values = layout.values(spec, snap, datetime.datetime(2026, 11, 8, 9, 5))
+        values = layout.dashboard_values(spec, snap, datetime.datetime(2026, 11, 8, 9, 5))
         assert set(values) == channels
         assert [values[c] for c in layout.CLOCK] == [0, 9, 0, 5]          # leading zeros kept
         # The preview is decoded back out of the compiled bytes.
@@ -110,10 +110,18 @@ def test_theme_check_refuses_what_the_panel_cannot_serve():
 def test_layout_key_follows_the_look_not_the_values(stats):
     base = dict(settings.defaults())
     spec = layout.spec(base, stats)
+    assert spec["kind"] == "capture" and spec["theme"] == "standard"
     assert layout.key(spec) == layout.key(layout.spec(base, dict(stats, cpu_percent=99)))
     assert layout.key(spec) != layout.key(layout.spec(dict(base, std_scheme="nord"), stats))
+    assert layout.key(spec) == layout.key(layout.spec(dict(base, gk_columns="2"), stats))   # another theme's option
     assert layout.spec(dict(base, orientation="horizontal_flipped"), stats)["rotation"] == 180
-    _key, data = layout.compiled(layout.spec(dict(base, orientation="horizontal_flipped"), stats))
+    # Time-of-day scenes are captured again when the period changes.
+    ba = dict(base, theme="brother_away")
+    morning = layout.spec(ba, stats, datetime.datetime(2026, 11, 8, 8, 0))
+    night = layout.spec(ba, stats, datetime.datetime(2026, 11, 8, 22, 0))
+    assert morning["hour"] != night["hour"] and layout.key(morning) != layout.key(night)
+    dash = layout.dashboard_spec(dict(base, orientation="horizontal_flipped"), stats)
+    _key, data = layout.dashboard_compiled(dash)
     assert any(r["type"] == imgdat.ROTATE and r["rotation"] == 2 for r in imgdat.parse(data))
 
 
@@ -219,6 +227,12 @@ def make_driver(tmp_path, monkeypatch):
     monkeypatch.setattr(sm_driver, "RESTART_VANISH", 0.0)
     monkeypatch.setattr(sm_driver.os.path, "exists", lambda _p: True)
 
+    def dashboard(theme_spec, settings_, stats_, progress=None):
+        dash = layout.dashboard_spec(settings_, stats_)
+        key, data = layout.dashboard_compiled(dash)
+        return layout.Compiled(key, data, None, dash)
+    monkeypatch.setattr(layout, "compiled", dashboard)
+
     def make(panel):
         drv = sm_driver.SmartMonitorHid("/dev/hidraw-fake", "1-1", state_path=str(tmp_path / "state.json"))
         drv.hid = panel
@@ -235,12 +249,12 @@ def test_driver_flashes_once_then_pushes_values(make_driver, stats):
     drv.on_progress = lambda what: steps.append(what) and False
     frame = drv.build_frame(dict(settings.defaults(), brightness=40), stats)
     drv.present(frame)
-    _key, data = layout.compiled(frame.spec)
+    data = drv.picture.data
     assert bytes(panel.received[:len(data)]) == data                 # NAKed block 3 was resent
     assert any(s.startswith("block ") for s in steps)
     with open(drv.state_path, encoding="utf-8") as handle:
         saved = json.load(handle)
-    assert saved["layout"] == frame.key and saved["bytes"] == len(data)
+    assert saved["layout"] == drv.picture.key and saved["bytes"] == len(data)
     sensors = [w for w in panel.writes if w[0] == protocol.SENSOR]
     stamp = [w for w in panel.writes if w[0] == protocol.DATETIME][-1]
     assert sensors and stamp[10] == 40
@@ -251,7 +265,7 @@ def test_driver_flashes_once_then_pushes_values(make_driver, stats):
     assert all(w[0] in (protocol.SENSOR, protocol.DATETIME) for w in new)
     # A new driver (service restart) trusts the remembered layout.
     again = make_driver(FakePanel())
-    assert again.flashed == frame.key
+    assert again.flashed == drv.picture.key
 
 
 def test_driver_follows_a_panel_that_restarts_on_reset(make_driver, stats):
@@ -260,6 +274,42 @@ def test_driver_follows_a_panel_that_restarts_on_reset(make_driver, stats):
     drv.present(drv.build_frame(dict(settings.defaults()), stats))
     assert panel.restarts == 1 and panel.opens >= 3                  # reopened after reset and after the flash
     assert drv.uploads == 1
+
+
+class StuckPanel(FakePanel):
+    """A panel whose previous upload was cut (measured on hardware): still inside the
+    YMODEM transfer, it answers "ymodem" with 06 43 but NAKs block 0, and only
+    leaves on EOT + empty block 0 (then restarts)."""
+
+    def __init__(self):
+        super().__init__()
+        self.stuck = True
+        self.unstuck = 0
+
+    def _handle(self, payload):
+        if not self.stuck:
+            return super()._handle(payload)
+        if payload[0] == protocol.EOT:
+            self._ack(protocol.ACK_MORE)
+        elif payload[:3] == bytes([protocol.SOH, 0, 0xFF]) and not any(payload[3:64]):
+            self.stuck = False
+            self.unstuck += 1
+            self.state = "theme"
+            self.fd = None                       # restarts
+        elif payload.startswith(protocol.YMODEM):
+            self._ack(protocol.ACK_MORE)
+        elif payload[0] == protocol.SOH:
+            self.inbox.append(bytes([protocol.NAK]) + bytes(63))
+
+
+def test_driver_recovers_a_panel_left_inside_an_upload(make_driver, stats, monkeypatch):
+    monkeypatch.setattr(sm_driver, "ACK_TIMEOUT", 0.2)
+    panel = StuckPanel()
+    drv = make_driver(panel)
+    drv.present(drv.build_frame(dict(settings.defaults()), stats))
+    assert panel.unstuck == 1 and drv.uploads == 1
+    data = drv.picture.data
+    assert bytes(panel.received[:len(data)]) == data
 
 
 def test_driver_flash_stops_when_the_service_stops(make_driver, stats):
@@ -314,7 +364,7 @@ def test_runtime_feeds_the_driver_its_own_frames(tmp_path, stats):
     session.stop_event = threading.Event()
     session._telemetry_step(dict(settings.defaults()), session.hb["render"])
     frame = session.mailbox.items[0]
-    assert isinstance(frame, sm_driver.Frame) and frame.values
+    assert isinstance(frame, sm_driver.Frame) and frame.spec["theme"] == "standard"
     assert session.last_metrics["layout"] == frame.key
     # Progress during a flash keeps the transport heartbeat fresh and honours stop.
     beat = session.hb["transport"]
@@ -323,3 +373,52 @@ def test_runtime_feeds_the_driver_its_own_frames(tmp_path, stats):
     assert session._driver_progress("block 1/2") is False and beat.stalled(30, 30) is None
     session.stop_event.set()
     assert session._driver_progress("block 2/2") is True
+
+
+# ---------------------------------------------------------------- theme capture (worker process, as in production)
+
+@pytest.mark.parametrize("theme_id", ["standard", "old_computer"])
+def test_themes_are_captured_into_live_widgets(theme_id, stats, tmp_path, monkeypatch):
+    monkeypatch.setenv("STATE_DIRECTORY", str(tmp_path))
+    layout._MEMORY.clear()
+    values = dict(settings.defaults(), theme=theme_id)
+    theme_spec = layout.spec(values, stats)
+    picture = layout.compiled(theme_spec, values, stats)
+    assert picture.bindings, picture.report                         # not the fallback dashboard
+    records = imgdat.parse(picture.data)
+    numbers = [r for r in records if r["type"] == imgdat.NUMBER]
+    assert len(numbers) >= 6 and len({r["channel"] for r in numbers}) <= imgdat.MAX_CHANNELS
+    cands = {b["cand"] for b in picture.bindings.values()}
+    assert {"hour", "minute", "cpu_percent"} <= cands               # clock and CPU found in the theme's drawing
+    live = layout.values(picture, dict(stats, cpu_percent=42.0))
+    cpu = [int(c) for c, b in picture.bindings.items() if b["cand"] == "cpu_percent" and b.get("part") != "pct"]
+    assert cpu and all(live[c] == 42 for c in cpu)
+    # The disk cache serves the next service start without a capture.
+    layout._MEMORY.clear()
+    again = layout.compiled(theme_spec, values, stats)
+    assert again.data == picture.data and again.bindings == picture.bindings
+    assert imgdat.render(picture.data, live).size == (480, 320)
+
+
+def test_capture_failure_falls_back_to_the_dashboard(stats, tmp_path, monkeypatch):
+    monkeypatch.setenv("STATE_DIRECTORY", str(tmp_path))
+    layout._MEMORY.clear()
+    values = dict(settings.defaults(), theme="standard")
+    theme_spec = dict(layout.spec(values, stats), theme="no_such_theme")
+    picture = layout.compiled(theme_spec, values, stats)
+    assert picture.bindings is None and "fallback" in picture.report
+    assert imgdat.parse(picture.data)[0]["type"] == imgdat.BACKGROUND
+
+
+def test_bindings_turn_telemetry_into_panel_integers():
+    from bsmd.displays.smartmonitor import fields
+    stats = {"ram_used_mb": 11571, "net_rx_mbps": 2.9}
+    assert fields.binding_value({"cand": "ram_used_mb", "scale": 1 / 1024, "part": "int", "decimals": 1}, stats) == 11
+    assert fields.binding_value({"cand": "ram_used_mb", "scale": 1 / 1024, "part": "frac", "decimals": 1}, stats) == 3
+    assert fields.binding_value({"cand": "net_rx_mbps", "scale": 125.0, "part": "whole"}, stats) == 362
+    when = datetime.datetime(2026, 11, 8, 9, 5).timestamp()
+    assert fields.binding_value({"cand": "hour", "part": "tens"}, {}, when) == 0
+    assert fields.binding_value({"cand": "hour", "part": "ones"}, {}, when) == 9
+    # Twelve month names over two word widgets of nine words + a blank cell.
+    assert fields.binding_value({"cand": "month0", "part": "word_chunk", "first": 0}, {}, when) == 9     # blank
+    assert fields.binding_value({"cand": "month0", "part": "word_chunk", "first": 9}, {}, when) == 1     # "nov"

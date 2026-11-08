@@ -289,13 +289,14 @@ class DisplaysPage:
                                             card.set_texture)
             return
         if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
-            card.set_text(own.get("name") or entry.title, " · ".join((state, "480×320", _("SmartMonitor dashboard"))))
+            theme = themes.REGISTRY.get(effective.get("theme")) or themes.REGISTRY["standard"]
+            card.set_text(own.get("name") or entry.title,
+                          " · ".join((state, "480×320", _(theme.name.split(" — ")[0]))))
             card.set_badge(state if _kind in ("error", "warning") else None)
             metrics_ = (entry.status or {}).get("metrics") or {}
             key = ("display", entry.id, "smartmonitor", repr(sorted((metrics_.get("fields") or {}).items())),
-                   (entry.status or {}).get("state"), repr(sorted((k, repr(v)) for k, v in effective.items()
-                                                                if k in ("std_scheme", "std_temp_unit", "name",
-                                                                         "orientation"))))
+                   (entry.status or {}).get("state"),
+                   hash(repr(sorted((k, repr(v)) for k, v in effective.items() if k != "displays"))))
             self.window.thumbnailer.request(key, smartmonitor_view.thumbnail_work(effective, entry.status),
                                             card.set_texture)
             return

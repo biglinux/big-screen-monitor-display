@@ -1,9 +1,9 @@
 """The SmartMonitor HID panel in the configuration window.
 
-The panel draws the dashboard Big Screen Monitor flashes into it, not the
-selected theme, so its card and live preview show that dashboard (decoded
-from the same compiled theme the service sends, with the service's last
-values when it is running).
+The panel shows a flashed adaptation of the selected theme (see
+bsmd.displays.smartmonitor.capture), so its card and live preview show that
+adaptation, decoded from the same compiled picture the service sends, with
+the service's last values when it is running.
 """
 
 from bsmd import settings
@@ -27,7 +27,7 @@ def is_panel(status=None, own=None, candidate=None):
 def metrics_of(status):
     status = status or {}
     if status.get("state") not in ("healthy", "degraded"):
-        return {"hints": (status.get("metrics") or {}).get("hints")}
+        return {}
     return status.get("metrics") or {}
 
 

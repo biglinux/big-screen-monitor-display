@@ -36,6 +36,7 @@ RESOURCE_START = SLOT * SLOTS
 GLYPHS = "0123456789.-"
 
 BACKGROUND = 0x81
+IMAGE = 0x84
 PROGRESS = 0x8B
 NUMBER = 0x92
 ROTATE = 0x96
@@ -79,7 +80,24 @@ class Number:
     box: tuple                   # x, y, width, height
     color: tuple
     atlas: Atlas
-    align: int = 0               # 0 = left (proven on hardware)
+    align: int = 0               # measured on hardware: 0 = left, 1 = centre, 2 = right
+
+
+@dataclass
+class Sprite:
+    """Image widget: ``frames`` (PIL images of the box size) played in a loop
+    every ``delay_ms`` by the panel itself; RGBA frames keep their transparency."""
+    box: tuple
+    frames: list
+    delay_ms: int = 200
+
+
+def rgba565_bytes(image):
+    """Alpha plane followed by little-endian RGB565 (image widgets with transparency)."""
+    import numpy as np
+    rgba = image.convert("RGBA")
+    alpha = np.asarray(rgba, dtype=np.uint8)[..., 3].tobytes()
+    return alpha + rgb565_bytes(rgba.convert("RGB"))
 
 
 @dataclass
@@ -89,7 +107,7 @@ class Bar:
     fg: tuple
     bg: tuple
     frame: tuple
-    style: int = 1               # 1 = horizontal fill (vendor themes)
+    style: int = 1               # measured: 1..3 fill left to right; 0 draws nothing
 
 
 @dataclass
@@ -99,9 +117,12 @@ class Theme:
     numbers: list = field(default_factory=list)
     bars: list = field(default_factory=list)
     rotation: int = 0
+    frames: list = field(default_factory=list)      # extra background frames (animated scenery)
+    frame_delay_ms: int = 0
+    sprites: list = field(default_factory=list)
 
     def check(self):
-        widgets = len(self.numbers) + len(self.bars)
+        widgets = len(self.numbers) + len(self.bars) + len(self.sprites)
         channels = {n.channel for n in self.numbers} | {b.channel for b in self.bars}
         problems = []
         if widgets > MAX_WIDGETS:
@@ -114,11 +135,20 @@ class Theme:
             problems.append("channel out of range")
         if self.background.size != tuple(self.size):
             problems.append("background size does not match the canvas")
+        if any(frame.size != tuple(self.size) for frame in self.frames):
+            problems.append("background frame size does not match the canvas")
+        for sprite in self.sprites:
+            if not sprite.frames or any(f.size != tuple(sprite.box[2:]) for f in sprite.frames):
+                problems.append(f"sprite frames do not match their box {sprite.box}")
+            if len(sprite.frames) > 255:
+                problems.append("a sprite has more than 255 frames")
+        if len(self.frames) + 1 > 255:
+            problems.append("more than 255 background frames")
         width, height = self.size
-        for widget in list(self.numbers) + list(self.bars):
+        for widget in list(self.numbers) + list(self.bars) + list(self.sprites):
             x, y, w, h = widget.box
             if x < 0 or y < 0 or w <= 0 or h <= 0 or x + w > width or y + h > height:
-                problems.append(f"widget on channel {widget.channel} outside the canvas: {widget.box}")
+                problems.append(f"widget on channel {getattr(widget, 'channel', '-')} outside the canvas: {widget.box}")
         if self.rotation not in ROTATIONS:
             problems.append(f"rotation {self.rotation}")
         return problems
@@ -161,10 +191,25 @@ def compile_theme(theme):
     record[0] = BACKGROUND
     _box(record, (0, 0, width, height))
     record[11] = 0                               # image, not a flat colour
-    _put32(record, 14, place(rgb565_bytes(theme.background)))
-    record[18] = 1                               # frames
+    frames = [theme.background] + list(theme.frames)
+    _put32(record, 14, place(b"".join(rgb565_bytes(frame) for frame in frames)))
+    record[18] = len(frames)
+    _put16(record, 20, theme.frame_delay_ms if len(frames) > 1 else 0)
     records.append(record)
     widget_id = 1
+    for sprite in theme.sprites:
+        record = bytearray(SLOT)
+        record[0] = IMAGE
+        record[1] = widget_id
+        _box(record, sprite.box)
+        transparent = any(frame.mode == "RGBA" for frame in sprite.frames)
+        encode = rgba565_bytes if transparent else rgb565_bytes
+        _put32(record, 11, place(b"".join(encode(frame) for frame in sprite.frames)))
+        record[15] = len(sprite.frames)
+        record[16] = 1 if transparent else 0
+        _put16(record, 17, sprite.delay_ms if len(sprite.frames) > 1 else 0)
+        records.append(record)
+        widget_id += 1
     for number in theme.numbers:
         record = bytearray(SLOT)
         record[0] = NUMBER
@@ -221,7 +266,11 @@ def parse(data):
         item = {"slot": index, "type": kind, "id": raw[1],
                 "box": tuple(int.from_bytes(raw[o:o + 2], "big") for o in (3, 5, 7, 9))}
         if kind == BACKGROUND:
-            item["offset"] = int.from_bytes(raw[14:18], "big")
+            item.update(offset=int.from_bytes(raw[14:18], "big"), frames=raw[18] or 1,
+                        delay=int.from_bytes(raw[20:22], "big"))
+        elif kind == IMAGE:
+            item.update(offset=int.from_bytes(raw[11:15], "big"), frames=raw[15] or 1, alpha=bool(raw[16]),
+                        delay=int.from_bytes(raw[17:19], "big"))
         elif kind == NUMBER:
             item.update(channel=raw[2], align=raw[11], color=int.from_bytes(raw[12:14], "big"), alpha=raw[15],
                         offset=int.from_bytes(raw[16:20], "big"), height=int.from_bytes(raw[20:22], "big"),
@@ -239,23 +288,38 @@ def _from565(value):
     return (((value >> 11) & 0x1F) * 255 // 31, ((value >> 5) & 0x3F) * 255 // 63, (value & 0x1F) * 255 // 31)
 
 
-def render(data, values=None):
-    """What the panel draws for ``values`` ({channel: int}): a PIL image decoded
-    back out of the compiled bytes (so a correct preview proves the offsets)."""
+def _rgb565_image(data, offset, width, height):
     import numpy as np
+    from PIL import Image
+    raw = np.frombuffer(data, dtype="<u2", count=width * height, offset=offset).reshape(height, width)
+    rgb = np.stack([((raw >> 11) & 0x1F) * 255 // 31, ((raw >> 5) & 0x3F) * 255 // 63, (raw & 0x1F) * 255 // 31],
+                   axis=-1).astype("uint8")
+    return Image.fromarray(rgb, "RGB")
+
+
+def render(data, values=None, frame=0):
+    """What the panel draws for ``values`` ({channel: int}) at animation step
+    ``frame``: a PIL image decoded back out of the compiled bytes (so a correct
+    preview proves the offsets). Widgets are drawn in definition order."""
     from PIL import Image
     values = values or {}
     records = parse(data)
     background = next(r for r in records if r["type"] == BACKGROUND)
     width, height = background["box"][2:]
-    raw = np.frombuffer(data, dtype="<u2", count=width * height, offset=background["offset"])
-    raw = raw.reshape(height, width)
-    rgb = np.stack([((raw >> 11) & 0x1F) * 255 // 31, ((raw >> 5) & 0x3F) * 255 // 63, (raw & 0x1F) * 255 // 31],
-                   axis=-1).astype("uint8")
-    image = Image.fromarray(rgb, "RGB")
+    index = frame % background["frames"]
+    image = _rgb565_image(data, background["offset"] + index * width * height * 2, width, height)
     for record in records:
         x, y, w, h = record["box"]
-        if record["type"] == PROGRESS:
+        if record["type"] == IMAGE:
+            step = frame % record["frames"]
+            if record["alpha"]:
+                size = w * h * 3
+                start = record["offset"] + step * size
+                alpha = Image.frombytes("L", (w, h), data[start:start + w * h])
+                image.paste(_rgb565_image(data, start + w * h, w, h), (x, y), alpha)
+            else:
+                image.paste(_rgb565_image(data, record["offset"] + step * w * h * 2, w, h), (x, y))
+        elif record["type"] == PROGRESS:
             value = max(0, min(100, int(values.get(record["channel"], 0))))
             image.paste(_from565(record["bg"]), (x, y, x + w, y + h))
             fill = round(w * value / 100)
@@ -269,12 +333,12 @@ def render(data, values=None):
                 cells.append(Image.frombytes("L", (cell_w, record["height"]), data[offset:offset + size]) if size
                              else None)
                 offset += size
-            cursor = x
-            for char in str(int(values[record["channel"]])):
-                cell = cells[GLYPHS.index(char)]
-                if cell is None:
-                    continue
-                if cursor + cell.width <= x + w:
+            glyphs = [cells[GLYPHS.index(char)] for char in str(int(values[record["channel"]]))]
+            glyphs = [g for g in glyphs if g is not None]
+            total = sum(g.width for g in glyphs)
+            cursor = x + {1: (w - total) // 2, 2: w - total}.get(record["align"], 0)
+            for cell in glyphs:
+                if x <= cursor and cursor + cell.width <= x + w:
                     mask = cell.crop((0, 0, cell.width, min(cell.height, h)))
                     image.paste(_from565(record["color"]), (cursor, y, cursor + mask.width, y + mask.height), mask)
                 cursor += cell.width

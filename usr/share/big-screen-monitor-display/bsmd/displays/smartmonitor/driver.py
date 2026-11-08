@@ -41,17 +41,20 @@ class _Hid(Hidraw):
 
 @dataclass
 class Frame:
-    """What the panel should show: the dashboard picture (by key) and the values."""
+    """What the panel should show: the picture (by spec key) and the telemetry it
+    is filled from. Values are computed on the transport thread, once the picture
+    (and its bindings) is ready."""
     key: str
     spec: dict
-    values: dict
+    settings: dict
+    stats: dict
+    values: dict = field(default_factory=dict)
     brightness: int = 70
     created: float = field(default_factory=time.time)
 
     def describe(self):
-        hints = {key: self.spec.get(key) for key in ("gpu", "gpu_name", "ram_total_gb", "host")}
-        return {"layout": self.key, "fields": {str(k): v for k, v in sorted(self.values.items())},
-                "brightness": self.brightness, "hints": hints}
+        return {"layout": self.key, "theme": self.spec.get("theme", "dashboard"),
+                "fields": {str(k): v for k, v in sorted(self.values.items())}, "brightness": self.brightness}
 
 
 def find_hidraw(usb_path, sysfs=SYSFS_USB):
@@ -95,6 +98,7 @@ class SmartMonitorHid(TelemetryDriver):
         self.state_path = state_path or os.path.join(state_dir(), f"smartmonitor-{safe}.json")
         self.flashed = self._load_state()
         self.on_progress = None        # set by the runtime: called per block, returns True to abort
+        self.picture = None            # layout.Compiled being shown
         self.last_frame = None
         self.uploads = 0
 
@@ -129,17 +133,38 @@ class SmartMonitorHid(TelemetryDriver):
 
     def build_frame(self, settings, stats, now=None):
         theme_spec = layout.spec(settings, stats)
-        return Frame(layout.key(theme_spec), theme_spec, layout.values(theme_spec, stats, now),
-                     int(settings.get("brightness", 70)))
+        frame = Frame(layout.key(theme_spec), theme_spec, dict(settings), dict(stats),
+                      brightness=int(settings.get("brightness", 70)))
+        picture = self.picture
+        if picture is not None and picture.source_key == frame.key:
+            frame.values = layout.values(picture, stats, now)
+        return frame
 
     def frame_interval(self, _settings):
         return 1.0
 
+    def _adapt(self, frame):
+        """The compiled picture for a frame (a theme capture can take a few seconds)."""
+        picture = self.picture
+        if picture is not None and picture.source_key == frame.key:
+            return picture
+
+        def progress():
+            callback = self.on_progress
+            return bool(callback is not None and callback("adapting the theme"))
+        picture = layout.compiled(frame.spec, frame.settings, frame.stats, progress)
+        picture.source_key = frame.key
+        self.picture = picture
+        return picture
+
     def present(self, frame):
         start = time.monotonic()
         sent = 0
-        if frame.key != self.flashed:
-            sent += self.flash(frame.spec)
+        picture = self._adapt(frame)
+        if picture.key != self.flashed:
+            sent += self.flash(picture)
+        if not frame.values:
+            frame.values = layout.values(picture, frame.stats)
         self.brightness = frame.brightness
         sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
         for packet in protocol.sensor_reports(frame.values):
@@ -219,53 +244,94 @@ class SmartMonitorHid(TelemetryDriver):
                 return sum(len(p) for p in reports)
         raise DisplayError(PROTOCOL, f"{what}: refused {BLOCK_RETRIES} times")
 
-    def _enter_ymodem(self):
-        self.hid.drain()
-        self.hid.write(protocol.report(protocol.RESET))
-        time.sleep(0.2)
+    def _ask_ymodem(self, timeout):
+        """``True`` when the panel answers "ymodem" with ``06 43``; ``False`` on NAK or silence."""
         try:
+            self.hid.drain()
             self.hid.write(protocol.report(protocol.YMODEM))
-            if self._expect(protocol.ACK_MORE, "ymodem", timeout=3.0):
-                return
+            return self._expect(protocol.ACK_MORE, "ymodem", timeout=timeout)
         except DisplayError as error:
             if error.kind not in (DISCONNECTED, NOT_FOUND, TIMEOUT):
                 raise
-        # Some units restart (and re-enumerate) on "reset": follow them, then ask again.
-        self._reopen()
-        self.hid.drain()
-        self.hid.write(protocol.report(protocol.YMODEM))
-        if not self._expect(protocol.ACK_MORE, "ymodem"):
-            raise DisplayError(PROTOCOL, "the panel refused the upload mode")
+            return False
 
-    def flash(self, theme_spec):
-        """Compile and upload the dashboard. Returns the bytes sent."""
-        key, data = layout.compiled(theme_spec)
+    def _close_open_transfer(self):
+        """Finish a YMODEM session left open (upload cut by a crash, a replug or a
+        stop): EOT, then the empty block 0. Measured: the panel then leaves the
+        transfer and restarts. While a transfer is open it reads "reset" (byte 0
+        is 0x01 = SOH) and "ymodem" as broken blocks and NAKs them."""
+        try:
+            self.hid.write(protocol.report(bytes([protocol.EOT])))
+            self.hid.read(1.5)
+            for packet in protocol.metadata_block("", 0):
+                self.hid.write(packet)
+            self.hid.read(1.5)
+        except DisplayError as error:
+            if error.kind not in (DISCONNECTED, NOT_FOUND, TIMEOUT):
+                raise
+
+    def _enter_ymodem(self):
+        self.hid.drain()
+        try:
+            self.hid.write(protocol.report(protocol.RESET))
+            time.sleep(0.2)
+        except DisplayError as error:
+            if error.kind not in (DISCONNECTED, NOT_FOUND):
+                raise
+        if self._ask_ymodem(3.0):
+            return
+        # Either the unit restarted on "reset" (follow it) or a previous upload left a
+        # transfer open (close it; the panel restarts). Then ask again.
+        if self.hid.fd is not None and os.path.exists(self.hid.path or ""):
+            self._close_open_transfer()
+        self._await_restart(vanish_within=3.0)
+        if self._ask_ymodem(ACK_TIMEOUT):
+            return
+        raise DisplayError(PROTOCOL, "the panel refused the upload mode")
+
+    def flash(self, picture):
+        """Upload a :class:`layout.Compiled` picture. Returns the bytes sent."""
+        data = picture.data
         if not protocol.THEME_MIN <= len(data) <= protocol.THEME_MAX:
             raise DisplayError(PROTOCOL, f"compiled theme of {len(data)} bytes is out of range")
-        log.info("flashing the SmartMonitor dashboard %s (%d bytes, %d blocks) on usb %s", key, len(data),
-                 (len(data) + protocol.BLOCK - 1) // protocol.BLOCK, self.usb_path)
+        log.info("flashing SmartMonitor picture %s (%s, %d bytes, %d blocks) on usb %s", picture.key,
+                 picture.spec.get("theme", "dashboard"), len(data), (len(data) + protocol.BLOCK - 1) // protocol.BLOCK,
+                 self.usb_path)
         started = time.monotonic()
-        last_error = None
+        sent = self.upload(data)
+        self.uploads += 1
+        self._save_state(picture.key, len(data))
+        log.info("SmartMonitor picture flashed in %.1f s", time.monotonic() - started)
+        self._await_restart()
+        if self.info is not None:
+            self.info.details["flashed_layout"] = picture.key
+            self.info.details["hidraw"] = self.hid.path
+        return sent
+
+    def upload(self, data):
+        """Upload ``img.dat`` bytes, recovering from a transfer left open or refused."""
         for attempt in range(1, UPLOAD_ATTEMPTS + 1):
             try:
-                sent = self._upload(data)
-                break
+                return self._upload(data)
             except DisplayError as error:
-                last_error = error
                 if "interrupted" in str(error) or attempt == UPLOAD_ATTEMPTS:
                     raise
                 log.warning("SmartMonitor upload attempt %d failed: %s; retrying", attempt, error)
+                self._recover_transfer()
+        raise DisplayError(PROTOCOL, "upload failed")
+
+    def _recover_transfer(self):
+        """After a refused or broken upload: end whatever transfer the panel still
+        has open and wait for its restart (a panel with nothing open only gets
+        reopened)."""
+        try:
+            if self.hid.fd is None:
                 self._reopen()
-        else:
-            raise last_error
-        self.uploads += 1
-        self._save_state(key, len(data))
-        log.info("SmartMonitor dashboard flashed in %.1f s", time.monotonic() - started)
-        self._await_restart()
-        if self.info is not None:
-            self.info.details["flashed_layout"] = key
-            self.info.details["hidraw"] = self.hid.path
-        return sent
+            self._close_open_transfer()
+        except DisplayError as error:
+            if error.kind not in (DISCONNECTED, NOT_FOUND, TIMEOUT):
+                raise
+        self._await_restart(vanish_within=3.0)
 
     def _upload(self, data):
         self._progress("entering upload mode")

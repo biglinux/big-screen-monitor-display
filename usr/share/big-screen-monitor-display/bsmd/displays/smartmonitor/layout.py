@@ -1,7 +1,13 @@
-"""The dashboard this project flashes to the SmartMonitor HID panel.
+"""What this project flashes to the SmartMonitor HID panel.
 
-The panel draws a compiled theme by itself, so the dashboard is split in
-two:
+Every theme is adapted by :mod:`.capture` (the theme's own drawing, with its
+values turned into live widgets); this module decides *when* that picture
+changes (:func:`spec` / :func:`key`), compiles and caches it (:func:`compiled`)
+and computes the live values (:func:`values`). When a theme cannot be captured
+(no adaptation, or the capture fails) the panel falls back to the built-in
+dashboard below.
+
+The dashboard is split in two:
 
 * :func:`spec` - everything that changes the *picture* (palette, labels,
   hardware present, host name, rotation). Its :func:`key` decides when the
@@ -77,13 +83,14 @@ def _gpu(stats):
     return gpus[index] if 0 <= index < len(gpus) else gpus[0]
 
 
-def spec(settings, stats):
-    """Inputs of the picture (a JSON-able dict)."""
+def dashboard_spec(settings, stats):
+    """Inputs of the built-in dashboard's picture (a JSON-able dict)."""
     total_gb = round((stats.get("ram_total_mb") or 0) / 1024)
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
     gpu = _gpu(stats)
     return {
         "v": LAYOUT_VERSION,
+        "kind": "dashboard",
         "palette": _palette(settings),
         "fahrenheit": settings.get("std_temp_unit", "c") == "f",
         "gpu": bool(gpu),
@@ -264,8 +271,8 @@ def build(theme_spec):
 _CACHE = {}
 
 
-def compiled(theme_spec):
-    """``(key, img.dat bytes)``, cached."""
+def dashboard_compiled(theme_spec):
+    """``(key, img.dat bytes)`` of the built-in dashboard, cached."""
     theme_key = key(theme_spec)
     if theme_key not in _CACHE:
         _CACHE.clear()
@@ -289,8 +296,8 @@ def _rate(mbps):
     return min(9999, round(kbs / 1000)), 1
 
 
-def values(theme_spec, stats, now=None):
-    """``{channel: int}`` for the live figures."""
+def dashboard_values(theme_spec, stats, now=None):
+    """``{channel: int}`` for the built-in dashboard's live figures."""
     now = now or datetime.datetime.now()
     fahrenheit = theme_spec["fahrenheit"]
     result = {
@@ -330,16 +337,16 @@ DEMO = {CPU: 23, CPU_TEMP: 52, CPU_MHZ: 3600, GPU: 41, GPU_TEMP: 58, GPU_MEM: 35
         DISK: 61, DOWN: 1240, DOWN_UNIT: 0, UP: 86, UP_UNIT: 0}
 
 
-def preview(settings, metrics=None, now=None):
-    """What the panel shows, for the configuration window: the service's last frame
+def dashboard_preview(settings, metrics=None, now=None):
+    """The built-in dashboard for the configuration window: the service's last frame
     (``metrics`` = status ``metrics``) or sample values, decoded from the compiled theme."""
     metrics = metrics or {}
     hints = metrics.get("hints") or {}
     stats = {"hostname": hints.get("host") or os.uname().nodename,
              "ram_total_mb": (hints.get("ram_total_gb") or 16) * 1024,
              "gpus": [{"path": "gpu", "name": hints.get("gpu_name", "GPU")}] if hints.get("gpu", True) else []}
-    theme_spec = spec(settings, stats)
-    _key, data = compiled(theme_spec)
+    theme_spec = dashboard_spec(settings, stats)
+    _key, data = dashboard_compiled(theme_spec)
     fields = {int(k): v for k, v in (metrics.get("fields") or {}).items() if str(k).isdigit()}
     if not fields:
         now = now or datetime.datetime.now()
@@ -349,5 +356,216 @@ def preview(settings, metrics=None, now=None):
             fields[channels[0]], fields[channels[1]] = divmod(number, 10)
     image = imgdat.render(data, fields)
     if theme_spec["rotation"] == 180:
+        image = image.rotate(180)
+    return image
+
+
+# ---------------------------------------------------------------- every theme (capture)
+
+CAPTURE_VERSION = 1
+COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
+THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
+              "brother_away": ("ba_", "overlay_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
+# Scenes that follow the time of day are captured again when the period changes,
+# drawn at a representative hour (chosen so no clock component collides with the
+# date used by the capture, see fields.T0).
+BROTHER_AWAY_PERIODS = ((4.5, 7), (11.0, 13), (17.5, 18), (20.5, 23))     # (from hour, captured at)
+PLANET_HOURS = (1, 4, 7, 10, 13, 16, 19, 22)
+CAPTURE_TIMEOUT = 150.0
+CACHE_KEEP = 6
+
+
+def _epoch(theme_id, settings, now):
+    hour = now.hour + now.minute / 60
+    if theme_id == "brother_away" and settings.get("ba_day_night", True):
+        chosen = BROTHER_AWAY_PERIODS[-1][1]
+        for start, captured in BROTHER_AWAY_PERIODS:
+            if hour >= start:
+                chosen = captured
+        return chosen
+    if theme_id == "planet":
+        return PLANET_HOURS[min(len(PLANET_HOURS) - 1, int(hour // 3))]
+    return None
+
+
+def _hardware(stats):
+    """What themes print as fixed text (names, totals): a change means a new picture."""
+    gpus = [(g.get("name", ""), round((g.get("mem_total_mb") or 0) / 256)) for g in stats.get("gpus") or []]
+    return {"host": stats.get("hostname", ""), "kernel": stats.get("kernel", ""), "cpu": stats.get("cpu_model", ""),
+            "ram": round((stats.get("ram_total_mb") or 0) / 512), "swap": round((stats.get("swap_total_mb") or 0) / 512),
+            "disk": round(stats.get("disk_total_gb") or 0), "gpus": gpus, "cores": list(stats.get("cpu_cores") or ())}
+
+
+def spec(settings, stats, now=None):
+    """Inputs of the picture for a display (a JSON-able dict): its key changes only
+    when what the panel must show changes (theme, its options, hardware names,
+    time-of-day scene), never with the live values."""
+    from . import capture
+    theme_id = settings.get("theme", "standard")
+    if theme_id not in capture.THEME_OPTIONS:
+        return dashboard_spec(settings, stats)
+    prefixes = THEME_KEYS.get(theme_id, ())
+    subset = {k: v for k, v in settings.items()
+              if k in COMMON_KEYS or (prefixes and k.startswith(prefixes))}
+    now = now or datetime.datetime.now()
+    rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
+    return {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
+            "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+
+
+class Compiled:
+    """A picture ready to flash: ``key``, ``data`` (img.dat), ``bindings`` (None for
+    the built-in dashboard) and the spec it came from."""
+
+    def __init__(self, key_, data, bindings, theme_spec, report=None):
+        self.key, self.data, self.bindings, self.spec = key_, data, bindings, theme_spec
+        self.report = report or {}
+        self.source_key = None        # key of the spec it was made for (a fallback has another key)
+
+    @property
+    def channels(self):
+        return sorted(int(c) for c in self.bindings) if self.bindings is not None else None
+
+
+def cache_dir():
+    from .driver import state_dir
+    return os.path.join(state_dir(), "smartmonitor-cache")
+
+
+def _from_cache(key_, theme_spec):
+    base = os.path.join(cache_dir(), key_)
+    try:
+        with open(base + ".json", encoding="utf-8") as handle:
+            report = json.load(handle)
+        with open(base + ".dat", "rb") as handle:
+            data = handle.read()
+    except (OSError, ValueError):
+        return None
+    if report.get("bytes") != len(data) or "bindings" not in report:
+        return None
+    return Compiled(key_, data, report["bindings"], theme_spec, report)
+
+
+def _prune_cache():
+    try:
+        entries = sorted((os.path.getmtime(os.path.join(cache_dir(), name)), name)
+                         for name in os.listdir(cache_dir()) if name.endswith(".json"))
+    except OSError:
+        return
+    for _mtime, name in entries[:-CACHE_KEEP]:
+        for suffix in (".json", ".dat"):
+            try:
+                os.unlink(os.path.join(cache_dir(), name[:-5] + suffix))
+            except OSError:
+                pass
+
+
+def _jsonable(value):
+    return json.loads(json.dumps(value, default=lambda o: list(o) if isinstance(o, (tuple, set)) else str(o)))
+
+
+_MEMORY = {}
+_MEMORY_KEEP = 6
+_LOCK = __import__("threading").Lock()       # one capture at a time (window threads, several displays)
+
+
+def _remember(key_, result):
+    _MEMORY.pop(key_, None)
+    _MEMORY[key_] = result
+    while len(_MEMORY) > _MEMORY_KEEP:
+        _MEMORY.pop(next(iter(_MEMORY)))
+
+
+def compiled(theme_spec, settings, stats, progress=None):
+    with _LOCK:
+        return _compiled(theme_spec, settings, stats, progress)
+
+
+def _compiled(theme_spec, settings, stats, progress=None):
+    """The :class:`Compiled` picture for ``theme_spec``: memory cache, disk cache,
+    or a capture run in a worker process (``progress()`` is called while it runs
+    and may return True to stop). Falls back to the built-in dashboard."""
+    import logging
+    import subprocess
+    import sys
+    log = logging.getLogger("bsmd.smartmonitor")
+    key_ = key(theme_spec)
+    if key_ in _MEMORY:
+        return _MEMORY[key_]
+    if theme_spec.get("kind") != "capture":
+        dash_key, data = dashboard_compiled(theme_spec)
+        result = Compiled(dash_key, data, None, theme_spec)
+        _remember(key_, result)
+        return result
+    result = _from_cache(key_, theme_spec)
+    if result is None:
+        os.makedirs(cache_dir(), exist_ok=True)
+        out = os.path.join(cache_dir(), key_)
+        request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
+                   "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out}
+        worker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "worker.py")
+        started = time.monotonic()
+        try:
+            proc = subprocess.Popen([sys.executable, "-I", worker], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE, text=True)
+            proc.stdin.write(json.dumps(request))
+            proc.stdin.close()
+            while proc.poll() is None:
+                if progress is not None and progress():
+                    proc.kill()
+                    raise TimeoutError("capture stopped")
+                if time.monotonic() - started > CAPTURE_TIMEOUT:
+                    proc.kill()
+                    raise TimeoutError("capture took too long")
+                time.sleep(0.2)
+            error = proc.stderr.read()
+            if proc.returncode != 0:
+                raise RuntimeError(error.strip().splitlines()[-1] if error.strip() else f"exit {proc.returncode}")
+        except (OSError, RuntimeError, TimeoutError) as error:
+            log.warning("SmartMonitor: theme %s could not be adapted (%s); showing the built-in dashboard",
+                        theme_spec["theme"], error)
+            dash = dashboard_spec(settings, stats)
+            dash_key, data = dashboard_compiled(dash)
+            result = Compiled(dash_key, data, None, dash, {"fallback": str(error)})
+            _remember(key_, result)
+            return result
+        result = _from_cache(key_, theme_spec)
+        if result is None:
+            dash = dashboard_spec(settings, stats)
+            dash_key, data = dashboard_compiled(dash)
+            return Compiled(dash_key, data, None, dash, {"fallback": "capture wrote nothing"})
+        log.info("SmartMonitor: theme %s adapted in %.1f s (%d values, %d bars, %d frames, %d bytes)",
+                 theme_spec["theme"], time.monotonic() - started, result.report.get("numbers", 0),
+                 result.report.get("bars", 0), result.report.get("frames", 1), len(result.data))
+        _prune_cache()
+    _remember(key_, result)
+    return result
+
+
+def values(picture, stats, now=None):
+    """``{channel: int}`` for a :class:`Compiled` picture."""
+    if picture.bindings is None:
+        return dashboard_values(picture.spec, stats, now)
+    from . import fields
+    stamp = now.timestamp() if isinstance(now, datetime.datetime) else now
+    return {int(channel): fields.binding_value(binding, stats, stamp) for channel, binding in picture.bindings.items()}
+
+
+def preview(settings, metrics=None, stats=None, now=None):
+    """What the panel shows, for the configuration window, decoded from the same
+    compiled picture the service flashes (sample values without the service)."""
+    from ... import telemetry
+    stats = stats or telemetry.snapshot()
+    theme_spec = spec(settings, stats, now)
+    picture = compiled(theme_spec, settings, stats)
+    metrics = metrics or {}
+    fields_ = {int(k): v for k, v in (metrics.get("fields") or {}).items() if str(k).isdigit()} \
+        if metrics.get("layout") == key(theme_spec) else {}
+    if not fields_:
+        fields_ = values(picture, stats, now) if picture.bindings is not None else None
+    if fields_ is None:
+        return dashboard_preview(settings, metrics, now)
+    image = imgdat.render(picture.data, fields_)
+    if theme_spec.get("rotation") == 180:
         image = image.rotate(180)
     return image
