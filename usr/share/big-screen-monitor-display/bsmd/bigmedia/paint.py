@@ -199,7 +199,7 @@ def chrome_panel(img, box, radius, stops, outline=None, gloss=0.35, seed=3, brus
     vgrad(tile, (0, 0, w, h), None, None, stops)
     if brushed_strength:
         brushed(tile, (0, 0, w, h), brushed_strength, seed)
-    if gloss:
+    if gloss and w > 5 and h > 3:      # a sliver (progress at 0:01) has no room for the gloss
         highlight = Image.new("L", (w, h), 0)
         ImageDraw.Draw(highlight).rounded_rectangle((2, 1, w - 3, h // 2), radius=max(1, radius - 1),
                                                     fill=int(255 * gloss))
