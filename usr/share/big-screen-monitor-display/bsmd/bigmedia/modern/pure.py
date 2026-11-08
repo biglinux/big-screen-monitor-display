@@ -34,7 +34,7 @@ class BigPure(B.ModernSkin):
     art_frac = 0.36
     rows = (Row("meta", 3.4, flex=1.0), Row("progress_times", 2.0), Row("controls", 2.8),
             Row("volume", 1.3, drop=2))
-    meta = (("artist", 1.1, False), ("title", 1.85, False))
+    meta = (("artist", 1.1, False), ("title", 1.85, False), ("album", 0.9, False))
     tele_style = "text"
     light = True
     base_pal = {

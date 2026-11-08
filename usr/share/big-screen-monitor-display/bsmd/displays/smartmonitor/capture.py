@@ -1153,13 +1153,15 @@ class Capture:
                 w, h = x1 - x0, y1 - y0
                 if w < 3 or h < 3 or w * h > 20000:
                     continue
-                # A widget has one colour: one widget per state and per colour of the icon
-                # (light / dark, e.g. a blue button with white pause bars), each blank in
-                # the other states.
+                # A widget has one colour: one widget per colour of the icon (light / dark,
+                # e.g. a blue button with white pause bars) whose glyph cell k is that
+                # colour's part of the icon in state k.
                 blank = bytes(w * h)
+                per_state = []
                 for state, (shot, lit) in enumerate(zip(shots, lits)):
                     region = lit[y0:y1, x0:x1]
                     if not region.any():
+                        per_state.append([])
                         continue
                     pixels = shot[y0:y1, x0:x1]
                     luma = pixels @ np.array([0.299, 0.587, 0.114])
@@ -1172,13 +1174,17 @@ class Capture:
                             if a.sum() > 0.12 * region.sum() and b.sum() > 0.12 * region.sum():
                                 groups = [a, b]
                                 break
-                    for group in groups:
-                        colour = tuple(int(v) for v in np.median(pixels[group].reshape(-1, 3), axis=0))
-                        cells = b"".join((group.astype(np.uint8) * 255).tobytes() if k == state else blank
-                                         for k in range(10))
-                        atlas = imgdat.Atlas((w,) * 10 + (1, 1), h, cells + bytes(2 * h))
-                        number = imgdat.Number(0, (x0, y0, w, h), colour, atlas, 0)
-                        found.append((6.5, number, {"cand": cand, "scale": 1.0, "part": "state"}, -1))
+                    per_state.append([(group, pixels[group].reshape(-1, 3)) for group in groups])
+                for index in range(max((len(g) for g in per_state), default=0)):
+                    used = [(k, g[index]) for k, g in enumerate(per_state) if len(g) > index]
+                    colour = tuple(int(v) for v in np.median(np.concatenate([px for _k, (_g, px) in used]),
+                                                             axis=0))
+                    masks = dict((k, group) for k, (group, _px) in used)
+                    cells = b"".join((masks[k].astype(np.uint8) * 255).tobytes() if k in masks else blank
+                                     for k in range(10))
+                    atlas = imgdat.Atlas((w,) * 10 + (1, 1), h, cells + bytes(2 * h))
+                    number = imgdat.Number(0, (x0, y0, w, h), colour, atlas, 0)
+                    found.append((6.5, number, {"cand": cand, "scale": 1.0, "part": "state"}, -1))
         return found
 
     LEVELS = tuple(round(k * 100 / 9) for k in range(10))      # 0, 11, 22 ... 100
@@ -1424,6 +1430,7 @@ def _player_settings(settings):
         adjusted["bmp_tele_mode"] = "always"
     if adjusted.get("bmp_idle_mode") == "theme":
         adjusted["bmp_idle_mode"] = "screen"
+    adjusted["bmp_vis_blocks"] = True
     return adjusted
 
 

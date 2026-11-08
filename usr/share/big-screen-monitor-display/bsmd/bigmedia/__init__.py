@@ -61,6 +61,8 @@ class Frame:
         self.tele_icons = bool(settings.get("bmp_tele_icons", True))
         self.tele_sep = settings.get("bmp_tele_separator", "bar")
         self.vis_style = settings.get("bmp_vis_style", "bars")
+        # Panels that draw a flashed picture (SmartMonitor): one block per band, one colour.
+        self.vis_blocks = bool(settings.get("bmp_vis_blocks", False))
         self.compact_buttons = False
         self.status = "Stopped"
         self.title = self.artist = self.album = self.description = self.source = ""
@@ -887,12 +889,6 @@ class BigMediaPlayerTheme:
                 value += f" {temp:.0f}°C"
             items.append((icon("cpu"), "CPU", value, cpu >= settings.get("bmp_tele_alert_cpu", 90)
                           or (temp is not None and temp >= limit_t)))
-        if settings.get("bmp_tele_ram", True) and stats.get("ram_used_mb") is not None:
-            items.append((icon("ram"), "RAM", f"{stats['ram_used_mb'] / 1024:.1f} GB", False))
-        if settings.get("bmp_tele_swap", True) and stats.get("swap_total_mb"):
-            items.append((icon("swap"), "SWAP", f"{stats.get('swap_percent', 0):.0f}%", False))
-        if settings.get("bmp_tele_disk", True) and stats.get("disk_percent") is not None:
-            items.append((icon("disk"), "DISK", f"{stats['disk_percent']:.0f}%", False))
         gpus = [g for g in stats.get("gpus") or [] if g.get("path")]
         if settings.get("bmp_tele_gpu", True) and gpus:
             gpu = gpus[stats.get("active_gpu_idx", 0) % len(gpus)]
@@ -901,6 +897,12 @@ class BigMediaPlayerTheme:
             if settings.get("bmp_tele_gpu_temp", True) and temp is not None:
                 value += f" {temp:.0f}°C"
             items.append((icon("gpu"), "GPU", value, temp is not None and temp >= limit_t))
+        if settings.get("bmp_tele_ram", True) and stats.get("ram_used_mb") is not None:
+            items.append((icon("ram"), "RAM", f"{stats['ram_used_mb'] / 1024:.1f} GB", False))
+        if settings.get("bmp_tele_swap", True) and stats.get("swap_total_mb"):
+            items.append((icon("swap"), "SWAP", f"{stats.get('swap_percent', 0):.0f}%", False))
+        if settings.get("bmp_tele_disk", True) and stats.get("disk_percent") is not None:
+            items.append((icon("disk"), "DISK", f"{stats['disk_percent']:.0f}%", False))
         return items
 
     def _media_items(self, d, player):

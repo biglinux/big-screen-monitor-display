@@ -27,7 +27,7 @@ class BigStage(B.ModernSkin):
     remaining = True
     rows = (Row("header", 1.5, drop=1), Row("meta", 2.9, flex=0.6), Row("progress_times", 2.0),
             Row("controls", 3.5, flex=0.4), Row("chip_volume", 2.4, drop=2))
-    meta = (("artist", 0.95, False), ("title", 1.5, True))
+    meta = (("artist", 0.95, False), ("title", 1.5, True), ("album", 0.85, False))
     tele_style = "overlay"
     tele_radius = 0.5
     base_pal = {

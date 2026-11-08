@@ -341,3 +341,21 @@ def test_render_cost_is_reasonable():
     for _ in range(5):
         themes.render_for_panel(theme, 480, 320, values(), ctx)
     assert (time.perf_counter() - start) / 5 < 0.25        # generous: CI machines are slow
+
+
+def test_tele_slots_do_not_depend_on_the_values():
+    from bsmd.bigmedia import paint as P
+    def layout(cpu):
+        items = [(None, "", "14:29", False), (None, "CPU", f"{cpu}% 50°C", False), (None, "RAM", "12.5 GB", False)]
+        return [sum(w for _t, w, _a in parts) for _item, _iw, parts, _sp in P.tele_cells(items, 12, True, 8, 999)]
+    assert layout(1) == layout(45) == layout(100)
+
+
+def test_tele_drops_swap_and_disk_before_the_gpu():
+    from bsmd.bigmedia import paint as P
+    items = [(None, "", "14:29", False), (None, "CPU", "5% 50°C", False), (None, "GPU", "9% 55°C", False),
+             (None, "RAM", "12.5 GB", False), (None, "SWAP", "0%", False), (None, "DISK", "59%", False)]
+    kept = [item[1] for item, _iw, _parts, _sp in P.tele_cells(items, 12, True, 8, 330)]
+    assert "GPU" in kept and "CPU" in kept
+    assert kept.index("GPU") == kept.index("CPU") + 1
+    assert "SWAP" not in kept or "DISK" in kept

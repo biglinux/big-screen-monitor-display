@@ -25,7 +25,7 @@ class BigWave(B.ModernSkin):
             Row("volume", 1.25, drop=2))
     portrait_rows = (Row("meta", 2.9), Row("vis", 2.6, flex=1.0, drop=3), Row("progress_times", 2.1),
                      Row("controls", 3.1), Row("volume", 1.25, drop=2))
-    meta = (("title", 1.4, True), ("artist", 1.0, False))
+    meta = (("title", 1.4, True), ("artist", 1.0, False), ("album", 0.9, False))
     tele_style = "hud"
     tele_radius = 0.15
     base_pal = {

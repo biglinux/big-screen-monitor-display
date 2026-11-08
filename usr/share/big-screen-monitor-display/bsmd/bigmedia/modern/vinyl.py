@@ -25,7 +25,7 @@ class BigVinyl(B.ModernSkin):
     footer = (Row("progress_inline", 1.7),)
     portrait_rows = (Row("meta", 2.9, flex=0.5), Row("controls", 2.5), Row("volume", 1.7, drop=2),
                      Row("progress_inline", 1.7))
-    meta = (("title", 1.45, True), ("artist", 1.05, True))
+    meta = (("title", 1.45, True), ("artist", 1.05, True), ("album", 0.9, False))
     base_pal = {
         "bg": (62, 62, 64), "bg2": (42, 42, 44), "outer": (22, 22, 24), "surface": (72, 72, 74),
         "text": (244, 244, 244), "text2": (172, 172, 174), "text3": (142, 142, 144),

@@ -23,7 +23,7 @@ class BigLounge(B.ModernSkin):
     remaining = True
     rows = (Row("meta", 2.9, flex=0.6), Row("progress_times", 2.1), Row("controls", 3.2, flex=0.4),
             Row("volume", 1.6, drop=2), Row("chip", 2.0, drop=1))
-    meta = (("title", 1.22, True), ("artist", 1.18, False))
+    meta = (("title", 1.22, True), ("artist", 1.18, False), ("album", 0.95, False))
     tele_style = "text"
     prev_glyph = "rewind"
     next_glyph = "forward"

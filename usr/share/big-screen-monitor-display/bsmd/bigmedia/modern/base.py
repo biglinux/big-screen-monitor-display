@@ -367,7 +367,7 @@ class ModernSkin(Skin):
     rows = ()                     # landscape column rows
     portrait_rows = None
     footer = ()                   # full-width rows under everything (landscape)
-    meta = (("title", 1.4, True), ("artist", 1.05, False))
+    meta = (("title", 1.4, True), ("artist", 1.05, False), ("album", 0.9, False))
     meta_align = "l"
     caption = False               # captioned art: meta under the art
     light = False
@@ -1046,6 +1046,15 @@ class ModernSkin(Skin):
         mid = y0 + h * 0.6
         played = d.fraction if d.fraction is not None else 0.0
         draw = ImageDraw.Draw(img)
+        if d.vis_blocks:
+            # One block of bars per band, flat colour, no reflection: each band is a
+            # separate region a panel gauge can redraw on its own.
+            for i in range(n):
+                k = min(len(bands) - 1, int(i * len(bands) / n))
+                x = x0 + i * step + (w - n * step + step - bar_w) / 2
+                up = max(1, bands[k] * h * 0.9)
+                draw.rectangle((x, y1 - up, x + bar_w - 1, y1 - 1), fill=pal["accent"])
+            return
         for i in range(n):
             t = i / max(1, n - 1)
             v = _interp(bands, t) * d.shape_at(t)
@@ -1077,26 +1086,22 @@ class ModernSkin(Skin):
         fg, accent = pal["tele_fg"], pal["tele_accent"]
         x = x0 + h * 0.45 + slide
         draw = ImageDraw.Draw(img)
-        for index, (ico, label, value, alert) in enumerate(items):
-            text = f"{label} {value}" if label else value
-            needed = P.text_width(text, size, mono=mono) + (h * 0.8 if ico is not None and d.tele_icons else 0)
-            if x + needed + (h * 0.45 if index else 0) > x1 - h * 0.3:
-                break
+        gap = h * 0.45 if d.tele_sep in ("bar", "dot") else h * 0.35
+        icon_w = h * 0.58 + 2 if d.tele_icons else 0
+        cells = P.tele_cells(items, size, mono, gap, x1 - h * 0.3 - x, icon_w)
+        for index, ((ico, _label, _value, alert), iw, parts, space) in enumerate(cells):
             if index:
                 if d.tele_sep == "bar":
                     draw.line((x + h * 0.2, y0 + h * 0.28, x + h * 0.2, y1 - h * 0.28), fill=P.mix(fg, pal["bg"], 0.55))
-                    x += h * 0.45
                 elif d.tele_sep == "dot":
                     fill_circle(img, x + h * 0.22, (y0 + y1) / 2, max(1.2, h * 0.06), P.mix(fg, pal["bg"], 0.4))
-                    x += h * 0.45
-                else:
-                    x += h * 0.35
-            if ico is not None and d.tele_icons:
+                x += gap
+            if iw:
                 tile = ico(int(h * 0.58), (240, 90, 70) if alert else accent)
                 if tile is not None:
                     img.paste(tile, (int(x), int(y0 + (h - tile.height) / 2)), tile)
-                    x += tile.width + 2
-            x += P.put_text(img, (x, (y0 + y1) / 2), text, size, (240, 90, 70) if alert else fg, mono=mono)
+                x += iw
+            x = P.tele_draw_cell(img, x, (y0 + y1) / 2, parts, space, size, (240, 90, 70) if alert else fg, mono)
 
     def tele_decor(self, img, box, d):
         pass
