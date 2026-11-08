@@ -654,8 +654,10 @@ class Capture:
             self.scene.choose_seed(self.recorder)
             self.base_image, self.base_calls = self.scene.render(self.recorder)
             media = self.scene.base.get("media") or {}
+            no_length = media.get("present") and not media.get("length_us")
             sources = {name: (spec[1][1](self.scene.base), None) for name, spec in fields.FIELDS.items()
-                       if media.get("present") or not name.startswith("media_")}
+                       if (media.get("present") or not name.startswith("media_"))
+                       and not (no_length and name == "media_length")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
             sources["noise"] = (fields.noise(self.scene.base), None)
             if media.get("present"):
@@ -863,7 +865,8 @@ class Capture:
                     padded = len(integer_a) > len(str(int(cand_a * scale))) or \
                         len(token_b.split(".")[0].split(",")[0]) > len(str(int(cand_b * scale)))
                     # Minutes and seconds in two digits are always zero-padded ("09:05").
-                    padded = padded or (name in ("minute", "second", "uptime_minutes") and len(integer_a) == 2)
+                    padded = padded or (name in ("minute", "second", "uptime_minutes", "media_sec", "media_left_sec",
+                                                 "media_len_sec") and len(integer_a) == 2)
                     return {"cand": name, "scale": scale, "decimals": decimals, "padded": padded}
         return None
 
@@ -1076,6 +1079,8 @@ class Capture:
         for name, (setter, cand) in fields.PERCENT.items():
             if (name.startswith("media_") and not media_present) or (name.startswith("band") and not spectrum):
                 continue
+            if name == "media_position" and not (self.scene.base.get("media") or {}).get("length_us"):
+                continue                # a stream without a length has no progress bar
             shots = {pct: np.asarray(self._render_planned(plan, changes=setter(self.scene.base, pct), settings=calm),
                                      dtype=np.int16) for pct in (0, 25, 50, 75, 98, 100)}
             changed = np.abs(shots[100] - shots[0]).sum(axis=2) > 24

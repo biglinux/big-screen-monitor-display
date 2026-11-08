@@ -318,7 +318,11 @@ def base_stats(stats):
         # The real track as the player shows it, frozen (rate 0) for the capture.
         track = dict(MEDIA_SAMPLE)
         track.update({k: v for k, v in media.items() if k != "art_image"})
-        track.update(rate=0.0, position_mono=None, position_us=83_000_000, length_us=236_000_000,
+        # A player that reports no length (some browsers, streams) keeps none: the
+        # theme shows what it shows then, instead of a total of 0:00.
+        known = bool(media.get("length_us"))
+        track.update(rate=0.0, position_mono=None, position_us=83_000_000,
+                     length_us=236_000_000 if known else None,
                      status="Playing", volume=35, muted=False, bands=[0.3] * SPECTRUM)
         base["media"] = track
     else:

@@ -29,7 +29,8 @@ log = logging.getLogger("bsmd.smartmonitor")
 
 SYSFS_USB = "/sys/bus/usb/devices"
 REENUMERATE_WAIT = 15.0       # the panel restarts after "reset" and after a flash
-MEDIA_REFLASH_MIN = 120.0     # flashes caused by songs / players starting and stopping
+MEDIA_REFLASH_MIN = 120.0     # flashes caused by players starting and stopping
+MEDIA_TRACK_MIN = 25.0        # with "cover and title of every song": skipping songs updates quickly
 RESTART_VANISH = 5.0          # measured: the panel drops off USB ~1 s after the last block
 ACK_TIMEOUT = 5.0
 BLOCK_RETRIES = 5
@@ -150,9 +151,11 @@ class SmartMonitorHid(TelemetryDriver):
         picture = self.picture
         if picture is not None and picture.source_key == frame.key:
             return picture
+        following = bool(((frame.spec.get("media") or {}).get("track")))
+        wait = MEDIA_TRACK_MIN if following else MEDIA_REFLASH_MIN
         if picture is not None and self._media_only_change(picture, frame) and \
-                time.monotonic() - self.last_flash < MEDIA_REFLASH_MIN:
-            return picture        # a song or player change: not more than one flash every 2 minutes
+                time.monotonic() - self.last_flash < wait:
+            return picture        # songs / players changing: not more than one flash per interval
 
         def progress():
             callback = self.on_progress

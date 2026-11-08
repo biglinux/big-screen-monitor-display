@@ -362,7 +362,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 5
+CAPTURE_VERSION = 6
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
@@ -439,7 +439,7 @@ def spec(settings, stats, now=None):
             result["scene"] = scene
     if theme_id == "big_media_player":
         media = stats.get("media") if isinstance(stats.get("media"), dict) else {}
-        result["media"] = {"present": bool(media.get("present"))}
+        result["media"] = {"present": bool(media.get("present")), "length": bool(media.get("length_us"))}
         if media.get("present") and settings.get("sm_bmp_track_refresh"):
             # Cover and title flashed with the picture: a new song is a new picture.
             result["media"]["track"] = [media.get("title", ""), media.get("artist", ""), media.get("album", ""),
