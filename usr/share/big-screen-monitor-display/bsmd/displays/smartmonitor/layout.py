@@ -362,10 +362,10 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 4
+CAPTURE_VERSION = 5
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
-              "brother_away": ("ba_", "overlay_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
+              "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
 # Scenes that follow the time of day are captured again when the period changes,
 # drawn at a representative hour (chosen so no clock component collides with the
 # date used by the capture, see fields.T0).
@@ -386,6 +386,28 @@ def _epoch(theme_id, settings, now):
     if theme_id == "planet":
         return PLANET_HOURS[min(len(PLANET_HOURS) - 1, int(hour // 3))]
     return None
+
+
+# Brother Away on the panel: its stories told in scenes (beginning, middle, end of
+# each story), one after another; daytime and night-time stories follow the clock.
+BA_DAY_STORIES = ("shark", "mermaid", "message_bottle", "gull_lunch", "coconut_tree", "crab_glasses",
+                  "philosopher", "fishing", "ship_asleep", "treasure", "palm_talk", "build_raft", "dance_break")
+BA_NIGHT_STORIES = ("stars_night", "ufo", "night_fire", "philosopher", "message_bottle", "nap")
+BA_PARTS = 3
+
+
+def brother_away_scene(settings, now):
+    """{"story", "part"} on the panel now, or None (scenes off)."""
+    try:
+        minutes = int(settings.get("sm_ba_scene_minutes", "30"))
+    except (TypeError, ValueError):
+        minutes = 30
+    if minutes <= 0:
+        return None
+    night = now.hour >= 19 or now.hour < 6
+    stories = BA_NIGHT_STORIES if night else BA_DAY_STORIES
+    slot = int(now.timestamp() // (minutes * 60))
+    return {"story": stories[(slot // BA_PARTS) % len(stories)], "part": slot % BA_PARTS}
 
 
 def _hardware(stats):
@@ -411,6 +433,10 @@ def spec(settings, stats, now=None):
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
     result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
               "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+    if theme_id == "brother_away":
+        scene = brother_away_scene(settings, now)
+        if scene is not None:
+            result["scene"] = scene
     if theme_id == "big_media_player":
         media = stats.get("media") if isinstance(stats.get("media"), dict) else {}
         result["media"] = {"present": bool(media.get("present"))}
@@ -515,7 +541,8 @@ def _compiled(theme_spec, settings, stats, progress=None):
         art = media.pop("art_image", None)
         stats["media"] = media
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
-                   "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out}
+                   "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out,
+                   "scene": theme_spec.get("scene")}
         if art is not None and settings.get("sm_bmp_track_refresh"):
             import base64
             import io

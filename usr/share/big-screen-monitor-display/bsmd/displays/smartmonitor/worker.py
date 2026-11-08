@@ -34,7 +34,8 @@ def main():
 
         from PIL import Image
         art = Image.open(io.BytesIO(base64.b64decode(request["art_png"]))).convert("RGB")
-    theme, bindings, dropped = capture.capture(request["theme"], request["settings"], request["stats"], art)
+    theme, bindings, dropped = capture.capture(request["theme"], request["settings"], request["stats"], art,
+                                               request.get("scene"))
     theme.rotation = int(request.get("rotation", 0))
     data = imgdat.compile_theme(theme)
     out = request["out"]

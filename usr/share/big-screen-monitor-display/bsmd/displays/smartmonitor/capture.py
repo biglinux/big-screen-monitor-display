@@ -54,10 +54,13 @@ THEME_OPTIONS = {
     "old_computer": {"settings": {}},
     # The scene keeps its art; what moves (the castaway, the palm) becomes looping
     # sprites of 24 frames, 4 per second. Speech is text: no bubbles on the panel.
-    "brother_away": {"settings": {"ba_catchphrases": False, "ba_subtitles": False, "ba_dialogue_frequency": "low"},
+    # The scene keeps its art; what moves (the castaway, the shark, a bubble) becomes
+    # looping sprites of 24 frames, 4 per second. With a story scene (see layout) the
+    # theme is put at that moment of the story, speech bubble included.
+    "brother_away": {"settings": {},
                      "bars": False,         # the castaway reacts to the load: that is art, not a gauge
                      "calm": "_castaway_home",
-                     "sprites": {"frames": 24, "dt": 0.25, "max_area": 20000, "budget": 1_000_000}},
+                     "sprites": {"frames": 24, "dt": 0.25, "max_area": 36000, "budget": 1_300_000}},
     "kojiro": {"settings": {}},
     # Without media (the panel cannot show titles or covers live) the player's own
     # full-screen telemetry mode, in the chosen skin.
@@ -499,6 +502,7 @@ class Scene:
         self.seed = 1234
         self.last_theme = None
         self.art = None               # the current cover (PIL) when the panel follows songs
+        self.story = None             # (story id, seconds) of a Brother Away scene
 
     def _state_copy(self):
         """A private copy of the themes' saved progress (Brother Away's story), fresh for
@@ -539,6 +543,12 @@ class Scene:
         ctx.state_dir = self._state_copy()    # the user's saved progress, read only
         ctx.media = lambda stats=stats: _media_state(stats, self.art)
         theme = self.themes.create(self.theme_id, ctx)
+        if self.story is not None and hasattr(theme, "debug_seek"):
+            # The moment of the story this scene shows, moving on with the frames.
+            story, at = self.story
+            offset = (self.clock.now - fields.T0).total_seconds()
+            # Only the animation frames move the story on (the clock variant is months away).
+            theme.debug_seek(at + (offset if 0 <= offset <= 60 else 0.0), story=story)
         try:
             image = self.themes.render_for_panel(theme, SIZE[0], SIZE[1], dict(settings or self.settings), ctx)
         finally:
@@ -555,7 +565,7 @@ class Scene:
         """A random seed giving a representative moment (Brother Away: the castaway at
         home on the island, not away on the raft)."""
         check = THEME_OPTIONS.get(self.theme_id, {}).get("calm")
-        if not check:
+        if not check or self.story is not None:
             return
         for seed in range(1234, 1274):
             self.seed = seed
@@ -713,6 +723,8 @@ class Capture:
                 continue
             if call.method == "text":
                 action, found = self._text(call, dynamic)
+                if action == "skip" and not found and animated and self.scene.story is not None:
+                    continue              # a story scene: the speech is part of the scene, kept
                 plan[index] = action
                 candidates.extend((*item, index) for item in found)
             elif call.method in RECTS:
@@ -1224,34 +1236,49 @@ class Capture:
         mask = np.zeros(arrays[0].shape[:2], bool)
         for array in arrays[1:]:
             mask |= np.abs(array - arrays[0]).sum(axis=2) > 30
+        # Thin shimmering lines (waves on the sea) are not worth a sprite and would join
+        # everything into one strip: keep only motion at least 9 px tall.
+        solid = mask.copy()
+        for d in range(1, 5):
+            solid[d:] &= mask[:-d]
+            solid[:-d] &= mask[d:]
+        grown = solid.copy()
+        for d in range(1, 5):
+            grown[d:] |= solid[:-d]
+            grown[:-d] |= solid[d:]
+        mask = grown & mask if grown.any() else mask
         boxes = []
         for x0, y0, x1, y1 in _boxes(mask, join=4):
             x0, y0 = max(0, int(x0) - 2), max(0, int(y0) - 2)
             x1, y1 = min(SIZE[0], int(x1) + 2), min(SIZE[1], int(y1) + 2)
             if (x1 - x0) * (y1 - y0) >= 30:
-                boxes.append([x0, y0, x1, y1])
-        merged = True
-        while merged:                           # overlapping regions become one sprite
-            merged = False
-            for a in range(len(boxes)):
-                for b in range(a + 1, len(boxes)):
-                    p, q = boxes[a], boxes[b]
-                    if p[0] <= q[2] and q[0] <= p[2] and p[1] <= q[3] and q[1] <= p[3]:
-                        boxes[a] = [min(p[0], q[0]), min(p[1], q[1]), max(p[2], q[2]), max(p[3], q[3])]
-                        del boxes[b]
-                        merged = True
-                        break
-                if merged:
-                    break
+                boxes.append([x0, y0, x1, y1, int(mask[y0:y1, x0:x1].sum())])
 
-        def overlaps(box):
+        def overlaps(a, b):
+            return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
+
+        def hud(box):
             return any(box[0] < x + w and x < box[2] and box[1] < y + h and y < box[3] for x, y, w, h in avoid)
+        # Most motion first (the castaway, a shark); overlapping regions join only when the
+        # result still fits, otherwise the weaker one stays still (the sky, the HUD too).
+        chosen = []
+        for box in sorted(boxes, key=lambda b: b[4], reverse=True):
+            if hud(box) or (box[2] - box[0]) * (box[3] - box[1]) > options["max_area"]:
+                continue
+            clash = [c for c in chosen if overlaps(c, box)]
+            if clash:
+                union = [min([box[0]] + [c[0] for c in clash]), min([box[1]] + [c[1] for c in clash]),
+                         max([box[2]] + [c[2] for c in clash]), max([box[3]] + [c[3] for c in clash])]
+                if (union[2] - union[0]) * (union[3] - union[1]) > options["max_area"] or hud(union):
+                    continue
+                chosen = [c for c in chosen if c not in clash] + [union + [box[4]]]
+            else:
+                chosen.append(box)
         sprites, spent = [], 0
-        for x0, y0, x1, y1 in sorted(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1])):
-            area = (x1 - x0) * (y1 - y0)
-            cost = area * 2 * count
-            if area > options["max_area"] or overlaps((x0, y0, x1, y1)) or spent + cost > options["budget"]:
-                continue                        # the sky, the HUD: stay as in the first frame
+        for x0, y0, x1, y1, _motion in chosen:
+            cost = (x1 - x0) * (y1 - y0) * 2 * count
+            if spent + cost > options["budget"]:
+                continue
             sprites.append(imgdat.Sprite((x0, y0, x1 - x0, y1 - y0), [s.crop((x0, y0, x1, y1)) for s in shots],
                                          round(dt * 1000)))
             spent += cost
@@ -1476,11 +1503,45 @@ def _word_atlas(path, size, words, width=None):
     return _ATLASES[key]
 
 
-def capture(theme_id, settings, stats, art=None):
+def story_moments(story, settings, parts=3, limit=90.0):
+    """Seconds into a Brother Away story where each line of speech starts (the
+    scenes' bubbles), spread over ``parts``; plain moments when nobody speaks."""
+    from ... import runtime, themes
+    random.seed(1234)
+    ctx = runtime.RenderContext(preview=True)
+    ctx.state_dir = None
+    theme = themes.create("brother_away", ctx)
+    theme.render(SIZE[0], SIZE[1], dict(settings, theme="brother_away"), ctx)
+    theme.engine.forced = story
+    moments, last, elapsed, step = [], None, 0.0, 0.1
+    while elapsed < limit:
+        theme._advance(step, dict(settings, theme="brother_away"), datetime.datetime.now())
+        elapsed += step
+        speech = theme.hero.speech[0] if theme.hero.speech else None
+        if speech and speech != last:
+            moments.append(round(elapsed + 2.5, 1))       # the bubble fully shown
+        last = speech
+        if getattr(theme.engine, "current", None) is None and elapsed > 20 and moments:
+            break
+    theme.close()
+    if not moments:
+        moments = [4.0, 12.0, 24.0]
+    if len(moments) > parts:
+        moments = [moments[round(i * (len(moments) - 1) / (parts - 1))] for i in range(parts)]
+    return moments
+
+
+def capture(theme_id, settings, stats, art=None, scene=None):
     """``(imgdat.Theme, bindings, dropped)`` for ``theme_id`` with ``settings``
-    (``art``: the current cover, when the panel is flashed on every song)."""
+    (``art``: the current cover, when the panel is flashed on every song;
+    ``scene``: {"story", "part"} of a Brother Away story)."""
     if theme_id not in THEME_OPTIONS:
         raise CaptureError(f"no adaptation for theme {theme_id}")
+    story = None
+    if scene and theme_id == "brother_away":
+        moments = story_moments(scene["story"], settings)
+        story = (scene["story"], moments[min(int(scene.get("part", 0)), len(moments) - 1)])
     job = Capture(theme_id, settings, stats)
     job.scene.art = art
+    job.scene.story = story
     return job.run()

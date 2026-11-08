@@ -399,6 +399,14 @@ class DisplaysPage:
                 follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
                                                                          True if r.get_active() else None))
                 look.add(follow)
+                scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
+                          ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
+                look.add(self._combo(_("Brother Away: story scenes"), scenes,
+                                     str(values.get("sm_ba_scene_minutes", "30")),
+                                     lambda value: self._set(display_id, "sm_ba_scene_minutes", value),
+                                     _("The panel tells the stories as scenes (beginning, middle, end) with the "
+                                       "castaway animated and the speech bubble; each new scene is flashed "
+                                       "(about 20 seconds).")))
 
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None

@@ -465,3 +465,17 @@ def test_media_changes_flash_at_most_every_two_minutes(make_driver, stats, monke
     drv.last_flash -= sm_driver.MEDIA_REFLASH_MIN + 1
     second = drv.build_frame(follow, dict(stats, media={"present": True, "title": "B"}))
     assert sm_driver.SmartMonitorHid._media_only_change(drv.picture, second)
+
+
+def test_brother_away_scenes_follow_the_clock_and_the_setting():
+    base = dict(settings.defaults(), theme="brother_away")
+    day = datetime.datetime(2026, 11, 8, 14, 0)
+    first = layout.brother_away_scene(base, day)
+    later = layout.brother_away_scene(base, day + datetime.timedelta(minutes=30))
+    assert first["story"] in layout.BA_DAY_STORIES and first != later              # next scene after 30 min
+    night = layout.brother_away_scene(base, datetime.datetime(2026, 11, 8, 23, 0))
+    assert night["story"] in layout.BA_NIGHT_STORIES
+    assert layout.brother_away_scene(dict(base, sm_ba_scene_minutes="0"), day) is None
+    stats = {"hostname": "h"}
+    assert layout.key(layout.spec(base, stats, day)) != \
+        layout.key(layout.spec(base, stats, day + datetime.timedelta(minutes=30)))
