@@ -498,8 +498,9 @@ def test_spectrum_regroup_keeps_loudest_of_each_group():
 
 def test_spectrum_hint_ignores_the_song():
     a = {"theme": "big_media_player", "media": {"present": True, "track": "x"}}
-    b = {"theme": "big_media_player", "media": {"present": True, "track": "y"}}
+    b = {"theme": "big_media_player", "hour": 3, "media": {"present": True, "length": False, "track": "y"}}
     assert layout._song_free_key(a) == layout._song_free_key(b)
+    assert layout._song_free_key(a) != layout._song_free_key(dict(a, media={"present": False}))
 
 
 def test_a_song_starting_shows_the_player_without_the_long_wait(make_driver, stats):

@@ -463,10 +463,10 @@ class Compiled:
 
 
 def _song_free_key(theme_spec):
-    """The spec without the song: what decides how much room the visualizer has."""
-    spec_ = json.loads(json.dumps(theme_spec))
-    (spec_.get("media") or {}).pop("track", None)
-    return key(spec_)
+    """What decides how much room the visualizer has: the theme and its options, not
+    the song, its length (unknown for a moment on a new video) or the hour."""
+    return key({k: theme_spec.get(k) for k in ("v", "theme", "settings", "hw", "rotation")} |
+               {"present": bool((theme_spec.get("media") or {}).get("present"))})
 
 
 def cache_dir():
