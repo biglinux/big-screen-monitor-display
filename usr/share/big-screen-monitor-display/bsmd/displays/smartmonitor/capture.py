@@ -944,7 +944,12 @@ class Capture:
         if binding.get("padded") and len(integer) == 2:
             for offset, part in ((0, "tens"), (1, "ones")):
                 box = (round(x0 + offset * digit_w), round(y0), digit_w, atlas.height)
-                result.append((priority, imgdat.Number(0, box, color, atlas, 0), dict(binding, part=part)))
+                number = imgdat.Number(0, box, color, atlas, 0)
+                if binding.get("cand") in COMPACT_LEADING:
+                    # When the panel runs short: the hours / minutes before a ":" as one
+                    # right-aligned widget ("4:05" instead of "04:05"), one channel not two.
+                    number.compact = (round(x0), round(y0), digit_w * 2, atlas.height) if part == "tens" else None
+                result.append((priority, number, dict(binding, part=part)))
         else:
             align = self._alignment(call, other, token, token_b) if not decimals else 2
             if align == 1:
@@ -1316,6 +1321,15 @@ class Capture:
 
     # ------------------------------------------------------------ assembly
     def _select(self, candidates):
+        kept, bindings, dropped = self._select_once(candidates)
+        if dropped and any(getattr(c[1], "compact", False) is not False for c in candidates if c[1] is not None):
+            compact = _compacted(candidates)
+            trial = self._select_once(compact)
+            if trial[2] < dropped:
+                return trial
+        return kept, bindings, dropped
+
+    def _select_once(self, candidates):
         """Widgets that fit the firmware budget, most important first, and their channels.
 
         The values of one text go in together or not at all (a text with a value
@@ -1420,6 +1434,23 @@ def _boxes(mask, join=6):
         if len(cols) and len(rows):
             boxes.append((x0 + cols[0], y0 + rows[0], x0 + cols[-1] + 1, y0 + rows[-1] + 1))
     return boxes
+
+
+COMPACT_LEADING = ("hour", "hour12", "media_min", "media_len_min", "media_left_min")
+
+
+def _compacted(candidates):
+    """``candidates`` with each leading "tens + ones" pair as one right-aligned widget."""
+    out = []
+    for item in candidates:
+        widget = item[1]
+        mark = getattr(widget, "compact", False)
+        if mark is False:
+            out.append(item)
+        elif mark is not None:
+            number = imgdat.Number(0, mark, widget.color, widget.atlas, 2)
+            out.append((item[0], number, dict(item[2], part="whole", padded=False), item[3]))
+    return out
 
 
 def _player_settings(settings):
@@ -1581,9 +1612,14 @@ def capture(theme_id, settings, stats, art=None, scene=None, spectrum=None):
         story = (scene["story"], moments[min(int(scene.get("part", 0)), len(moments) - 1)])
     def run(count):
         fields.set_spectrum(count)
+        scene_stats = stats
+        if spectrum_on and count:
+            # The theme draws as many bars as it is given: exactly the bands that fit.
+            scene_stats = dict(stats, media=dict(media, bands=fields.regroup(media.get("bands") or [0.3] * 12,
+                                                                             count)))
         # No room for a spectrum at all: the player without its visualizer, not "NO SIGNAL".
         job = Capture(theme_id, dict(settings, bmp_visualizer="off") if count == 0 and spectrum_on else settings,
-                      stats)
+                      scene_stats)
         job.scene.art = art
         job.scene.story = story
         return job.run()

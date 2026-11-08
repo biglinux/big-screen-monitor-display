@@ -18,6 +18,7 @@ import glob
 import json
 import logging
 import os
+import threading
 import time
 from dataclasses import dataclass, field
 
@@ -104,6 +105,10 @@ class SmartMonitorHid(TelemetryDriver):
         self.last_flash = -1e9
         self.last_frame = None
         self.uploads = 0
+        # A new picture (song, skin) is captured in the background while the current
+        # one keeps its live values; only the flash itself pauses the panel.
+        self.background_capture = True
+        self._job = None
 
     # ------------------------------------------------------------ state
     def _load_state(self):
@@ -161,6 +166,9 @@ class SmartMonitorHid(TelemetryDriver):
                 time.monotonic() - self.last_flash < wait:
             return picture        # songs / players changing: not more than one flash per interval
 
+        if picture is not None and self.background_capture:
+            return self._adapt_in_background(picture, frame)
+
         def progress():
             callback = self.on_progress
             return bool(callback is not None and callback("adapting the theme"))
@@ -169,6 +177,35 @@ class SmartMonitorHid(TelemetryDriver):
         picture.source_spec = frame.spec
         self.picture = picture
         return picture
+
+    def _adapt_in_background(self, current, frame):
+        """The picture for ``frame`` once captured; ``current`` meanwhile."""
+        job = self._job
+        if job is not None and not job["done"].is_set():
+            return current                               # one capture at a time
+        if job is not None and job["key"] == frame.key:
+            self._job = None
+            if job.get("error") is not None:
+                raise job["error"]
+            picture = job["picture"]
+            picture.source_key = frame.key
+            picture.source_spec = job["spec"]
+            self.picture = picture
+            return picture
+        # Nothing running (or a finished capture of a picture no longer wanted): start one.
+        job = {"key": frame.key, "spec": frame.spec, "done": threading.Event()}
+
+        def work():
+            try:
+                job["picture"] = layout.compiled(frame.spec, frame.settings, frame.stats, None)
+            except Exception as error:  # noqa: BLE001 - reported on the transport thread
+                job["error"] = error if isinstance(error, DisplayError) else \
+                    DisplayError(PROTOCOL, f"theme capture failed: {error}")
+            finally:
+                job["done"].set()
+        self._job = job
+        threading.Thread(target=work, name="smartmonitor-capture", daemon=True).start()
+        return current
 
     @staticmethod
     def _media_only_change(picture, frame):

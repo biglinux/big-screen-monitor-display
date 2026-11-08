@@ -237,6 +237,7 @@ def make_driver(tmp_path, monkeypatch):
         drv = sm_driver.SmartMonitorHid("/dev/hidraw-fake", "1-1", state_path=str(tmp_path / "state.json"))
         drv.hid = panel
         drv.open()
+        drv.background_capture = False
         return drv
     return make
 
@@ -519,3 +520,18 @@ def test_a_song_starting_shows_the_player_without_the_long_wait(make_driver, sta
 
 def test_cover_and_title_of_every_song_is_on_by_default():
     assert settings.defaults()["sm_bmp_track_refresh"] is True
+
+
+def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver, stats):
+    drv = make_driver(FakePanel())
+    drv.background_capture = True
+    base = dict(settings.defaults(), brightness=40)
+    first = drv.build_frame(base, stats)
+    drv.present(first)                               # no picture yet: captured right away
+    assert drv.picture.source_key == first.key
+    other = drv.build_frame(dict(base, theme="big_media_player", sm_bmp_track_refresh=False), stats)
+    drv.present(other)                               # captured in the background...
+    assert drv.picture.source_key == first.key       # ...the current picture keeps going
+    drv._job["done"].wait(30)
+    drv.present(other)
+    assert drv.picture.source_key == other.key
