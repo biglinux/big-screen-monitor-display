@@ -3844,7 +3844,7 @@ msgstr "Start playing in Spotify, VLC, Rhythmbox, a browser with media integrati
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 708
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 152
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 793
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 482
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 507
 msgid "Unknown title"
 msgstr "Unknown title"
 
@@ -3865,7 +3865,7 @@ msgstr "Not available for this media"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/media_player_page.py, line: 734
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/skins.py, line: 252
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1205
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 546
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 571
 # File: big-screen-monitor-display/tests/test_bigmedia.py, line: 106
 msgid "LIVE"
 msgstr "LIVE"
@@ -4611,7 +4611,7 @@ msgstr "live stream"
 #
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1015
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/modern/base.py, line: 1328
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 889
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 914
 msgid "muted"
 msgstr "muted"
 
@@ -4622,61 +4622,61 @@ msgid "Now playing · {source}"
 msgstr "Now playing · {source}"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 474
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 499
 msgid "No media"
 msgstr "No media"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 808
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 833
 msgid "NO SIGNAL"
 msgstr "NO SIGNAL"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 884
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 909
 msgid "Playing"
 msgstr "Playing"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 884
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 921
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 909
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 946
 msgid "Paused"
 msgstr "Paused"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 884
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 922
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 909
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 947
 msgid "Stopped"
 msgstr "Stopped"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 889
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 914
 msgid "Vol"
 msgstr "Vol"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 926
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 951
 msgid "Media agent not running"
 msgstr "Media agent not running"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 928
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 953
 msgid "No MPRIS player found"
 msgstr "No MPRIS player found"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 930
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 955
 msgid "Waiting for playback"
 msgstr "Waiting for playback"
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 931
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 956
 msgid "No media playing"
 msgstr "No media playing"
 
 #
 # #-#-#-#-#  big-screen-monitor-display.pot (big-screen-monitor-display)  #-#-#-#-#
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 994
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py, line: 1019
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 720
 msgid "Time"
 msgstr "Time"
