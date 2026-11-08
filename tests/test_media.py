@@ -386,6 +386,8 @@ def test_spectrum_peaks_in_the_right_band():
 def test_pulse_backend_stop_does_not_respawn_pactl(monkeypatch):
     """Cancelling the ``pactl subscribe`` read on stop() used to look like a lost
     audio server and spawned a new pactl a moment later (one leaked per reload)."""
+    gi = pytest.importorskip("gi")
+    gi.require_version("Gio", "2.0")
     from gi.repository import GLib
     scheduled = []
     monkeypatch.setattr(GLib, "timeout_add_seconds", lambda *args: scheduled.append(args) or 1)
