@@ -64,7 +64,7 @@ ORIENTATIONS = ("horizontal", "vertical", "horizontal_flipped", "vertical_flippe
 # Display families (bsmd.displays.registry; kept here so the root helper
 # does not import the drivers). A test checks both lists agree.
 PROFILE_IDS = ("ax206", "turing_rev_a", "xuanfang_rev_b", "turing_rev_c", "kipye_rev_d", "weact_a",
-               "weact_b", "turing_usb",
+               "weact_b", "turing_usb", "smartmonitor_hid",
                "deepcool_ak", "deepcool_ag", "deepcool_ls", "deepcool_ak_pro", "deepcool_ak400_pro", "deepcool_ld",
                "deepcool_mystique")
 LED_COLORS = ("off", "white", "red", "green", "blue", "cyan", "magenta", "yellow", "orange", "purple")

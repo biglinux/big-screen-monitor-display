@@ -336,28 +336,42 @@ class DisplaySession:
         return driver is not None and getattr(driver.capabilities, "output", "raster") == TELEMETRY
 
     def _telemetry_step(self, settings, beat):
-        """Telemetry devices (DeepCool): build a frame of validated CPU values instead of an image."""
+        """Telemetry devices (DeepCool, SmartMonitor): build a frame of values instead of an image.
+
+        A driver may build its own frame (``build_frame(settings, stats)``);
+        otherwise the DeepCool CPU metrics are used."""
         from .displays.deepcool import metrics
         driver = self.driver
+        own = getattr(driver, "build_frame", None)
         beat.begin("metrics")
         try:
             stats = telemetry.snapshot()
-            values = metrics.gather(stats, self.clock(), settings.get("dc_freq_source", "max"))
-            frame = metrics.build_frame(driver.family, settings, values, self.clock())
+            if own is not None:
+                values = None
+                frame = own(settings, stats)
+            else:
+                values = metrics.gather(stats, self.clock(), settings.get("dc_freq_source", "max"))
+                frame = metrics.build_frame(driver.family, settings, values, self.clock())
         except Exception as error:  # noqa: BLE001 - never stop the session
             beat.end(False, repr(error))
             log.exception("[%s] metrics failed", self.id)
             self.stop_event.wait(1.0)
             return
         beat.end(True)
-        self.last_metrics = dict(frame.describe(), reasons=dict(values.reasons), updated=time.time(),
-                                 temp_source=stats.get("cpu_temp_source"),
-                                 power_source=stats.get("cpu_power_source"),
-                                 power_status=stats.get("cpu_power_status"))
+        if values is None:
+            self.last_metrics = dict(frame.describe(), updated=time.time())
+        else:
+            self.last_metrics = dict(frame.describe(), reasons=dict(values.reasons), updated=time.time(),
+                                     temp_source=stats.get("cpu_temp_source"),
+                                     power_source=stats.get("cpu_power_source"),
+                                     power_status=stats.get("cpu_power_status"))
         self.mailbox.put(frame)
         self.mailbox.wait_consumed(timeout=2.0)
         try:
-            interval = max(driver.min_interval, float(settings.get("dc_interval", "1")))
+            if own is not None:
+                interval = max(driver.min_interval, float(driver.frame_interval(settings)))
+            else:
+                interval = max(driver.min_interval, float(settings.get("dc_interval", "1")))
         except (TypeError, ValueError):
             interval = 1.0
         self.wake_render.wait(interval)
@@ -620,6 +634,8 @@ class DisplaySession:
         beat.begin("open")
         try:
             driver = self.source.create(settings)
+            if hasattr(driver, "on_progress"):
+                driver.on_progress = self._driver_progress
             info = driver.open()
             driver.set_brightness(settings.get("brightness", 70))
             driver.invalidate()
@@ -659,6 +675,15 @@ class DisplaySession:
             self.intro_shown = True
             self._show_intro(settings)
         self.wake_render.set()
+
+    def _driver_progress(self, _what=""):
+        """Long driver operations (a theme flash) report each step: keep the watchdog
+        from taking it for a hang, and stop when the session is stopping."""
+        beat = self.hb["transport"]
+        if beat.op_started is not None:
+            beat.op_started = self.clock()
+        beat.progress()
+        return self.stop_event.is_set()
 
     def _show_intro(self, settings):
         size = self._render_size(settings)

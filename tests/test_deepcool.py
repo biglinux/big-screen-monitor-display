@@ -590,11 +590,16 @@ def test_udev_rules_match_the_supported_models_only():
     text = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
     assert "0666" not in text
     hid_rules = [line for line in text.splitlines() if 'SUBSYSTEM=="hidraw"' in line]
-    assert len(hid_rules) == 1 and 'ATTRS{idVendor}=="3633"' in hid_rules[0]
-    granted = set(re.search(r'ATTRS\{idProduct\}=="([^"]+)"', hid_rules[0]).group(1).split("|"))
+    # Exactly two hidraw grants: the DeepCool coolers and the SmartMonitor panel, each by product id.
+    assert len(hid_rules) == 2
+    deepcool = next(line for line in hid_rules if 'ATTRS{idVendor}=="3633"' in line)
+    granted = set(re.search(r'ATTRS\{idProduct\}=="([^"]+)"', deepcool).group(1).split("|"))
     expected = {f"{m.pid:04x}" for m in models.MODELS if m.family and models.FAMILIES[m.family].transport == "hid"}
     assert granted == expected
-    assert 'GROUP="big-screen-monitor"' in hid_rules[0] and 'MODE="0660"' in hid_rules[0]
+    panel = next(line for line in hid_rules if 'ATTRS{idVendor}=="0483"' in line)
+    assert 'ATTRS{idProduct}=="0065"' in panel and "|" not in panel
+    for rule in hid_rules:
+        assert 'GROUP="big-screen-monitor"' in rule and 'MODE="0660"' in rule
     mystique = [line for line in text.splitlines() if 'ATTR{idProduct}=="0009"' in line and "MODE=" in line]
     assert len(mystique) == 1 and 'MODE="0660"' in mystique[0]
     rapl_rule = next(line for line in text.splitlines() if 'SUBSYSTEM=="powercap"' in line)

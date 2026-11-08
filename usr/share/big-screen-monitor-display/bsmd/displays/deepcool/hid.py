@@ -42,10 +42,13 @@ def hidraw_identity(fd):
 
 
 class Hidraw:
-    def __init__(self, path, vid, pid):
+    max_report = MAX_REPORT      # bytes per write, report id included
+
+    def __init__(self, path, vid, pid, label="cooler"):
         self.path = path
         self.vid = vid
         self.pid = pid
+        self.label = label
         self.fd = None
 
     def open(self):
@@ -69,13 +72,13 @@ class Hidraw:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
             os.close(fd)
-            raise DisplayError(BUSY, "another copy of Big Screen Monitor is using this cooler") from None
+            raise DisplayError(BUSY, f"another copy of Big Screen Monitor is using this {self.label}") from None
         self.fd = fd
 
     def write(self, data, timeout=WRITE_TIMEOUT):
         if self.fd is None:
             raise DisplayError(DISCONNECTED, "not open")
-        if not 1 <= len(data) <= MAX_REPORT:
+        if not 1 <= len(data) <= self.max_report:
             raise ValueError("report size out of range")
         deadline = time.monotonic() + timeout
         while True:
@@ -92,6 +95,25 @@ class Hidraw:
         if written != len(data):
             raise DisplayError(IO, f"short write ({written}/{len(data)})")
         return written
+
+    def read(self, timeout):
+        """One input report, or b"" when none arrives within ``timeout`` seconds."""
+        if self.fd is None:
+            raise DisplayError(DISCONNECTED, "not open")
+        try:
+            ready, _, _ = select.select([self.fd], [], [], max(0.0, timeout))
+            if not ready:
+                return b""
+            return os.read(self.fd, 1024)
+        except BlockingIOError:
+            return b""
+        except OSError as error:
+            raise _error(error, "read") from None
+
+    def drain(self):
+        """Discard input reports already queued (stale acknowledgements)."""
+        while self.read(0):
+            pass
 
     def alive(self):
         return self.fd is not None and os.path.exists(self.path)

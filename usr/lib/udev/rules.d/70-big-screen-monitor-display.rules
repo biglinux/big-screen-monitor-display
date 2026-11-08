@@ -43,6 +43,12 @@ SUBSYSTEM=="tty", ATTRS{idVendor}=="0525", ATTRS{idProduct}=="a4a7", ATTRS{seria
 SUBSYSTEM=="tty", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="0121|0106", ATTRS{serial}=="20080411", \
     MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
 
+# ------------------------------------------------------------ HID panels
+# SmartMonitor 3.5" HID panel (llhmi.com / llTechCo, sold as "3.5 inch PC CPU
+# Data Monitor"): only the hidraw node of 0483:0065, never other STMicro devices.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="0065", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
+
 # ------------------------------------------------------------ DeepCool digital coolers (VID 3633)
 # Numeric coolers (AK, AG, LS, AK PRO, LD): only the hidraw node of these products,
 # never every hidraw device and never MODE="0666". Other 3633 products (cases, LP,

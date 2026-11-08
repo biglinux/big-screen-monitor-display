@@ -26,7 +26,7 @@ from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page  # noqa: E402
+from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -286,6 +286,17 @@ class DisplaysPage:
                    metrics_.get("main"), metrics_.get("alarm"), (entry.status or {}).get("state"),
                    repr(sorted((k, repr(v)) for k, v in effective.items() if k.startswith("dc_") or k == "theme")))
             self.window.thumbnailer.request(key, deepcool_page.thumbnail_work(family, effective, entry),
+                                            card.set_texture)
+            return
+        if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+            card.set_text(own.get("name") or entry.title, " · ".join((state, "480×320", _("SmartMonitor dashboard"))))
+            card.set_badge(state if _kind in ("error", "warning") else None)
+            metrics_ = (entry.status or {}).get("metrics") or {}
+            key = ("display", entry.id, "smartmonitor", repr(sorted((metrics_.get("fields") or {}).items())),
+                   (entry.status or {}).get("state"), repr(sorted((k, repr(v)) for k, v in effective.items()
+                                                                if k in ("std_scheme", "std_temp_unit", "name",
+                                                                         "orientation"))))
+            self.window.thumbnailer.request(key, smartmonitor_view.thumbnail_work(effective, entry.status),
                                             card.set_texture)
             return
         size = self._size(entry)

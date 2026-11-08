@@ -25,6 +25,7 @@ teste garante que toda família registrada tem driver.
 | --- | --- | --- | --- | --- | --- |
 | AX206 (dpf-ax) | Porta-retratos AX206, "USB-Display", AIDA64 3,5"/5"/7" | informada pelo dispositivo (320×240 … 800×480) | libusb (SCSI sobre bulk) | `1908:0102` — confirmado | **A** |
 | Turing rev. A | Turing 3,5", UsbPCMonitor 3,5"/5"/7" | 320×480, 480×800, 600×1024 | serial CDC-ACM, RGB565 LE | `1a86:5722` + serial `USB35INCHIPSV2` — confirmado; sem esse serial — provável | B |
+| SmartMonitor HID | "3.5 inch PC CPU Data Monitor" (llhmi.com / llTechCo, várias marcas) | 480×320 (painel desenhado pelo próprio aparelho) | HID (hidraw): tema `img.dat` gravado por YMODEM + valores por canal | `0483:0065` + serial `2022100600` — confirmado; sem serial — provável | **A** |
 | XuanFang rev. B | XuanFang 3,5" (A01/A02), flagship com LEDs (A11/A12) | 320×480 | serial, RGB565 BE | `1a86:5722` + serial `2017-2-25` — confirmado; sem serial — ambíguo | B |
 | Turing rev. C | Turing 2,1", 2,8", 5", 8,8" (serial) | 480×480, 480×800, 480×1920 | serial, BGRA (+ BGR parcial) | serial `CT21INCH`/`CT88INCH`/`USB7INCH` (dormindo) — confirmado; `1a86:ca21` — provável; `0525:a4a7` ou `1d6b:0121/0106` **com** serial `20080411` — provável | B |
 | Kipye rev. D | Kipye Qiye Smart Display 3,5" | 320×480 | serial, RGB565 BE | `454d:4e41` — provável (o protocolo não tem handshake) | B |
