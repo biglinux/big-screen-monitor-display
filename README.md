@@ -789,5 +789,5 @@ Os protocolos Turing, XuanFang, Kipye, WeAct e Turing USB foram estudados no pro
 
 Agradecimento especial a quem colaborou com os testes:
 
-- **Cristian Philipe** — @Criatianphilipe
+- **Cristian Philipe** — cristianphilipe1234@hotmail.com
 - **Reinaldo Nunes Rodrigues Junior** — reinaldodeuseamor8@gmail.com
