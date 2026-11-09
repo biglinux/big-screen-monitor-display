@@ -784,3 +784,10 @@ Os protocolos Turing, XuanFang, Kipye, WeAct e Turing USB foram estudados no pro
 ## 👤 Desenvolvedor
 
 **Rafael Ruscher** · Equipe BigLinux — [github.com/biglinux/big-screen-monitor-display](https://github.com/biglinux/big-screen-monitor-display)
+
+## 🙏 Créditos
+
+Agradecimento especial a quem colaborou com os testes:
+
+- **Cristian Philipe** — cristianphilipe1234@hotmail.com
+- **Reinaldo Nunes Rodrigues Junior** — reinaldodeuseamor8@gmail.com

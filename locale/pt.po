@@ -6620,3 +6620,7 @@ msgstr "Nenhum player MPRIS no barramento."
 #, python-brace-format
 msgid "{files} image(s), {size:.1f} MB"
 msgstr "{files} imagem(ns), {size:.1f} MB"
+
+#: usr/share/big-screen-monitor-display/config_gui.py:1380
+msgid "Testing"
+msgstr "Testes"
