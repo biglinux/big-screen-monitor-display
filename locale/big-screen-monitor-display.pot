@@ -6018,3 +6018,8 @@ msgstr  ""
 msgid   "Free hardware monitor for small USB displays, with themes, the "
         "Brother Away island, the Kojiro studio and the Big Media Player."
 msgstr  ""
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1380
+msgid   "Testing"
+msgstr  ""

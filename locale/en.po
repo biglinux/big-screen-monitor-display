@@ -5948,3 +5948,8 @@ msgstr "Could not save the report"
 # File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1378
 msgid "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
 msgstr "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
+
+#
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/config_gui.py, line: 1380
+msgid "Testing"
+msgstr "Testing"
