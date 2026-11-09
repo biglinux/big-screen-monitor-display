@@ -37,7 +37,7 @@ from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, run
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page  # noqa: E402
+from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.brother_away_page import BrotherAwayPage  # noqa: E402
 from gui.dashboard import Dashboard  # noqa: E402
 from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
@@ -514,10 +514,14 @@ class ConfigWindow(Adw.ApplicationWindow):
 
     def _update_preview(self, entry):
         face = deepcool_page.face_renderer(self, entry["display"]) if entry["display"] else None
+        face_size = deepcool_page.PREVIEW_SIZE
+        if face is None and entry["display"]:
+            face = smartmonitor_view.face_renderer(self, entry["display"])
+            face_size = smartmonitor_view.PREVIEW_SIZE
         entry["renderer"].face = face
         if face is not None:
-            entry["frame"].set_ratio(*deepcool_page.PREVIEW_SIZE)
-            entry["renderer"].update(settings.merged(self.values, entry["display"]), deepcool_page.PREVIEW_SIZE)
+            entry["frame"].set_ratio(*face_size)
+            entry["renderer"].update(settings.merged(self.values, entry["display"]), face_size)
             return
         size = self._display_size(entry["display"]) if entry["display"] else None
         if entry["display"]:

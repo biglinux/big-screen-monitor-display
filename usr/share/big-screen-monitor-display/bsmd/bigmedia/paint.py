@@ -8,6 +8,7 @@ once into masks so a scrolling title only costs a crop and a paste.
 
 import collections
 import math
+import re
 
 import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
@@ -199,7 +200,7 @@ def chrome_panel(img, box, radius, stops, outline=None, gloss=0.35, seed=3, brus
     vgrad(tile, (0, 0, w, h), None, None, stops)
     if brushed_strength:
         brushed(tile, (0, 0, w, h), brushed_strength, seed)
-    if gloss:
+    if gloss and w > 5 and h > 3:      # a sliver (progress at 0:01) has no room for the gloss
         highlight = Image.new("L", (w, h), 0)
         ImageDraw.Draw(highlight).rounded_rectangle((2, 1, w - 3, h // 2), radius=max(1, radius - 1),
                                                     fill=int(255 * gloss))
@@ -515,3 +516,55 @@ def darken(image, factor):
     if factor >= 1:
         return image
     return ImageChops.multiply(image, Image.new("RGB", image.size, (int(255 * factor),) * 3))
+
+
+# ---------------------------------------------------------------- telemetry strip
+TELE_RANK = {"": 0, "CPU": 1, "GPU": 2, "RAM": 3, "DISK": 4, "SWAP": 5}
+
+
+def _token_template(token):
+    """``token`` with its digits at their widest (``7%`` -> ``000%``): the room the value
+    can grow to, so suffixes and the next item never move as the value changes."""
+    wide = 3 if token.endswith(("%", "°C", "°F")) else 0
+    return re.sub(r"\d+", lambda m: "0" * max(len(m.group()), wide), token)
+
+
+def tele_cells(items, size, mono, gap, avail, icon_w=0.0):
+    """Lay out the telemetry strip: returns ``[(item, icon_w, [(text, width, align)])]``.
+
+    Each value token gets a fixed slot (its widest form) and is drawn right-aligned in
+    it, so positions do not depend on the values: steadier on screen, and a panel that
+    only draws a flashed picture (SmartMonitor) keeps every suffix and separator in
+    place. Items that do not fit leave by importance (SWAP, then DISK...), not just
+    whatever happens to be last (the GPU)."""
+    space = text_width("0", size, mono=mono) * 0.6
+    cells = []
+    for item in items:
+        icon, label, value, _alert = item
+        parts = [(label, text_width(label, size, mono=mono), "l")] if label else []
+        for token in str(value).split(" "):
+            if token:
+                parts.append((token, max(text_width(token, size, mono=mono),
+                                         text_width(_token_template(token), size, mono=mono)), "r"))
+        width = sum(w for _t, w, _a in parts) + space * max(0, len(parts) - 1) + (icon_w if icon is not None else 0)
+        cells.append([item, icon_w if icon is not None else 0, parts, width])
+    order = list(range(len(cells)))
+
+    def total():
+        return sum(cells[i][3] for i in order) + gap * max(0, len(order) - 1)
+    while len(order) > 1 and total() > avail:
+        order.remove(max(order, key=lambda i: (TELE_RANK.get(cells[i][0][1], 10 + i), i)))
+    return [(cells[i][0], cells[i][1], cells[i][2], space) for i in order]
+
+
+def tele_draw_cell(img, x, ym, parts, space, size, color, mono):
+    """Draws one cell's text parts from ``x``; returns the x after it."""
+    for index, (text, width, align) in enumerate(parts):
+        if index:
+            x += space
+        if align == "r":
+            put_text(img, (x + width, ym), text, size, color, mono=mono, anchor="rm")
+        else:
+            put_text(img, (x, ym), text, size, color, mono=mono)
+        x += width
+    return x

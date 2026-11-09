@@ -35,7 +35,7 @@ DevicePolicy=closed
 DeviceAllow=char-usb_device rw
 DeviceAllow=char-ttyACM rw
 DeviceAllow=char-ttyUSB rw
-# DeepCool digital coolers (hidraw nodes; udev limits them to the supported products)
+# DeepCool coolers and the SmartMonitor HID panel (hidraw nodes; udev limits them to the supported products)
 DeviceAllow=char-hidraw rw
 
 # Stay out of the way of interactive work.

@@ -85,6 +85,9 @@ class Profile:
         if self.id == "weact_b":
             from .weact import WeActB
             return WeActB(port, options=options)
+        if self.id == "smartmonitor_hid":
+            from .smartmonitor import driver as smartmonitor_driver
+            return smartmonitor_driver.create(candidate.device, options)
         if self.id.startswith("deepcool_"):
             from .deepcool import drivers as deepcool_drivers
             return deepcool_drivers.create(self.id, candidate.device, options)
@@ -147,6 +150,16 @@ PROFILES = (
             "native USB, DES header + PNG/JPEG", "usb",
             (Rule(0x1CBE, (0x0028, 0x0046, 0x0050, 0x0080, 0x0088, 0x0092, 0x0123), PROBABLE),),
             "B", REF, notes=(N_("Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."),)),
+    Profile("smartmonitor_hid", "SmartMonitor 3.5\" (HID, llhmi / llTechCo)", "SmartMonitor (sold under many brands)",
+            ("3.5\" PC CPU Data Monitor", "SmartMonitor 3.5\""), "480x320",
+            "HID: theme flashed over YMODEM + live channels", "hid",
+            (Rule(0x0483, (0x0065,), CONFIRMED, serial=("2022100600",)),
+             Rule(0x0483, (0x0065,), PROBABLE)),
+            "A", "https://github.com/Agentry433/turing-smart-screen-python-HIDdev2",
+            notes=(N_("The panel has no framebuffer: Big Screen Monitor flashes its own dashboard into it "
+                      "(about a minute, only when the look changes) and then sends the live values."),
+                   N_("Themes are not drawn on this panel; the dashboard follows the Standard theme's colour "
+                      "scheme, temperature unit, name and brightness of this display."))),
 )
 
 

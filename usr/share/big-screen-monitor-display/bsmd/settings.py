@@ -64,7 +64,7 @@ ORIENTATIONS = ("horizontal", "vertical", "horizontal_flipped", "vertical_flippe
 # Display families (bsmd.displays.registry; kept here so the root helper
 # does not import the drivers). A test checks both lists agree.
 PROFILE_IDS = ("ax206", "turing_rev_a", "xuanfang_rev_b", "turing_rev_c", "kipye_rev_d", "weact_a",
-               "weact_b", "turing_usb",
+               "weact_b", "turing_usb", "smartmonitor_hid",
                "deepcool_ak", "deepcool_ag", "deepcool_ls", "deepcool_ak_pro", "deepcool_ak400_pro", "deepcool_ld",
                "deepcool_mystique")
 LED_COLORS = ("off", "white", "red", "green", "blue", "cyan", "magenta", "yellow", "orange", "purple")
@@ -196,6 +196,12 @@ SCHEMA = {
     "bmp_tele_every": (*_int(10, 600), 30),
     "bmp_tele_duration": (*_int(3, 60), 8),
     "bmp_tele_idle_after": (*_int(10, 1800), 60),
+    # SmartMonitor HID panel: flash cover and title again on every new song (the
+    # panel restarts ~10 s each time and its flash wears; off by default).
+    "sm_bmp_track_refresh": (*BOOL, True),
+    # SmartMonitor HID panel: Brother Away tells its stories as scenes flashed one
+    # after another every N minutes ("0": a single scene per time of day).
+    "sm_ba_scene_minutes": (*_choice("0", "15", "30", "60"), "30"),
     "bmp_tele_alert_cpu": (*_int(50, 100), 90),
     "bmp_tele_alert_temp": (*_int(50, 110), 85),
     "bmp_tele_clock": (*BOOL, True),

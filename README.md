@@ -163,6 +163,17 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
 
+### SmartMonitor 3,5" HID (`0483:0065`)
+
+O painel vendido como "3.5 inch PC CPU Data Monitor" (llhmi.com / llTechCo, várias
+marcas) não tem framebuffer: ele desenha um tema gravado na própria memória. O
+serviço grava nele um painel próprio (CPU, GPU ou sistema, memória, rede e disco,
+data e relógio) nas cores do esquema do tema Padrão, e depois envia os valores a
+cada segundo. A gravação leva uns 10 s e só se repete quando a aparência muda
+(esquema, unidade de temperatura, nome, orientação invertida). O brilho da tela
+funciona normalmente. Validado em hardware (classe A), funcionando ao lado de uma
+Turing 3,5" de forma independente.
+
 ### Coolers DeepCool Digital (5.1)
 
 | Família | Modelos | Visor | Transporte | Status |

@@ -394,28 +394,25 @@ class Skin:
         x = x0 + h * 0.3 + slide
         draw = ImageDraw.Draw(img)
         fg, accent = self.pal["tele_fg"], self.pal["tele_accent"]
-        for index, (icon, label, value, alert) in enumerate(items):
+        gap = {"bar": h * 0.45, "dot": h * 0.5}.get(sep, h * 0.35)
+        icon_w = h * 0.62 + 2 if d.tele_icons else 0
+        cells = P.tele_cells(items, size, self.mono, gap, x1 - 2 - x, icon_w)
+        for index, ((icon, _label, _value, alert), iw, parts, space) in enumerate(cells):
             if index:
                 if sep == "bar":
                     draw.line((x + h * 0.2, y0 + h * 0.22, x + h * 0.2, y1 - h * 0.22),
                               fill=P.mix(fg, self.pal["tele_bg"], 0.5))
-                    x += h * 0.45
                 elif sep == "dot":
                     draw.ellipse((x + h * 0.15, (y0 + y1) / 2 - 1.5, x + h * 0.15 + 3, (y0 + y1) / 2 + 1.5),
                                  fill=P.mix(fg, self.pal["tele_bg"], 0.4))
-                    x += h * 0.5
-                else:
-                    x += h * 0.35
-            text = f"{label} {value}" if label else value
-            needed = P.text_width(text, size, mono=self.mono) + (h * 0.8 if icon is not None and d.tele_icons else 0)
-            if x + needed > x1 - 2:
-                break
-            if icon is not None and d.tele_icons:
+                x += gap
+            if iw:
                 tile = icon(int(h * 0.62), alert and (230, 70, 60) or accent)
                 if tile is not None:
                     img.paste(tile, (int(x), int(y0 + (h - tile.height) / 2)), tile)
-                    x += tile.width + 2
-            x += P.put_text(img, (x, (y0 + y1) / 2), text, size, (240, 90, 70) if alert else fg, mono=self.mono)
+                x += iw
+            x = P.tele_draw_cell(img, x, (y0 + y1) / 2, parts, space, size, (240, 90, 70) if alert else fg,
+                                 self.mono)
 
 
 def _ramp(colors, t):
@@ -1048,13 +1045,13 @@ class BigMediaPlayer(Skin):
         h = y1 - y0
         size = max(7, h * 0.58)
         x = x0 + 2
-        for _icon, label, value, alert in items:
-            text = f"{label} {value}" if label else value
-            w = P.text_width(text, size) + h * 0.6
-            if x + w > x1 - 2:
-                break
+        items = [(None, label, value, alert) for _icon, label, value, alert in items]
+        for (_icon, _label, _value, alert), _iw, parts, space in P.tele_cells(items, size, False, 2 + h * 0.6,
+                                                                               x1 - 2 - x + h * 0.6):
+            w = sum(pw for _t, pw, _a in parts) + space * (len(parts) - 1) + h * 0.6
             P.win_bevel(draw, (x, y0 + 1, x + w, y1 - 1), (192, 192, 192), sunken=True)
-            P.put_text(img, (x + h * 0.3, (y0 + y1) / 2), text, size, (160, 0, 0) if alert else (0, 0, 0))
+            P.tele_draw_cell(img, x + h * 0.3, (y0 + y1) / 2, parts, space, size,
+                             (160, 0, 0) if alert else (0, 0, 0), False)
             x += w + 2
 
 

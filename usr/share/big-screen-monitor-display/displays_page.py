@@ -26,7 +26,7 @@ from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page  # noqa: E402
+from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -288,6 +288,18 @@ class DisplaysPage:
             self.window.thumbnailer.request(key, deepcool_page.thumbnail_work(family, effective, entry),
                                             card.set_texture)
             return
+        if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+            theme = themes.REGISTRY.get(effective.get("theme")) or themes.REGISTRY["standard"]
+            card.set_text(own.get("name") or entry.title,
+                          " · ".join((state, "480×320", _(theme.name.split(" — ")[0]))))
+            card.set_badge(state if _kind in ("error", "warning") else None)
+            metrics_ = (entry.status or {}).get("metrics") or {}
+            key = ("display", entry.id, "smartmonitor", repr(sorted((metrics_.get("fields") or {}).items())),
+                   (entry.status or {}).get("state"),
+                   hash(repr(sorted((k, repr(v)) for k, v in effective.items() if k != "displays"))))
+            self.window.thumbnailer.request(key, smartmonitor_view.thumbnail_work(effective, entry.status),
+                                            card.set_texture)
+            return
         size = self._size(entry)
         parts = [state]
         if size:
@@ -375,6 +387,26 @@ class DisplaysPage:
                                  + [(k, _(v)) for k, v in PROFILES],
                                  own.get("performance_profile", GLOBAL),
                                  lambda value: self._set(display_id, "performance_profile", value)))
+
+            if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+                # The panel shows a flashed adaptation of the theme: song details cannot be live.
+                follow = Adw.SwitchRow(
+                    title=_("Big Media Player: cover and title of every song"),
+                    subtitle=_("Flashes the panel again on each new song (at most every 2 minutes): it restarts "
+                               "for about 10 seconds each time and its memory wears with use. Off: time, progress, "
+                               "volume and play/pause stay live without the song details."),
+                    active=bool(values.get("sm_bmp_track_refresh")))
+                follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
+                                                                         True if r.get_active() else None))
+                look.add(follow)
+                scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
+                          ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
+                look.add(self._combo(_("Brother Away: story scenes"), scenes,
+                                     str(values.get("sm_ba_scene_minutes", "30")),
+                                     lambda value: self._set(display_id, "sm_ba_scene_minutes", value),
+                                     _("The panel tells the stories as scenes (beginning, middle, end) with the "
+                                       "castaway animated and the speech bubble; each new scene is flashed "
+                                       "(about 20 seconds).")))
 
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None
