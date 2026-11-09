@@ -1377,6 +1377,10 @@ class ConfigApp(Adw.Application):
             issue_url="https://github.com/biglinux/big-screen-monitor-display/issues",
             comments=_("Free hardware monitor for small USB displays, with themes, the Brother Away island, "
                        "the Kojiro studio and the Big Media Player."))
+        about.add_acknowledgement_section(_("Testing"), [
+            "Cristian Philipe (@Criatianphilipe)",
+            "Reinaldo Nunes Rodrigues Junior <reinaldodeuseamor8@gmail.com>",
+        ])
         about.present(self.props.active_window)
 
 
