@@ -861,6 +861,7 @@ class Runtime:
         self._proc = None
         self._removed_recoveries = 0
         self.media_hub = None          # started when a display uses the Big Media Player theme
+        self._media_lock = threading.Lock()   # sessions ask from their own threads: start it once
 
     # ------------------------------------------------------------ compatibility
     @property
@@ -953,6 +954,11 @@ class Runtime:
         return candidate.auto_profile()
 
     def _start_media_hub(self):
+        with self._media_lock:
+            if self.media_hub is None:        # another thread may have started it meanwhile
+                self._start_media_hub_locked()
+
+    def _start_media_hub_locked(self):
         from .media.hub import MediaHub
         from .media.ipc import SOCKET_NAME
         path = os.path.join(os.path.dirname(self.status_file), SOCKET_NAME)

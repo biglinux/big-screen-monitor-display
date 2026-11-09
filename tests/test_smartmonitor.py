@@ -535,3 +535,31 @@ def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver,
     drv._job["done"].wait(30)
     drv.present(other)
     assert drv.picture.source_key == other.key
+
+
+def test_media_hub_starts_once_when_sessions_ask_together(tmp_path, monkeypatch):
+    import threading as th
+    from bsmd.media import hub as hub_mod
+    created = []
+
+    class SlowHub:
+        def __init__(self, path, on_change=None):
+            created.append(self)
+            self.server = type("S", (), {"error": None})()
+
+        def start(self):
+            time.sleep(0.2)                       # the window two threads used to race in
+            return len(created) == 1
+
+        def stop(self):
+            pass
+    monkeypatch.setattr(hub_mod, "MediaHub", SlowHub)
+    store_ = settings.SettingsStore(str(tmp_path / "s.json"))
+    app = runtime.Runtime(store_, simulate=None, status_file=str(tmp_path / "run" / "status.json"),
+                          state_directory=str(tmp_path / "state"), scan=lambda: [])
+    threads = [th.Thread(target=app._start_media_hub) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert len(created) == 1 and app.media_hub is created[0]
