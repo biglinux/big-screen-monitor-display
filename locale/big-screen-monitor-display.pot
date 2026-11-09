@@ -4612,7 +4612,7 @@ msgid   "Note: the panels do not report what they display; a successful "
 msgstr  ""
 
 #
-# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/runtime.py, line: 1260
+# File: big-screen-monitor-display/usr/share/big-screen-monitor-display/bsmd/runtime.py, line: 1266
 msgid   "Monitoring stopped"
 msgstr  ""
 
