@@ -4,14 +4,14 @@
 
 # Big Screen Monitor Display
 
-**Monitor de hardware livre para pequenos displays USB no Linux — com temas, autorrecuperação, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
+**Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-1237%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1326%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -42,6 +42,16 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
+## ✨ Novidades desde a 5.1.0 — SmartMonitor 3,5" e Big Media Player mais confiável
+
+- **Novo display: SmartMonitor 3,5" HID** (`0483:0065`, vendido como "3.5 inch PC CPU Data Monitor" por llhmi.com / llTechCo e várias marcas). Ele não tem framebuffer: desenha uma imagem gravada na própria memória e só recebe números. O serviço grava ali uma versão do tema escolhido e envia os valores a cada segundo. **Validado em hardware (classe A)**, inclusive funcionando ao lado de uma Turing 3,5".
+- **Todos os temas no SmartMonitor**: em vez de redesenhar cada tema à mão, o próprio tema é desenhado e o serviço descobre quais textos, barras, medidores, anéis e relógios mudam com cada dado. Esses viram elementos ao vivo do painel, com a mesma fonte, cor e alinhamento; o resto vira o fundo. Dados que o painel não consegue mostrar ao vivo são removidos, nunca congelados.
+- **Brother Away no SmartMonitor** conta as histórias em cenas (começo, meio e fim, com o balão de fala), com personagem animado; a cena muda a cada 15, 30 ou 60 min, ou uma por período do dia.
+- **Big Media Player no SmartMonitor**: tempo, progresso, volume, play/pausa, mudo e espectro ao vivo; opção de regravar a capa e o título a cada música. O painel continua ao vivo enquanto a imagem nova é preparada (antes congelava de 10 a 40 s).
+- **Rodapé de telemetria** com posição fixa para cada valor (o "%" e o "°C" não pulam), GPU logo depois da CPU e linha do álbum nas skins modernas que não a tinham.
+- **Agente de mídia dormente**: quando nenhum display usa o Big Media Player, o agente adormece em vez de sair e acorda sozinho quando o tema volta (antes, YouTube, mpv e outros só voltavam a aparecer no próximo login). Corrigidos também o `pactl subscribe` que vazava processos e o hub de mídia criado duas vezes, que deixava o player sem dados.
+- **Nome e logo da sessão ativa**: no Big WindowMaker (e em qualquer desktop com arquivo em `/usr/share/desktop-identity`), os temas mostram o nome e o logo do desktop em vez dos da distribuição. Detalhes em [docs/session-identity](docs/session-identity.md).
+
 ## ✨ Novidades da 5.1.0 — Coolers DeepCool Digital
 
 - **Coolers DeepCool com visor** controlados pelo próprio serviço: AK400/AK500/AK500S/AK620 DIGITAL (e SE), AG300/400/500/620 DIGITAL, LS520/LS720 SE DIGITAL, AK400/AK500/AK620 DIGITAL PRO, LD240/LD360 e MYSTIQUE 240/360 (modo de informações e rotação).
@@ -62,6 +72,9 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 - **Barra de alterações pendentes** com Descartar e Aplicar (Ctrl+S); atalhos Ctrl+1…9 e Ctrl+F; estilo claro/escuro/sistema.
 - **Mais leve**: abre em 0,5 s (antes 1,2 s) e usa 163 MB ao abrir (antes 278 MB); seções construídas sob demanda, varredura USB fora da thread da interface, prévias param fora da tela e com a janela em segundo plano. Detalhes em [docs/redesign](docs/redesign/05-relatorio-final.md).
 - Tradução pt-BR completa (1303 mensagens).
+
+<details>
+<summary><b>Versões anteriores (4.0 a 4.4)</b></summary>
 
 ## ✨ Novidades da 4.4.0 — Big Media Player Modern Collection
 
@@ -149,6 +162,8 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 </tr>
 </table>
 
+</details>
+
 ---
 
 ## 🖥️ Displays suportados
@@ -162,17 +177,31 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **Kipye rev. D** | Kipye Qiye Smart Display 3,5" | 320×480 | serial | 🧪 **B** |
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
+| **SmartMonitor HID** (`0483:0065`) | "3.5 inch PC CPU Data Monitor" (llhmi / llTechCo) | 480×320 | USB HID · imagem gravada + valores | ✅ **A** — testado em hardware real |
 
-### SmartMonitor 3,5" HID (`0483:0065`)
+### SmartMonitor 3,5" HID
 
 O painel vendido como "3.5 inch PC CPU Data Monitor" (llhmi.com / llTechCo, várias
-marcas) não tem framebuffer: ele desenha um tema gravado na própria memória. O
-serviço grava nele um painel próprio (CPU, GPU ou sistema, memória, rede e disco,
-data e relógio) nas cores do esquema do tema Padrão, e depois envia os valores a
-cada segundo. A gravação leva uns 10 s e só se repete quando a aparência muda
-(esquema, unidade de temperatura, nome, orientação invertida). O brilho da tela
-funciona normalmente. Validado em hardware (classe A), funcionando ao lado de uma
-Turing 3,5" de forma independente.
+marcas) não tem framebuffer: ele desenha uma imagem gravada na própria memória e
+recebe só números para os elementos ao vivo. Por isso ele funciona diferente dos
+outros displays:
+
+- **O tema é "fotografado".** O serviço desenha o tema escolhido variando cada
+  dado (CPU, RAM, GPU, rede, relógio…) para descobrir o que depende de quê.
+  Textos, barras, medidores, anéis e relógios de 7 segmentos viram elementos ao
+  vivo do painel; o resto vira a imagem de fundo. Isso roda em um processo
+  separado e o resultado fica em cache.
+- **A gravação leva uns 10 s** e só se repete quando a aparência muda (tema,
+  opções, esquema, unidade, nome, orientação). Durante a preparação de uma
+  imagem nova o painel continua mostrando os valores ao vivo.
+- **O firmware tem limite de elementos.** Quando um tema tem mais dados do que
+  cabem, saem primeiro as casas decimais, depois dados secundários; o que não é
+  mostrado ao vivo é removido da imagem, nunca congelado com um valor antigo.
+- **Brother Away** vira uma sequência de cenas das histórias, com o personagem
+  animado; **Big Media Player** mostra o player com tempo, progresso, volume e
+  espectro quando há música e a telemetria do tema quando não há.
+- O brilho funciona normalmente; se o painel ficar preso numa transferência,
+  o serviço o recupera sozinho.
 
 ### Coolers DeepCool Digital (5.1)
 
@@ -488,7 +517,7 @@ Atualizações preservam as configurações e **respeitam o serviço desativado*
 | --- | --- |
 | Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit` |
 | Janela | `python-gobject`, `python-cairo`, `glib2`, `gtk4`, `libadwaita` ≥ 1.6, `hicolor-icon-theme` |
-| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
+| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
 | Build | `gettext`, `git` |
 
 ---
@@ -541,20 +570,27 @@ Exemplo de `systemctl status`:
 
 ### Arquitetura
 
+O diagrama mostra como o serviço se organiza por dentro: uma coleta de dados única alimenta uma sessão por display (cada uma com seu tema e seu transporte), e um supervisor só avisa o systemd que está tudo bem quando todas as partes estão realmente progredindo.
+
 ```mermaid
 flowchart LR
     U["Descoberta<br/>sysfs a cada 2 s"] --> H
     T["Coleta<br/>telemetria 0,5–2 s (perfil)"] --> S[("SYSTEM_STATS<br/>compartilhado")]
     S --> R1["Sessão A: tema"] --> X1["Transporte A"] --> D1(["AX206"])
-    S --> R2["Sessão B: tema"] --> X2["Transporte B"] --> D2(["WeAct 0,96&quot;"])
+    S --> R2["Sessão B: tema"] --> X2["Transporte B"] --> D2(["WeAct 0,96 pol."])
+    S --> R3["Sessão C: captura do tema"] --> X3["Valores ao vivo"] --> D3(["SmartMonitor 3,5 pol."])
+    M["Agente de mídia<br/>sessão do usuário"] -- "socket local" --> S
     H["Supervisor"] -. heartbeats .-> T
     H -. heartbeats .-> X1
     H -. heartbeats .-> X2
+    H -. heartbeats .-> X3
     H -- "WATCHDOG=1 só se tudo progride" --> SD["systemd"]
     H --> J["status.json · journald"]
 ```
 
 - **Uma sessão por display + supervisor.** Cada display tem threads de render e transporte, estado, backoff e incidentes próprios; só o seu transporte fala com o dispositivo; a coleta é única e nunca atrasa a animação. Drivers por família em `bsmd/displays/` ([docs/13](docs/13-arquitetura-drivers.md)).
+- **Drivers de telemetria.** Coolers DeepCool e o SmartMonitor não recebem imagens prontas: o driver monta o próprio "quadro" (números, ou a imagem gravada mais os valores ao vivo). Operações longas, como gravar a imagem no SmartMonitor, também informam progresso ao supervisor e param junto com o serviço.
+- **Mídia isolada do serviço.** O agente de mídia roda na sessão do usuário (onde estão o MPRIS e o áudio) e envia dados validados ao serviço por um socket local autenticado; o serviço continua sem acesso ao D-Bus da sessão.
 - **Backpressure e coalescência.** O render nunca fica mais de um quadro à frente do transporte; um quadro não enviado é trocado pelo mais novo.
 - **Progresso, não pixels.** Tela estática não é travamento: cada subsistema informa iterações concluídas e operações em andamento. Operação presa > 30 s, ausência de progresso ou thread morta suspendem o watchdog.
 - **Recuperação progressiva:**
@@ -583,10 +619,12 @@ Sinais: `SIGTERM` encerra mostrando "Monitoramento parado" (em vez de uma imagem
 
 ### Segurança
 
-| | 3.x | 4.0 – 4.2 |
+| | 3.x | 4.0 em diante |
 | --- | --- | --- |
 | Usuário do serviço | root | usuário dinâmico sem privilégios |
-| Acesso ao display | udev `0666` (qualquer processo) | `0660` + grupo do serviço + `uaccess`, só nos IDs/seriais dos displays suportados |
+| Acesso ao display | udev `0666` (qualquer processo) | `0660` + grupo do serviço + `uaccess`, só nos IDs/seriais dos displays e coolers suportados (no SmartMonitor, só o `hidraw` de `0483:0065`) |
+| Dispositivos desconhecidos | — | nunca recebem comandos; só os identificadores USB são lidos |
+| Mídia (MPRIS, áudio) | — | agente na sessão do usuário, socket local autenticado, dados validados |
 | Operações administrativas | sudoers `NOPASSWD` | Polkit + `bsm-helper` com verbos fixos e JSON validado; alterações visuais sem senha para o usuário local ativo, controle do serviço só com administrador |
 | Imagens do usuário | — | decodificadas só sem privilégios; o root confere apenas a estrutura PNG |
 | Configurações | primeiro `/home/*` encontrado | `/etc/…/settings.json`, validado e gravado atomicamente |
@@ -617,7 +655,7 @@ O Automático limita os temas animados a 8 fps (as poses são desenhadas "em doi
 
 ### Traduções
 
-Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensagens). Português completo em `locale/pt.po`; as demais línguas são geradas pelo tradutor automático do BigLinux e compiladas no PKGBUILD.
+Textos marcados com gettext (`locale/big-screen-monitor-display.pot`). Português completo em `locale/pt.po` (cerca de 1450 mensagens); as demais línguas são geradas pelo tradutor automático do BigLinux e compiladas no PKGBUILD.
 
 ---
 
@@ -644,6 +682,9 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 | Big Media Player: "Agente de mídia não está rodando" | Aba **Big Media Player → Diagnóstico → Iniciar**; confira se o tema está aplicado (o agente sai quando nenhum display o usa). |
 | Big Media Player: player não aparece | O aplicativo precisa publicar MPRIS. Firefox: `media.hardwaremediakeys.enabled` ligado. Veja a lista em *Diagnóstico → Players MPRIS*. |
 | Big Media Player: display mostra outro player | Use *Player* em *Tocando agora*, ou *Reprodução → Player mostrado → Sempre o mesmo* / *Aplicativos ignorados*. |
+| Big Media Player: YouTube/mpv sumiram depois de trocar de tema | Atualize o pacote: desde a versão atual o agente de mídia fica dormente e acorda sozinho. No mpv, instale `mpv-mpris`. |
+| SmartMonitor mostra o tema antigo por alguns segundos | Normal: a nova imagem leva uns 10 s para ser gravada no painel; os valores continuam ao vivo enquanto isso. |
+| SmartMonitor sem algum dado do tema | O firmware tem um limite de elementos ao vivo; o que não cabe é removido (nunca congelado). Desligue itens que não usa nas opções do tema para liberar espaço. |
 | Big Media Player: volume indisponível | Instale `libpulse` (`pactl`) ou `wireplumber` (`wpctl`); o diagnóstico mostra o sistema de áudio detectado. |
 | Pedir ajuda | **Diagnóstico → Exportar diagnóstico** gera um relatório com o estado e os logs. |
 
@@ -652,13 +693,13 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 929 mensag
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 1237 testes, sem hardware (os de D-Bus usam um barramento privado)
+python3 -m pytest -q tests                                  # 1326 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py
 ```
 
-Os testes cobrem configurações, conversão e retângulos, todos os temas em 10 resoluções nas duas orientações e em tela redonda, os bytes de cada protocolo comparados com a referência, o layout do GKrellM (todos os módulos e partições em 480×320, listas encurtadas sem sobreposição), partições btrfs dentro do isolamento do serviço, perfis de desempenho, retângulos recortados ao pixel, detecção e níveis de confiança, vários displays com hot-plug e falha isolada, drivers com USB/serial falsos, máquina de estados, pipeline com falhas injetadas (desconexão, timeout, travamento, falha persistente), assistente Polkit, as 14 histórias do Brother Away e um dia simulado. A CI roda em `.github/workflows/tests.yml`.
+Os testes cobrem configurações, conversão e retângulos, todos os temas em 10 resoluções nas duas orientações e em tela redonda, os bytes de cada protocolo comparados com a referência, o layout do GKrellM (todos os módulos e partições em 480×320, listas encurtadas sem sobreposição), partições btrfs dentro do isolamento do serviço, perfis de desempenho, retângulos recortados ao pixel, detecção e níveis de confiança, vários displays com hot-plug e falha isolada, drivers com USB/serial falsos, máquina de estados, pipeline com falhas injetadas (desconexão, timeout, travamento, falha persistente), assistente Polkit, as 14 histórias do Brother Away e um dia simulado, os protocolos e presets dos coolers DeepCool, a captura dos temas para o SmartMonitor, o agente de mídia (MPRIS, volume, dormência) e a identidade da sessão. A CI roda em `.github/workflows/tests.yml`.
 
 ### Estrutura
 
@@ -669,10 +710,16 @@ usr/share/big-screen-monitor-display/
 ├── displays_page.py     página "Meus Displays"
 ├── kojiro_page.py       aba Kojiro (barra de ferramentas e inspetor)
 ├── kojiro_editor.py     Kojiro Design Studio (estado, desfazer/refazer, canvas Cairo)
+├── media_player_page.py página Big Media Player (Tocando agora, skins, personalizar)
+├── gui/                 páginas e componentes da janela (Início, temas, Brother Away, DeepCool, SmartMonitor, preferências)
 └── bsmd/
     ├── runtime.py       descoberta, sessões por display, supervisor, recuperação
     ├── health.py        heartbeats, máquina de estados, backoff, incidentes
     ├── displays/        drivers por família, registro, descoberta, transporte serial, simulador
+    │   ├── deepcool/    coolers DeepCool Digital (HID, MYSTIQUE, presets)
+    │   └── smartmonitor/ SmartMonitor HID: protocolo, imagem gravada, captura dos temas
+    ├── media/           agente de mídia, MPRIS, volume, espectro, hub e socket local
+    ├── bigmedia/        tema Big Media Player: skins clássicas e modernas
     ├── kojiro/          tema Kojiro: modelo, layout, dados, desenho, elementos, papéis de parede, armazenamento, motor
     ├── drivers.py       compatibilidade com a API antiga
     ├── compact.py       layout para telas minúsculas
@@ -717,7 +764,14 @@ locale/ · pkgbuild/ · tests/ · tools/ · docs/
 | [Big Media Player · telemetria](docs/big-media-player-telemetry.md) | [Big Media Player · desempenho](docs/big-media-player-performance.md) |
 | [Big Media Player · testes](docs/big-media-player-testing.md) | [Big Media Player · relatório final](docs/big-media-player-final-report.md) |
 | [Modern Collection · skins e layouts](docs/big-media-player-modern.md) | [Modern Collection · configurações](docs/big-media-player-modern-settings.md) |
-| [Modern Collection · desempenho, testes e relatório](docs/big-media-player-modern-report.md) | |
+| [Modern Collection · desempenho, testes e relatório](docs/big-media-player-modern-report.md) | [Nome e logo da sessão ativa](docs/session-identity.md) |
+| [DeepCool · auditoria](docs/deepcool/01-auditoria.md) | [DeepCool · arquitetura](docs/deepcool/02-arquitetura.md) |
+| [DeepCool · protocolos](docs/deepcool/03-protocolos.md) | [DeepCool · implementação](docs/deepcool/04-implementacao.md) |
+| [DeepCool · interface](docs/deepcool/05-interface.md) | [DeepCool · compatibilidade com temas](docs/deepcool/06-compatibilidade-temas.md) |
+| [DeepCool · testes](docs/deepcool/07-testes.md) | [DeepCool · relatório final](docs/deepcool/08-relatorio-final.md) |
+| [Janela · auditoria](docs/redesign/01-auditoria.md) | [Janela · design system](docs/redesign/02-design-system.md) |
+| [Janela · arquitetura de UX](docs/redesign/03-arquitetura-ux.md) | [Janela · testes e benchmarks](docs/redesign/04-testes-benchmarks.md) |
+| [Janela · relatório final](docs/redesign/05-relatorio-final.md) | |
 
 ---
 
