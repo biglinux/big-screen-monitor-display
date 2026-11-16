@@ -53,8 +53,9 @@ for po in "${SCRIPT_DIR}/locale/"*.po; do
 done
 
 echo "=== 5. Ajustando permissões de executáveis e serviços ==="
-chmod 755 /usr/bin/big-screen-monitor-config.sh /usr/bin/big-screen-monitor-display.sh
-chmod 755 /usr/share/${PKGNAME}/main.py /usr/share/${PKGNAME}/config_gui.py
+chmod 755 /usr/bin/big-screen-monitor-config.sh /usr/bin/big-screen-monitor-display.sh /usr/bin/deepcool-digital.sh 2>/dev/null || true
+ln -sf /usr/bin/deepcool-digital.sh /usr/bin/deepcool-digital 2>/dev/null || true
+chmod 755 /usr/share/${PKGNAME}/main.py /usr/share/${PKGNAME}/config_gui.py /usr/share/${PKGNAME}/tray/main.py 2>/dev/null || true
 chmod 755 /usr/lib/${PKGNAME}/bsm-helper
 chmod 644 /usr/lib/systemd/system/big-screen-monitor-display.service
 chmod 644 /usr/lib/udev/rules.d/70-big-screen-monitor-display.rules

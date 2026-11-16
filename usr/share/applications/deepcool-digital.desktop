@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=DeepCool Digital
+Comment=DeepCool Digital cooler system tray controller
+Exec=/usr/bin/deepcool-digital.sh
+Icon=deepcool-digital
+Terminal=false
+Categories=System;Monitor;HardwareSettings;
+StartupNotify=false
+X-KDE-autostart-after=panel
