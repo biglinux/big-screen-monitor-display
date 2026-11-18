@@ -430,6 +430,8 @@ class DisplaysPage:
                                          lambda value: self._set(display_id, "led_color",
                                                                  None if value == "off" else value),
                                          _("Only the flagship model has LEDs.")))
+            if effective is not None and effective.id == "foston_fs707dc":
+                self._foston_rows(hardware, display_id, own)
             rows = {}
             for key, title in (("state", _("State")), ("resolution", _("Resolution")),
                                ("connection", _("Connection")), ("protocol", _("Protocol")),
@@ -591,6 +593,46 @@ class DisplaysPage:
                 self.window.toast(_("Model chosen. Press Apply to start using the display."))
         dialog.connect("response", response)
         dialog.present(self.window)
+
+    def _foston_rows(self, group, display_id, own):
+        """FOSTON FS-707DC: touchscreen on the panel and the Windows CE client."""
+        touch_row = Adw.SwitchRow(title=_("Touchscreen"), active=own.get("touch_enabled", True),
+                                  subtitle=_("Tap, hold and swipe on the panel itself; the computer's keyboard "
+                                             "focus and mouse are never touched."))
+        touch_row.connect("notify::active", lambda r, _p: self._set(display_id, "touch_enabled",
+                                                                    None if r.get_active() else False))
+        group.add(touch_row)
+        for title, subtitle, action, icon in (
+                (_("Touch test"), _("Draws your finger's path on the panel (hold to leave)"), "touch_test",
+                 "input-touchscreen-symbolic"),
+                (_("Calibrate touch"), _("Opens the navigator's own calibration (tap the crosses)"), "calibrate",
+                 "find-location-symbolic")):
+            row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
+            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+            row.connect("activated", lambda *_a, a=action: self.command({"action": a, "display": display_id}))
+            group.add(row)
+        install_row = Adw.ActionRow(
+            title=_("Install the client on the navigator"),
+            subtitle=_("With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. "
+                       "Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."),
+            activatable=True)
+        install_row.add_prefix(Gtk.Image.new_from_icon_name("document-save-symbolic"))
+        install_row.connect("activated", lambda *_a: self._foston_install())
+        group.add(install_row)
+
+    def _foston_install(self):
+        from bsmd.displays.foston import install
+        try:
+            volumes = install.find_volumes()
+            if not volumes:
+                self.window.toast(_("No navigator mounted as USB storage. Quit the client on the navigator "
+                                    "(Exit button) and open its volume in the file manager."))
+                return
+            path = install.install(volumes[0])
+        except OSError as error:
+            self.window.toast(_("Could not install the client: {error}").format(error=error))
+            return
+        self.window.toast(_("Client installed at {path}. Reset the navigator before starting it.").format(path=path))
 
     def command(self, command):
         def worker():
