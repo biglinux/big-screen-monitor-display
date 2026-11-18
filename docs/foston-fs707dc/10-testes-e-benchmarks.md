@@ -31,6 +31,9 @@ Logs brutos: `foston-monitor/bench-2026-11-18-*.jsonl`, `foston-monitor/lab/run1
 | Repasse de toque no PC (leitura → callback) | < 0,05 ms |
 | Estresse 30 s quadros completos | 208 quadros, nenhum erro na sessão |
 | Perdas no link sob carga (runtime 3 min) | 2 quadros reparados automaticamente |
+| Reparos com o serviço do sistema, uso normal + menu (cliente 1.1.1, janela 64 KiB) | 8 em ~7,5 min (≈1,1/min) |
+| Idem com cliente 1.2.0 (leitora prioridade 200) e janela 32 KiB | 4 em 5 min (≈0,8/min) — melhora modesta; cada reparo reenvia um quadro (~150 ms) |
+| "Sair para o menu do GPS" (aparelho real) | ✅ `client_quit` registrado; FOSTON voltou ao modo armazenamento |
 | RAM livre no aparelho com cliente | ~97–100 MB de 118 MB |
 | Tamanho do cliente | 32 KB |
 

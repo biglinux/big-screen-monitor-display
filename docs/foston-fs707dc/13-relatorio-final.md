@@ -52,7 +52,7 @@ nenhuma queda ([10](10-testes-e-benchmarks.md)).
 
 * Testes físicos: reiniciar o PC, suspensão,
   FOSTON + AX206 no mesmo runtime, KDE Plasma e WindowMaker Wayland.
-* Subir a prioridade da thread leitora do cliente para reduzir os reparos sob carga.
+* Reparos de quadro ainda ocorrem (~0,8/min): reenviar só a mensagem perdida em vez do quadro inteiro reduziria o impacto visual.
 * Controle do Big Media Player pelo toque (exige decisão sobre comandos
   serviço → sessão).
 * Imagem bruta do volume (`sudo dd`) para o arquivo de backup.
