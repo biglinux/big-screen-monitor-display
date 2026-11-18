@@ -10,6 +10,7 @@
 | `/dev/ttyUSB0` sem permissão | regra udev ausente | instalar o pacote ou a regra de desenvolvimento |
 | "frame damaged on the link … resynchronising" no log | perda de bytes no driver serial do WinCE | nada: o quadro é refeito; se for frequente, perfil de desempenho "economia" |
 | Volume não aparece no PC | cliente aberto (modo serial) | Sair no aparelho |
+| Tela parece travada, relógio parado | o PC parou de enviar (serviço parado ou antigo, PC suspenso) | o cliente 1.1.1 volta sozinho à tela de espera após 30 s sem dados; o serviço instalado precisa ter o suporte ao FOSTON |
 
 ## Mecanismos automáticos
 

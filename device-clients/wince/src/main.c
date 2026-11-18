@@ -32,8 +32,8 @@
 
 #include "fsp.h"
 
-#define CLIENT_VERSION "bsmd-ce 1.1.0"
-#define CLIENT_VERSION_W L"bsmd-ce 1.1.0"
+#define CLIENT_VERSION "bsmd-ce 1.1.1"
+#define CLIENT_VERSION_W L"bsmd-ce 1.1.1"
 #define WM_APP_CALIBRATE (WM_APP + 1)
 #define WM_APP_STATUS    (WM_APP + 2)
 #define CORNER 64                 /* top-left exit corner, pixels */
@@ -977,6 +977,10 @@ static DWORD WINAPI reader_thread(LPVOID arg)
 
 #define CREDIT_STEP (8u * 1024u)
 #define STALL_MS 1000
+/* The host sends a frame or a PING at least every 15 s while it drives the
+ * panel; after this much silence the frame on the glass is stale (service
+ * stopped, computer suspended, process killed): show the waiting screen. */
+#define HOST_SILENCE_MS 30000
 
 static void send_credit(uint32_t consumed)
 {
@@ -989,7 +993,7 @@ static void comm_session(void)
 {
     fsp_parser parser;
     fsp_box dirty = {0, 0, 0, 0};
-    DWORD decode_ms = 0, last_data = GetTickCount();
+    DWORD decode_ms = 0, last_data = GetTickCount(), last_msg = GetTickCount();
     uint32_t consumed = 0, credited = 0;     /* bytes of whole messages handled since HELLO */
     HANDLE reader;
     g_ring_head = g_ring_tail = 0;
@@ -1004,6 +1008,11 @@ static void comm_session(void)
     while (!g_quit && g_reader_alive) {
         DWORD head = g_ring_head, tail = g_ring_tail;
         if (head == tail) {
+            if (g_connected && GetTickCount() - last_msg > HOST_SILENCE_MS) {
+                log_line("host silent for %u ms: back to the waiting screen", (unsigned)HOST_SILENCE_MS);
+                InterlockedExchange(&g_connected, 0);
+                set_status(L"O computador parou de enviar dados.\nAguardando o Big Screen Monitor...");
+            }
             if (parser.used && GetTickCount() - last_data > STALL_MS) {
                 /* a partial message that will never complete: resynchronise */
                 uint8_t nak[3];
@@ -1032,6 +1041,7 @@ static void comm_session(void)
                     send_msg(FSP_NAK, nak, 3);
                     continue;
                 }
+                last_msg = GetTickCount();
                 if (m.type == FSP_HELLO) {
                     consumed = credited = 0;
                 } else {
