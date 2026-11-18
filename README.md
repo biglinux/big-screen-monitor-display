@@ -42,6 +42,10 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
+## 🧭 Novo: FOSTON FS-707DC vira display touch
+
+Um navegador GPS de 2010 (Windows CE 5, MediaTek MT3351, 800×480 resistivo) passa a mostrar os temas do Big Screen Monitor **e a responder ao toque**, sem gravar firmware: o cliente `bsmd-ce` (32 KB, C) roda pelo menu "caminho da navegação", troca o USB para serial e fala o protocolo FSP com o serviço. Toque, deslize e segure na própria tela para trocar tema, abrir a galeria ou testar o toque — sem tocar no foco do teclado nem no mouse do computador. Medido no aparelho: 7 quadros completos/s, ~130 atualizações pequenas/s, PING de 2 ms. Detalhes em [docs/foston-fs707dc](docs/foston-fs707dc/13-relatorio-final.md).
+
 ## ✨ Novidades desde a 5.1.0 — SmartMonitor 3,5" e Big Media Player mais confiável
 
 - **Novo display: SmartMonitor 3,5" HID** (`0483:0065`, vendido como "3.5 inch PC CPU Data Monitor" por llhmi.com / llTechCo e várias marcas). Ele não tem framebuffer: desenha uma imagem gravada na própria memória e só recebe números. O serviço grava ali uma versão do tema escolhido e envia os valores a cada segundo. **Validado em hardware (classe A)**, inclusive funcionando ao lado de uma Turing 3,5".
@@ -178,6 +182,7 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
 | **SmartMonitor HID** (`0483:0065`) | "3.5 inch PC CPU Data Monitor" (llhmi / llTechCo) | 480×320 | USB HID · imagem gravada + valores | ✅ **A** — testado em hardware real |
+| **FOSTON FS-707DC Touch Display** (`045e:00ce`) | navegador GPS Windows CE 7" com o cliente `bsmd-ce` | 800×480 (informada pelo aparelho) | USB serial · FSP + **toque** | ✅ **A** — vídeo, toque e reconexão validados no aparelho ([docs](docs/foston-fs707dc/13-relatorio-final.md)) |
 
 ### SmartMonitor 3,5" HID
 
