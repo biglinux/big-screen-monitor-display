@@ -47,7 +47,7 @@ class FostonDisplay(RasterDriver):
     # buffers 2 MiB; the Serial_Class driver of the FS-707DC itself drops data
     # beyond ~1 KB when nobody reads, which is why the client drains it in a
     # dedicated thread and the host never runs ahead of it.
-    WINDOW = 64 * 1024                # measured on the FS-707DC: 256 KiB lost data under sustained load
+    WINDOW = 32 * 1024                # measured on the FS-707DC: most stable in the sweep; 256 KiB lost data
     MAX_RAW = 16 * 1024               # raw bytes per RECT message before compression
     HELLO_ATTEMPTS = 2
 

@@ -1077,7 +1077,8 @@ static void comm_session(void)
         return;
     CeSetThreadPriority_t set_prio = (CeSetThreadPriority_t)core_proc(L"CeSetThreadPriority");
     if (set_prio)
-        set_prio(reader, 248);             /* above normal (251): keep draining under GDI load */
+        set_prio(reader, 200);             /* well above applications (251) and GDI work: the Serial_Class
+                                              driver drops bytes when nobody drains it (it sleeps when idle) */
     fsp_parser_init(&parser, g_rx_buf, FSP_HEADER + FSP_MAX_PAYLOAD);
     while (!g_quit && g_reader_alive) {
         DWORD head = g_ring_head, tail = g_ring_tail;
