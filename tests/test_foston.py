@@ -577,3 +577,36 @@ def test_packaged_client_matches_its_checksum():
     expected = open(install.PACKAGED_CLIENT + ".sha256").read().split()[0]
     assert install.sha256(install.PACKAGED_CLIENT) == expected
     assert open(install.PACKAGED_CLIENT, "rb").read(2) == b"MZ"
+
+
+def test_exit_to_device_menu_needs_a_confirming_tap():
+    host, clock = Host(), Clock()
+    host.can_quit = lambda: True
+    ui = touch.TouchUI(host, None, clock=clock)
+    ui._open("menu", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
+    quit_box = next(box for box, action, _arg in ui.buttons if action == "quit")
+    center = ((quit_box[0] + quit_box[2]) // 2, (quit_box[1] + quit_box[3]) // 2)
+    tap(ui, clock, *center)
+    assert ("quit_client",) not in host.requests and ui.page == "menu"   # armed only
+    clock.now += touch.QUIT_CONFIRM_SECONDS + 1
+    tap(ui, clock, *center)
+    assert ("quit_client",) not in host.requests                        # expired: armed again
+    tap(ui, clock, *center)
+    assert ("quit_client",) in host.requests and ui.page is None
+
+
+def test_menu_has_no_exit_for_panels_without_a_client():
+    host, clock = Host(), Clock()
+    ui = touch.TouchUI(host, None, clock=clock)
+    ui._open("menu", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
+    assert not [b for b in ui.buttons if b[1] == "quit"]
+
+
+def test_runtime_quit_client_reaches_the_device(foston_runtime):
+    panel = EmulatedPanel()
+    app = foston_runtime([panel])
+    assert wait(lambda: len(panel.device.presented) >= 1)
+    app.sessions["simulated"].request("quit_client")
+    assert wait(lambda: panel.device.quit)

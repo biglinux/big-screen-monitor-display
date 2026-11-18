@@ -23,7 +23,8 @@ digitalizador resistivo → driver de toque do WinCE (já calibrado)
 |---|---|
 | Toque | mostra a barra inferior + cabeçalho (6 s); na barra, aciona o botão |
 | Deslizar ← / → | próximo / anterior tema |
-| Deslizar ↑ ou segurar 0,7 s | menu: galeria de temas, Teste de toque, Calibrar, Fechar |
+| Deslizar ↑ ou segurar 0,7 s | menu: galeria de temas, Teste de toque, Calibrar, Voltar e **Sair para o menu do GPS** |
+| Sair para o menu do GPS (2 toques em até 4 s) | fecha o cliente no aparelho, devolve o USB ao modo armazenamento e volta ao menu principal do FOSTON |
 | Deslizar ↓ | fecha o que estiver aberto |
 
 Cabeçalho: hora, data, nome do display e indicador de conexão (verde = saudável).
@@ -46,7 +47,7 @@ guarda. Orientação/inversão de eixos vêm da opção "Orientação" do displa
 ## Configuração (Meus Displays)
 
 No grupo **Hardware** do FOSTON: interruptor *Touchscreen*, *Teste de toque*,
-*Calibrar toque* e *Instalar o cliente no navegador* (copia `bsmd-ce.exe` para
+*Calibrar toque*, *Fechar o cliente no navegador* e *Instalar o cliente no navegador* (copia `bsmd-ce.exe` para
 `BigScreen\` do volume montado e confere o SHA-256).
 
 ## Ainda não feito

@@ -277,7 +277,7 @@ DISPLAY_SCHEMA = {
 GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback"}
 MAX_DISPLAYS = 16
 # Per-display commands accepted from the configuration window (command spool).
-SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test")
+SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test", "quit_client")
 PATTERN_NAMES = ("identify", "bars", "grid", "gradient", "orientation", "white", "black")
 DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?)$")
 

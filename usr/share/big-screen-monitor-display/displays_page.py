@@ -606,7 +606,10 @@ class DisplaysPage:
                 (_("Touch test"), _("Draws your finger's path on the panel (hold to leave)"), "touch_test",
                  "input-touchscreen-symbolic"),
                 (_("Calibrate touch"), _("Opens the navigator's own calibration (tap the crosses)"), "calibrate",
-                 "find-location-symbolic")):
+                 "find-location-symbolic"),
+                (_("Close the client on the navigator"),
+                 _("Returns the navigator to its main menu and USB storage mode"), "quit_client",
+                 "application-exit-symbolic")):
             row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
             row.add_prefix(Gtk.Image.new_from_icon_name(icon))
             row.connect("activated", lambda *_a, a=action: self.command({"action": a, "display": display_id}))

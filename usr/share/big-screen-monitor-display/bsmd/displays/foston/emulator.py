@@ -67,6 +67,7 @@ class EmulatedDevice:
         self.out = queue.Queue()
         self.presented = []
         self.calibrations = 0
+        self.quit = False
         self.closed = False
         self.drop_present = False         # simulate a hung device
         self.nak_next = False
@@ -159,6 +160,10 @@ class EmulatedDevice:
             self.brightness = msg.payload[0]
         elif msg.kind == fsp.CALIBRATE:
             self.calibrations += 1
+        elif msg.kind == fsp.BYE and msg.payload[:1] == bytes([fsp.BYE_QUIT]):
+            # the real client closes its window, restores USB storage and says BYE
+            self.quit = True
+            self._reply(fsp.BYE, bytes([fsp.BYE_QUIT]))
 
     def image(self):
         """Framebuffer as an RGB PIL image (RGB565 expanded)."""

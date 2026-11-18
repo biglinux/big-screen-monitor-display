@@ -40,6 +40,7 @@ TEST_SECONDS = 60.0
 RIPPLE_SECONDS = 0.45
 ACTIVE_INTERVAL = 0.12            # s between frames while the overlay animates
 OVERRIDE_KEYS = ("theme", "brightness")
+QUIT_CONFIRM_SECONDS = 4.0        # second tap on "Exit" within this time closes the client
 BRIGHTNESS_STEP = 10
 
 THEME_LABELS = {"standard": N_("Standard"), "gkrellm": N_("GKrellM"), "planet": N_("Planet"),
@@ -181,6 +182,7 @@ class TouchUI:
         self.buttons = []             # (box, action, arg) of the last drawn overlay
         self.pressed = None           # button box under the finger
         self.toast = None             # (text, until)
+        self.quit_armed_until = 0.0   # "Exit to the device menu" waits for a confirming tap
         self.last_event = None
         self.events = 0
 
@@ -300,6 +302,17 @@ class TouchUI:
             self._open("menu", now)
         elif action == "close":
             self._open(None, now)
+        elif action == "quit":
+            if now < self.quit_armed_until:
+                self.quit_armed_until = 0.0
+                self._open(None, now)
+                self.toast = (_("Closing…"), now + 3.0)
+                self.host.request("quit_client")
+            else:
+                # Leaving ends the panel until the client is started again: ask for a second tap.
+                self.quit_armed_until = now + QUIT_CONFIRM_SECONDS
+                self.until = max(self.until, now + QUIT_CONFIRM_SECONDS + 1)
+                self.toast = (_("Tap again to exit"), now + QUIT_CONFIRM_SECONDS)
         elif action == "test":
             self._open("test", now)
         elif action == "calibrate":
@@ -380,9 +393,11 @@ class TouchUI:
         cx = right - lw - 14
         draw.ellipse((cx - 6, bar / 2 - 6, cx + 6, bar / 2 + 6), fill=dot)
 
-    def _button(self, draw, box, action, arg=None, accent=False):
+    def _button(self, draw, box, action, arg=None, accent=False, danger=False):
         pressed = self.pressed == box
         color = (53, 132, 228, 235) if accent else (40, 48, 62, 225)
+        if danger:
+            color = (192, 28, 40, 235) if self.clock() < self.quit_armed_until else (110, 34, 40, 230)
         if pressed:
             color = (98, 160, 234, 245)
         draw.rounded_rectangle(box, radius=max(6, (box[3] - box[1]) // 5), fill=color,
@@ -452,7 +467,10 @@ class TouchUI:
         self._text(draw, (0, 0, width, title_h), _("Themes"), int(title_h * 0.5), bold=True)
         current = settings.get("theme")
         items = [("theme", theme, _(THEME_LABELS.get(theme, theme))) for theme in settings_mod.THEME_IDS]
-        items += [("test", None, _("Touch test")), ("calibrate", None, _("Calibrate")), ("close", None, _("Close"))]
+        items += [("test", None, _("Touch test")), ("calibrate", None, _("Calibrate")), ("close", None, _("Back"))]
+        if getattr(self.host, "can_quit", lambda: False)():
+            armed = self.clock() < self.quit_armed_until
+            items.append(("quit", None, _("Tap again to exit") if armed else _("Exit to the device menu")))
         cols = 4 if width >= height else 2
         rows = math.ceil(len(items) / cols)
         pad = max(8, width // 80)
@@ -462,7 +480,8 @@ class TouchUI:
             col, row = index % cols, index // cols
             box = (int(pad + col * (cell_w + pad)), int(title_h + pad + row * (cell_h + pad)),
                    int(pad + col * (cell_w + pad) + cell_w), int(title_h + pad + row * (cell_h + pad) + cell_h))
-            self._button(draw, box, action, arg, accent=action == "theme" and arg == current)
+            self._button(draw, box, action, arg, accent=action == "theme" and arg == current,
+                         danger=action == "quit")
             self._text(draw, box, label, int(min(cell_h * 0.22, cell_w * 0.12)), bold=arg == current)
 
     def _draw_test(self, draw, width, height):

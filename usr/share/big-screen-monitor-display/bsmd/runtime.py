@@ -186,6 +186,10 @@ class _TouchHost:
     def state(self):
         return self.session.link.state
 
+    def can_quit(self):
+        """The client on the device can be closed from the panel (FOSTON)."""
+        return hasattr(self.session.driver, "quit_client")
+
     def brightness_supported(self):
         driver = self.session.driver
         return bool(driver is not None and driver.capabilities.brightness)
@@ -572,6 +576,10 @@ class DisplaySession:
                 self._io("calibrate", self.driver.calibrate)
             elif command == "touch_test" and self.touch is not None:
                 self.touch.start_test()
+            elif command == "quit_client" and hasattr(self.driver, "quit_client"):
+                # The device closes its client and returns to its own menu (USB back to storage).
+                self.record("client_quit", health.SEVERITY_INFO, "client closed on the device by request")
+                self._io("quit_client", self.driver.quit_client)
             elif command in ("reconnect", "recover"):
                 self.record("recovery_requested", health.SEVERITY_INFO, args[0], model=self._model_name())
                 self._begin_recovery(args[0])
@@ -1262,7 +1270,7 @@ class Runtime:
             self.request("pattern", "identify", 8.0, display=display)
         elif action == "clear_pattern":
             self.request("clear_pattern", display=display)
-        elif action in ("calibrate", "touch_test"):
+        elif action in ("calibrate", "touch_test", "quit_client"):
             self.request(action, display=display)
         else:
             self.request("pattern", command["pattern"], float(command["seconds"]), display=display)

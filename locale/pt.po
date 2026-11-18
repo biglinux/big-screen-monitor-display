@@ -6624,3 +6624,72 @@ msgstr "{files} imagem(ns), {size:.1f} MB"
 #: usr/share/big-screen-monitor-display/config_gui.py:1380
 msgid "Testing"
 msgstr "Testes"
+
+msgid "Exit to the device menu"
+msgstr "Sair para o menu do GPS"
+
+msgid "Tap again to exit"
+msgstr "Toque de novo para sair"
+
+msgid "Closing…"
+msgstr "Saindo…"
+
+msgid "Touch test"
+msgstr "Teste de toque"
+
+msgid "Calibrate"
+msgstr "Calibrar"
+
+msgid "Brightness {value}%"
+msgstr "Brilho {value}%"
+
+msgid "Touch test - hold to leave"
+msgstr "Teste de toque – segure para sair"
+
+msgid "Kojiro"
+msgstr "Kojiro"
+
+msgid "Touchscreen"
+msgstr "Tela sensível ao toque"
+
+msgid "Tap, hold and swipe on the panel itself; the computer's keyboard focus and mouse are never touched."
+msgstr "Toque, segure e deslize no próprio painel; o foco do teclado e o mouse do computador nunca são afetados."
+
+msgid "Draws your finger's path on the panel (hold to leave)"
+msgstr "Desenha o caminho do dedo no painel (segure para sair)"
+
+msgid "Calibrate touch"
+msgstr "Calibrar o toque"
+
+msgid "Opens the navigator's own calibration (tap the crosses)"
+msgstr "Abre a calibração do próprio navegador (toque nas cruzes)"
+
+msgid "Close the client on the navigator"
+msgstr "Fechar o cliente no navegador"
+
+msgid "Returns the navigator to its main menu and USB storage mode"
+msgstr "Volta o navegador ao menu principal e ao modo de armazenamento USB"
+
+msgid "Install the client on the navigator"
+msgstr "Instalar o cliente no navegador"
+
+msgid "With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."
+msgstr "Com o navegador conectado como armazenamento USB: copia o bsmd-ce.exe para a pasta BigScreen. Depois dê reset no navegador e escolha BigScreen\\bsmd-ce.exe como caminho da navegação."
+
+msgid "No navigator mounted as USB storage. Quit the client on the navigator (Exit button) and open its volume in the file manager."
+msgstr "Nenhum navegador montado como armazenamento USB. Feche o cliente no navegador (botão Sair) e abra o volume dele no gerenciador de arquivos."
+
+msgid "Could not install the client: {error}"
+msgstr "Não foi possível instalar o cliente: {error}"
+
+msgid "Client installed at {path}. Reset the navigator before starting it."
+msgstr "Cliente instalado em {path}. Dê reset no navegador antes de abri-lo."
+
+msgid "reported by the device (800x480 on the FS-707DC)"
+msgstr "informada pelo aparelho (800x480 no FS-707DC)"
+
+msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
+msgstr "Roda o cliente bsmd-ce no firmware original do navegador (nada é gravado)."
+
+msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
+msgstr "Toque resistivo de um ponto: toque, segure e deslize no próprio painel."
