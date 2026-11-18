@@ -31,9 +31,10 @@
 #include <wchar.h>
 
 #include "fsp.h"
+#include "splash_data.h"
 
-#define CLIENT_VERSION "bsmd-ce 1.1.1"
-#define CLIENT_VERSION_W L"bsmd-ce 1.1.1"
+#define CLIENT_VERSION "bsmd-ce 1.2.0"
+#define CLIENT_VERSION_W L"bsmd-ce 1.2.0"
 #define WM_APP_CALIBRATE (WM_APP + 1)
 #define WM_APP_STATUS    (WM_APP + 2)
 #define CORNER 64                 /* top-left exit corner, pixels */
@@ -70,6 +71,7 @@ static int g_last_x = -1, g_last_y = -1;
 static DWORD g_corner_since;
 static RECT g_exit_button;
 
+static uint16_t *g_art;               /* waiting-screen artwork (splash_data.h), when the panel is 800x480 */
 static uint8_t *g_rx_buf;             /* parser buffer */
 static uint8_t *g_scratch;            /* inflate output */
 static size_t g_scratch_len;
@@ -632,10 +634,82 @@ static void blit_box(const fsp_box *box)
     ReleaseDC(g_hwnd, dc);
 }
 
-/* Waiting screen, drawn locally while no host is connected. */
+/* Waiting screen with the artwork rendered at build time (tools/make_splash.py):
+ * only the live texts are drawn here. */
+static void load_art(void)
+{
+    size_t bytes = (size_t)SPLASH_W * SPLASH_H * 2;
+    if (g_width != SPLASH_W || g_height != SPLASH_H)
+        return;
+    g_art = (uint16_t *)malloc(bytes);
+    if (g_art && fsp_inflate(splash_z, SPLASH_Z_LEN, (uint8_t *)g_art, bytes) != (long)bytes) {
+        free(g_art);
+        g_art = NULL;
+    }
+    log_line("splash artwork %s", g_art ? "loaded" : "not used");
+}
+
+static HFONT make_font(int height, int bold)
+{
+    LOGFONTW lf;
+    memset(&lf, 0, sizeof(lf));
+    lf.lfHeight = -height;
+    lf.lfWeight = bold ? FW_BOLD : FW_NORMAL;
+    lf.lfQuality = 5;
+    wcscpy(lf.lfFaceName, L"Tahoma");
+    return CreateFontIndirectW(&lf);
+}
+
+static void draw_art_splash(void)
+{
+    RECT r, calc;
+    HFONT f_status, f_small, f_ver, old;
+    fsp_box all;
+    int y, line;
+    EnterCriticalSection(&g_fb_lock);
+    for (y = 0; y < g_height; y++)
+        memcpy(g_surface.pixels + (long)y * g_surface.stride, g_art + (long)y * g_width, (size_t)g_width * 2);
+    f_status = make_font(21, 1);
+    f_small = make_font(13, 0);
+    f_ver = make_font(13, 0);
+    SetBkMode(g_memdc, TRANSPARENT);
+    old = (HFONT)SelectObject(g_memdc, f_status);
+    SetTextColor(g_memdc, SPLASH_TEXT);
+    /* status, centred vertically in its area */
+    SetRect(&calc, SPLASH_STATUS_X0, 0, SPLASH_STATUS_X1, 0);
+    DrawTextW(g_memdc, g_status, -1, &calc, DT_CENTER | DT_WORDBREAK | DT_CALCRECT);
+    y = (SPLASH_STATUS_Y0 + SPLASH_STATUS_Y1 - (calc.bottom - calc.top)) / 2;
+    SetRect(&r, SPLASH_STATUS_X0, y, SPLASH_STATUS_X1, SPLASH_STATUS_Y1);
+    DrawTextW(g_memdc, g_status, -1, &r, DT_CENTER | DT_WORDBREAK);
+    SelectObject(g_memdc, f_small);
+    SetTextColor(g_memdc, SPLASH_DIM);
+    for (line = 0; line < DIAG_LINES; line++) {
+        SetRect(&r, SPLASH_DIAG_X0, SPLASH_DIAG_Y0 + line * 15, SPLASH_DIAG_X1, SPLASH_DIAG_Y0 + (line + 1) * 15);
+        DrawTextW(g_memdc, g_diag[line], -1, &r, DT_LEFT | DT_SINGLELINE | DT_VCENTER);
+    }
+    SelectObject(g_memdc, f_ver);
+    SetTextColor(g_memdc, SPLASH_FAINT);
+    SetRect(&r, SPLASH_VERSION_X0, SPLASH_VERSION_Y0, SPLASH_VERSION_X1, SPLASH_VERSION_Y1);
+    DrawTextW(g_memdc, CLIENT_VERSION_W, -1, &r, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
+    SelectObject(g_memdc, old);
+    DeleteObject(f_status);
+    DeleteObject(f_small);
+    DeleteObject(f_ver);
+    SetRect(&g_exit_button, SPLASH_EXIT_X0, SPLASH_EXIT_Y0, SPLASH_EXIT_X1, SPLASH_EXIT_Y1);
+    all.x0 = 0; all.y0 = 0; all.x1 = g_width; all.y1 = g_height;
+    blit_box(&all);
+    LeaveCriticalSection(&g_fb_lock);
+}
+
+/* Waiting screen, drawn locally while no host is connected (GDI-only fallback
+ * for panels that are not 800x480). */
 static void draw_splash(void)
 {
     RECT r;
+    if (g_art) {
+        draw_art_splash();
+        return;
+    }
     HFONT font_big, font_small, old;
     LOGFONTW lf;
     HBRUSH bg, accent, button;
@@ -1275,6 +1349,7 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE prev, LPWSTR cmd, int show)
         log_line("out of memory");
         return 1;
     }
+    load_art();
     backlight_probe();
     write_report();
     keep_awake_init();

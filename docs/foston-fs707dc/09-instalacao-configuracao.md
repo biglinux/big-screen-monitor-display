@@ -41,6 +41,7 @@ cd device-clients/wince
 make host-test                                   # núcleo portátil, sem compilador cruzado
 LD_LIBRARY_PATH=<deps32>/lib make CROSS=/opt/mingw32ce/bin/arm-mingw32ce-
 make package CROSS=...                           # atualiza o binário empacotado + SHA-256
+make splash                                      # regera a arte da tela de espera (src/splash_data.h)
 ```
 
 CeGCC 0.59.1 (2009) precisa de `libgmp.so.3` e `libmpfr.so.1` de 32 bits:

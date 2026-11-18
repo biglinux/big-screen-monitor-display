@@ -22,7 +22,7 @@ Classe no registro: **A** (vídeo, toque e reconexão comprovados no aparelho).
 
 | Parte | Onde |
 |---|---|
-| Cliente Windows CE `bsmd-ce` 1.1.1 (C, 32 KB) | `device-clients/wince/` (fonte), binário em `usr/share/big-screen-monitor-display/device-clients/wince/` |
+| Cliente Windows CE `bsmd-ce` 1.2.0 (C, 52 KB, tela de espera com arte embutida) | `device-clients/wince/` (fonte), binário em `usr/share/big-screen-monitor-display/device-clients/wince/` |
 | Protocolo FSP (C + Python) | `device-clients/wince/src/fsp.[ch]`, `bsmd/displays/foston/protocol.py` |
 | Driver `foston_fs707dc` | `bsmd/displays/foston/driver.py` (+ `emulator.py`, `install.py`) |
 | Camada de toque genérica | `bsmd/touch.py`; integração em `bsmd/runtime.py` |

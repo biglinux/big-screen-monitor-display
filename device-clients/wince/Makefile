@@ -20,7 +20,7 @@ OUT = build/bsmd-ce.exe
 
 all: $(OUT)
 
-$(OUT): $(SRC) src/fsp.h
+$(OUT): $(SRC) src/fsp.h src/splash_data.h
 	mkdir -p build
 	$(CC) $(CFLAGS) $(ARCH_FLAGS) $(DEFS) -o $@ $(SRC) $(LIBS)
 	$(STRIP) $@
@@ -43,3 +43,9 @@ package: $(OUT)
 	cd $(PACKAGED) && sha256sum bsmd-ce.exe > bsmd-ce.exe.sha256
 
 .PHONY: package
+
+# Regenerate the waiting-screen artwork (needs Pillow, rsvg-convert, Adwaita icons).
+splash:
+	python3 tools/make_splash.py
+
+.PHONY: splash
