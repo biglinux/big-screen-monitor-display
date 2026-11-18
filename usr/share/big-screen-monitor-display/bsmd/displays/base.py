@@ -77,6 +77,7 @@ class Capabilities:
     output: str = "raster"               # raster (framebuffer) or telemetry (structured CPU values)
     metrics: tuple = ()                  # telemetry: metrics the firmware shows, physical order
     display: str = "lcd"                 # lcd or segment (numeric)
+    touch: str = ""                      # "" none, "single" single-point touchscreen (events via on_input)
 
     def as_dict(self):
         return {key: (list(value) if isinstance(value, tuple) else value)

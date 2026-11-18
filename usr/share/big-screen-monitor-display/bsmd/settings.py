@@ -64,7 +64,7 @@ ORIENTATIONS = ("horizontal", "vertical", "horizontal_flipped", "vertical_flippe
 # Display families (bsmd.displays.registry; kept here so the root helper
 # does not import the drivers). A test checks both lists agree.
 PROFILE_IDS = ("ax206", "turing_rev_a", "xuanfang_rev_b", "turing_rev_c", "kipye_rev_d", "weact_a",
-               "weact_b", "turing_usb", "smartmonitor_hid",
+               "weact_b", "turing_usb", "smartmonitor_hid", "foston_fs707dc",
                "deepcool_ak", "deepcool_ag", "deepcool_ls", "deepcool_ak_pro", "deepcool_ak400_pro", "deepcool_ld",
                "deepcool_mystique")
 LED_COLORS = ("off", "white", "red", "green", "blue", "cyan", "magenta", "yellow", "orange", "purple")
@@ -272,11 +272,12 @@ DISPLAY_SCHEMA = {
     "profile": (*_choice("auto", *PROFILE_IDS), "auto"),
     "rev_c_size": (*_choice("auto", "2.1", "2.8", "5", "8.8"), "auto"),
     "led_color": (*_choice(*LED_COLORS), "off"),
+    "touch_enabled": (*BOOL, True),       # touch panels (FOSTON): interact on the panel itself
 }
 GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback"}
 MAX_DISPLAYS = 16
 # Per-display commands accepted from the configuration window (command spool).
-SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern")
+SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test")
 PATTERN_NAMES = ("identify", "bars", "grid", "gradient", "orientation", "white", "black")
 DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?)$")
 

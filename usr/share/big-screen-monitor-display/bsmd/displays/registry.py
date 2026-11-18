@@ -85,6 +85,9 @@ class Profile:
         if self.id == "weact_b":
             from .weact import WeActB
             return WeActB(port, options=options)
+        if self.id == "foston_fs707dc":
+            from .foston.driver import FostonDisplay
+            return FostonDisplay(port, options=options)
         if self.id == "smartmonitor_hid":
             from .smartmonitor import driver as smartmonitor_driver
             return smartmonitor_driver.create(candidate.device, options)
@@ -97,6 +100,7 @@ class Profile:
 REF = "https://github.com/mathoudebine/turing-smart-screen-python"
 QINHENG = 0x1A86
 LINUX_GADGET = (0x0525, 0x1D6B)
+WINCE_VID, WINCE_SERIAL_PID = 0x045E, 0x00CE     # Microsoft "Windows CE USB serial" (ipaq driver)
 
 PROFILES = (
     Profile("ax206", "AX206 DPF (AIDA64 / USB-Display)", "Appotech AX206 based frames",
@@ -160,6 +164,15 @@ PROFILES = (
                       "(about a minute, only when the look changes) and then sends the live values."),
                    N_("Themes are not drawn on this panel; the dashboard follows the Standard theme's colour "
                       "scheme, temperature unit, name and brightness of this display."))),
+    Profile("foston_fs707dc", "FOSTON FS-707DC Touch Display", "FOSTON (Windows CE / MediaTek MT3351 navigators)",
+            ("FOSTON FS-707DC 7\"",), N_("reported by the device (800x480 on the FS-707DC)"),
+            "FSP over the Windows CE USB serial class (bsmd-ce client on the device)", "serial",
+            # 045e:00ce is the generic Windows CE USB serial function: the HELLO
+            # handshake with the bsmd-ce client confirms the device.
+            (Rule(WINCE_VID, (WINCE_SERIAL_PID,), PROBABLE),),
+            "A", "device-clients/wince",
+            notes=(N_("Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."),
+                   N_("Single-point resistive touchscreen: tap, hold and swipe on the panel itself."),)),
 )
 
 
