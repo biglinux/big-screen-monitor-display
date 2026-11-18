@@ -372,7 +372,7 @@ def tap(ui, clock, x, y):
 
 def test_touch_ui_bar_buttons_theme_and_brightness(tmp_path):
     host, clock = Host(), Clock()
-    ui = touch.TouchUI(host, str(tmp_path / "touch.json"), clock=clock)
+    ui = touch.TouchUI(host, str(tmp_path / "touch.json"), clock=clock, thumbnails=False)
     frame = Image.new("RGB", (800, 480), (0, 0, 0))
     tap(ui, clock, 400, 200)                        # first tap opens the bar
     assert ui.page == "bar"
@@ -394,23 +394,31 @@ def test_touch_ui_bar_buttons_theme_and_brightness(tmp_path):
     assert "theme" not in again.overrides.values
 
 
+def press(ui, clock, action, arg=None):
+    box = next(box for box, a, g in ui.buttons if a == action and (arg is None or g == arg))
+    tap(ui, clock, (box[0] + box[2]) // 2, (box[1] + box[3]) // 2)
+
+
 def test_touch_ui_menu_gallery_test_and_timeout(tmp_path):
     host, clock = Host(), Clock()
-    ui = touch.TouchUI(host, None, clock=clock)
+    ui = touch.TouchUI(host, None, clock=clock, thumbnails=False)
     ui.handle(touch.DOWN, 300, 300)
     clock.now += 0.9
     ui.tick()                                       # long press fires while still held
     ui.handle(touch.UP, 300, 300)
     assert ui.page == "menu"
-    ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
-    kojiro = next(box for box, action, arg in ui.buttons if action == "theme" and arg == "kojiro")
-    tap(ui, clock, (kojiro[0] + kojiro[2]) // 2, (kojiro[1] + kojiro[3]) // 2)
+    frame = Image.new("RGB", (800, 480))
+    ui.decorate(frame, host.base_settings())
+    press(ui, clock, "page", "themes")
+    assert ui.page == "themes"
+    ui.decorate(frame, ui.apply(host.base_settings()))
+    press(ui, clock, "theme", "kojiro")
     assert ui.page is None and ui.apply(host.base_settings())["theme"] == "kojiro"
     ui.start_test()
     for x in range(100, 300, 20):
         ui.handle(touch.MOVE if x > 100 else touch.DOWN, x, 200)
     ui.handle(touch.UP, 300, 200)
-    image = ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
+    image = ui.decorate(frame, host.base_settings())
     assert ui.page == "test" and len(ui.trail) >= 5 and image.getpixel((200, 200)) != (0, 0, 0)
     clock.now += touch.TEST_SECONDS + 1
     ui.tick()
@@ -420,6 +428,85 @@ def test_touch_ui_menu_gallery_test_and_timeout(tmp_path):
     clock.now += 0.2
     ui.handle(touch.UP, 300, 240)
     assert ui.page is None and ("invalidate",) in host.requests
+
+
+@pytest.mark.parametrize("theme,key,value", [("standard", "std_scheme", "nord"),
+                                              ("gkrellm", "gk_theme_color", "cyber_red"),
+                                              ("planet", "planet_accent", "amber"),
+                                              ("old_computer", "oc_scheme", "plum"),
+                                              ("big_media_player", "bmp_skin", "big_vinyl")])
+def test_appearance_page_sets_the_theme_option(theme, key, value):
+    host, clock = Host({"theme": theme, "brightness": 70}), Clock()
+    ui = touch.TouchUI(host, None, clock=clock, thumbnails=False)
+    ui._open("menu", clock())
+    frame = Image.new("RGB", (800, 480))
+    ui.decorate(frame, ui.apply(host.base_settings()))
+    press(ui, clock, "page", "style")
+    ui.decorate(frame, ui.apply(host.base_settings()))
+    press(ui, clock, "style", value)
+    assert ui.apply(host.base_settings())[key] == value
+    ui._open("menu", clock())
+    ui.decorate(frame, ui.apply(host.base_settings()))
+    assert ui._current_style(ui.apply(host.base_settings()))[0] == value
+
+
+def test_kojiro_look_and_brother_away_story():
+    host, clock = Host({"theme": "kojiro", "brightness": 70}), Clock()
+    ui = touch.TouchUI(host, None, clock=clock, thumbnails=False)
+    ui._open("style", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), ui.apply(host.base_settings()))
+    press(ui, clock, "style", "matrix")
+    applied = ui.apply(host.base_settings())
+    from bsmd.kojiro import presets
+    assert applied["kojiro"] == presets.build("matrix") and ui._current_style(applied)[0] == "matrix"
+    host.values["theme"] = "brother_away"
+    ui._open("style", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), ui.apply(host.base_settings()))
+    assert len([b for b in ui.buttons if b[1] == "style"]) == len(touch.STORIES)
+    press(ui, clock, "style", "shark")
+    assert ("ba_story", "shark") in host.requests
+
+
+def test_orientation_page():
+    host, clock = Host(), Clock()
+    ui = touch.TouchUI(host, None, clock=clock, thumbnails=False)
+    ui._open("orientation", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), ui.apply(host.base_settings()))
+    press(ui, clock, "orientation", "vertical")
+    assert ui.apply(host.base_settings())["orientation"] == "vertical" and ("invalidate",) in host.requests
+    host.values["orientation"] = "horizontal_flipped"          # changed in the window: the window wins
+    assert ui.apply(host.base_settings())["orientation"] == "horizontal_flipped"
+
+
+def test_back_button_returns_to_the_menu_then_closes():
+    host, clock = Host(), Clock()
+    ui = touch.TouchUI(host, None, clock=clock, thumbnails=False)
+    ui._open("themes", clock())
+    ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
+    press(ui, clock, "back")
+    assert ui.page == "menu"
+    ui.decorate(Image.new("RGB", (800, 480)), host.base_settings())
+    assert not [b for b in ui.buttons if b[1] == "back"]       # the menu shows the app icon instead
+    ui.handle(touch.DOWN, 400, 100)
+    clock.now += 0.2
+    ui.handle(touch.UP, 400, 400)                               # swipe down closes
+    assert ui.page is None
+
+
+def test_gallery_thumbnails_are_real_renders():
+    host, clock = Host(), Clock()
+    host.panel_size = lambda: (800, 480)
+    ui = touch.TouchUI(host, None, clock=clock)
+    ui._open("themes", clock())
+    settings_value = ui.apply(host.base_settings())
+    ui.decorate(Image.new("RGB", (800, 480)), settings_value)
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline and not [k for k, v in ui.thumbs.done.items() if v is not None]:
+        time.sleep(0.2)
+    ready = {key[1]: image for key, image in ui.thumbs.done.items() if image is not None}
+    assert "standard" in ready or ready, "no thumbnail rendered"
+    image = next(iter(ready.values()))
+    assert image.width > 50 and len(set(image.getdata())) > 20                # a real picture, not a fill
 
 
 def test_touch_ui_portrait_layout_has_reachable_buttons():

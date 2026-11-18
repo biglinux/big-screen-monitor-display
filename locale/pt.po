@@ -6693,3 +6693,63 @@ msgstr "Roda o cliente bsmd-ce no firmware original do navegador (nada é gravad
 
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Toque resistivo de um ponto: toque, segure e deslize no próprio painel."
+
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Horizontal (upside down)"
+msgstr "Horizontal (invertida)"
+
+msgid "Vertical (upside down)"
+msgstr "Vertical (invertida)"
+
+msgid "The coconut tree"
+msgstr "O coqueiro"
+
+msgid "The philosopher"
+msgstr "O filósofo"
+
+msgid "The shark"
+msgstr "O tubarão"
+
+msgid "The raft"
+msgstr "A jangada"
+
+msgid "The UFO"
+msgstr "O disco voador"
+
+msgid "The crab with glasses"
+msgstr "O caranguejo de óculos"
+
+msgid "The mermaid"
+msgstr "A sereia"
+
+msgid "Starry night"
+msgstr "Noite estrelada"
+
+msgid "Rain again"
+msgstr "Chuva de novo"
+
+msgid "Gone fishing"
+msgstr "Pescaria"
+
+msgid "Skin"
+msgstr "Skin"
+
+msgid "Choose a story"
+msgstr "Escolha uma história"
+
+msgid "Draw with your finger"
+msgstr "Desenhe com o dedo"
+
+msgid "Device calibration"
+msgstr "Calibração do aparelho"
+
+msgid "Back to the GPS main menu"
+msgstr "Volta ao menu principal do GPS"
+
+msgid "This theme has no options here."
+msgstr "Este tema não tem opções aqui."

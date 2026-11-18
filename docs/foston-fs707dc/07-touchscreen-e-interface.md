@@ -21,17 +21,27 @@ digitalizador resistivo → driver de toque do WinCE (já calibrado)
 
 | Gesto | Ação |
 |---|---|
-| Toque | mostra a barra inferior + cabeçalho (6 s); na barra, aciona o botão |
+| Toque | barra inferior + faixa de status (6 s); na barra, aciona o botão |
 | Deslizar ← / → | próximo / anterior tema |
-| Deslizar ↑ ou segurar 0,7 s | menu: galeria de temas, Teste de toque, Calibrar, Voltar e **Sair para o menu do GPS** |
-| Sair para o menu do GPS (2 toques em até 4 s) | fecha o cliente no aparelho, devolve o USB ao modo armazenamento e volta ao menu principal do FOSTON |
+| Deslizar ↑, segurar 0,7 s ou botão de grade da barra | menu |
 | Deslizar ↓ | fecha o que estiver aberto |
 
-Cabeçalho: hora, data, nome do display e indicador de conexão (verde = saudável).
-Barra: ◀ tema, nome do tema, tema ▶, brilho −/+ (**só quando o hardware tem
-controle de luz de fundo** — o FS-707DC não tem), menu, fechar. Botões de
-≥ 64 px de altura; em retrato a barra perde o rótulo e os botões crescem.
-Cada toque desenha uma onda que se expande (feedback visual imediato).
+## Menu (aparência Adwaita, como a janela de configuração)
+
+Cabeçalho com o ícone do app (ou botão Voltar nas subpáginas), título, nome do
+display, indicador de conexão e relógio; fundo fosco (o próprio tema desfocado).
+
+| Cartão | Página |
+|---|---|
+| **Temas** | galeria com miniaturas reais dos 7 temas |
+| **Aparência do tema atual** | Padrão: 8 esquemas de cores · GKrellM: 3 estilos · Planet: 5 cores de destaque · Computador Antigo: 4 esquemas · Big Media Player: 15 skins · Kojiro: 7 aparências (presets) · Brother Away: 14 histórias (a escolhida começa na hora) — todas com miniatura real, inclusive a cena de cada história |
+| **Orientação** | Horizontal, Vertical e as duas invertidas, com desenho da tela |
+| **Teste de toque** | desenha o caminho do dedo; segurar sai |
+| **Calibrar** | calibração nativa do aparelho |
+| **Sair para o menu do GPS** | dois toques em até 4 s: fecha o cliente, devolve o USB ao modo armazenamento e volta ao menu principal |
+
+Miniaturas: renderizadas numa thread separada a meia resolução, guardadas por 10 min.
+Ícones: Adwaita simbólicos via `rsvg-convert`, tingidos; há desenho vetorial de reserva.
 
 As escolhas feitas no painel (tema, brilho) são salvas por display em
 `$STATE_DIRECTORY/touch-<id>.json` e **descartadas assim que o mesmo ajuste é

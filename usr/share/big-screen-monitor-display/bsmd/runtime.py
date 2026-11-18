@@ -186,6 +186,10 @@ class _TouchHost:
     def state(self):
         return self.session.link.state
 
+    def panel_size(self):
+        settings = self.session.settings()
+        return self.session._render_size(settings)
+
     def can_quit(self):
         """The client on the device can be closed from the panel (FOSTON)."""
         return hasattr(self.session.driver, "quit_client")
@@ -576,6 +580,10 @@ class DisplaySession:
                 self._io("calibrate", self.driver.calibrate)
             elif command == "touch_test" and self.touch is not None:
                 self.touch.start_test()
+            elif command == "ba_story":
+                theme = self.theme
+                if theme is not None and hasattr(theme, "play_story"):
+                    theme.play_story(args[0])
             elif command == "quit_client" and hasattr(self.driver, "quit_client"):
                 # The device closes its client and returns to its own menu (USB back to storage).
                 self.record("client_quit", health.SEVERITY_INFO, "client closed on the device by request")
