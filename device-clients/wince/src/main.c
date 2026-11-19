@@ -33,8 +33,8 @@
 #include "fsp.h"
 #include "splash_data.h"
 
-#define CLIENT_VERSION "bsmd-ce 1.2.0"
-#define CLIENT_VERSION_W L"bsmd-ce 1.2.0"
+#define CLIENT_VERSION "bsmd-ce 1.2.1"
+#define CLIENT_VERSION_W L"bsmd-ce 1.2.1"
 #define WM_APP_CALIBRATE (WM_APP + 1)
 #define WM_APP_STATUS    (WM_APP + 2)
 #define CORNER 64                 /* top-left exit corner, pixels */
@@ -291,6 +291,46 @@ static void ufn_report(FILE *report)
     CloseHandle(h);
 }
 
+#define UFN_KEY L"Drivers\\USB\\FunctionDrivers"
+
+static int read_default_client(WCHAR *out, DWORD chars)
+{
+    HKEY key;
+    DWORD len = chars * sizeof(WCHAR), type = 0;
+    int ok = 0;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, UFN_KEY, 0, 0, &key) != ERROR_SUCCESS)
+        return 0;
+    if (RegQueryValueExW(key, L"DefaultClientDriver", NULL, &type, (BYTE *)out, &len) == ERROR_SUCCESS &&
+        type == REG_SZ && out[0]) {
+        out[chars - 1] = 0;
+        ok = 1;
+    }
+    RegCloseKey(key);
+    return ok;
+}
+
+/* IOCTL_UFN_CHANGE_CURRENT_CLIENT on the FS-707DC also saves the new client
+ * as the boot default (found 2026-11-19: after using the panel the navigator
+ * kept starting as a serial port instead of USB storage, until Ajustes -> USB
+ * was used). Put the saved default back right after switching. */
+static void restore_default_client(const WCHAR *value)
+{
+    typedef LONG (WINAPI *RegFlushKey_t)(HKEY);
+    RegFlushKey_t flush = (RegFlushKey_t)core_proc(L"RegFlushKey");
+    WCHAR now[128];
+    HKEY key;
+    if (!read_default_client(now, 128) || !_wcsicmp(now, value))
+        return;
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, UFN_KEY, 0, 0, &key) != ERROR_SUCCESS)
+        return;
+    RegSetValueExW(key, L"DefaultClientDriver", 0, REG_SZ, (const BYTE *)value,
+                   (DWORD)((wcslen(value) + 1) * sizeof(WCHAR)));
+    if (flush)
+        flush(key);
+    RegCloseKey(key);
+    log_line("DefaultClientDriver %ls -> %ls (restored)", now, value);
+}
+
 /* Make sure Serial_Class is the active USB client. Returns 1 when it is. */
 static int ensure_serial_client(void)
 {
@@ -304,6 +344,10 @@ static int ensure_serial_client(void)
             diag(DIAG_CLIENT, L"Cliente USB: Serial_Class (ativo)");
             ok = 1;
         } else if (ufn_change(h, L"Serial_Class")) {
+            WCHAR saved[128];
+            if (read_default_client(saved, 128) && !_wcsicmp(saved, L"Serial_Class") &&
+                _wcsicmp(current, L"Serial_Class"))
+                restore_default_client(current);
             diag(DIAG_CLIENT, L"Cliente USB: %ls -> Serial_Class", current);
             if (!g_switched_usb) {
                 wcscpy(g_prev_client, current);
