@@ -721,7 +721,7 @@ class TouchUI:
 
     def _draw_status(self, layer, draw, width, height):
         bar = max(30, height // 12)
-        draw.rectangle((0, 0, width, bar), fill=(20, 20, 24, 220))
+        draw.rectangle((0, 0, width, bar), fill=(20, 20, 24, 250))   # opaque: the theme's own clock must not ghost
         now = time.localtime()
         size = bar * 0.55
         self._text(draw, (12, bar / 2), time.strftime("%H:%M", now), size, bold=True, anchor="lm")
@@ -739,7 +739,7 @@ class TouchUI:
     def _draw_bar(self, layer, draw, width, height, settings):
         bar = max(64, int(height * 0.18))
         top = height - bar
-        draw.rectangle((0, top, width, height), fill=(20, 20, 24, 225))
+        draw.rectangle((0, top, width, height), fill=(20, 20, 24, 248))
         draw.line((0, top, width, top), fill=(255, 255, 255, 30))
         pad = max(6, bar // 9)
         theme = settings.get("theme")
@@ -783,7 +783,8 @@ class TouchUI:
         o_label = next((label for value, label, _icon in ORIENTATIONS if value == orientation), orientation)
         armed = self.clock() < self.quit_armed_until
         tiles = [("view-grid", _("Themes"), _(THEME_LABELS.get(theme, theme or "")), "page", "themes", ACCENT),
-                 ("color-select", _((options or ("", N_("Appearance")))[1]) if options else _("Appearance"),
+                 ("media-playback-start" if theme == "brother_away" else "color-select",
+                  _((options or ("", N_("Appearance")))[1]) if options else _("Appearance"),
                   style_label or (_("Choose a story") if theme == "brother_away" else "—"),
                   "page", "style", (192, 97, 203)),
                  ("rotation-allowed", _("Orientation"), _(o_label), "page", "orientation", (38, 162, 105)),
