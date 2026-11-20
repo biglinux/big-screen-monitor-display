@@ -1378,12 +1378,18 @@ class Capture:
                     counts["numbers"] + counts["bars"] + numbers + bars <= MAX_WIDGETS and
                     len(channels) + len(new) <= MAX_CHANNELS)
 
-        for _group, items in sorted(groups.items(), key=lambda g: min(i[0] for i in g[1])):
-            chosen = items if fits(items) else [i for i in items if i[2].get("part") != "frac"]
-            if not chosen or not fits(chosen):
-                dropped += len(items)
-                continue
-            dropped += len(items) - len(chosen)
+        # A text repeating values already live elsewhere (a second clock) comes after
+        # every text showing something not on screen yet: same priority order inside.
+        ordered = sorted(groups.items(), key=lambda g: min(i[0] for i in g[1]))
+        first, repeats, shown = [], [], set()
+        for group in ordered:
+            keys = {_channel_key(i[2]) for i in group[1]}
+            (repeats if keys and keys <= shown else first).append(group)
+            shown |= keys
+        # Among repeats the cheapest first: three values in one widget each are worth
+        # more than a second clock of five.
+        repeats.sort(key=lambda g: (len(g[1]), min(i[0] for i in g[1])))
+        def keep(chosen):
             for item in chosen:
                 _priority, widget, binding, _index = item
                 key = _channel_key(binding)
@@ -1393,6 +1399,32 @@ class Capture:
                 widget.channel = channels[key]
                 counts["numbers" if isinstance(widget, imgdat.Number) else "bars"] += 1
                 kept.append(item)
+
+        # Decimals of large values come last: every value first, then those decimals while
+        # room is left ("200M" and the GPU load beat "200.0M" without it). Small values
+        # keep theirs: "0.3 Mb/s" must never become "0 Mb/s".
+        def large(item):
+            try:
+                value = fields.candidate_value(item[2]["cand"], self.scene.base) * item[2].get("scale", 1.0)
+            except (KeyError, TypeError, ValueError):
+                return False
+            return abs(value) >= 100
+
+        decimals = []
+        for _group, items in first + repeats:
+            chosen = [i for i in items if i[2].get("part") != "frac" or not large(i)] or items
+            if not fits(chosen):
+                chosen = [i for i in items if i[2].get("part") != "frac"]     # without its decimals
+            if not chosen or not fits(chosen):
+                dropped += len(items)
+                continue
+            keep(chosen)
+            decimals.extend(i for i in items if i not in chosen)
+        for item in decimals:
+            if fits([item]):
+                keep([item])
+            else:
+                dropped += 1
         return kept, bindings, dropped
 
     @staticmethod

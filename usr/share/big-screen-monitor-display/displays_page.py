@@ -422,6 +422,14 @@ class DisplaysPage:
                 processes.connect("notify::active", lambda r, _p: self._set(display_id, "sm_std_processes",
                                                                             "30" if r.get_active() else None))
                 look.add(processes)
+                planet = [("30", _("Every 30 minutes")), ("60", _("Every hour")),
+                          ("180", _("Every 3 hours (recommended)"))]
+                look.add(self._combo(_("Planet: position of the globe"), planet,
+                                     str(values.get("sm_planet_minutes", "180")),
+                                     lambda value: self._set(display_id, "sm_planet_minutes", value),
+                                     _("The globe is drawn at the real time and turns as a new picture flashed "
+                                       "at this interval: the display restarts for about 17 seconds each time and "
+                                       "its memory wears with use.")))
                 scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
                           ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
                 look.add(self._combo(_("Brother Away: story scenes"), scenes,

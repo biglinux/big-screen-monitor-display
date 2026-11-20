@@ -6713,3 +6713,25 @@ msgid ""
 msgstr ""
 "O painel conta as histórias em cenas (começo, meio e fim) com o náufrago "
 "animado e o balão de fala; cada cena nova é gravada (cerca de 20 segundos)."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:427
+msgid "Every 30 minutes"
+msgstr "A cada 30 minutos"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:428
+msgid "Every 3 hours (recommended)"
+msgstr "A cada 3 horas (recomendado)"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:429
+msgid "Planet: position of the globe"
+msgstr "Planet: posição do planeta"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:431
+msgid ""
+"The globe is drawn at the real time and turns as a new picture flashed at "
+"this interval: the display restarts for about 17 seconds each time and its "
+"memory wears with use."
+msgstr ""
+"O planeta é desenhado na hora real e gira com uma nova imagem gravada neste "
+"intervalo: o display reinicia por cerca de 17 segundos a cada vez e a "
+"memória dele se desgasta com o uso."

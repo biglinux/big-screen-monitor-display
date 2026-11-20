@@ -90,3 +90,13 @@ Do clique até o painel voltar com o tema novo: **17–18 s** (antes, 19–28 s,
 Uma troca isolada começa na hora. Mudanças seguidas (editar um tema) esperam 4 s sem mudanças antes de gravar.
 
 Durante a gravação, o painel some do USB por ~4 s. No KDE Plasma, isso gera o aviso e o som de "Dispositivo conectado/desconectado". O Plasma só avisa sobre dispositivos que o kernel marca como removíveis, e um painel ligado num hub USB aparece como `unknown`, então não gera aviso. Também é possível desligar esses dois eventos em *Configurações do sistema → Notificações → Notificações do sistema* (`~/.config/plasma_workspace.notifyrc`, `Action=` em `Event/deviceAdded` e `Event/deviceRemoved`).
+
+### Quais valores ficam ao vivo
+
+O painel aceita no máximo 28 números e 26 canais. Quando um tema mostra mais que isso, a captura escolhe nesta ordem:
+
+1. Valores que ainda não aparecem em nenhum lugar da tela, por prioridade (relógio, CPU, RAM, GPU, disco, rede…).
+2. Repetições de valores já ao vivo em outro ponto, as mais baratas primeiro: três números de um widget cada valem mais que um segundo relógio de cinco.
+3. Casas decimais de valores grandes (≥ 100), se sobrar espaço: "200M" em vez de "200.0M". Valores pequenos mantêm as suas ("0.3 Mb/s" nunca vira "0 Mb/s").
+
+No tema Planet isso trouxe CPU Freq, GPU Clock, Disk e Net de volta. Também foram corrigidos: o clock, a potência e o encoder da GPU ativa, que eram tratados como "não ao vivo"; e o Planet, que lia a frequência da CPU por fora da telemetria.

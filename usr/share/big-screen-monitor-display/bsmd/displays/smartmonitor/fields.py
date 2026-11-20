@@ -339,8 +339,10 @@ def noise(stats):
     gpus = [dict(g) for g in stats.get("gpus") or []]
     active = stats.get("active_gpu_idx", 0)
     for index, gpu in enumerate(gpus):
+        # The active GPU's clock, power and encoder are live fields: only the other
+        # GPUs' are noise (left out when a theme shows them).
         for key in ("clock_mhz", "power_w", "enc_percent"):
-            if gpu.get(key) is not None or index != active:
+            if index != active:
                 gpu[key] = (gpu.get(key) or 0) * 1.37 + 11
         for key in ("edge", "junc", "mem"):             # hwmon temperature strings ("54.0°C")
             if gpu.get(key):

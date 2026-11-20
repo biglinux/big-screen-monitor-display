@@ -362,9 +362,9 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 11
+CAPTURE_VERSION = 12
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
-THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
+THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_", "sm_planet_"), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
 # Scenes that follow the time of day are captured again when the period changes,
 # drawn at a representative hour (chosen so no clock component collides with the
@@ -373,6 +373,14 @@ BROTHER_AWAY_PERIODS = ((4.5, 7), (11.0, 13), (17.5, 18), (20.5, 23))     # (fro
 PLANET_HOURS = (1, 4, 7, 10, 13, 16, 19, 22)
 CAPTURE_TIMEOUT = 150.0
 CACHE_KEEP = 12              # every theme adapted ahead of a switch (see driver PRECAPTURE_IDLE)
+
+
+def planet_minutes(settings):
+    """Minutes between two positions of the Planet theme's globe on the panel."""
+    try:
+        return min(180, max(30, int(settings.get("sm_planet_minutes", "180"))))
+    except (TypeError, ValueError):
+        return 180
 
 
 def process_minutes(settings):
@@ -441,6 +449,12 @@ def spec(settings, stats, now=None):
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
     result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
               "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+    if theme_id == "planet":
+        # The globe at the real time, renewed every N minutes (a new picture each time).
+        step = planet_minutes(settings) * 60
+        utc = (now.astimezone() if now.tzinfo is None else now).astimezone(datetime.timezone.utc)
+        slot = int(utc.timestamp() // step) * step + step // 2       # the middle of the slot
+        result["astronomy"] = datetime.datetime.fromtimestamp(slot, datetime.timezone.utc).isoformat()
     minutes = process_minutes(settings)
     if theme_id == "standard" and minutes:
         # The process list is a snapshot: a new one (a new picture) every N minutes.
@@ -577,6 +591,7 @@ def _compiled(theme_spec, settings, stats, progress=None):
             hints = {}
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
                    "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out,
+                   "astronomy": theme_spec.get("astronomy"),
                    "scene": theme_spec.get("scene"), "spectrum": hints.get(base_key)}
         if art is not None and settings.get("sm_bmp_track_refresh"):
             import base64

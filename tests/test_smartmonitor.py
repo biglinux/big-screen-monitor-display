@@ -819,3 +819,58 @@ def test_standard_graphs_side_panel_keeps_its_values_live(stats, tmp_path, monke
     assert with_graphs.bindings and with_graphs.data != without.data
     numbers = [r for r in imgdat.parse(with_graphs.data) if r["type"] == imgdat.NUMBER]
     assert len(numbers) > len([r for r in imgdat.parse(without.data) if r["type"] == imgdat.NUMBER])
+
+
+def test_planet_globe_turns_every_n_minutes_at_the_real_time(stats):
+    base = dict(settings.defaults(), theme="planet")
+    assert settings.defaults()["sm_planet_minutes"] == "180"
+    when = datetime.datetime(2026, 11, 20, 14, 10, tzinfo=datetime.timezone.utc)
+    half = dict(base, sm_planet_minutes="30")
+    a = layout.spec(half, stats, when)
+    b = layout.spec(half, stats, when + datetime.timedelta(minutes=15))
+    c = layout.spec(half, stats, when + datetime.timedelta(minutes=25))
+    assert a["astronomy"] == b["astronomy"] != c["astronomy"]
+    assert datetime.datetime.fromisoformat(a["astronomy"]) == datetime.datetime(2026, 11, 20, 14, 15,
+                                                                                tzinfo=datetime.timezone.utc)
+    slow = layout.spec(base, stats, when)
+    assert datetime.datetime.fromisoformat(slow["astronomy"]).hour == 13    # 12:00-15:00, middle 13:30
+
+
+def test_active_gpu_clock_power_and_encoder_are_live_not_noise():
+    from bsmd.displays.smartmonitor import fields
+    stats = {"active_gpu_idx": 0, "gpus": [{"path": "a", "clock_mhz": 200, "power_w": 8, "enc_percent": 0},
+                                           {"path": "b", "clock_mhz": 300}]}
+    noise = fields.noise(stats)
+    assert noise["gpus"][0]["clock_mhz"] == 200 and noise["gpus"][0]["power_w"] == 8
+    assert noise["gpus"][1]["clock_mhz"] != 300                        # another GPU's: left out
+
+
+def test_planet_reads_the_cpu_frequency_from_the_collector(monkeypatch):
+    from bsmd import legacy_themes, telemetry
+    monkeypatch.setitem(telemetry.SYSTEM_STATS, "cpu_freq_mhz", 3814.0)
+    monkeypatch.setattr(legacy_themes.psutil, "cpu_freq", lambda: pytest.fail("the collector's value is used"))
+    legacy_themes.render_dashboard_planet(480, 320, dict(settings.defaults(), theme="planet"))
+
+
+def test_values_not_on_screen_beat_repeats_and_large_decimals():
+    from bsmd.displays.smartmonitor import capture
+    sel = capture.Capture.__new__(capture.Capture)
+    sel.scene = type("S", (), {"base": {"gpus": [{"path": "g", "clock_mhz": 1768.0}], "cpu_percent": 7.0,
+                                         "net_rx_mbps": 0.3}})()
+
+    def number(cand, part="whole"):
+        return imgdat.Number(0, (0, 0, 10, 9), (255, 255, 255), imgdat.Atlas((1,) * 12, 1, bytes(12)))
+    items, index = [], 0
+    for _ in range(capture.MAX_NUMBERS - 4):                         # a screen almost full of clocks
+        items.append((0, number("hour"), {"cand": "hour", "part": "whole"}, 0))
+    items += [(0, number("hour"), {"cand": "hour", "part": "whole"}, 1),          # a repeat
+              (46, number("gpu_clock"), {"cand": "gpu_clock", "part": "int"}, 2),
+              (46, number("gpu_clock"), {"cand": "gpu_clock", "part": "frac", "decimals": 1}, 2),
+              (34, number("net"), {"cand": "net_rx_mbps", "part": "int"}, 3),
+              (34, number("net"), {"cand": "net_rx_mbps", "part": "frac", "decimals": 1}, 3),
+              (20, number("gpu"), {"cand": "cpu_percent", "part": "whole"}, 4)]
+    kept, _bindings, dropped = sel._select_once(items)
+    kept_parts = {(k[2]["cand"], k[2]["part"], k[3]) for k in kept}
+    assert ("net_rx_mbps", "frac", 3) in kept_parts                  # 0.3 keeps its decimal
+    assert ("gpu_clock", "int", 2) in kept_parts and ("cpu_percent", "whole", 4) in kept_parts
+    assert ("gpu_clock", "frac", 2) not in kept_parts and ("hour", "whole", 1) not in kept_parts
