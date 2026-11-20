@@ -38,6 +38,13 @@ RESTART_VANISH = 5.0          # measured: the panel drops off USB ~1 s after the
 ACK_TIMEOUT = 5.0
 BLOCK_RETRIES = 5
 UPLOAD_ATTEMPTS = 3
+# Live values: the panel takes a report in ~1 ms, so while a song plays (progress,
+# time, spectrum - the media agent sends it 12 times a second) values go out
+# several times a second; otherwise once a second, like the telemetry.
+MEDIA_INTERVAL = {"economy": 1.0, "balanced": 0.25, "auto": 0.2, "fluid": 0.1}
+IDLE_INTERVAL = 1.0
+CLOCK_EVERY = 1.0             # the clock / backlight report
+RESEND_EVERY = 5.0            # every value again (only changed ones in between)
 FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
 STUCK_REPROBE = 60.0          # a stuck panel on the same USB address is tried again this often
 
@@ -126,7 +133,12 @@ class SmartMonitorHid(TelemetryDriver):
         caps.native_size = layout.SIZE
         caps.metrics = ("cpu", "gpu", "ram", "disk", "network", "clock")
         caps.notes = ("Draws a dashboard flashed into the panel; live values are pushed every second.",)
-        self.min_interval = 1.0
+        self.min_interval = min(MEDIA_INTERVAL.values())
+        self._sent = {}                # channel -> value the panel shows
+        self._sent_at = -1e9           # last time every value was sent
+        self._clock_at = -1e9          # last clock / backlight report
+        self._clock_brightness = None
+        self._playing = False
         self.brightness = 70
         safe = (usb_path or "default").replace("/", "_")
         self.state_path = state_path or os.path.join(state_dir(), f"smartmonitor-{safe}.json")
@@ -195,8 +207,10 @@ class SmartMonitorHid(TelemetryDriver):
             frame.values = layout.values(picture, stats, now)
         return frame
 
-    def frame_interval(self, _settings):
-        return 1.0
+    def frame_interval(self, settings):
+        if self._playing and settings.get("theme") == "big_media_player":
+            return MEDIA_INTERVAL.get(settings.get("performance_profile", "auto"), MEDIA_INTERVAL["auto"])
+        return IDLE_INTERVAL
 
     def _adapt(self, frame):
         """The compiled picture for a frame (a theme capture can take a few seconds)."""
@@ -272,19 +286,32 @@ class SmartMonitorHid(TelemetryDriver):
         picture = self._adapt(frame)
         if picture.key != self.flashed:
             sent += self.flash(picture)
+            self._sent, self._sent_at, self._clock_at = {}, -1e9, -1e9   # the panel restarted
         if not frame.values:
             frame.values = layout.values(picture, frame.stats)
+        media = frame.stats.get("media") if isinstance(frame.stats.get("media"), dict) else {}
+        self._playing = bool(media.get("present")) and media.get("status") == "Playing"
         self.brightness = frame.brightness
-        sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
-        for packet in protocol.sensor_reports(frame.values):
+        now = time.monotonic()
+        if now - self._clock_at >= CLOCK_EVERY or self._clock_brightness != self.brightness:
+            sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+            self._clock_at, self._clock_brightness = now, self.brightness
+        values = {int(k): protocol.clamp_value(v) for k, v in frame.values.items()}
+        full = now - self._sent_at >= RESEND_EVERY
+        changed = values if full else {k: v for k, v in values.items() if self._sent.get(k) != v}
+        for packet in protocol.sensor_reports(changed):
             sent += self.hid.write(packet)
+        self._sent.update(changed)
+        if full:
+            self._sent_at = now
         self.last_frame = frame
-        return Transfer(sent, 1, True, time.monotonic() - start)
+        return Transfer(sent, 1, full, time.monotonic() - start)
 
     def set_brightness(self, percent):
         self.brightness = max(0, min(100, int(percent)))
         if self.hid.fd is not None:
             self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+            self._clock_at, self._clock_brightness = time.monotonic(), self.brightness
 
     def probe(self):
         if not self.hid.alive():

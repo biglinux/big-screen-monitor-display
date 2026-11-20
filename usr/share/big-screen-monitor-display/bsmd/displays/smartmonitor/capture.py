@@ -1507,15 +1507,32 @@ def _castaway_home(theme):
     return x is not None and lay.walk_min <= x <= lay.walk_max and not getattr(hero, "hidden", False)
 
 
+# Caches of *resources* (font files and objects, rasterized icons and logos, fixed
+# data): what they return is still drawn by the caller, so the recorder sees it
+# either way. Clearing them only respawned fc-match and rsvg-convert for every
+# render: ~2500 processes and 25 of the 43 s of a Big Media Player capture.
+KEEP_CACHES = {
+    "bsmd.themes": {"ui_font"},
+    "bsmd.kojiro.draw": {"font_file", "font"},
+    "bsmd.kojiro.assets": {"os_release", "_distro_info", "load_logo"},
+    "bsmd.kojiro.wallpaper": {"_user_image"},
+    "bsmd.legacy_themes": {"_cached_truetype", "ICON_CACHE", "_LOGO_CACHE", "_COMMAND_CACHE"},
+}
+
+
 def _clear_theme_caches():
     """Themes cache rendered text and layers; a cache hit draws nothing, which the
-    recorder cannot see. Every capture render starts from empty caches."""
+    recorder cannot see. Every capture render starts from empty caches (resource
+    caches, see KEEP_CACHES, are kept)."""
     import collections
     import functools
     for name, module in list(sys.modules.items()):
         if not name.startswith("bsmd.") or name.startswith("bsmd.displays.smartmonitor") or module is None:
             continue
+        keep = KEEP_CACHES.get(name, ())
         for attr, value in list(vars(module).items()):
+            if attr in keep:
+                continue
             if isinstance(value, (dict, collections.OrderedDict)) and "CACHE" in attr.upper():
                 value.clear()
             elif isinstance(value, functools._lru_cache_wrapper):

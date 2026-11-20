@@ -657,3 +657,54 @@ def test_telemetry_displays_ask_the_collector_for_what_kojiro_shows():
     needs = runtime._telemetry_needs({"theme": "kojiro", "kojiro": config, "orientation": "horizontal"})
     assert needs["fans"] is True
     assert runtime._telemetry_needs({"theme": "standard"}) is None
+
+
+def test_live_values_go_out_fast_while_a_song_plays_and_only_when_they_change(make_driver, stats, monkeypatch):
+    clock = [500.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    panel = FakePanel()
+    drv = make_driver(panel)
+    base = dict(settings.defaults(), brightness=40)
+    frame = drv.build_frame(base, stats)
+    drv.present(frame)
+    assert drv.frame_interval(dict(base, theme="big_media_player")) == sm_driver.IDLE_INTERVAL
+    panel.writes.clear()
+    clock[0] += 0.2
+    drv.present(drv.build_frame(base, stats))            # nothing changed, clock sent 0.2 s ago
+    assert panel.writes == []
+    frame = drv.build_frame(base, stats)
+    channel = next(iter(frame.values))
+    frame.values = {**frame.values, channel: frame.values[channel] + 1}
+    clock[0] += 0.2
+    drv.present(frame)                                   # one value changed: one small report
+    assert len(panel.writes) == 1 and panel.writes[0][0] == protocol.SENSOR and panel.writes[0][1] == 1
+    panel.writes.clear()
+    clock[0] += 1.0
+    drv.present(frame)                                   # a second later: the clock again
+    assert [w[0] for w in panel.writes] == [protocol.DATETIME]
+    panel.writes.clear()
+    clock[0] += sm_driver.RESEND_EVERY
+    drv.present(frame)                                   # every value again now and then
+    assert sum(w[0] == protocol.SENSOR for w in panel.writes) >= 1
+    playing = dict(stats, media={"present": True, "status": "Playing"})
+    drv.present(drv.build_frame(dict(base, theme="standard"), playing))
+    for profile, interval in sm_driver.MEDIA_INTERVAL.items():
+        assert drv.frame_interval({"theme": "big_media_player", "performance_profile": profile}) == interval
+    assert drv.frame_interval({"theme": "standard"}) == sm_driver.IDLE_INTERVAL
+
+
+def test_resource_caches_survive_a_capture_render():
+    from bsmd.displays.smartmonitor import capture
+    from bsmd.kojiro import draw
+    from bsmd import legacy_themes
+    draw.font_file("default", False)
+    legacy_themes.ICON_CACHE["probe"] = "kept"
+    legacy_themes._TEXT_PROBE_CACHE = {"x": 1}
+    try:
+        capture._clear_theme_caches()
+        assert draw.font_file.cache_info().currsize >= 1
+        assert legacy_themes.ICON_CACHE.get("probe") == "kept"
+        assert legacy_themes._TEXT_PROBE_CACHE == {}       # drawing caches are still emptied
+    finally:
+        legacy_themes.ICON_CACHE.pop("probe", None)
+        del legacy_themes._TEXT_PROBE_CACHE

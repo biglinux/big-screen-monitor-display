@@ -46,3 +46,30 @@ Memória: serviço ~90 MB RSS (igual aos outros temas); agente **41 MB** RSS
   serviço só recebe pixels RGB já reduzidos.
 - Uma mudança significativa (faixa, estado, volume) acorda o render na hora;
   heartbeats não.
+
+## No SmartMonitor 3,5" HID
+
+O painel não recebe imagens: ele mostra uma versão gravada do tema e só recebe
+números. Medido num Ryzen 5 5500 (skin Big Wave, espectro real) em 20/11/2026:
+
+| | Antes | Agora |
+| --- | --- | --- |
+| Adaptar o tema com música e espectro | 41–43 s | 9,8 s (12,8 s com perfil) |
+| Atualizações dos valores com música tocando | 1/s | ~5/s (Automático), 10/s (Fluido), 4/s (Equilibrado), 1/s (Econômico) |
+| Relatórios por atualização | relógio + todos os valores | só os valores que mudaram (todos a cada 5 s); relógio 1×/s |
+
+* **Captura**: antes de cada desenho, a captura limpa os caches dos temas (um
+  texto vindo do cache não seria visto pelo gravador). Isso também apagava os
+  caches de recursos (arquivo e objeto de fonte, ícones SVG rasterizados,
+  logos), e cada desenho rodava `fc-match` e `rsvg-convert` de novo: ~2500
+  processos, 25 dos 43 s. Esses caches agora são mantidos
+  (`capture.KEEP_CACHES`), com imagem e valores idênticos (bytes do `img.dat`
+  comparados em Big Media Player, Kojiro, Padrão e GKrellM).
+* **Valores ao vivo**: cada relatório leva ~1 ms no painel. Com uma música
+  tocando, tempo, progresso e espectro (que o agente envia 12×/s) vão ao painel
+  várias vezes por segundo, conforme o perfil de desempenho.
+* **Música nova**: com "capa e título de cada música" ligado, cada música nova é
+  gravada no painel de novo (~10 s de captura + ~12 s de gravação, com o painel
+  reiniciando). Com o YouTube, que troca de título com frequência, desligar a
+  opção deixa o painel sem reinícios: tempo, progresso, volume, play/pausa e
+  espectro continuam ao vivo.
