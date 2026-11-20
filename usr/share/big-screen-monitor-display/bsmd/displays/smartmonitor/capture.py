@@ -48,7 +48,9 @@ MAX_CHANNELS = imgdat.MAX_CHANNELS
 
 # How a theme is best adapted: settings it is captured with, animation frames.
 THEME_OPTIONS = {
-    "standard": {"settings": {"std_side_panel": "none"}},
+    # The side panel's process list cannot be live: left out, or (sm_std_processes)
+    # kept as a snapshot renewed by flashing again every N minutes.
+    "standard": {"settings": {"std_side_panel": "none"}, "adjust": "_standard_settings"},
     "gkrellm": {"settings": {}},
     "planet": {"settings": {}},
     "old_computer": {"settings": {}},
@@ -660,7 +662,12 @@ class Capture:
                        if (media.get("present") or not name.startswith("media_"))
                        and not (no_length and name == "media_length")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
-            sources["noise"] = (fields.noise(self.scene.base), None)
+            noise = fields.noise(self.scene.base)
+            if self.scene.settings.get("std_side_panel") == "processes" and self.scene.theme_id == "standard":
+                # The process list is wanted as a snapshot: frozen in the picture, not left out.
+                noise.pop("procs", None)
+                noise.pop("procs_mem", None)
+            sources["noise"] = (noise, None)
             if media.get("present"):
                 for name, (setter, _count, _cand) in fields.STATES.items():
                     sources["state_" + name] = (setter(self.scene.base, 1), None)
@@ -1494,6 +1501,14 @@ def _media_state(stats, art=None):
     bands = media.get("bands")
     spectrum = {"bands": list(bands), "mono": now} if bands else None
     return hub.MediaState(snapshot, {art_id: art} if art_id else {}, spectrum, connected=True)
+
+
+def _standard_settings(settings):
+    """Standard: the process list in the side panel when it is wanted as a snapshot."""
+    from .layout import process_minutes
+    if process_minutes(settings):
+        return dict(settings, std_side_panel="processes")
+    return settings
 
 
 def _castaway_home(theme):

@@ -778,3 +778,23 @@ def test_kojiro_is_not_adapted_ahead_without_its_fans():
     assert sm_driver._lacks_data(wanted, {"fans": []}) is True
     assert sm_driver._lacks_data(wanted, {"fans": [{"id": "nct6793/fan2", "rpm": 1300}]}) is False
     assert sm_driver._lacks_data({"theme": "standard"}, {}) is False
+
+
+def test_standard_process_list_is_a_snapshot_renewed_every_n_minutes(stats):
+    base = dict(settings.defaults(), theme="standard")
+    assert settings.defaults()["sm_std_processes"] == "0"
+    off = layout.spec(base, stats, datetime.datetime(2026, 11, 20, 12, 0))
+    assert "procs" not in off
+    on = dict(base, sm_std_processes="30")
+    first = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 1))
+    same = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 29))
+    later = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 31))
+    assert layout.key(first) == layout.key(same) != layout.key(later)
+    from bsmd.displays.smartmonitor import capture
+    assert capture._standard_settings(on)["std_side_panel"] == "processes"
+    assert "std_side_panel" not in capture._standard_settings(dict(base, std_side_panel="graphs")) or \
+        capture._standard_settings(dict(base, std_side_panel="graphs"))["std_side_panel"] == "graphs"
+    needs = runtime._telemetry_needs(on)
+    assert needs["processes"] is True and runtime._telemetry_needs(base) is None
+    assert sm_driver._lacks_data(on, {"procs": []}) is True
+    assert sm_driver._lacks_data(on, {"procs": [{"name": "x"}]}) is False

@@ -364,7 +364,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 CAPTURE_VERSION = 10
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
-THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
+THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
 # Scenes that follow the time of day are captured again when the period changes,
 # drawn at a representative hour (chosen so no clock component collides with the
@@ -373,6 +373,14 @@ BROTHER_AWAY_PERIODS = ((4.5, 7), (11.0, 13), (17.5, 18), (20.5, 23))     # (fro
 PLANET_HOURS = (1, 4, 7, 10, 13, 16, 19, 22)
 CAPTURE_TIMEOUT = 150.0
 CACHE_KEEP = 12              # every theme adapted ahead of a switch (see driver PRECAPTURE_IDLE)
+
+
+def process_minutes(settings):
+    """Minutes between two snapshots of the Standard theme's process list (0: no list)."""
+    try:
+        return max(0, int(settings.get("sm_std_processes", "0")))
+    except (TypeError, ValueError):
+        return 0
 
 
 def _epoch(theme_id, settings, now):
@@ -433,6 +441,10 @@ def spec(settings, stats, now=None):
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
     result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
               "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+    minutes = process_minutes(settings)
+    if theme_id == "standard" and minutes:
+        # The process list is a snapshot: a new one (a new picture) every N minutes.
+        result["procs"] = int(now.timestamp() // (minutes * 60))
     if theme_id == "brother_away":
         scene = brother_away_scene(settings, now)
         if scene is not None:

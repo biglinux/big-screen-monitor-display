@@ -837,7 +837,13 @@ class DisplaySession:
 
 
 def _telemetry_needs(settings):
-    """Optional data a theme drawn by a telemetry device's driver needs (Kojiro widgets)."""
+    """Optional data a theme drawn by a telemetry device's driver needs (Kojiro widgets,
+    the Standard theme's process list snapshot)."""
+    if settings.get("theme") == "standard":
+        from .displays.smartmonitor.layout import process_minutes
+        if process_minutes(settings):
+            return {"fans": False, "disks": set(), "processes": True, "sensors": False, "addrs": False}
+        return None
     if settings.get("theme") != "kojiro":
         return None
     try:

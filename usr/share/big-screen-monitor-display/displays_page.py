@@ -404,13 +404,21 @@ class DisplaysPage:
                 # The panel shows a flashed adaptation of the theme: song details cannot be live.
                 follow = Adw.SwitchRow(
                     title=_("Big Media Player: cover and title of every song"),
-                    subtitle=_("Flashes the panel again on each new song (at most every 2 minutes): it restarts "
-                               "for about 10 seconds each time and its memory wears with use. Off: time, progress, "
-                               "volume and play/pause stay live without the song details."),
+                    subtitle=_("Flashes the panel again on each new song (at most every 25 seconds): it restarts "
+                               "for about 17 seconds each time and its memory wears with use. Off: time, progress, "
+                               "volume, play/pause and the spectrum stay live without the song details."),
                     active=bool(values.get("sm_bmp_track_refresh")))
                 follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
                                                                          True if r.get_active() else None))
                 look.add(follow)
+                snapshots = [("0", _("Off (the panel cannot show it live)")), ("15", _("Every 15 minutes")),
+                             ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
+                look.add(self._combo(_("Standard: process list"), snapshots,
+                                     str(values.get("sm_std_processes", "0")),
+                                     lambda value: self._set(display_id, "sm_std_processes", value),
+                                     _("Shows the process list as a snapshot flashed with the theme and renewed "
+                                       "at this interval: the panel restarts for about 17 seconds each time and "
+                                       "its memory wears with use.")))
                 scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
                           ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
                 look.add(self._combo(_("Brother Away: story scenes"), scenes,

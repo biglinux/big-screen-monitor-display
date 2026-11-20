@@ -45,6 +45,7 @@ MEDIA_INTERVAL = {"economy": 1.0, "balanced": 0.25, "auto": 0.2, "fluid": 0.1}
 IDLE_INTERVAL = 1.0
 CLOCK_EVERY = 1.0             # the clock / backlight report
 RESEND_EVERY = 5.0            # every value again (only changed ones in between)
+DATA_WAIT = 15.0              # the first picture waits this long for data being sampled
 PRECAPTURE_IDLE = 45.0        # quiet this long: the other themes are adapted ahead of a switch
 FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
 STUCK_REPROBE = 60.0          # a stuck panel on the same USB address is tried again this often
@@ -111,10 +112,11 @@ STUCK_UPLOAD_MESSAGE = ("the panel stopped answering after an interrupted theme 
 
 def _lacks_data(settings, stats):
     """True when a theme shows optional data the collector only samples while that
-    theme is shown (Kojiro fans): adapted ahead now, it would leave them out."""
+    theme is shown (Kojiro fans, the Standard process list): adapted ahead now, it
+    would leave them out."""
     from ...runtime import _telemetry_needs
-    needs = _telemetry_needs(settings)
-    return bool(needs and needs.get("fans") and not stats.get("fans"))
+    needs = _telemetry_needs(settings) or {}
+    return bool((needs.get("fans") and not stats.get("fans")) or (needs.get("processes") and not stats.get("procs")))
 
 
 def state_dir():
@@ -269,6 +271,8 @@ class SmartMonitorHid(TelemetryDriver):
             picture.source_spec = job["spec"]
             self.picture = picture
             return picture
+        if _lacks_data(frame.settings, frame.stats):
+            return current                               # its data is being sampled: in a moment
         # Every new picture restarts the panel (its firmware reloads the theme): while the
         # settings keep changing (a theme being edited) the current one stays, live.
         now = time.monotonic()
@@ -301,6 +305,9 @@ class SmartMonitorHid(TelemetryDriver):
     def present(self, frame):
         start = time.monotonic()
         sent = 0
+        if self.picture is None and _lacks_data(frame.settings, frame.stats) and \
+                start - self._started < DATA_WAIT:
+            return Transfer(0, 0, False, 0.0)            # the first picture waits for its data
         picture = self._adapt(frame)
         if picture.key != self.flashed:
             sent += self.flash(picture)

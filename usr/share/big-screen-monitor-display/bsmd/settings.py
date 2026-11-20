@@ -202,6 +202,10 @@ SCHEMA = {
     # SmartMonitor HID panel: Brother Away tells its stories as scenes flashed one
     # after another every N minutes ("0": a single scene per time of day).
     "sm_ba_scene_minutes": (*_choice("0", "15", "30", "60"), "30"),
+    # SmartMonitor HID panel: the Standard theme's process list, a snapshot flashed
+    # with the theme and renewed every N minutes ("0": off; the panel restarts ~17 s
+    # each time and its flash wears).
+    "sm_std_processes": (*_choice("0", "15", "30", "60"), "0"),
     "bmp_tele_alert_cpu": (*_int(50, 100), 90),
     "bmp_tele_alert_temp": (*_int(50, 110), 85),
     "bmp_tele_clock": (*BOOL, True),
