@@ -411,14 +411,16 @@ class DisplaysPage:
                 follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
                                                                          True if r.get_active() else None))
                 look.add(follow)
-                snapshots = [("0", _("Off (the panel cannot show it live)")), ("15", _("Every 15 minutes")),
-                             ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
-                look.add(self._combo(_("Standard: process list"), snapshots,
-                                     str(values.get("sm_std_processes", "0")),
-                                     lambda value: self._set(display_id, "sm_std_processes", value),
-                                     _("Shows the process list as a snapshot flashed with the theme and renewed "
-                                       "at this interval: the panel restarts for about 17 seconds each time and "
-                                       "its memory wears with use.")))
+                processes = Adw.SwitchRow(
+                    title=_("Standard: process list (snapshot every 30 minutes)"),
+                    subtitle=_("Not available live on this display: it only receives numbers, so the list cannot "
+                               "be updated in real time. On: the list is shown as a snapshot flashed with the "
+                               "theme and renewed every 30 minutes; the display restarts for about 17 seconds "
+                               "each time and its memory wears with use."),
+                    active=str(values.get("sm_std_processes", "0")) != "0")
+                processes.connect("notify::active", lambda r, _p: self._set(display_id, "sm_std_processes",
+                                                                            "30" if r.get_active() else None))
+                look.add(processes)
                 scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
                           ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
                 look.add(self._combo(_("Brother Away: story scenes"), scenes,

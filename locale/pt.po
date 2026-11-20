@@ -6650,22 +6650,21 @@ msgid "This display shows themes lying down (landscape) only."
 msgstr "Este display mostra os temas só deitados (paisagem)."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:415
-msgid "Off (the panel cannot show it live)"
-msgstr "Desligada (o painel não consegue mostrá-la ao vivo)"
+msgid "Standard: process list (snapshot every 30 minutes)"
+msgstr "Padrão: lista de processos (foto a cada 30 minutos)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:417
-msgid "Standard: process list"
-msgstr "Padrão: lista de processos"
-
-#: usr/share/big-screen-monitor-display/displays_page.py:420
+#: usr/share/big-screen-monitor-display/displays_page.py:416
 msgid ""
-"Shows the process list as a snapshot flashed with the theme and renewed at "
-"this interval: the panel restarts for about 17 seconds each time and its "
-"memory wears with use."
+"Not available live on this display: it only receives numbers, so the list "
+"cannot be updated in real time. On: the list is shown as a snapshot flashed "
+"with the theme and renewed every 30 minutes; the display restarts for about "
+"17 seconds each time and its memory wears with use."
 msgstr ""
-"Mostra a lista de processos como uma foto gravada junto com o tema e "
-"renovada neste intervalo: o painel reinicia por cerca de 17 segundos a "
-"cada vez e a memória dele se desgasta com o uso."
+"Não disponível ao vivo neste display: ele só recebe números, então a lista "
+"não pode ser atualizada em tempo real. Ligado: a lista aparece como uma "
+"foto gravada junto com o tema e renovada a cada 30 minutos; o display "
+"reinicia por cerca de 17 segundos a cada vez e a memória dele se desgasta "
+"com o uso."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:409
 msgid "Big Media Player: cover and title of every song"
