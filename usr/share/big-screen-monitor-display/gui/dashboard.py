@@ -245,9 +245,9 @@ class Dashboard:
             return
         if current and current.get("attention") == "replug":
             card.show("error", "dialog-warning-symbolic", _("Unplug the display and plug it in again"),
-                      _("The display stopped taking data after a USB reset (restarting the computer or waking it "
-                        "from sleep). Its firmware only recovers when it loses power: unplug its USB cable, wait "
-                        "5 seconds and plug it into the same port. The service continues on its own."),
+                      _("The display stopped taking data (after the computer restarted, or a theme upload was "
+                        "interrupted). Its firmware only recovers when it loses power: unplug its USB cable, wait "
+                        "5 seconds and plug it in again. The service continues on its own."),
                       [(_("Diagnose"), window.diagnose)])
             return
         if current and current.get("state") in ("failed", "disconnected", "retrying"):

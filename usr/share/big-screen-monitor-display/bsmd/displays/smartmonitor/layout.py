@@ -372,7 +372,7 @@ THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",)
 BROTHER_AWAY_PERIODS = ((4.5, 7), (11.0, 13), (17.5, 18), (20.5, 23))     # (from hour, captured at)
 PLANET_HOURS = (1, 4, 7, 10, 13, 16, 19, 22)
 CAPTURE_TIMEOUT = 150.0
-CACHE_KEEP = 6
+CACHE_KEEP = 12              # every theme adapted ahead of a switch (see driver PRECAPTURE_IDLE)
 
 
 def _epoch(theme_id, settings, now):
@@ -516,6 +516,15 @@ def _remember(key_, result):
     _MEMORY[key_] = result
     while len(_MEMORY) > _MEMORY_KEEP:
         _MEMORY.pop(next(iter(_MEMORY)))
+
+
+def is_cached(theme_spec):
+    """True when the picture for ``theme_spec`` is ready (memory or disk cache)."""
+    key_ = key(theme_spec)
+    if key_ in _MEMORY or theme_spec.get("kind") != "capture":
+        return True
+    base = os.path.join(cache_dir(), key_)
+    return os.path.exists(base + ".json") and os.path.exists(base + ".dat")
 
 
 def compiled(theme_spec, settings, stats, progress=None):

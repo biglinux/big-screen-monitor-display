@@ -571,19 +571,78 @@ def test_a_new_picture_waits_until_the_settings_stop_changing(make_driver, stats
     monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
     drv = make_driver(FakePanel())
     drv.background_capture = True
+    drv.precapture = False
     base = dict(settings.defaults(), brightness=40)
-    first = drv.build_frame(base, stats)
-    drv.present(first)
+    drv.present(drv.build_frame(base, stats))
+    clock[0] += 60.0
+    picked = drv.build_frame(dict(base, theme="big_media_player"), stats)
+    drv.present(picked)                              # another theme picked: captured at once
+    assert drv._job is not None and drv._job["key"] == picked.key
+    drv._job["done"].wait(30)
+    drv.present(picked)
     flashed = drv.flashed
-    for brightness in (41, 42, 43):                  # editing: a new picture every second
+    for skin in ("a", "b", "c"):                     # then edited: a new picture every second
         clock[0] += 1.0
-        editing = drv.build_frame(dict(base, theme="big_media_player", bmp_skin=f"s{brightness}"), stats)
+        editing = drv.build_frame(dict(base, theme="big_media_player", bmp_skin=skin), stats)
         drv.present(editing)
         assert drv._job is None and drv.flashed == flashed
     clock[0] += sm_driver.FLASH_SETTLE + 0.1          # quiet: now it is captured
     drv.present(editing)
     assert drv._job is not None and drv._job["key"] == editing.key
     drv._job["done"].wait(30)
+
+
+def test_other_themes_are_adapted_ahead_when_quiet(make_driver, stats, monkeypatch):
+    clock = [1000.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    drv = make_driver(FakePanel())
+    drv._started = clock[0]
+    adapted = []
+    monkeypatch.setattr(layout, "is_cached", lambda spec: spec["theme"] == "planet")
+    original = layout.compiled
+    monkeypatch.setattr(layout, "compiled", lambda spec, s, st, progress=None:
+                        adapted.append(spec["theme"]) or original(spec, s, st, progress))
+    base = dict(settings.defaults(), brightness=40)
+    frame = drv.build_frame(base, stats)
+    drv.present(frame)
+    assert drv._pre is None                          # just flashed: not yet
+    adapted.clear()
+    clock[0] += sm_driver.PRECAPTURE_IDLE + 1
+    drv.present(drv.build_frame(base, stats))
+    drv._pre.join(60)
+    from bsmd.displays.smartmonitor import capture
+    expected = set(capture.THEME_OPTIONS) - {base["theme"], "planet"}
+    if sm_driver._lacks_data(dict(base, theme="kojiro"), stats):
+        expected.discard("kojiro")                   # its fans are not sampled yet
+    assert set(adapted) == expected
+    adapted.clear()
+    clock[0] += 1
+    drv.present(drv.build_frame(base, stats))        # same settings: done once
+    assert drv._pre.is_alive() is False and adapted == []
+
+
+class SilentPanel(FakePanel):
+    """A panel whose upload was cut after its theme was erased: takes reports, answers nothing."""
+
+    def _handle(self, payload):
+        return
+
+
+def test_a_panel_silent_after_an_interrupted_upload_asks_to_be_replugged(make_driver, stats, monkeypatch):
+    from bsmd.displays.base import NEEDS_REPLUG
+    monkeypatch.setattr(sm_driver, "ACK_TIMEOUT", 0.05)
+    monkeypatch.setattr(sm_driver, "REENUMERATE_WAIT", 0.05)
+    monkeypatch.setattr(sm_driver, "usb_address", lambda _path, sysfs=None: "3:4")
+    monkeypatch.setattr(sm_driver, "_STUCK", {})
+    monkeypatch.setattr(sm_driver.SmartMonitorHid, "_ask_ymodem", lambda self, timeout: False)
+    drv = make_driver(SilentPanel())
+    with pytest.raises(DisplayError) as caught:
+        drv.present(drv.build_frame(dict(settings.defaults()), stats))
+    assert caught.value.kind == NEEDS_REPLUG
+    drv.hid = FakePanel()
+    with pytest.raises(DisplayError) as caught:      # no more tries until it is plugged in again
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG
 
 
 class ResetStuckPanel(FakePanel):
@@ -708,3 +767,14 @@ def test_resource_caches_survive_a_capture_render():
     finally:
         legacy_themes.ICON_CACHE.pop("probe", None)
         del legacy_themes._TEXT_PROBE_CACHE
+
+
+def test_kojiro_is_not_adapted_ahead_without_its_fans():
+    config = settings.kojiro_defaults()
+    widgets = config["layouts"]["landscape"]
+    if not any(w["type"] == "fan" for w in widgets):
+        widgets.append(dict(widgets[0], id="fan-9", type="fan", opts={"fan": "auto"}, visible=True))
+    wanted = {"theme": "kojiro", "kojiro": config, "orientation": "horizontal"}
+    assert sm_driver._lacks_data(wanted, {"fans": []}) is True
+    assert sm_driver._lacks_data(wanted, {"fans": [{"id": "nct6793/fan2", "rpm": 1300}]}) is False
+    assert sm_driver._lacks_data({"theme": "standard"}, {}) is False

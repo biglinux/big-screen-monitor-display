@@ -40,7 +40,7 @@ BUSY = "busy"            # another program holds the device
 # removing its power brings it back (unplug and plug the cable again).
 NEEDS_REPLUG = "needs_replug"
 
-FATAL_KINDS = {NOT_FOUND, PERMISSION, DISCONNECTED, BUSY}
+FATAL_KINDS = {NOT_FOUND, PERMISSION, DISCONNECTED, BUSY, NEEDS_REPLUG}
 # Conditions a process restart cannot fix: retry slowly, never escalate to FAILED.
 EXTERNAL_KINDS = {PERMISSION, BUSY, NEEDS_REPLUG}
 

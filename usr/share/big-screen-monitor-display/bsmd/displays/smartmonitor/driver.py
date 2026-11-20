@@ -45,6 +45,7 @@ MEDIA_INTERVAL = {"economy": 1.0, "balanced": 0.25, "auto": 0.2, "fluid": 0.1}
 IDLE_INTERVAL = 1.0
 CLOCK_EVERY = 1.0             # the clock / backlight report
 RESEND_EVERY = 5.0            # every value again (only changed ones in between)
+PRECAPTURE_IDLE = 45.0        # quiet this long: the other themes are adapted ahead of a switch
 FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
 STUCK_REPROBE = 60.0          # a stuck panel on the same USB address is tried again this often
 
@@ -104,6 +105,16 @@ def _timed_out(error):
 
 STUCK_MESSAGE = ("the panel stopped taking data after a USB reset (PC restart or resume from sleep); "
                  "unplug its USB cable and plug it in again")
+STUCK_UPLOAD_MESSAGE = ("the panel stopped answering after an interrupted theme upload; "
+                        "unplug its USB cable and plug it in again")
+
+
+def _lacks_data(settings, stats):
+    """True when a theme shows optional data the collector only samples while that
+    theme is shown (Kojiro fans): adapted ahead now, it would leave them out."""
+    from ...runtime import _telemetry_needs
+    needs = _telemetry_needs(settings)
+    return bool(needs and needs.get("fans") and not stats.get("fans"))
 
 
 def state_dir():
@@ -152,7 +163,11 @@ class SmartMonitorHid(TelemetryDriver):
         # one keeps its live values; only the flash itself pauses the panel.
         self.background_capture = True
         self._job = None
-        self._wanted = (None, 0.0)     # (picture key asked for, since): see FLASH_SETTLE
+        self._wanted = (None, -1e9, False)   # (picture key asked for, since, while editing): FLASH_SETTLE
+        self.precapture = True         # adapt the other themes ahead of a switch (see PRECAPTURE_IDLE)
+        self._pre = None               # the thread doing it
+        self._pre_done = None          # signature of the settings it was done for
+        self._started = time.monotonic()
 
     # ------------------------------------------------------------ state
     def _load_state(self):
@@ -179,8 +194,9 @@ class SmartMonitorHid(TelemetryDriver):
             self.hid.path = find_hidraw(self.usb_path)
         address = usb_address(self.usb_path) if self.usb_path else ""
         stuck = _STUCK.get(self.usb_path)
-        if stuck and address and stuck[0] == address and time.monotonic() - stuck[1] < STUCK_REPROBE:
-            raise DisplayError(NEEDS_REPLUG, STUCK_MESSAGE)
+        if stuck and address and stuck[0] == address and \
+                (len(stuck) > 2 or time.monotonic() - stuck[1] < STUCK_REPROBE):
+            raise DisplayError(NEEDS_REPLUG, STUCK_UPLOAD_MESSAGE if len(stuck) > 2 else STUCK_MESSAGE)
         self.hid.open()
         try:
             # Liveness: the clock and backlight report (harmless, sent every second anyway).
@@ -257,8 +273,10 @@ class SmartMonitorHid(TelemetryDriver):
         # settings keep changing (a theme being edited) the current one stays, live.
         now = time.monotonic()
         if self._wanted[0] != frame.key:
-            self._wanted = (frame.key, now)
-        if now - self._wanted[1] < FLASH_SETTLE:
+            # A change right after another one is a theme being edited: wait for quiet.
+            # A single change (another theme picked) starts at once.
+            self._wanted = (frame.key, now, now - self._wanted[1] < FLASH_SETTLE)
+        if self._wanted[2] and now - self._wanted[1] < FLASH_SETTLE:
             return current
         # Nothing running (or a finished capture of a picture no longer wanted): start one.
         job = {"key": frame.key, "spec": frame.spec, "done": threading.Event()}
@@ -305,7 +323,41 @@ class SmartMonitorHid(TelemetryDriver):
         if full:
             self._sent_at = now
         self.last_frame = frame
+        self._maybe_precapture(frame, now)
         return Transfer(sent, 1, full, time.monotonic() - start)
+
+    def _maybe_precapture(self, frame, now):
+        """Adapt the other themes in the background once things are quiet, so that
+        switching theme only costs the flash (a capture takes 2 to 10 s)."""
+        if not self.precapture or (self._pre is not None and self._pre.is_alive()):
+            return
+        if (self._job is not None and not self._job["done"].is_set()) or \
+                now - max(self._wanted[1], self.last_flash, self._started) < PRECAPTURE_IDLE:
+            return
+        settings = {k: v for k, v in frame.settings.items() if k != "theme"}
+        signature = layout.key({"settings": settings, "hw": layout._hardware(frame.stats)})
+        if signature == self._pre_done:
+            return
+        self._pre_done = signature
+        stats = {k: v for k, v in frame.stats.items() if k != "media"}
+        current = frame.settings.get("theme")
+
+        def work():
+            from . import capture
+            for theme_id in capture.THEME_OPTIONS:
+                if theme_id == current:
+                    continue
+                wanted = dict(frame.settings, theme=theme_id)
+                if _lacks_data(wanted, stats):
+                    continue            # adapted on the switch, once the collector samples it
+                try:
+                    theme_spec = layout.spec(wanted, stats)
+                    if not layout.is_cached(theme_spec):
+                        layout.compiled(theme_spec, wanted, stats)
+                except Exception:  # noqa: BLE001 - only a head start; the switch captures it anyway
+                    log.debug("SmartMonitor: %s could not be adapted ahead", theme_id, exc_info=True)
+        self._pre = threading.Thread(target=work, name="smartmonitor-precapture", daemon=True)
+        self._pre.start()
 
     def set_brightness(self, percent):
         self.brightness = max(0, min(100, int(percent)))
@@ -447,10 +499,19 @@ class SmartMonitorHid(TelemetryDriver):
 
     def upload(self, data):
         """Upload ``img.dat`` bytes, recovering from a transfer left open or refused."""
+        refused = 0
         for attempt in range(1, UPLOAD_ATTEMPTS + 1):
             try:
                 return self._upload(data)
             except DisplayError as error:
+                refused += "refused the upload mode" in str(error)
+                if refused == UPLOAD_ATTEMPTS:
+                    # Measured: a panel whose upload was cut after its theme was erased
+                    # answers nothing any more (not even "ymodem") until it loses power.
+                    address = usb_address(self.usb_path) if self.usb_path else ""
+                    if address:
+                        _STUCK[self.usb_path] = (address, time.monotonic(), "upload")
+                    raise DisplayError(NEEDS_REPLUG, STUCK_UPLOAD_MESSAGE) from None
                 if "interrupted" in str(error) or attempt == UPLOAD_ATTEMPTS:
                     raise
                 log.warning("SmartMonitor upload attempt %d failed: %s; retrying", attempt, error)

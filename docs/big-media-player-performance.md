@@ -73,3 +73,20 @@ números. Medido num Ryzen 5 5500 (skin Big Wave, espectro real) em 20/11/2026:
   reiniciando). Com o YouTube, que troca de título com frequência, desligar a
   opção deixa o painel sem reinícios: tempo, progresso, volume, play/pausa e
   espectro continuam ao vivo.
+
+### Troca de tema no SmartMonitor
+
+Medido no aparelho (tema de ~390 KB, 384 blocos):
+
+| Etapa | Tempo | Pode diminuir? |
+| --- | --- | --- |
+| Adaptar o tema | 2–10 s | **Sim, feito**: com 45 s sem mudanças, o serviço adapta os outros temas em segundo plano; na troca o tema já está pronto (0 s) |
+| Enviar os blocos (6537 relatórios de 64 bytes) | 6,5 s | Não: o painel é USB full-speed com 1 relatório por milissegundo |
+| Confirmação de cada bloco (gravação na memória do painel) | 4,1 s | Não: enviar o bloco seguinte antes da confirmação foi testado e o firmware recusa (e apaga o tema antigo) |
+| Reinício do painel para ler o tema | 3,5–5 s | Não: é o firmware |
+
+Do clique até o painel voltar com o tema novo: **17–18 s** (antes, 19–28 s, ou ~60 s no Big Media Player). Uma placa de vídeo não ajuda: a adaptação é desenho 2D (Pillow) e o resto é limitado pelo USB e pelo firmware do painel.
+
+Uma troca isolada começa na hora. Mudanças seguidas (editar um tema) esperam 4 s sem mudanças antes de gravar.
+
+Durante a gravação, o painel some do USB por ~4 s. No KDE Plasma, isso gera o aviso e o som de "Dispositivo conectado/desconectado". O Plasma só avisa sobre dispositivos que o kernel marca como removíveis, e um painel ligado num hub USB aparece como `unknown`, então não gera aviso. Também é possível desligar esses dois eventos em *Configurações do sistema → Notificações → Notificações do sistema* (`~/.config/plasma_workspace.notifyrc`, `Action=` em `Event/deviceAdded` e `Event/deviceRemoved`).
