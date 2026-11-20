@@ -48,7 +48,9 @@ MAX_CHANNELS = imgdat.MAX_CHANNELS
 
 # How a theme is best adapted: settings it is captured with, animation frames.
 THEME_OPTIONS = {
-    "standard": {"settings": {"std_side_panel": "none"}},
+    # Side panel: graphs (their numbers live, their lines left out); the process list
+    # cannot be live: left out, or (sm_std_processes) a snapshot renewed every N minutes.
+    "standard": {"settings": {}, "adjust": "_standard_settings"},
     "gkrellm": {"settings": {}},
     "planet": {"settings": {}},
     "old_computer": {"settings": {}},
@@ -57,7 +59,9 @@ THEME_OPTIONS = {
     # The scene keeps its art; what moves (the castaway, the shark, a bubble) becomes
     # looping sprites of 24 frames, 4 per second. With a story scene (see layout) the
     # theme is put at that moment of the story, speech bubble included.
-    "brother_away": {"settings": {},
+    # Reactions to the load are speech that changes with the values: they cannot be
+    # live, and without their words only an empty bubble would be left.
+    "brother_away": {"settings": {"ba_telemetry_reactions": False},
                      "bars": False,         # the castaway reacts to the load: that is art, not a gauge
                      "calm": "_castaway_home",
                      "sprites": {"frames": 24, "dt": 0.25, "max_area": 36000, "budget": 1_300_000}},
@@ -68,6 +72,14 @@ THEME_OPTIONS = {
     "big_media_player": {"settings": {"bmp_idle_after": 600, "bmp_preview_demo": False},
                          "adjust": "_player_settings"},
 }
+
+
+FRAC_PARTS = ("frac", "frac_digit")
+
+# Themes whose history graphs are left out of the picture (their values stay live):
+# the panel cannot draw a moving line. Elsewhere the graphs are part of the art
+# (Old Computer's monitors) and stay as drawn.
+HISTORY_THEMES = {"standard", "gkrellm"}
 
 
 class CaptureError(Exception):
@@ -497,6 +509,15 @@ class Scene:
         if options.get("adjust"):
             self.settings = globals()[options["adjust"]](self.settings)
         self.base = fields.base_stats(stats)
+        if theme_id in HISTORY_THEMES:
+            # Per-GPU and per-interface histories empty too, like the global ones (see render).
+            for key, names in fields.NESTED_HISTORIES:
+                items = self.base.get(key)
+                if isinstance(items, list):
+                    self.base[key] = [dict(i, **{n: [0] * len(i[n]) for n in names if i.get(n)}) for i in items]
+                elif isinstance(items, dict):
+                    self.base[key] = {k: dict(i, **{n: [0] * len(i[n]) for n in names if i.get(n)})
+                                      for k, i in items.items()}
         self.telemetry, self.themes, self.runtime = telemetry, themes, runtime
         self.clock = _Frozen()
         self.clock.install()
@@ -527,6 +548,10 @@ class Scene:
     def render(self, recorder, changes=None, when=None, plan=None, settings=None):
         stats = dict(self.base)
         stats.update(changes or {})
+        # History graphs cannot be live on the panel (it draws numbers, not lines): they
+        # are empty in the picture (themes draw nothing for an empty history) and the
+        # noise variant moves them, so whatever depends on them is left out, not frozen.
+        level = stats.pop(fields.HISTORY_LEVEL, 0 if self.theme_id in HISTORY_THEMES else 20)
         self.clock.now = when or fields.T0
         tele = self.telemetry
         tele.SYSTEM_STATS.clear()
@@ -536,7 +561,7 @@ class Scene:
                      "NET_RX_HISTORY", "NET_TX_HISTORY"):
             history = getattr(tele, name, None)
             if history is not None:
-                history[:] = [20] * len(history)
+                history[:] = [level] * len(history)
         random.seed(self.seed)
         _clear_theme_caches()
         recorder.reset(plan)
@@ -660,7 +685,25 @@ class Capture:
                        if (media.get("present") or not name.startswith("media_"))
                        and not (no_length and name == "media_length")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
-            sources["noise"] = (fields.noise(self.scene.base), None)
+            noise = fields.noise(self.scene.base)
+            if self.scene.theme_id not in HISTORY_THEMES:
+                # Graphs are part of these themes' art: their histories are not noise.
+                noise.pop(fields.HISTORY_LEVEL, None)
+                for key, names in fields.NESTED_HISTORIES:
+                    moved, kept = noise.get(key), self.scene.base.get(key)
+                    if not moved or not kept:
+                        continue
+                    pairs = zip(moved, kept) if isinstance(moved, list) else \
+                        ((moved[k], kept[k]) for k in moved if k in kept)
+                    for new_item, old_item in pairs:
+                        for name in names:
+                            if name in old_item:
+                                new_item[name] = old_item[name]
+            if self.scene.settings.get("std_side_panel") == "processes" and self.scene.theme_id == "standard":
+                # The process list is wanted as a snapshot: frozen in the picture, not left out.
+                noise.pop("procs", None)
+                noise.pop("procs_mem", None)
+            sources["noise"] = (noise, None)
             if media.get("present"):
                 for name, (setter, _count, _cand) in fields.STATES.items():
                     sources["state_" + name] = (setter(self.scene.base, 1), None)
@@ -690,7 +733,7 @@ class Capture:
             with_values = {c[3] for c in candidates if c[1] is not None}
             for index in with_values - {c[3] for c in kept}:
                 plan[index] = "skip"
-            with_decimals = {c[3] for c in kept if c[2].get("part") == "frac"}
+            with_decimals = {c[3] for c in kept if c[2].get("part") in FRAC_PARTS}
             for index, action in self._without_decimals.items():
                 if index not in with_decimals and plan.get(index) != "skip":
                     plan[index] = action
@@ -975,9 +1018,17 @@ class Capture:
             separator = text[len(integer)]
             sep_x = end_int
             frac_x = sep_x + font.getlength(separator) * sx
-            box = (round(frac_x), round(y0), digit_w * decimals, atlas.height)
             # Decimals are the first thing left out when the panel runs short.
-            result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0), dict(binding, part="frac")))
+            if decimals == 1:
+                box = (round(frac_x), round(y0), digit_w, atlas.height)
+                result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0), dict(binding, part="frac")))
+            else:
+                # The panel does not pad: "64.09" drawn as one number would read "64.9".
+                # One widget per decimal digit keeps the zero.
+                for digit in range(decimals):
+                    box = (round(frac_x + digit * digit_w), round(y0), digit_w, atlas.height)
+                    result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0),
+                                   dict(binding, part="frac_digit", digit=digit)))
         return result
 
     def _bar(self, call, dynamic):
@@ -1350,12 +1401,18 @@ class Capture:
                     counts["numbers"] + counts["bars"] + numbers + bars <= MAX_WIDGETS and
                     len(channels) + len(new) <= MAX_CHANNELS)
 
-        for _group, items in sorted(groups.items(), key=lambda g: min(i[0] for i in g[1])):
-            chosen = items if fits(items) else [i for i in items if i[2].get("part") != "frac"]
-            if not chosen or not fits(chosen):
-                dropped += len(items)
-                continue
-            dropped += len(items) - len(chosen)
+        # A text repeating values already live elsewhere (a second clock) comes after
+        # every text showing something not on screen yet: same priority order inside.
+        ordered = sorted(groups.items(), key=lambda g: min(i[0] for i in g[1]))
+        first, repeats, shown = [], [], set()
+        for group in ordered:
+            keys = {_channel_key(i[2]) for i in group[1]}
+            (repeats if keys and keys <= shown else first).append(group)
+            shown |= keys
+        # Among repeats the cheapest first: three values in one widget each are worth
+        # more than a second clock of five.
+        repeats.sort(key=lambda g: (len(g[1]), min(i[0] for i in g[1])))
+        def keep(chosen):
             for item in chosen:
                 _priority, widget, binding, _index = item
                 key = _channel_key(binding)
@@ -1365,12 +1422,54 @@ class Capture:
                 widget.channel = channels[key]
                 counts["numbers" if isinstance(widget, imgdat.Number) else "bars"] += 1
                 kept.append(item)
+
+        # Decimals of large values come last: every value first, then those decimals while
+        # room is left ("200M" and the GPU load beat "200.0M" without it). Small values
+        # keep theirs: "0.3 Mb/s" must never become "0 Mb/s".
+        def magnitude(item):
+            try:
+                return abs(fields.candidate_value(item[2]["cand"], self.scene.base) * item[2].get("scale", 1.0))
+            except (KeyError, TypeError, ValueError):
+                return None
+
+        def large(item):
+            value = magnitude(item)
+            return value is not None and value >= 100
+
+        def small(item):
+            value = magnitude(item)
+            return value is not None and value < 10
+
+        decimals = []
+        for _group, items in first + repeats:
+            chosen = [i for i in items if i[2].get("part") not in FRAC_PARTS or not large(i)] or items
+            if not fits(chosen):
+                # Short of room: one decimal digit of each value ("1.1" for 1.18), then none.
+                first_digit = [i for i in chosen if i[2].get("part") != "frac_digit" or i[2].get("digit", 0) == 0]
+                if first_digit != chosen and fits(first_digit):
+                    chosen = first_digit
+            if not fits(chosen) and not any(i[2].get("part") in FRAC_PARTS and small(i) for i in items):
+                # Without its decimals, rounded ("1047M"); never a small value ("3.6 GHz"
+                # would read "4 GHz"): that one goes out whole instead.
+                chosen = [i for i in items if i[2].get("part") not in FRAC_PARTS]
+            if not chosen or not fits(chosen):
+                dropped += len(items)
+                continue
+            keep(chosen)
+            rest = [i for i in items if i not in chosen]
+            if rest:
+                decimals.append(rest)
+        for rest in decimals:                           # all the decimals of a value, or none
+            if fits(rest):
+                keep(rest)
+            else:
+                dropped += len(rest)
         return kept, bindings, dropped
 
     @staticmethod
     def _close_gaps(kept, bindings):
         """An integer whose decimals did not fit takes the whole token's place, rounded."""
-        with_decimals = {c[3] for c in kept if c[2].get("part") == "frac"}
+        with_decimals = {c[3] for c in kept if c[2].get("part") in FRAC_PARTS}
         for _priority, widget, binding, index in kept:
             if binding.get("part") != "int" or index in with_decimals:
                 continue
@@ -1496,6 +1595,17 @@ def _media_state(stats, art=None):
     return hub.MediaState(snapshot, {art_id: art} if art_id else {}, spectrum, connected=True)
 
 
+def _standard_settings(settings):
+    """Standard's side panel on the panel: the process list only as a snapshot
+    (sm_std_processes); graphs as chosen (numbers live, lines left out); else none."""
+    from .layout import process_minutes
+    if process_minutes(settings):
+        return dict(settings, std_side_panel="processes")
+    if settings.get("std_side_panel") == "graphs":
+        return settings
+    return dict(settings, std_side_panel="none")
+
+
 def _castaway_home(theme):
     """Brother Away: the castaway standing on the island."""
     hero = getattr(theme, "hero", None)
@@ -1507,15 +1617,32 @@ def _castaway_home(theme):
     return x is not None and lay.walk_min <= x <= lay.walk_max and not getattr(hero, "hidden", False)
 
 
+# Caches of *resources* (font files and objects, rasterized icons and logos, fixed
+# data): what they return is still drawn by the caller, so the recorder sees it
+# either way. Clearing them only respawned fc-match and rsvg-convert for every
+# render: ~2500 processes and 25 of the 43 s of a Big Media Player capture.
+KEEP_CACHES = {
+    "bsmd.themes": {"ui_font"},
+    "bsmd.kojiro.draw": {"font_file", "font"},
+    "bsmd.kojiro.assets": {"os_release", "_distro_info", "load_logo"},
+    "bsmd.kojiro.wallpaper": {"_user_image"},
+    "bsmd.legacy_themes": {"_cached_truetype", "ICON_CACHE", "_LOGO_CACHE", "_COMMAND_CACHE"},
+}
+
+
 def _clear_theme_caches():
     """Themes cache rendered text and layers; a cache hit draws nothing, which the
-    recorder cannot see. Every capture render starts from empty caches."""
+    recorder cannot see. Every capture render starts from empty caches (resource
+    caches, see KEEP_CACHES, are kept)."""
     import collections
     import functools
     for name, module in list(sys.modules.items()):
         if not name.startswith("bsmd.") or name.startswith("bsmd.displays.smartmonitor") or module is None:
             continue
+        keep = KEEP_CACHES.get(name, ())
         for attr, value in list(vars(module).items()):
+            if attr in keep:
+                continue
             if isinstance(value, (dict, collections.OrderedDict)) and "CACHE" in attr.upper():
                 value.clear()
             elif isinstance(value, functools._lru_cache_wrapper):

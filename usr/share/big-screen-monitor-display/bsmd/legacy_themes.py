@@ -288,6 +288,10 @@ def _planet_cpu_model():
 
 
 _PLANET_LAST_GLOBE = []
+# The moment the planet is drawn at (UTC) when it differs from the clock: the
+# SmartMonitor capture freezes the clock at fixed values to find the clock's
+# digits, while the globe shows the real time of its picture.
+ASTRONOMY_TIME = None
 
 
 def _planet_paths(settings, sun_path, moon_path):
@@ -618,7 +622,7 @@ def render_dashboard_planet_portrait(width, height, settings):
 
     now_local = datetime.now()
     now_utc = datetime.now(timezone.utc)
-    astronomy_utc = now_utc.replace(second=0, microsecond=0)
+    astronomy_utc = (ASTRONOMY_TIME or now_utc).replace(second=0, microsecond=0)
     julian_day = _planet_julian_day(astronomy_utc)
     sun_position = _planet_sun_position(astronomy_utc)
     moon_position = _planet_moon_position(astronomy_utc)
@@ -714,11 +718,14 @@ def render_dashboard_planet_portrait(width, height, settings):
     gpu_list = SYSTEM_STATS.get("gpus", [])
     gpu_idx = min(SYSTEM_STATS.get("active_gpu_idx", 0), max(0, len(gpu_list) - 1))
     active_gpu = gpu_list[gpu_idx] if gpu_list else {}
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}M" if cpu_freq else "--"
     cpu_name = clipped(_planet_cpu_model(), 16)
     gpu_name = clipped(active_gpu.get("name", "GPU"), 16)
@@ -908,7 +915,7 @@ def render_dashboard_planet(width, height, settings):
 
     now_local = datetime.now()
     now_utc = datetime.now(timezone.utc)
-    astronomy_utc = now_utc.replace(second=0, microsecond=0)
+    astronomy_utc = (ASTRONOMY_TIME or now_utc).replace(second=0, microsecond=0)
     julian_day = _planet_julian_day(astronomy_utc)
     sun_position = _planet_sun_position(astronomy_utc)
     moon_position = _planet_moon_position(astronomy_utc)
@@ -1083,11 +1090,14 @@ def render_dashboard_planet(width, height, settings):
     gpu_list = SYSTEM_STATS.get("gpus", [])
     gpu_idx = min(SYSTEM_STATS.get("active_gpu_idx", 0), max(0, len(gpu_list) - 1))
     active_gpu = gpu_list[gpu_idx] if gpu_list else {}
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}M" if cpu_freq else "--"
     gpu_name = clipped(active_gpu.get("name", "GPU"), 20)
     cpu_name = clipped(_planet_cpu_model(), 20)
@@ -1390,7 +1400,8 @@ def render_dashboard_old_computer(width, height, settings):
 
     def format_uptime():
         try:
-            elapsed = max(0, int(time.time() - psutil.boot_time()))
+            boot = SYSTEM_STATS.get("boot_time") or psutil.boot_time()    # the collector's, like other themes
+            elapsed = max(0, int(time.time() - boot))
             days, remainder = divmod(elapsed, 86400)
             hours, minutes = divmod(remainder, 3600)
             minutes //= 60
@@ -1407,11 +1418,14 @@ def render_dashboard_old_computer(width, height, settings):
     gpu_mem = float(gpu.get("mem_used_mb", 0.0) or 0.0)
     gpu_mem_total = float(gpu.get("mem_total_mb", 0.0) or 0.0)
     gpu_mem_percent = (gpu_mem / gpu_mem_total * 100.0) if gpu_mem_total else 0.0
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}MHz" if cpu_freq else "--MHz"
     cpu_model = _planet_cpu_model()
     gpu_model = str(gpu.get("name", "GPU"))
@@ -1557,10 +1571,12 @@ def render_dashboard_old_computer(width, height, settings):
         draw_card(content_pad + col * (card_w + card_gap),
                   card_top + row * (card_h + card_gap), card_w, card_h, *card)
 
-    try:
-        process_count = len(psutil.pids())
-    except Exception:
-        process_count = len(SYSTEM_STATS.get("procs", []))
+    process_count = SYSTEM_STATS.get("proc_count")      # the collector's, like other themes
+    if not process_count:
+        try:
+            process_count = len(psutil.pids())
+        except Exception:
+            process_count = len(SYSTEM_STATS.get("procs", []))
     sensor_ok = _planet_temperature(SYSTEM_STATS.get("cpu_temp")) is not None
     sensor_status = "OK" if sensor_ok else "CHECK"
     status = (f"GRAPH  |  POLL 1.0S  |  HISTORY 30S  |  SENSORS {sensor_status}  |  "

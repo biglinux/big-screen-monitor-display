@@ -404,13 +404,32 @@ class DisplaysPage:
                 # The panel shows a flashed adaptation of the theme: song details cannot be live.
                 follow = Adw.SwitchRow(
                     title=_("Big Media Player: cover and title of every song"),
-                    subtitle=_("Flashes the panel again on each new song (at most every 2 minutes): it restarts "
-                               "for about 10 seconds each time and its memory wears with use. Off: time, progress, "
-                               "volume and play/pause stay live without the song details."),
+                    subtitle=_("Flashes the panel again on each new song (at most every 25 seconds): it restarts "
+                               "for about 17 seconds each time and its memory wears with use. Off: time, progress, "
+                               "volume, play/pause and the spectrum stay live without the song details."),
                     active=bool(values.get("sm_bmp_track_refresh")))
                 follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
                                                                          True if r.get_active() else None))
                 look.add(follow)
+                processes = Adw.SwitchRow(
+                    title=_("Standard: process list (snapshot every 30 minutes)"),
+                    subtitle=_("This display only receives numbers. In the Standard theme's side panel, graphs "
+                               "show their values live but not their lines, and the process list cannot be "
+                               "updated in real time, so it is left out. On: the process list is shown as a "
+                               "snapshot flashed with the theme and renewed every 30 minutes; the display "
+                               "restarts for about 17 seconds each time and its memory wears with use."),
+                    active=str(values.get("sm_std_processes", "0")) != "0")
+                processes.connect("notify::active", lambda r, _p: self._set(display_id, "sm_std_processes",
+                                                                            "30" if r.get_active() else None))
+                look.add(processes)
+                planet = [("30", _("Every 30 minutes")), ("60", _("Every hour")),
+                          ("180", _("Every 3 hours (recommended)"))]
+                look.add(self._combo(_("Planet: position of the globe"), planet,
+                                     str(values.get("sm_planet_minutes", "180")),
+                                     lambda value: self._set(display_id, "sm_planet_minutes", value),
+                                     _("The globe is drawn at the real time and turns as a new picture flashed "
+                                       "at this interval: the display restarts for about 17 seconds each time and "
+                                       "its memory wears with use.")))
                 scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
                           ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
                 look.add(self._combo(_("Brother Away: story scenes"), scenes,

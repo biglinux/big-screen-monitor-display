@@ -6631,15 +6631,15 @@ msgstr "Desconecte o display e conecte de novo"
 
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:248
 msgid ""
-"The display stopped taking data after a USB reset (restarting the computer "
-"or waking it from sleep). Its firmware only recovers when it loses power: "
-"unplug its USB cable, wait 5 seconds and plug it into the same port. The "
-"service continues on its own."
+"The display stopped taking data (after the computer restarted, or a theme "
+"upload was interrupted). Its firmware only recovers when it loses power: "
+"unplug its USB cable, wait 5 seconds and plug it in again. The service "
+"continues on its own."
 msgstr ""
-"O display parou de aceitar dados depois de um reset do USB (reinício do "
-"computador ou volta da suspensão). O firmware dele só se recupera quando "
-"fica sem energia: desconecte o cabo USB, espere 5 segundos e conecte na "
-"mesma porta. O serviço continua sozinho."
+"O display parou de aceitar dados (depois de o computador reiniciar ou de uma "
+"gravação de tema ser interrompida). O firmware dele só se recupera quando "
+"fica sem energia: desconecte o cabo USB, espere 5 segundos e conecte de "
+"novo. O serviço continua sozinho."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:259
 msgid "Unplug and plug in again"
@@ -6648,3 +6648,90 @@ msgstr "Desconecte e conecte de novo"
 #: usr/share/big-screen-monitor-display/displays_page.py:379
 msgid "This display shows themes lying down (landscape) only."
 msgstr "Este display mostra os temas só deitados (paisagem)."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:415
+msgid "Standard: process list (snapshot every 30 minutes)"
+msgstr "Padrão: lista de processos (foto a cada 30 minutos)"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:416
+msgid ""
+"This display only receives numbers. In the Standard theme's side panel, "
+"graphs show their values live but not their lines, and the process list "
+"cannot be updated in real time, so it is left out. On: the process list is "
+"shown as a snapshot flashed with the theme and renewed every 30 minutes; the "
+"display restarts for about 17 seconds each time and its memory wears with "
+"use."
+msgstr ""
+"Este display só recebe números. No painel lateral do tema Padrão, os "
+"gráficos mostram os valores ao vivo, mas não as linhas, e a lista de "
+"processos não pode ser atualizada em tempo real, então fica de fora. "
+"Ligado: a lista de processos aparece como uma foto gravada junto com o tema "
+"e renovada a cada 30 minutos; o display reinicia por cerca de 17 segundos a "
+"cada vez e a memória dele se desgasta com o uso."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:409
+msgid "Big Media Player: cover and title of every song"
+msgstr "Big Media Player: capa e título de cada música"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:410
+msgid ""
+"Flashes the panel again on each new song (at most every 25 seconds): it "
+"restarts for about 17 seconds each time and its memory wears with use. Off: "
+"time, progress, volume, play/pause and the spectrum stay live without the "
+"song details."
+msgstr ""
+"Grava o painel de novo a cada música (no máximo a cada 25 segundos): ele "
+"reinicia por cerca de 17 segundos a cada vez e a memória dele se desgasta "
+"com o uso. Desligado: tempo, progresso, volume, play/pausa e o espectro "
+"continuam ao vivo, sem os dados da música."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:415
+msgid "Every 15 minutes"
+msgstr "A cada 15 minutos"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:416
+msgid "Every 30 minutes (recommended)"
+msgstr "A cada 30 minutos (recomendado)"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:416
+msgid "Every hour"
+msgstr "A cada hora"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:424
+msgid "Off: one scene per time of day"
+msgstr "Desligado: uma cena por período do dia"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:425
+msgid "Brother Away: story scenes"
+msgstr "Brother Away: cenas das histórias"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:428
+msgid ""
+"The panel tells the stories as scenes (beginning, middle, end) with the "
+"castaway animated and the speech bubble; each new scene is flashed (about 20 "
+"seconds)."
+msgstr ""
+"O painel conta as histórias em cenas (começo, meio e fim) com o náufrago "
+"animado e o balão de fala; cada cena nova é gravada (cerca de 20 segundos)."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:427
+msgid "Every 30 minutes"
+msgstr "A cada 30 minutos"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:428
+msgid "Every 3 hours (recommended)"
+msgstr "A cada 3 horas (recomendado)"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:429
+msgid "Planet: position of the globe"
+msgstr "Planet: posição do planeta"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:431
+msgid ""
+"The globe is drawn at the real time and turns as a new picture flashed at "
+"this interval: the display restarts for about 17 seconds each time and its "
+"memory wears with use."
+msgstr ""
+"O planeta é desenhado na hora real e gira com uma nova imagem gravada neste "
+"intervalo: o display reinicia por cerca de 17 segundos a cada vez e a "
+"memória dele se desgasta com o uso."
