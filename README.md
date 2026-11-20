@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.1.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.2.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-1326%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1351%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -42,7 +42,7 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
-## ✨ Novidades desde a 5.1.0 — SmartMonitor 3,5" e Big Media Player mais confiável
+## ✨ Novidades da 5.2.0 — SmartMonitor 3,5" e Big Media Player mais confiável
 
 - **Novo display: SmartMonitor 3,5" HID** (`0483:0065`, vendido como "3.5 inch PC CPU Data Monitor" por llhmi.com / llTechCo e várias marcas). Ele não tem framebuffer: desenha uma imagem gravada na própria memória e só recebe números. O serviço grava ali uma versão do tema escolhido e envia os valores a cada segundo. **Validado em hardware (classe A)**, inclusive funcionando ao lado de uma Turing 3,5".
 - **Todos os temas no SmartMonitor**: em vez de redesenhar cada tema à mão, o próprio tema é desenhado e o serviço descobre quais textos, barras, medidores, anéis e relógios mudam com cada dado. Esses viram elementos ao vivo do painel, com a mesma fonte, cor e alinhamento; o resto vira o fundo. Dados que o painel não consegue mostrar ao vivo são removidos, nunca congelados.
@@ -50,6 +50,16 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 - **Big Media Player no SmartMonitor**: tempo, progresso, volume, play/pausa, mudo e espectro ao vivo; opção de regravar a capa e o título a cada música. O painel continua ao vivo enquanto a imagem nova é preparada (antes congelava de 10 a 40 s).
 - **Rodapé de telemetria** com posição fixa para cada valor (o "%" e o "°C" não pulam), GPU logo depois da CPU e linha do álbum nas skins modernas que não a tinham.
 - **Agente de mídia dormente**: quando nenhum display usa o Big Media Player, o agente adormece em vez de sair e acorda sozinho quando o tema volta (antes, YouTube, mpv e outros só voltavam a aparecer no próximo login). Corrigidos também o `pactl subscribe` que vazava processos e o hub de mídia criado duas vezes, que deixava o player sem dados.
+- **SmartMonitor mais robusto** (validado num PC real com ASRock A520M-HVS, em colaboração com Leandro Silva):
+  - painel travado depois de reiniciar o PC é detectado na hora; a janela pede para reconectar o cabo e o serviço volta sozinho, sem reinícios em loop;
+  - na **suspensão** o painel é protegido e volta sem reconectar;
+  - **troca de tema em ~17 s**: os outros temas são preparados em segundo plano e a captura ficou 3,4× mais rápida; o Big Media Player atualiza ~5 vezes por segundo;
+  - todos os valores são enviados a cada atualização (antes o painel podia congelar depois de uma gravação);
+  - **data gravada na imagem** e renovada à meia-noite, liberando espaço para mais valores ao vivo (FAN, DN e UP voltaram ao Kojiro);
+  - **Padrão**: números do painel de gráficos ao vivo e lista de processos opcional, como foto renovada a cada 30 min;
+  - **Planet**: GPU Clock, CPU Freq, disco e rede ao vivo, e o planeta gira na hora real (a cada 30 min, 1 h ou 3 h);
+  - tempo ligado e contagem de processos ao vivo em GKrellM, Computador Antigo e outros; números como "64.09%" e "3.6 GHz" exibidos corretamente;
+  - ventoinha da CPU/placa-mãe com prioridade sobre a da GPU, e só orientações deitadas oferecidas para este painel.
 - **Nome e logo da sessão ativa**: no Big WindowMaker (e em qualquer desktop com arquivo em `/usr/share/desktop-identity`), os temas mostram o nome e o logo do desktop em vez dos da distribuição. Detalhes em [docs/session-identity](docs/session-identity.md).
 
 ## ✨ Novidades da 5.1.0 — Coolers DeepCool Digital
@@ -191,7 +201,7 @@ outros displays:
   Textos, barras, medidores, anéis e relógios de 7 segmentos viram elementos ao
   vivo do painel; o resto vira a imagem de fundo. Isso roda em um processo
   separado e o resultado fica em cache.
-- **A gravação leva uns 10 s** e só se repete quando a aparência muda (tema,
+- **A gravação leva de 10 a 15 s** (a troca toda, com o reinício do painel, ~17 s) e só se repete quando a aparência muda (tema,
   opções, esquema, unidade, nome, orientação). Durante a preparação de uma
   imagem nova o painel continua mostrando os valores ao vivo.
 - **O firmware tem limite de elementos.** Quando um tema tem mais dados do que
@@ -683,7 +693,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`). Portuguê
 | Big Media Player: player não aparece | O aplicativo precisa publicar MPRIS. Firefox: `media.hardwaremediakeys.enabled` ligado. Veja a lista em *Diagnóstico → Players MPRIS*. |
 | Big Media Player: display mostra outro player | Use *Player* em *Tocando agora*, ou *Reprodução → Player mostrado → Sempre o mesmo* / *Aplicativos ignorados*. |
 | Big Media Player: YouTube/mpv sumiram depois de trocar de tema | Atualize o pacote: desde a versão atual o agente de mídia fica dormente e acorda sozinho. No mpv, instale `mpv-mpris`. |
-| SmartMonitor mostra o tema antigo por alguns segundos | Normal: a nova imagem leva uns 10 s para ser gravada no painel; os valores continuam ao vivo enquanto isso. |
+| SmartMonitor mostra o tema antigo por alguns segundos | Normal: a nova imagem leva de 10 a 15 s para ser gravada no painel; os valores continuam ao vivo enquanto isso. |
 | SmartMonitor parado depois de reiniciar o PC | O firmware do painel deixa de aceitar dados depois de um reset de USB e só volta sem energia; no reinício a BIOS o configura e o kernel o reseta, e a placa-mãe mantém o USB energizado. A janela pede para **desconectar e conectar o cabo** e o serviço continua sozinho (sem reinícios em loop). Na **suspensão** o painel é protegido automaticamente (`big-screen-monitor-display-sleep`). Detalhes em [docs/smartmonitor-usb-reset](docs/smartmonitor-usb-reset.md). |
 | SmartMonitor some do USB por ~4 s ao trocar de tema | Normal: o firmware só carrega um tema novo reiniciando. Para não reiniciar a cada ajuste, a imagem nova só é gravada quando as opções ficam 4 s sem mudar. |
 | Ventoinha sem valor no Kojiro | O chip de sensores da placa-mãe precisa do driver certo. Rode `sudo sensors-detect` (pacote `lm_sensors`) ou carregue o módulo indicado (muitas placas ASRock/ASUS usam `nct6775`: `echo nct6775 \| sudo tee /etc/modules-load.d/nct6775.conf`). No modo automático a ventoinha da CPU/placa-mãe tem prioridade sobre a da placa de vídeo. |
@@ -699,7 +709,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`). Portuguê
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 1326 testes, sem hardware (os de D-Bus usam um barramento privado)
+python3 -m pytest -q tests                                  # 1351 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py
@@ -797,3 +807,4 @@ Agradecimento especial a quem colaborou com os testes:
 
 - **Cristian Philipe** — cristianphilipe1234@hotmail.com
 - **Reinaldo Nunes Rodrigues Junior** — reinaldodeuseamor8@gmail.com
+- **Leandro Silva** — leandroruizbrabo@ig.com (colaboração nos testes do SmartMonitor 3,5")
