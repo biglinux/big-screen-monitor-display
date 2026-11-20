@@ -506,6 +506,12 @@ class Collector:
             SYSTEM_STATS["procs"] = []
             SYSTEM_STATS["procs_mem"] = []
 
+    def sample_optional_now(self):
+        """Sample the optional data just asked for (fans) now instead of on the next pass."""
+        if self.want_fans and "fans" not in self._last:
+            self._last["fans"] = time.monotonic()
+            self._guard("fans", self._sample_fans)
+
     def start(self):
         if self._thread and self._thread.is_alive():
             return

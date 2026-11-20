@@ -255,6 +255,8 @@ class DisplaysPage:
         state = (entry.status or {}).get("state")
         if own.get("enabled", True) is False:
             return _("Disabled"), None
+        if (entry.status or {}).get("attention") == "replug":
+            return _("Unplug and plug in again"), "error"
         if state:
             return _(STATE_TEXT.get(state, state)), STATE_KIND.get(state)
         if entry.candidate and entry.candidate.auto_profile() is None and own.get("profile", "auto") == "auto":
@@ -368,11 +370,21 @@ class DisplaysPage:
                                  lambda value: self._set(display_id, "theme", value),
                                  _("Theme options (colours, modules) are shared and set in the Theme Gallery.")))
             orientation = dict(ORIENTATIONS).get(values.get("orientation"), ORIENTATIONS[0][1])
+            choices = ORIENTATIONS
+            hint = None
+            if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+                # The panel draws its picture lying down only: portrait would show the
+                # landscape picture (or upside down), never a portrait theme.
+                choices = tuple(o for o in ORIENTATIONS if o[0].startswith("horizontal"))
+                hint = _("This display shows themes lying down (landscape) only.")
+            own_orientation = own.get("orientation", GLOBAL)
+            if own_orientation != GLOBAL and own_orientation not in dict(choices):
+                choices = choices + ((own_orientation, dict(ORIENTATIONS).get(own_orientation, own_orientation)),)
             look.add(self._combo(_("Orientation"),
                                  [(GLOBAL, _("Same as default ({value})").format(value=_(orientation)))]
-                                 + [(k, _(v)) for k, v in ORIENTATIONS],
-                                 own.get("orientation", GLOBAL), lambda value: self._set(display_id, "orientation",
-                                                                                         value)))
+                                 + [(k, _(v)) for k, v in choices],
+                                 own_orientation, lambda value: self._set(display_id, "orientation", value),
+                                 hint))
             levels = [(GLOBAL, _("Same as default ({value}%)").format(value=values.get("brightness", 70)))] + \
                 [(level, f"{level}%") for level in range(100, -1, -10)]
             current = own.get("brightness", GLOBAL)

@@ -109,7 +109,14 @@ def _fan(stats, wanted):
     if wanted and wanted != "auto":
         return next((fan for fan in fans if fan["id"] == wanted), None)
     spinning = [fan for fan in fans if fan.get("rpm")]
+    # "Fan" on a hardware panel means the computer's (CPU, case) fan: a CPU-labelled
+    # one first, then the motherboard's, the graphics card's last.
+    spinning.sort(key=lambda fan: (0 if "cpu" in str(fan.get("label", "")).lower() else 1,
+                                   1 if str(fan.get("chip", "")).lower() in GPU_FAN_CHIPS else 0))
     return spinning[0] if spinning else None
+
+
+GPU_FAN_CHIPS = {"amdgpu", "radeon", "nouveau", "nvidia", "i915", "xe"}
 
 
 def _temp_sensor(stats, wanted):

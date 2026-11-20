@@ -6624,3 +6624,27 @@ msgstr "{files} imagem(ns), {size:.1f} MB"
 #: usr/share/big-screen-monitor-display/config_gui.py:1380
 msgid "Testing"
 msgstr "Testes"
+
+#: usr/share/big-screen-monitor-display/gui/dashboard.py:247
+msgid "Unplug the display and plug it in again"
+msgstr "Desconecte o display e conecte de novo"
+
+#: usr/share/big-screen-monitor-display/gui/dashboard.py:248
+msgid ""
+"The display stopped taking data after a USB reset (restarting the computer "
+"or waking it from sleep). Its firmware only recovers when it loses power: "
+"unplug its USB cable, wait 5 seconds and plug it into the same port. The "
+"service continues on its own."
+msgstr ""
+"O display parou de aceitar dados depois de um reset do USB (reinício do "
+"computador ou volta da suspensão). O firmware dele só se recupera quando "
+"fica sem energia: desconecte o cabo USB, espere 5 segundos e conecte na "
+"mesma porta. O serviço continua sozinho."
+
+#: usr/share/big-screen-monitor-display/displays_page.py:259
+msgid "Unplug and plug in again"
+msgstr "Desconecte e conecte de novo"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:379
+msgid "This display shows themes lying down (landscape) only."
+msgstr "Este display mostra os temas só deitados (paisagem)."

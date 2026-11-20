@@ -188,6 +188,56 @@ FIELDS = {
 }
 CLOCK_PRIORITY = 0
 
+# Fans: one live value per fan (RPM and PWM duty), found by its id ("nct6793/fan2"),
+# so a theme showing a chosen fan keeps showing that one. Each fan gets its own
+# values in the capture variants, so a number drawn for a fan tells which fan it is.
+# Fans standing still keep 0 RPM in every variant: "auto" picks the same fan the
+# themes pick at run time (the first one spinning).
+FAN_PRIORITY = 38
+FAN_RPM, FAN_PCT = "fan_rpm:", "fan_pct:"
+
+
+def _fan_changes(stats, variant):
+    fans = []
+    for index, fan in enumerate(stats.get("fans") or []):
+        fan = dict(fan)
+        if fan.get("rpm"):
+            fan["rpm"] = (1137 if variant == 0 else 2351) + 97 * index
+        if fan.get("percent") is not None or fan.get("rpm"):
+            fan["percent"] = float((23 if variant == 0 else 58) + 3 * index)
+        fans.append(fan)
+    return {"fans": fans}
+
+
+def _fan_percent(stats, pct):
+    return {"fans": [dict(fan, percent=float(pct)) for fan in stats.get("fans") or []]}
+
+
+def _fan_value(stats, name):
+    kind, wanted = (FAN_RPM, name[len(FAN_RPM):]) if name.startswith(FAN_RPM) else (FAN_PCT, name[len(FAN_PCT):])
+    fan = next((f for f in stats.get("fans") or [] if f.get("id") == wanted), None)
+    if fan is None:
+        return 0.0
+    return float((fan.get("rpm") if kind == FAN_RPM else fan.get("percent")) or 0.0)
+
+
+def set_fans(fans):
+    """Make the fans of this computer live values of the next capture."""
+    fans = [f for f in fans or [] if f.get("id")]
+    if not fans:
+        FIELDS.pop("fan", None)
+        PERCENT.pop("fan", None)
+        return
+    names = tuple(FAN_RPM + f["id"] for f in fans) + tuple(FAN_PCT + f["id"] for f in fans)
+    FIELDS["fan"] = (FAN_PRIORITY, (lambda s: _fan_changes(s, 0), lambda s: _fan_changes(s, 1)), names)
+    spinning = [f for f in fans if f.get("rpm")]
+    from ...kojiro.data import _fan as pick
+    auto = pick({"fans": spinning}, "auto") if spinning else None
+    if auto is not None:
+        PERCENT["fan"] = (_fan_percent, FAN_PCT + auto["id"])
+    else:
+        PERCENT.pop("fan", None)
+
 # How to put a field at a given percentage (0..100) of its bar, and the candidate
 # that bar follows. Used to find bars and photograph them empty and full.
 PERCENT = {
@@ -304,8 +354,9 @@ def noise(stats):
         changes["gpus"] = gpus
     changes["sensors"] = [(group, label, (value or 0) + 7.3 if isinstance(value, (int, float)) else value, unit)
                           for group, label, value, unit in (tuple(item) for item in stats.get("sensors") or [])]
-    changes["fans"] = [dict(fan, rpm=(fan.get("rpm") or 0) + 111, percent=(fan.get("percent") or 0) + 17)
-                       for fan in stats.get("fans") or []]
+    if "fan" not in FIELDS:
+        changes["fans"] = [dict(fan, rpm=(fan.get("rpm") or 0) + 111, percent=(fan.get("percent") or 0) + 17)
+                           for fan in stats.get("fans") or []]
     changes["cpu_cores_percent"] = [(value or 0) + 13 for value in stats.get("cpu_cores_percent") or []]
     changes["disks"] = {mount: {k: (v * 1.3 + 3 if isinstance(v, (int, float)) and not isinstance(v, bool) else v)
                                 for k, v in info.items()} for mount, info in (stats.get("disks") or {}).items()}
@@ -328,6 +379,7 @@ def _disk(stats, used):
 def base_stats(stats):
     """The telemetry every capture render starts from (realistic, fixed)."""
     base = dict(stats)
+    set_fans(stats.get("fans"))
     base.update({"valid": True, "boot_time": T0.timestamp() - BOOT0, "proc_count": 497,
                  "load_avg": (3.78, 3.96, 3.79), "cpu_freq_mhz": 3774.0, "cpu_power_w": 26.0,
                  "cpu_power_status": "ok", "disk_io_kbs": 2048.0, "cpu_temp_at": T0.timestamp()})
@@ -355,6 +407,8 @@ def base_stats(stats):
 
 
 def candidate_value(name, stats, now=None):
+    if name.startswith((FAN_RPM, FAN_PCT)):
+        return _fan_value(stats, name)
     now = now or time.time()
     return float(CANDIDATES[name](stats, now, datetime.datetime.fromtimestamp(now)))
 

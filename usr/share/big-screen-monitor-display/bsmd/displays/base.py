@@ -36,10 +36,13 @@ TIMEOUT = "timeout"
 IO = "io"
 PROTOCOL = "protocol"
 BUSY = "busy"            # another program holds the device
+# The device answers on USB but its firmware stopped taking data, and only
+# removing its power brings it back (unplug and plug the cable again).
+NEEDS_REPLUG = "needs_replug"
 
 FATAL_KINDS = {NOT_FOUND, PERMISSION, DISCONNECTED, BUSY}
 # Conditions a process restart cannot fix: retry slowly, never escalate to FAILED.
-EXTERNAL_KINDS = {PERMISSION, BUSY}
+EXTERNAL_KINDS = {PERMISSION, BUSY, NEEDS_REPLUG}
 
 
 class DisplayError(Exception):

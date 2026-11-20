@@ -522,7 +522,8 @@ def test_cover_and_title_of_every_song_is_on_by_default():
     assert settings.defaults()["sm_bmp_track_refresh"] is True
 
 
-def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver, stats):
+def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver, stats, monkeypatch):
+    monkeypatch.setattr(sm_driver, "FLASH_SETTLE", 0.0)
     drv = make_driver(FakePanel())
     drv.background_capture = True
     base = dict(settings.defaults(), brightness=40)
@@ -563,3 +564,96 @@ def test_media_hub_starts_once_when_sessions_ask_together(tmp_path, monkeypatch)
     for thread in threads:
         thread.join()
     assert len(created) == 1 and app.media_hub is created[0]
+
+
+def test_a_new_picture_waits_until_the_settings_stop_changing(make_driver, stats, monkeypatch):
+    clock = [1000.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    drv = make_driver(FakePanel())
+    drv.background_capture = True
+    base = dict(settings.defaults(), brightness=40)
+    first = drv.build_frame(base, stats)
+    drv.present(first)
+    flashed = drv.flashed
+    for brightness in (41, 42, 43):                  # editing: a new picture every second
+        clock[0] += 1.0
+        editing = drv.build_frame(dict(base, theme="big_media_player", bmp_skin=f"s{brightness}"), stats)
+        drv.present(editing)
+        assert drv._job is None and drv.flashed == flashed
+    clock[0] += sm_driver.FLASH_SETTLE + 0.1          # quiet: now it is captured
+    drv.present(editing)
+    assert drv._job is not None and drv._job["key"] == editing.key
+    drv._job["done"].wait(30)
+
+
+class ResetStuckPanel(FakePanel):
+    """A panel after a USB reset: every write times out in the kernel."""
+
+    def write(self, data):
+        import errno
+        raise DisplayError("io", "write: timed out", OSError(errno.ETIMEDOUT, "Connection timed out"))
+
+
+def test_a_panel_stuck_after_a_usb_reset_asks_to_be_replugged(tmp_path, monkeypatch):
+    from bsmd.displays.base import NEEDS_REPLUG
+    address = ["1:5"]
+    monkeypatch.setattr(sm_driver, "usb_address", lambda _path, sysfs=None: address[0])
+    monkeypatch.setattr(sm_driver, "_STUCK", {})
+    drv = sm_driver.SmartMonitorHid("/dev/hidraw-fake", "1-1", state_path=str(tmp_path / "state.json"))
+    drv.hid = panel = ResetStuckPanel()
+    with pytest.raises(DisplayError) as caught:
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG and panel.fd is None
+    opens = panel.opens
+    with pytest.raises(DisplayError) as caught:      # same USB address: no 5 s write again
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG and panel.opens == opens
+    address[0] = "1:6"                               # replugged: a new address, tried again
+    drv.hid = FakePanel()
+    drv.open()
+    assert "1-1" not in sm_driver._STUCK
+
+
+def test_fans_are_live_values_found_by_id():
+    from bsmd.displays.smartmonitor import fields
+    fans = [{"id": "amdgpu/fan1", "label": "fan1", "chip": "amdgpu", "rpm": 1450, "percent": 28.0},
+            {"id": "nct6793/fan1", "label": "fan1", "chip": "nct6793", "rpm": 0, "percent": 30.0},
+            {"id": "nct6793/fan2", "label": "fan2", "chip": "nct6793", "rpm": 1378, "percent": 62.7}]
+    try:
+        base = fields.base_stats({"fans": fans})
+        names = fields.FIELDS["fan"][2]
+        assert "fan_rpm:nct6793/fan2" in names and "fan_pct:amdgpu/fan1" in names
+        variant = dict(base, **fields.FIELDS["fan"][1][1](base))
+        values = {n: (fields.candidate_value(n, base), fields.candidate_value(n, variant)) for n in names}
+        rpm_pairs = [v for n, v in values.items() if n.startswith(fields.FAN_RPM) and v[0]]
+        assert len(set(rpm_pairs)) == len(rpm_pairs) == 2           # each spinning fan is told apart
+        assert values["fan_rpm:nct6793/fan1"] == (0.0, 0.0)          # a stopped fan stays stopped
+        assert fields.PERCENT["fan"][1] == "fan_pct:nct6793/fan2"    # "auto": the motherboard fan
+        assert "fans" not in fields.noise(base)
+        live = {"fans": [dict(f, rpm=f["rpm"] + 5) for f in fans]}
+        binding = {"cand": "fan_rpm:nct6793/fan2", "part": "whole"}
+        assert fields.binding_value(binding, live) == 1383
+        assert fields.binding_value({"cand": "fan_rpm:gone/fan9", "part": "whole"}, live) == 0
+    finally:
+        fields.set_fans([])
+    assert "fan" not in fields.FIELDS
+
+
+def test_kojiro_auto_fan_prefers_the_computer_fan():
+    from bsmd.kojiro import data
+    fans = [{"id": "amdgpu/fan1", "label": "fan1", "chip": "amdgpu", "rpm": 1450},
+            {"id": "nct6793/fan2", "label": "fan2", "chip": "nct6793", "rpm": 1378}]
+    assert data._fan({"fans": fans}, "auto")["id"] == "nct6793/fan2"
+    labelled = fans + [{"id": "it87/CPU Fan", "label": "CPU Fan", "chip": "it87", "rpm": 900}]
+    assert data._fan({"fans": labelled}, "auto")["id"] == "it87/CPU Fan"
+    assert data._fan({"fans": fans[:1]}, "auto")["id"] == "amdgpu/fan1"   # only the GPU's: still shown
+
+
+def test_telemetry_displays_ask_the_collector_for_what_kojiro_shows():
+    config = settings.kojiro_defaults()
+    widgets = config["layouts"]["landscape"]
+    if not any(w["type"] == "fan" for w in widgets):
+        widgets.append(dict(widgets[0], id="fan-9", type="fan", opts={"fan": "auto"}, visible=True))
+    needs = runtime._telemetry_needs({"theme": "kojiro", "kojiro": config, "orientation": "horizontal"})
+    assert needs["fans"] is True
+    assert runtime._telemetry_needs({"theme": "standard"}) is None
