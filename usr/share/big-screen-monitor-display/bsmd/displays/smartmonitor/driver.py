@@ -14,6 +14,7 @@ flash.
 """
 
 import datetime
+import errno
 import glob
 import json
 import logging
@@ -22,7 +23,8 @@ import threading
 import time
 from dataclasses import dataclass, field
 
-from ..base import DISCONNECTED, NOT_FOUND, PROTOCOL, TIMEOUT, DeviceInfo, DisplayError, TelemetryDriver, Transfer
+from ..base import (DISCONNECTED, NEEDS_REPLUG, NOT_FOUND, PROTOCOL, TIMEOUT, DeviceInfo, DisplayError, TelemetryDriver,
+                    Transfer)
 from ..deepcool.hid import Hidraw
 from . import layout, protocol
 
@@ -36,6 +38,16 @@ RESTART_VANISH = 5.0          # measured: the panel drops off USB ~1 s after the
 ACK_TIMEOUT = 5.0
 BLOCK_RETRIES = 5
 UPLOAD_ATTEMPTS = 3
+FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
+STUCK_REPROBE = 60.0          # a stuck panel on the same USB address is tried again this often
+
+# Measured on hardware: after any USB reset of a panel the host has configured
+# (a PC restart or resume, ``usbreset``), the firmware stops taking reports: every
+# write times out in the kernel (5 s) until its power is removed. Nothing sent
+# over USB (control requests, port resets, suspend) brings it back. Ports seen
+# stuck: {usb_path: (bus:address, when)}, so retries cost nothing until the
+# panel is plugged in again (it then gets a new address).
+_STUCK = {}
 
 
 class _Hid(Hidraw):
@@ -66,6 +78,25 @@ def find_hidraw(usb_path, sysfs=SYSFS_USB):
         return ""
     nodes = sorted(glob.glob(os.path.join(sysfs, usb_path, f"{usb_path}:*", "*", "hidraw", "hidraw*")))
     return "/dev/" + os.path.basename(nodes[0]) if nodes else ""
+
+
+def usb_address(usb_path, sysfs=SYSFS_USB):
+    """``"bus:address"`` of the device on ``usb_path`` (a new one after every replug)."""
+    try:
+        with open(os.path.join(sysfs, usb_path, "busnum"), encoding="ascii") as bus, \
+                open(os.path.join(sysfs, usb_path, "devnum"), encoding="ascii") as dev:
+            return f"{bus.read().strip()}:{dev.read().strip()}"
+    except (OSError, TypeError):
+        return ""
+
+
+def _timed_out(error):
+    cause = getattr(error, "cause", None)
+    return getattr(cause, "errno", None) == errno.ETIMEDOUT or getattr(error, "kind", None) == TIMEOUT
+
+
+STUCK_MESSAGE = ("the panel stopped taking data after a USB reset (PC restart or resume from sleep); "
+                 "unplug its USB cable and plug it in again")
 
 
 def state_dir():
@@ -109,6 +140,7 @@ class SmartMonitorHid(TelemetryDriver):
         # one keeps its live values; only the flash itself pauses the panel.
         self.background_capture = True
         self._job = None
+        self._wanted = (None, 0.0)     # (picture key asked for, since): see FLASH_SETTLE
 
     # ------------------------------------------------------------ state
     def _load_state(self):
@@ -133,7 +165,22 @@ class SmartMonitorHid(TelemetryDriver):
     def open(self):
         if not self.hid.path:
             self.hid.path = find_hidraw(self.usb_path)
+        address = usb_address(self.usb_path) if self.usb_path else ""
+        stuck = _STUCK.get(self.usb_path)
+        if stuck and address and stuck[0] == address and time.monotonic() - stuck[1] < STUCK_REPROBE:
+            raise DisplayError(NEEDS_REPLUG, STUCK_MESSAGE)
         self.hid.open()
+        try:
+            # Liveness: the clock and backlight report (harmless, sent every second anyway).
+            self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+        except DisplayError as error:
+            self.hid.close()
+            if not _timed_out(error):
+                raise
+            if address:
+                _STUCK[self.usb_path] = (address, time.monotonic())
+            raise DisplayError(NEEDS_REPLUG, STUCK_MESSAGE, getattr(error, "cause", None)) from None
+        _STUCK.pop(self.usb_path, None)
         self.info = DeviceInfo(self.DRIVER, self.MODEL, *layout.SIZE, f"usb {self.usb_path}",
                                {"hidraw": self.hid.path, "product": self.product, "flashed_layout": self.flashed or "",
                                 "protocol": "SmartMonitor HID (img.dat + channels)"})
@@ -192,6 +239,13 @@ class SmartMonitorHid(TelemetryDriver):
             picture.source_spec = job["spec"]
             self.picture = picture
             return picture
+        # Every new picture restarts the panel (its firmware reloads the theme): while the
+        # settings keep changing (a theme being edited) the current one stays, live.
+        now = time.monotonic()
+        if self._wanted[0] != frame.key:
+            self._wanted = (frame.key, now)
+        if now - self._wanted[1] < FLASH_SETTLE:
+            return current
         # Nothing running (or a finished capture of a picture no longer wanted): start one.
         job = {"key": frame.key, "spec": frame.spec, "done": threading.Event()}
 

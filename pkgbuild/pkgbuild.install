@@ -40,6 +40,7 @@ post_upgrade() {
 ## arg 1:  the old package version
 pre_remove() {
 	systemctl disable --now "${_service}" 2>/dev/null || true
+	/usr/lib/big-screen-monitor-display/bsm-usb-guard unpark 2>/dev/null || true
 }
 
 ## arg 1:  the old package version

@@ -31,8 +31,8 @@ from PIL import Image, ImageDraw
 from . import __version__, frames, health, i18n, patterns, settings as settings_mod, telemetry, themes
 from .displays import discovery, registry
 from .displays.ax206 import AX206
-from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO, NOT_FOUND, PROTOCOL, TELEMETRY, \
-    TIMEOUT, DisplayError, Transfer
+from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO, NEEDS_REPLUG, NOT_FOUND, PROTOCOL, \
+    TELEMETRY, TIMEOUT, DisplayError, Transfer
 from .health import (DEGRADED, DISCONNECTED, FAILED, HEALTHY, RECOVERING, RETRYING, STARTING,
                      STOPPED)
 from .settings import atomic_write_json
@@ -184,6 +184,7 @@ class DisplaySession:
         self.driver = None
         self.device_info = None
         self.failed_attempts = 0
+        self.attention = None          # "replug": only unplugging the display brings it back
         self.recoveries = 0
         self.recovery_started = None
         self.next_attempt = 0.0
@@ -343,9 +344,16 @@ class DisplaySession:
         from .displays.deepcool import metrics
         driver = self.driver
         own = getattr(driver, "build_frame", None)
+        stats = telemetry.snapshot()
+        if not stats.get("valid"):
+            # Before the collector's first pass the snapshot has no hardware at all: a
+            # SmartMonitor would compile (and flash) a picture for it, then again a few
+            # seconds later for the real one - two panel restarts at every start.
+            beat.progress()
+            self.stop_event.wait(0.2)
+            return
         beat.begin("metrics")
         try:
-            stats = telemetry.snapshot()
             if own is not None:
                 values = None
                 if settings.get("theme") == "big_media_player":
@@ -670,8 +678,16 @@ class DisplaySession:
             log.info("[%s] display ready: %s %dx%d at %s", self.id, info.model, info.width, info.height,
                      info.location)
         self.failed_attempts = 0
+        self.attention = None
         self.backoff.reset()
         self.recovery_started = None
+        if self._is_telemetry():
+            # What the theme needs (fans for Kojiro...) must be sampled before the first
+            # capture of the picture, or those values are left out of it.
+            self.runtime.wake_collector_needs()
+            sample_now = getattr(self.runtime.collector, "sample_optional_now", None)
+            if sample_now is not None:
+                sample_now()
         self._apply_leds(settings.get("led_color", "off"))
         if not self.intro_shown and getattr(driver.capabilities, "output", "raster") != TELEMETRY:
             self.intro_shown = True
@@ -732,6 +748,17 @@ class DisplaySession:
         self.failed_attempts += 1
         if self.recovery_started is None:
             self.recovery_started = now
+        if error.kind == NEEDS_REPLUG:
+            # The firmware is stuck until its power is removed: say so once, keep the
+            # process (a restart cannot help) and poll cheaply until it is replugged.
+            if self.attention != "replug":
+                self.attention = "replug"
+                self.record("needs_replug", health.SEVERITY_CRITICAL, str(error),
+                            action="unplug the display's USB cable and plug it in again")
+            if self.link.state == RECOVERING:
+                self.link.to(RETRYING, "waiting for the display to be plugged in again")
+            self.next_attempt = now + runtime.REPLUG_POLL
+            return
         self.record(f"connect_{error.kind}", health.SEVERITY_ERROR, str(error), operation="open",
                     attempts=self.failed_attempts, strategy="close + reopen + backoff")
         if error.kind in (NOT_FOUND, GONE):
@@ -800,12 +827,31 @@ class DisplaySession:
                           target_fps=round(self._content_fps(), 1)),
             "recoveries": self.recoveries,
             "failed_attempts": self.failed_attempts,
+            "attention": self.attention,
             "sensors": dict(self.sensors),
             "pattern": self.pattern[0] if self.pattern else None,
             "metrics": self.last_metrics,
             "incidents": [entry for entry in self.runtime.incidents.recent(60)
                           if entry.get("display") == self.id][-15:],
         }
+
+
+def _telemetry_needs(settings):
+    """Optional data a theme drawn by a telemetry device's driver needs (Kojiro widgets)."""
+    if settings.get("theme") != "kojiro":
+        return None
+    try:
+        from .kojiro import data as kojiro_data, model as kojiro_model
+        config = settings.get("kojiro")
+        if not isinstance(config, dict) or "layouts" not in config:
+            config, _problems = kojiro_model.validate(config)
+        portrait = str(settings.get("orientation", "")).startswith("vertical")
+        widgets, _ref = kojiro_model.layout_for(config, portrait)
+        landscape, _ref = kojiro_model.layout_for(config, False)
+        return kojiro_data.needs(list(widgets) + list(landscape))
+    except Exception:  # noqa: BLE001 - a broken layout only loses optional data
+        log.debug("Kojiro needs of a telemetry display could not be computed", exc_info=True)
+        return None
 
 
 # ---------------------------------------------------------------- runtime
@@ -819,6 +865,7 @@ class Runtime:
     DISCOVERY_EVERY = 2.0          # sysfs scan for hot-plugged panels
     SESSION_LINGER = 45.0          # forget a session whose device has been gone this long
     MAX_FAILED_ATTEMPTS = 8
+    REPLUG_POLL = 3.0              # a display waiting to be replugged: cheap (no I/O until it is)
     RESET_PORT_AFTER = 4
     SELF_EXIT_AFTER_STALL = 90.0   # when systemd's watchdog is not configured
     STATUS_EVERY = 2.0
@@ -985,6 +1032,13 @@ class Runtime:
         if media_wanted and self.media_hub is None:
             self._start_media_hub()
         needs = [s.theme.needs for s in sessions if isinstance(getattr(s.theme, "needs", None), dict)]
+        # Telemetry devices (SmartMonitor) have no theme object: the theme is drawn by the
+        # driver's capture, which needs the same optional data (fans, disks, processes...).
+        for session in list(self.sessions.values()):
+            if session.theme is None and getattr(session, "_is_telemetry", lambda: False)():
+                wanted = _telemetry_needs(session.settings())
+                if wanted is not None:
+                    needs.append(wanted)
         collector = self.collector
         collector.want_processes = bool(ids & {"standard", "gkrellm", "old_computer"}) or any(
             n["processes"] for n in needs)

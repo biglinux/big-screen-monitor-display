@@ -1,0 +1,20 @@
+[Unit]
+Description=Big Screen Monitor Display - keep USB panels working across sleep
+Documentation=https://github.com/biglinux/big-screen-monitor-display
+Before=sleep.target
+StopWhenUnneeded=yes
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Only acts when a SmartMonitor HID panel is plugged in: stops the service,
+# parks the panel (see bsm-usb-guard) and, after waking up, brings both back.
+ExecStart=/usr/lib/big-screen-monitor-display/bsm-usb-guard sleep
+ExecStop=/usr/lib/big-screen-monitor-display/bsm-usb-guard wake
+TimeoutSec=40
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=sleep.target

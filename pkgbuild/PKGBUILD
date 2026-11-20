@@ -90,7 +90,11 @@ package() {
     # Permissions
     chmod 755 "${pkgdir}/usr/bin/"*
     chmod 755 "${pkgdir}/usr/share/${pkgname}/main.py" "${pkgdir}/usr/share/${pkgname}/config_gui.py"
-    chmod 755 "${pkgdir}/usr/lib/${pkgname}/bsm-helper"
+    chmod 755 "${pkgdir}/usr/lib/${pkgname}/bsm-helper" "${pkgdir}/usr/lib/${pkgname}/bsm-usb-guard"
+    # SmartMonitor HID panels across sleep (see bsm-usb-guard): always active, it
+    # does nothing unless such a panel is plugged in.
+    install -d "${pkgdir}/usr/lib/systemd/system/sleep.target.wants"
+    ln -sf ../${pkgname}-sleep.service "${pkgdir}/usr/lib/systemd/system/sleep.target.wants/${pkgname}-sleep.service"
     chmod 644 "${pkgdir}/usr/lib/systemd/system/"*.service
     chmod 644 "${pkgdir}/usr/lib/udev/rules.d/"*.rules
     chmod 644 "${pkgdir}/usr/lib/sysusers.d/"*.conf
