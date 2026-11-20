@@ -56,7 +56,7 @@ números. Medido num Ryzen 5 5500 (skin Big Wave, espectro real) em 20/11/2026:
 | --- | --- | --- |
 | Adaptar o tema com música e espectro | 41–43 s | 9,8 s (12,8 s com perfil) |
 | Atualizações dos valores com música tocando | 1/s | ~5/s (Automático), 10/s (Fluido), 4/s (Equilibrado), 1/s (Econômico) |
-| Relatórios por atualização | relógio + todos os valores | só os valores que mudaram (todos a cada 5 s); relógio 1×/s |
+| Relatórios por atualização | relógio + todos os valores | todos os valores; relógio 1×/s |
 
 * **Captura**: antes de cada desenho, a captura limpa os caches dos temas (um
   texto vindo do cache não seria visto pelo gravador). Isso também apagava os
@@ -65,7 +65,7 @@ números. Medido num Ryzen 5 5500 (skin Big Wave, espectro real) em 20/11/2026:
   processos, 25 dos 43 s. Esses caches agora são mantidos
   (`capture.KEEP_CACHES`), com imagem e valores idênticos (bytes do `img.dat`
   comparados em Big Media Player, Kojiro, Padrão e GKrellM).
-* **Valores ao vivo**: cada relatório leva ~1 ms no painel. Com uma música
+* **Valores ao vivo**: cada relatório leva ~1 ms no painel. Todos os valores vão em toda atualização: enviar só os que mudaram foi testado e deixou o painel com os valores congelados depois de uma gravação. Com uma música
   tocando, tempo, progresso e espectro (que o agente envia 12×/s) vão ao painel
   várias vezes por segundo, conforme o perfil de desempenho.
 * **Música nova**: com "capa e título de cada música" ligado, cada música nova é

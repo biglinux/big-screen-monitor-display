@@ -44,7 +44,6 @@ UPLOAD_ATTEMPTS = 3
 MEDIA_INTERVAL = {"economy": 1.0, "balanced": 0.25, "auto": 0.2, "fluid": 0.1}
 IDLE_INTERVAL = 1.0
 CLOCK_EVERY = 1.0             # the clock / backlight report
-RESEND_EVERY = 5.0            # every value again (only changed ones in between)
 DATA_WAIT = 15.0              # the first picture waits this long for data being sampled
 PRECAPTURE_IDLE = 45.0        # quiet this long: the other themes are adapted ahead of a switch
 FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
@@ -147,8 +146,6 @@ class SmartMonitorHid(TelemetryDriver):
         caps.metrics = ("cpu", "gpu", "ram", "disk", "network", "clock")
         caps.notes = ("Draws a dashboard flashed into the panel; live values are pushed every second.",)
         self.min_interval = min(MEDIA_INTERVAL.values())
-        self._sent = {}                # channel -> value the panel shows
-        self._sent_at = -1e9           # last time every value was sent
         self._clock_at = -1e9          # last clock / backlight report
         self._clock_brightness = None
         self._playing = False
@@ -311,7 +308,7 @@ class SmartMonitorHid(TelemetryDriver):
         picture = self._adapt(frame)
         if picture.key != self.flashed:
             sent += self.flash(picture)
-            self._sent, self._sent_at, self._clock_at = {}, -1e9, -1e9   # the panel restarted
+            self._clock_at = -1e9                        # the panel restarted
         if not frame.values:
             frame.values = layout.values(picture, frame.stats)
         media = frame.stats.get("media") if isinstance(frame.stats.get("media"), dict) else {}
@@ -321,17 +318,13 @@ class SmartMonitorHid(TelemetryDriver):
         if now - self._clock_at >= CLOCK_EVERY or self._clock_brightness != self.brightness:
             sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
             self._clock_at, self._clock_brightness = now, self.brightness
-        values = {int(k): protocol.clamp_value(v) for k, v in frame.values.items()}
-        full = now - self._sent_at >= RESEND_EVERY
-        changed = values if full else {k: v for k, v in values.items() if self._sent.get(k) != v}
-        for packet in protocol.sensor_reports(changed):
+        # Every value in every update. Measured: sending only the changed channels left
+        # the panel showing frozen values after a flash, although it took the reports.
+        for packet in protocol.sensor_reports(frame.values):
             sent += self.hid.write(packet)
-        self._sent.update(changed)
-        if full:
-            self._sent_at = now
         self.last_frame = frame
         self._maybe_precapture(frame, now)
-        return Transfer(sent, 1, full, time.monotonic() - start)
+        return Transfer(sent, 1, True, time.monotonic() - start)
 
     def _maybe_precapture(self, frame, now):
         """Adapt the other themes in the background once things are quiet, so that
