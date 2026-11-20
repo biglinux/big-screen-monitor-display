@@ -362,7 +362,7 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 12
+CAPTURE_VERSION = 13
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
 THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_", "sm_planet_"), "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
@@ -447,8 +447,11 @@ def spec(settings, stats, now=None):
               if k in COMMON_KEYS or (prefixes and k.startswith(prefixes))}
     now = now or datetime.datetime.now()
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
+    # The date is drawn into the picture (it needs up to six number widgets live): a new
+    # picture once a day, at midnight.
     result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
-              "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+              "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation,
+              "date": now.date().isoformat()}
     if theme_id == "planet":
         # The globe at the real time, renewed every N minutes (a new picture each time).
         step = planet_minutes(settings) * 60
@@ -591,7 +594,7 @@ def _compiled(theme_spec, settings, stats, progress=None):
             hints = {}
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
                    "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out,
-                   "astronomy": theme_spec.get("astronomy"),
+                   "astronomy": theme_spec.get("astronomy"), "date": theme_spec.get("date"),
                    "scene": theme_spec.get("scene"), "spectrum": hints.get(base_key)}
         if art is not None and settings.get("sm_bmp_track_refresh"):
             import base64

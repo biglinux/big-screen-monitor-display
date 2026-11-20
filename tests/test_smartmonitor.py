@@ -865,3 +865,42 @@ def test_values_not_on_screen_beat_repeats_and_large_decimals():
     assert ("net_rx_mbps", "frac", 3) in kept_parts                  # 0.3 keeps its decimal
     assert ("gpu_clock", "int", 2) in kept_parts and ("cpu_percent", "whole", 4) in kept_parts
     assert ("gpu_clock", "frac", 2) not in kept_parts and ("hour", "whole", 1) not in kept_parts
+
+
+def test_two_decimals_keep_their_leading_zero():
+    from bsmd.displays.smartmonitor import fields
+    binding = {"cand": "ram_used_pct", "decimals": 2, "part": "frac_digit"}
+    stats = {"ram_used_mb": 6409.0, "ram_total_mb": 10000.0}                 # 64.09 %
+    assert [fields.binding_value(dict(binding, digit=d), stats) for d in (0, 1)] == [0, 9]
+    assert fields.binding_value({"cand": "ram_used_pct", "decimals": 2, "part": "int"}, stats) == 64
+
+
+def test_capture_date_is_drawn_and_renewed_daily(stats):
+    base = dict(settings.defaults(), theme="standard")
+    today = layout.spec(base, stats, datetime.datetime(2026, 11, 20, 23, 59))
+    tomorrow = layout.spec(base, stats, datetime.datetime(2026, 11, 21, 0, 0))
+    assert today["date"] == "2026-11-20" and layout.key(today) != layout.key(tomorrow)
+    from bsmd.displays.smartmonitor import fields
+    saved = fields.T0, fields.T1
+    try:
+        fields.set_date(datetime.date(2026, 11, 20))
+        assert fields.T0.date() == fields.T1.date() == datetime.date(2026, 11, 20)
+        assert fields.T0.time() != fields.T1.time()
+    finally:
+        fields.T0, fields.T1 = saved
+
+
+def test_gkrellm_cpu_split_and_interfaces_are_live_fields():
+    from bsmd.displays.smartmonitor import fields
+    stats = {"net_ifaces": {"enp6s0": {"rx": 0.2, "tx": 2.9, "rx_history": [1, 2]}, "lo": {"rx": 0, "tx": 0}}}
+    try:
+        base = fields.base_stats(stats)
+        names = fields.FIELDS["iface"][2]
+        assert "iface_rx:enp6s0" in names and "iface_tx:lo" in names
+        variant = dict(base, **fields.FIELDS["iface"][1][1](base))
+        assert fields.candidate_value("iface_rx:enp6s0", base) != fields.candidate_value("iface_rx:enp6s0", variant)
+        assert fields.candidate_value("iface_rx:enp6s0", base) >= 1                  # "2.9M": the M unit
+        assert "cpu_user" in fields.FIELDS["cpu_split"][2]
+        assert fields.noise(base)["net_ifaces"]["enp6s0"]["rx_history"] == [70, 70]   # graphs: never frozen
+    finally:
+        fields.set_ifaces({})

@@ -1400,7 +1400,8 @@ def render_dashboard_old_computer(width, height, settings):
 
     def format_uptime():
         try:
-            elapsed = max(0, int(time.time() - psutil.boot_time()))
+            boot = SYSTEM_STATS.get("boot_time") or psutil.boot_time()    # the collector's, like other themes
+            elapsed = max(0, int(time.time() - boot))
             days, remainder = divmod(elapsed, 86400)
             hours, minutes = divmod(remainder, 3600)
             minutes //= 60
@@ -1570,10 +1571,12 @@ def render_dashboard_old_computer(width, height, settings):
         draw_card(content_pad + col * (card_w + card_gap),
                   card_top + row * (card_h + card_gap), card_w, card_h, *card)
 
-    try:
-        process_count = len(psutil.pids())
-    except Exception:
-        process_count = len(SYSTEM_STATS.get("procs", []))
+    process_count = SYSTEM_STATS.get("proc_count")      # the collector's, like other themes
+    if not process_count:
+        try:
+            process_count = len(psutil.pids())
+        except Exception:
+            process_count = len(SYSTEM_STATS.get("procs", []))
     sensor_ok = _planet_temperature(SYSTEM_STATS.get("cpu_temp")) is not None
     sensor_status = "OK" if sensor_ok else "CHECK"
     status = (f"GRAPH  |  POLL 1.0S  |  HISTORY 30S  |  SENSORS {sensor_status}  |  "

@@ -59,7 +59,9 @@ THEME_OPTIONS = {
     # The scene keeps its art; what moves (the castaway, the shark, a bubble) becomes
     # looping sprites of 24 frames, 4 per second. With a story scene (see layout) the
     # theme is put at that moment of the story, speech bubble included.
-    "brother_away": {"settings": {},
+    # Reactions to the load are speech that changes with the values: they cannot be
+    # live, and without their words only an empty bubble would be left.
+    "brother_away": {"settings": {"ba_telemetry_reactions": False},
                      "bars": False,         # the castaway reacts to the load: that is art, not a gauge
                      "calm": "_castaway_home",
                      "sprites": {"frames": 24, "dt": 0.25, "max_area": 36000, "budget": 1_300_000}},
@@ -71,6 +73,8 @@ THEME_OPTIONS = {
                          "adjust": "_player_settings"},
 }
 
+
+FRAC_PARTS = ("frac", "frac_digit")
 
 # Themes whose history graphs are left out of the picture (their values stay live):
 # the panel cannot draw a moving line. Elsewhere the graphs are part of the art
@@ -506,9 +510,14 @@ class Scene:
             self.settings = globals()[options["adjust"]](self.settings)
         self.base = fields.base_stats(stats)
         if theme_id in HISTORY_THEMES:
-            # Per-GPU histories empty too, like the global ones (see render).
-            self.base["gpus"] = [dict(g, **{k: [0] * len(g[k]) for k in ("usage_history", "mem_history")
-                                            if g.get(k)}) for g in self.base.get("gpus") or []]
+            # Per-GPU and per-interface histories empty too, like the global ones (see render).
+            for key, names in fields.NESTED_HISTORIES:
+                items = self.base.get(key)
+                if isinstance(items, list):
+                    self.base[key] = [dict(i, **{n: [0] * len(i[n]) for n in names if i.get(n)}) for i in items]
+                elif isinstance(items, dict):
+                    self.base[key] = {k: dict(i, **{n: [0] * len(i[n]) for n in names if i.get(n)})
+                                      for k, i in items.items()}
         self.telemetry, self.themes, self.runtime = telemetry, themes, runtime
         self.clock = _Frozen()
         self.clock.install()
@@ -680,10 +689,16 @@ class Capture:
             if self.scene.theme_id not in HISTORY_THEMES:
                 # Graphs are part of these themes' art: their histories are not noise.
                 noise.pop(fields.HISTORY_LEVEL, None)
-                for moved, kept in zip(noise.get("gpus") or [], self.scene.base.get("gpus") or []):
-                    for key in ("usage_history", "mem_history"):
-                        if key in kept:
-                            moved[key] = kept[key]
+                for key, names in fields.NESTED_HISTORIES:
+                    moved, kept = noise.get(key), self.scene.base.get(key)
+                    if not moved or not kept:
+                        continue
+                    pairs = zip(moved, kept) if isinstance(moved, list) else \
+                        ((moved[k], kept[k]) for k in moved if k in kept)
+                    for new_item, old_item in pairs:
+                        for name in names:
+                            if name in old_item:
+                                new_item[name] = old_item[name]
             if self.scene.settings.get("std_side_panel") == "processes" and self.scene.theme_id == "standard":
                 # The process list is wanted as a snapshot: frozen in the picture, not left out.
                 noise.pop("procs", None)
@@ -718,7 +733,7 @@ class Capture:
             with_values = {c[3] for c in candidates if c[1] is not None}
             for index in with_values - {c[3] for c in kept}:
                 plan[index] = "skip"
-            with_decimals = {c[3] for c in kept if c[2].get("part") == "frac"}
+            with_decimals = {c[3] for c in kept if c[2].get("part") in FRAC_PARTS}
             for index, action in self._without_decimals.items():
                 if index not in with_decimals and plan.get(index) != "skip":
                     plan[index] = action
@@ -1003,9 +1018,17 @@ class Capture:
             separator = text[len(integer)]
             sep_x = end_int
             frac_x = sep_x + font.getlength(separator) * sx
-            box = (round(frac_x), round(y0), digit_w * decimals, atlas.height)
             # Decimals are the first thing left out when the panel runs short.
-            result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0), dict(binding, part="frac")))
+            if decimals == 1:
+                box = (round(frac_x), round(y0), digit_w, atlas.height)
+                result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0), dict(binding, part="frac")))
+            else:
+                # The panel does not pad: "64.09" drawn as one number would read "64.9".
+                # One widget per decimal digit keeps the zero.
+                for digit in range(decimals):
+                    box = (round(frac_x + digit * digit_w), round(y0), digit_w, atlas.height)
+                    result.append((priority + 100, imgdat.Number(0, box, color, atlas, 0),
+                                   dict(binding, part="frac_digit", digit=digit)))
         return result
 
     def _bar(self, call, dynamic):
@@ -1403,34 +1426,50 @@ class Capture:
         # Decimals of large values come last: every value first, then those decimals while
         # room is left ("200M" and the GPU load beat "200.0M" without it). Small values
         # keep theirs: "0.3 Mb/s" must never become "0 Mb/s".
-        def large(item):
+        def magnitude(item):
             try:
-                value = fields.candidate_value(item[2]["cand"], self.scene.base) * item[2].get("scale", 1.0)
+                return abs(fields.candidate_value(item[2]["cand"], self.scene.base) * item[2].get("scale", 1.0))
             except (KeyError, TypeError, ValueError):
-                return False
-            return abs(value) >= 100
+                return None
+
+        def large(item):
+            value = magnitude(item)
+            return value is not None and value >= 100
+
+        def small(item):
+            value = magnitude(item)
+            return value is not None and value < 10
 
         decimals = []
         for _group, items in first + repeats:
-            chosen = [i for i in items if i[2].get("part") != "frac" or not large(i)] or items
+            chosen = [i for i in items if i[2].get("part") not in FRAC_PARTS or not large(i)] or items
             if not fits(chosen):
-                chosen = [i for i in items if i[2].get("part") != "frac"]     # without its decimals
+                # Short of room: one decimal digit of each value ("1.1" for 1.18), then none.
+                first_digit = [i for i in chosen if i[2].get("part") != "frac_digit" or i[2].get("digit", 0) == 0]
+                if first_digit != chosen and fits(first_digit):
+                    chosen = first_digit
+            if not fits(chosen) and not any(i[2].get("part") in FRAC_PARTS and small(i) for i in items):
+                # Without its decimals, rounded ("1047M"); never a small value ("3.6 GHz"
+                # would read "4 GHz"): that one goes out whole instead.
+                chosen = [i for i in items if i[2].get("part") not in FRAC_PARTS]
             if not chosen or not fits(chosen):
                 dropped += len(items)
                 continue
             keep(chosen)
-            decimals.extend(i for i in items if i not in chosen)
-        for item in decimals:
-            if fits([item]):
-                keep([item])
+            rest = [i for i in items if i not in chosen]
+            if rest:
+                decimals.append(rest)
+        for rest in decimals:                           # all the decimals of a value, or none
+            if fits(rest):
+                keep(rest)
             else:
-                dropped += 1
+                dropped += len(rest)
         return kept, bindings, dropped
 
     @staticmethod
     def _close_gaps(kept, bindings):
         """An integer whose decimals did not fit takes the whole token's place, rounded."""
-        with_decimals = {c[3] for c in kept if c[2].get("part") == "frac"}
+        with_decimals = {c[3] for c in kept if c[2].get("part") in FRAC_PARTS}
         for _priority, widget, binding, index in kept:
             if binding.get("part") != "int" or index in with_decimals:
                 continue
