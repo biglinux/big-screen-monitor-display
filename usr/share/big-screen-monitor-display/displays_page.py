@@ -413,11 +413,11 @@ class DisplaysPage:
                 look.add(follow)
                 processes = Adw.SwitchRow(
                     title=_("Standard: process list (snapshot every 30 minutes)"),
-                    subtitle=_("The Standard theme's side panel (processes or graphs) is not available live on "
-                               "this display: it only receives numbers, so the list and the graphs cannot be "
-                               "updated in real time and the side panel is left out. On: the process list is "
-                               "shown as a snapshot flashed with the theme and renewed every 30 minutes; the "
-                               "display restarts for about 17 seconds each time and its memory wears with use."),
+                    subtitle=_("This display only receives numbers. In the Standard theme's side panel, graphs "
+                               "show their values live but not their lines, and the process list cannot be "
+                               "updated in real time, so it is left out. On: the process list is shown as a "
+                               "snapshot flashed with the theme and renewed every 30 minutes; the display "
+                               "restarts for about 17 seconds each time and its memory wears with use."),
                     active=str(values.get("sm_std_processes", "0")) != "0")
                 processes.connect("notify::active", lambda r, _p: self._set(display_id, "sm_std_processes",
                                                                             "30" if r.get_active() else None))

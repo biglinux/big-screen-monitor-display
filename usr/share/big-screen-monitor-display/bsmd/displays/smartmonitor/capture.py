@@ -48,9 +48,9 @@ MAX_CHANNELS = imgdat.MAX_CHANNELS
 
 # How a theme is best adapted: settings it is captured with, animation frames.
 THEME_OPTIONS = {
-    # The side panel's process list cannot be live: left out, or (sm_std_processes)
-    # kept as a snapshot renewed by flashing again every N minutes.
-    "standard": {"settings": {"std_side_panel": "none"}, "adjust": "_standard_settings"},
+    # Side panel: graphs (their numbers live, their lines left out); the process list
+    # cannot be live: left out, or (sm_std_processes) a snapshot renewed every N minutes.
+    "standard": {"settings": {}, "adjust": "_standard_settings"},
     "gkrellm": {"settings": {}},
     "planet": {"settings": {}},
     "old_computer": {"settings": {}},
@@ -70,6 +70,12 @@ THEME_OPTIONS = {
     "big_media_player": {"settings": {"bmp_idle_after": 600, "bmp_preview_demo": False},
                          "adjust": "_player_settings"},
 }
+
+
+# Themes whose history graphs are left out of the picture (their values stay live):
+# the panel cannot draw a moving line. Elsewhere the graphs are part of the art
+# (Old Computer's monitors) and stay as drawn.
+HISTORY_THEMES = {"standard", "gkrellm"}
 
 
 class CaptureError(Exception):
@@ -499,6 +505,10 @@ class Scene:
         if options.get("adjust"):
             self.settings = globals()[options["adjust"]](self.settings)
         self.base = fields.base_stats(stats)
+        if theme_id in HISTORY_THEMES:
+            # Per-GPU histories empty too, like the global ones (see render).
+            self.base["gpus"] = [dict(g, **{k: [0] * len(g[k]) for k in ("usage_history", "mem_history")
+                                            if g.get(k)}) for g in self.base.get("gpus") or []]
         self.telemetry, self.themes, self.runtime = telemetry, themes, runtime
         self.clock = _Frozen()
         self.clock.install()
@@ -529,6 +539,10 @@ class Scene:
     def render(self, recorder, changes=None, when=None, plan=None, settings=None):
         stats = dict(self.base)
         stats.update(changes or {})
+        # History graphs cannot be live on the panel (it draws numbers, not lines): they
+        # are empty in the picture (themes draw nothing for an empty history) and the
+        # noise variant moves them, so whatever depends on them is left out, not frozen.
+        level = stats.pop(fields.HISTORY_LEVEL, 0 if self.theme_id in HISTORY_THEMES else 20)
         self.clock.now = when or fields.T0
         tele = self.telemetry
         tele.SYSTEM_STATS.clear()
@@ -538,7 +552,7 @@ class Scene:
                      "NET_RX_HISTORY", "NET_TX_HISTORY"):
             history = getattr(tele, name, None)
             if history is not None:
-                history[:] = [20] * len(history)
+                history[:] = [level] * len(history)
         random.seed(self.seed)
         _clear_theme_caches()
         recorder.reset(plan)
@@ -663,6 +677,13 @@ class Capture:
                        and not (no_length and name == "media_length")}
             sources["clock"] = ({"boot_time": fields.T1.timestamp() - fields.BOOT0}, fields.T1)
             noise = fields.noise(self.scene.base)
+            if self.scene.theme_id not in HISTORY_THEMES:
+                # Graphs are part of these themes' art: their histories are not noise.
+                noise.pop(fields.HISTORY_LEVEL, None)
+                for moved, kept in zip(noise.get("gpus") or [], self.scene.base.get("gpus") or []):
+                    for key in ("usage_history", "mem_history"):
+                        if key in kept:
+                            moved[key] = kept[key]
             if self.scene.settings.get("std_side_panel") == "processes" and self.scene.theme_id == "standard":
                 # The process list is wanted as a snapshot: frozen in the picture, not left out.
                 noise.pop("procs", None)
@@ -1504,11 +1525,14 @@ def _media_state(stats, art=None):
 
 
 def _standard_settings(settings):
-    """Standard: the process list in the side panel when it is wanted as a snapshot."""
+    """Standard's side panel on the panel: the process list only as a snapshot
+    (sm_std_processes); graphs as chosen (numbers live, lines left out); else none."""
     from .layout import process_minutes
     if process_minutes(settings):
         return dict(settings, std_side_panel="processes")
-    return settings
+    if settings.get("std_side_panel") == "graphs":
+        return settings
+    return dict(settings, std_side_panel="none")
 
 
 def _castaway_home(theme):

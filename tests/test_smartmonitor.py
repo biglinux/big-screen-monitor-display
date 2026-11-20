@@ -792,9 +792,30 @@ def test_standard_process_list_is_a_snapshot_renewed_every_n_minutes(stats):
     assert layout.key(first) == layout.key(same) != layout.key(later)
     from bsmd.displays.smartmonitor import capture
     assert capture._standard_settings(on)["std_side_panel"] == "processes"
-    assert "std_side_panel" not in capture._standard_settings(dict(base, std_side_panel="graphs")) or \
-        capture._standard_settings(dict(base, std_side_panel="graphs"))["std_side_panel"] == "graphs"
+    assert capture._standard_settings(dict(base, std_side_panel="graphs"))["std_side_panel"] == "graphs"
+    assert capture._standard_settings(dict(base, std_side_panel="processes"))["std_side_panel"] == "none"
     needs = runtime._telemetry_needs(on)
     assert needs["processes"] is True and runtime._telemetry_needs(base) is None
     assert sm_driver._lacks_data(on, {"procs": []}) is True
     assert sm_driver._lacks_data(on, {"procs": [{"name": "x"}]}) is False
+
+
+def test_history_graphs_are_never_frozen_in_the_picture():
+    from bsmd.displays.smartmonitor import capture, fields
+    assert {"standard", "gkrellm"} <= capture.HISTORY_THEMES and "old_computer" not in capture.HISTORY_THEMES
+    stats = {"gpus": [{"path": "g", "percent": 30, "usage_history": [5, 60, 40], "mem_history": [10, 20, 30]}]}
+    noise = fields.noise(fields.base_stats(stats))
+    assert noise[fields.HISTORY_LEVEL] != 0                          # moved: whatever follows it is left out
+    assert noise["gpus"][0]["usage_history"] != [5, 60, 40]
+
+
+def test_standard_graphs_side_panel_keeps_its_values_live(stats, tmp_path, monkeypatch):
+    monkeypatch.setenv("STATE_DIRECTORY", str(tmp_path))
+    layout._MEMORY.clear()
+    plain = dict(settings.defaults(), theme="standard", std_side_panel="none")
+    graphs = dict(plain, std_side_panel="graphs")
+    without = layout.compiled(layout.spec(plain, stats), plain, stats)
+    with_graphs = layout.compiled(layout.spec(graphs, stats), graphs, stats)
+    assert with_graphs.bindings and with_graphs.data != without.data
+    numbers = [r for r in imgdat.parse(with_graphs.data) if r["type"] == imgdat.NUMBER]
+    assert len(numbers) > len([r for r in imgdat.parse(without.data) if r["type"] == imgdat.NUMBER])

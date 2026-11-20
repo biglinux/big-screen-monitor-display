@@ -188,6 +188,9 @@ FIELDS = {
 }
 CLOCK_PRIORITY = 0
 
+# Key of a capture variant setting the level of every history graph (see capture.render).
+HISTORY_LEVEL = "_history_level"
+
 # Fans: one live value per fan (RPM and PWM duty), found by its id ("nct6793/fan2"),
 # so a theme showing a chosen fan keeps showing that one. Each fan gets its own
 # values in the capture variants, so a number drawn for a fan tells which fan it is.
@@ -345,6 +348,9 @@ def noise(stats):
                     gpu[key] = f"{float(str(gpu[key]).replace('°C', '')) + 9:.1f}°C"
                 except ValueError:
                     pass
+        for key in ("usage_history", "mem_history"):
+            if gpu.get(key):
+                gpu[key] = [70] * len(gpu[key])
         if index != active:
             gpu["percent"] = (gpu.get("percent") or 0) + 23
             gpu["mem_used_mb"] = (gpu.get("mem_used_mb") or 0) + 733
@@ -352,6 +358,7 @@ def noise(stats):
             gpu["temp"] = f"{gpu['temp_value']:.0f}°C"
     if gpus:
         changes["gpus"] = gpus
+    changes[HISTORY_LEVEL] = 70
     changes["sensors"] = [(group, label, (value or 0) + 7.3 if isinstance(value, (int, float)) else value, unit)
                           for group, label, value, unit in (tuple(item) for item in stats.get("sensors") or [])]
     if "fan" not in FIELDS:
