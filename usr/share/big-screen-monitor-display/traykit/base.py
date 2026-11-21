@@ -11,6 +11,7 @@
 * slow work (pkexec, OpenRGB) off the GUI thread.
 """
 
+import functools
 import logging
 import os
 import sys
@@ -301,30 +302,60 @@ def activate_running(app_id):
     return True
 
 
-def listen(app_id, on_show, on_quit):
+class CommandServer(QLocalServer):
     """Single-instance socket: ``show`` raises the window, ``quit`` ends the app
-    (used by the configuration window's switch)."""
-    server = QLocalServer()
+    (the configuration window's switch). Slots never let an exception out (PyQt6
+    aborts the process on one) and never touch a socket Qt already destroyed."""
+
+    def __init__(self, on_show, on_quit):
+        super().__init__()
+        self.on_show, self.on_quit = on_show, on_quit
+        self.newConnection.connect(self._accept)
+
+    def _accept(self):
+        try:
+            while self.hasPendingConnections():
+                connection = self.nextPendingConnection()
+                connection.readyRead.connect(functools.partial(self._read, connection))
+                # A short client (connect, write, close): the command may already be
+                # buffered (Qt does not signal it again) or come with the hang-up, so
+                # what is left is read before the connection is dropped.
+                connection.disconnected.connect(functools.partial(self._gone, connection))
+                if connection.bytesAvailable() or connection.waitForReadyRead(0):
+                    self._read(connection)
+        except Exception:      # noqa: BLE001 - never into PyQt (it aborts)
+            log.exception("single-instance socket")
+
+    def _gone(self, connection):
+        self._read(connection)
+        try:
+            connection.deleteLater()
+        except RuntimeError:
+            pass
+
+    def _read(self, connection):
+        try:
+            if not connection.isOpen() or not connection.bytesAvailable():
+                return
+            data = bytes(connection.readAll())
+        except (RuntimeError, AttributeError):   # already destroyed by Qt
+            return
+        try:
+            for word in data.decode("ascii", "replace").split():
+                if word == "quit":
+                    log.info("asked to quit (configuration window)")
+                    self.on_quit()
+                elif word == "show":
+                    self.on_show()
+        except Exception:      # noqa: BLE001 - never into PyQt (it aborts)
+            log.exception("single-instance command")
+
+
+def listen(app_id, on_show, on_quit):
+    server = CommandServer(on_show, on_quit)
     QLocalServer.removeServer(socket_path(app_id))       # stale socket of a crashed instance
     if not server.listen(socket_path(app_id)):
         log.warning("single-instance socket unavailable: %s", server.errorString())
-        return server
-
-    def read(connection):
-        for line in bytes(connection.readAll()).decode("ascii", "replace").split():
-            if line == "quit":
-                log.info("asked to quit (configuration window)")
-                on_quit()
-            elif line == "show":
-                on_show()
-
-    def accept():
-        while server.hasPendingConnections():
-            connection = server.nextPendingConnection()
-            connection.readyRead.connect(lambda c=connection: read(c))
-            connection.disconnected.connect(connection.deleteLater)
-
-    server.newConnection.connect(accept)
     return server
 
 

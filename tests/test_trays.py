@@ -612,3 +612,24 @@ def test_kinds_present():
     from traykit import session
     assert session.kinds_present({"displays": [SCREEN, cooler(), AX206]}) == {session.SCREEN, session.DEEPCOOL}
     assert session.kinds_present(None) == set()
+
+
+def test_session_commands_are_never_lost(qt_env, monkeypatch):
+    """Short clients (connect, write, close), servers created and dropped in a row:
+    every command arrives and nothing aborts (PyQt6 aborts on an exception in a slot)."""
+    import gc
+    from traykit import base, session
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(qt_env.path))
+    for _round in range(40):
+        calls = []
+        server = base.listen("bsm-test-commands", lambda c=calls: c.append("show"),
+                             lambda c=calls: c.append("quit"))
+        assert session.send("bsm-test-commands", "show") and session.send("bsm-test-commands", "quit")
+        end = time.monotonic() + 3
+        while len(calls) < 2 and time.monotonic() < end:
+            qt_env.app.processEvents()
+            time.sleep(0.001)
+        assert calls == ["show", "quit"]
+        server.close()
+        del server
+        gc.collect()
