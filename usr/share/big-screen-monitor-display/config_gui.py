@@ -32,8 +32,8 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, runtime, settings, sound,  # noqa: E402
-                  telemetry, themes)
+from bsmd import (APP_ID, SERVICE_NAME, __version__, control, dashboard, diagnostics, runtime, settings,  # noqa: E402
+                  sound, telemetry, themes)
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
@@ -78,42 +78,12 @@ PROFILE_ICON = {"auto": "emblem-system-symbolic", "economy": "power-profile-powe
 
 def run_helper(args, payload=None, timeout=120):
     """Run the privileged helper via pkexec. Returns (ok, message)."""
-    if not os.path.exists(HELPER):
-        return False, _("The administrative helper is not installed ({path}).").format(path=HELPER)
-    binary = isinstance(payload, bytes)
-    try:
-        result = subprocess.run(["pkexec", HELPER, *args], input=payload, capture_output=True,
-                                text=not binary, timeout=timeout, check=False)
-    except (OSError, subprocess.SubprocessError) as error:
-        return False, str(error)
-    if binary:
-        result.stdout = result.stdout.decode("utf-8", "replace")
-        result.stderr = result.stderr.decode("utf-8", "replace")
-    if result.returncode in (126, 127):
-        return False, _("Authorization was cancelled or denied.")
-    try:
-        reply = json.loads(result.stdout.strip().splitlines()[-1])
-    except (ValueError, IndexError):
-        reply = {"ok": result.returncode == 0, "error": result.stderr.strip()}
-    if reply.get("ok"):
-        if "id" in reply:
-            return True, reply["id"]
-        problems = reply.get("problems") or []
-        return True, "; ".join(problems)
-    return False, reply.get("error") or result.stderr.strip() or _("Unknown error")
+    return control.run_helper(args, payload, timeout, helper=HELPER)
 
 
 def save_settings(values):
     """Persist settings: directly when writable (development), else via helper."""
-    path = settings.config_path()
-    directory = os.path.dirname(path)
-    if os.environ.get("BSM_CONFIG") or (os.path.isdir(directory) and os.access(directory, os.W_OK)):
-        try:
-            _clean, problems = settings.save(values, path)
-            return True, "; ".join(problems)
-        except OSError as error:
-            return False, str(error)
-    return run_helper(["apply-settings"], json.dumps(values))
+    return control.save_settings(values, helper=HELPER)
 
 
 def play_success_sound():
