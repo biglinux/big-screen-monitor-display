@@ -23,12 +23,32 @@ import logging
 import os
 import time
 
+import gi
 from gi.repository import Gio, GLib
+
 
 from .. import __version__, settings as settings_mod
 from . import artwork, ipc, model, mpris, selection, volume
 
 log = logging.getLogger("bsmd.media")
+
+
+def register_object(conn, path, interface, method_call, *, get_property=None, set_property=None):
+    """``register_object_with_closures2`` (GLib >= 2.84; the old call is deprecated
+    there), else the classic ``register_object``. Same callback signatures."""
+    register = getattr(conn, "register_object_with_closures2", None) or conn.register_object
+    return register(path, interface, method_call, get_property, set_property)
+
+
+def unix_signal_add(signum, callback):
+    """``GLibUnix.signal_add`` (GLib >= 2.80), else ``GLib.unix_signal_add``."""
+    try:
+        gi.require_version("GLibUnix", "2.0")
+        from gi.repository import GLibUnix
+        return GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, signum, callback)
+    except (ImportError, ValueError, AttributeError):
+        return GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, callback)
+
 
 BUS_NAME = "br.com.biglinux.BigScreenMonitor.Media"
 OBJECT_PATH = "/br/com/biglinux/BigScreenMonitor/Media"
@@ -387,7 +407,7 @@ class Agent:
         self.conn.connect("closed", lambda *_: self.loop.quit())
         GLib.timeout_add_seconds(SETTINGS_EVERY, self._check_settings)
         for signum in (2, 15):
-            GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, self._quit)
+            unix_signal_add(signum, self._quit)
         self.loop.run()
         self._deactivate()
         return self.exit_code
@@ -397,7 +417,7 @@ class Agent:
         agent is already active (this process is then not needed)."""
         # Export the object first, then take the name: a client never sees the name without it.
         node = Gio.DBusNodeInfo.new_for_xml(INTROSPECTION)
-        registration = self.conn.register_object(OBJECT_PATH, node.interfaces[0], self._on_call, None, None)
+        registration = register_object(self.conn, OBJECT_PATH, node.interfaces[0], self._on_call)
         try:
             reply = self.conn.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
                                         "RequestName", GLib.Variant("(su)", (BUS_NAME, 4)),     # DO_NOT_QUEUE

@@ -24,7 +24,8 @@ from bsmd.displays.turing_serial import (LANDSCAPE, PORTRAIT, REVERSE_LANDSCAPE,
 from bsmd.displays.weact import WeActA, WeActB
 from bsmd.displays.xuanfang import XuanFangRevB
 
-HASHES = json.load(open(os.path.join(os.path.dirname(__file__), "data", "reference_protocol_hashes.json")))["hashes"]
+with open(os.path.join(os.path.dirname(__file__), "data", "reference_protocol_hashes.json")) as _handle:
+    HASHES = json.load(_handle)["hashes"]
 ORIENTATIONS = {"portrait": PORTRAIT, "landscape": LANDSCAPE, "reverse_portrait": REVERSE_PORTRAIT,
                 "reverse_landscape": REVERSE_LANDSCAPE}
 

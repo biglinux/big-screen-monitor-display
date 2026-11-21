@@ -40,6 +40,21 @@ reconstruídos sobre a arquitetura do projeto (doc 22 explica por quê).
   `themes.render_for_panel` do serviço num subprocesso de baixa prioridade, no
   tamanho da tela escolhida, e guardadas em `~/.cache/big-screen-monitor-display/tray-thumbnails/`.
 
+## Ligar e desligar pela janela de configuração
+
+Preferências › **Bandeja do sistema** tem um interruptor por bandeja. Ligado:
+a bandeja inicia na hora (só o ícone) e com cada sessão — é a mesma entrada de
+autostart que o item "Iniciar com a sessão" do menu da bandeja escreve.
+Desligado: a bandeja em execução recebe `quit` pelo socket
+`$XDG_RUNTIME_DIR/<app>-<uid>.sock` e a entrada sai do autostart. A página
+mostra "Rodando" e explica quando o desktop não tem bandeja ou falta o PyQt.
+
+Ao abrir a janela, a bandeja ligada que não estiver rodando é iniciada. Na
+primeira vez em que há um aparelho conectado e o desktop tem bandeja, a do tipo
+de aparelho (telas, DeepCool) é ligada uma vez, com um aviso; se o usuário
+desligar, isso é respeitado. A lógica fica em `traykit/session.py` (sem Qt; a
+janela GTK a usa) e a página em `gui/tray_settings.py`.
+
 ## Host de bandeja em cada ambiente
 
 As bandejas usam StatusNotifierItem (via `QSystemTrayIcon`). Quando não há host:

@@ -5,8 +5,6 @@ the app gives up quietly on desktops without a tray host.
 """
 
 import os
-import shutil
-import sys
 
 # Entries written by the first version of these apps (pull request #11), replaced
 # by the new ones: removed only when they start those launchers.
@@ -29,12 +27,9 @@ def path(app_id):
 
 
 def command(app_id):
-    installed = shutil.which(app_id)
-    if installed:
-        return installed
-    package = "screentray" if app_id == "big-screen-monitor-tray" else "deepcooltray"
-    main = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), package, "main.py")
-    return f"{sys.executable} {main}"
+    import shlex
+    from .session import command as session_command
+    return shlex.join(session_command(app_id))
 
 
 def is_enabled(app_id):

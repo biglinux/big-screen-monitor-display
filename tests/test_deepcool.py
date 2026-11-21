@@ -586,7 +586,8 @@ def test_udev_rules_match_the_supported_models_only():
     import re
     path = os.path.join(os.path.dirname(__file__), "..", "usr", "lib", "udev", "rules.d",
                         "70-big-screen-monitor-display.rules")
-    text = open(path, encoding="utf-8").read().replace("\\\n", " ")
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read().replace("\\\n", " ")
     text = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
     assert "0666" not in text
     hid_rules = [line for line in text.splitlines() if 'SUBSYSTEM=="hidraw"' in line]

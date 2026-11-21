@@ -40,7 +40,8 @@ from gui import components as ui  # noqa: E402
 from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.brother_away_page import BrotherAwayPage  # noqa: E402
 from gui.dashboard import Dashboard  # noqa: E402
-from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
+from gui import tray_settings  # noqa: E402
+from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings, save_gui_settings  # noqa: E402
 from gui.theme_gallery import ThemeGallery  # noqa: E402
 
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
@@ -390,6 +391,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             self.media_page.set_active(key == "big_media_player")
         if key == "home":
             self.dashboard.update()
+        elif key == "preferences" and hasattr(self, "preferences_page"):
+            self.preferences_page.trays.refresh()       # a tray menu may have changed it
         elif key == "diagnostics":
             self._refresh_diagnostics()
         elif key == "performance":
@@ -1094,6 +1097,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.service_fresh = self._status_fresh()
         self.displays_page.refresh()
         self._update_sidebar_status()
+        tray_settings.status_changed(self, load_gui_settings, save_gui_settings)
         if self.current_section == "home" and hasattr(self, "dashboard"):
             self.dashboard.update()
         if hasattr(self, "diag_rows") and self.current_section == "diagnostics":
@@ -1323,6 +1327,8 @@ class ConfigApp(Adw.Application):
             if self.page:
                 window.show_section(LEGACY_PAGES.get(self.page, self.page))
         window.present()
+        # Tray apps switched on in Preferences run whenever the window opens (and are offered once).
+        GLib.timeout_add(1500, tray_settings.ensure_running, window, load_gui_settings, save_gui_settings)
         if self.screenshot:
             GLib.timeout_add(2500, self._save_screenshot, window)
 

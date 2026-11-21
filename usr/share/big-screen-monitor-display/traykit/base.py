@@ -11,6 +11,7 @@
 * slow work (pkexec, OpenRGB) off the GUI thread.
 """
 
+import functools
 import logging
 import os
 import sys
@@ -22,6 +23,7 @@ from bsmd import control, i18n, settings
 from bsmd.i18n import _
 
 from . import autostart
+from .session import desktop_name, host_hint, socket_path
 from .qt import (QApplication, QIcon, QLocalServer, QLocalSocket, QObject, QSystemTrayIcon, QTimer, Signal,
                  exec_app)
 
@@ -44,25 +46,6 @@ def setup_logging(name):
         pass
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s: %(message)s",
                         handlers=handlers)
-
-
-def desktop_name():
-    return (os.environ.get("XDG_CURRENT_DESKTOP") or os.environ.get("DESKTOP_SESSION") or "").lower()
-
-
-def host_hint():
-    """Why there is no tray icon on this desktop, and what to do (translated)."""
-    desktop = desktop_name()
-    if "gnome" in desktop or "ubuntu" in desktop:
-        return _("GNOME shows tray icons only with the “AppIndicator and KStatusNotifierItem Support” "
-                 "extension. Install it from your distribution (gnome-shell-extension-appindicator) or from "
-                 "extensions.gnome.org and enable it in Extensions; the icon then appears the next time you "
-                 "open this app.")
-    if "windowmaker" in desktop or "wlmaker" in desktop:
-        return _("Window Maker has no notification area. Open this window from the applications menu or a Dock "
-                 "icon whenever you need these controls; the display keeps working without it.")
-    return _("This desktop has no notification area (system tray) running, so the controls are shown in this "
-             "window. Add a system tray to your panel to get the icon.")
 
 
 class _Bridge(QObject):
@@ -306,14 +289,10 @@ class TrayApp(QObject):
 # ------------------------------------------------------------ single instance
 
 
-def _server_name(app_id):
-    return f"{app_id}-{os.getuid()}"
-
-
 def activate_running(app_id):
     """True when another instance runs (it was asked to show its window)."""
     socket = QLocalSocket()
-    socket.connectToServer(_server_name(app_id))
+    socket.connectToServer(socket_path(app_id))
     if not socket.waitForConnected(500):
         return False
     socket.write(b"show\n")
@@ -323,20 +302,71 @@ def activate_running(app_id):
     return True
 
 
-def listen(app_id, on_show):
-    server = QLocalServer()
-    QLocalServer.removeServer(_server_name(app_id))       # stale socket of a crashed instance
-    if not server.listen(_server_name(app_id)):
+class CommandServer(QLocalServer):
+    """Single-instance socket: ``show`` raises the window, ``quit`` ends the app
+    (the configuration window's switch). Slots never let an exception out (PyQt6
+    aborts the process on one) and never touch a socket Qt already destroyed."""
+
+    def __init__(self, on_show, on_quit):
+        super().__init__()
+        self.on_show, self.on_quit = on_show, on_quit
+        self._partial = {}       # connection -> end of a command not yet complete
+        self.newConnection.connect(self._accept)
+
+    def _accept(self):
+        try:
+            while self.hasPendingConnections():
+                connection = self.nextPendingConnection()
+                connection.readyRead.connect(functools.partial(self._read, connection))
+                # A short client (connect, write, close): the command may already be
+                # buffered (Qt does not signal it again) or come with the hang-up, so
+                # what is left is read before the connection is dropped.
+                connection.disconnected.connect(functools.partial(self._gone, connection))
+                if connection.bytesAvailable() or connection.waitForReadyRead(0):
+                    self._read(connection)
+        except Exception:      # noqa: BLE001 - never into PyQt (it aborts)
+            log.exception("single-instance socket")
+
+    def _gone(self, connection):
+        self._read(connection)
+        self._run(self._partial.pop(connection, "").split())    # the hang-up ends the last word
+        try:
+            connection.deleteLater()
+        except RuntimeError:
+            pass
+
+    def _read(self, connection):
+        try:
+            if not connection.isOpen() or not connection.bytesAvailable():
+                return
+            data = bytes(connection.readAll())
+        except (RuntimeError, AttributeError):   # already destroyed by Qt
+            return
+        # A command may arrive split across reads ("qu" + "it\n"): only words that a
+        # separator (or the hang-up) ended are run; the rest waits for the next read.
+        text = self._partial.pop(connection, "") + data.decode("ascii", "replace")
+        words = text.split()
+        if words and not text[-1].isspace():
+            self._partial[connection] = words.pop()
+        self._run(words)
+
+    def _run(self, words):
+        try:
+            for word in words:
+                if word == "quit":
+                    log.info("asked to quit (configuration window)")
+                    self.on_quit()
+                elif word == "show":
+                    self.on_show()
+        except Exception:      # noqa: BLE001 - never into PyQt (it aborts)
+            log.exception("single-instance command")
+
+
+def listen(app_id, on_show, on_quit):
+    server = CommandServer(on_show, on_quit)
+    QLocalServer.removeServer(socket_path(app_id))       # stale socket of a crashed instance
+    if not server.listen(socket_path(app_id)):
         log.warning("single-instance socket unavailable: %s", server.errorString())
-        return server
-
-    def accept():
-        while server.hasPendingConnections():
-            connection = server.nextPendingConnection()
-            connection.readyRead.connect(lambda c=connection: (c.readAll(), on_show()))
-            connection.disconnected.connect(connection.deleteLater)
-
-    server.newConnection.connect(accept)
     return server
 
 
@@ -356,7 +386,7 @@ def run(app_cls, argv=None):
             log.info("already running: asked the running instance to show its window")
         return 0
     tray_app = app_cls(app, autostarted=autostarted)
-    server = listen(app_cls.app_id, tray_app.show_window)
+    server = listen(app_cls.app_id, tray_app.show_window, tray_app.quit)
     app.aboutToQuit.connect(tray_app.shutdown)          # also on logout (session manager)
     tray_app.start()
     if (show or not autostarted) and tray_app.tray is not None:

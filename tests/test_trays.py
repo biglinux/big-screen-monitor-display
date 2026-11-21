@@ -175,7 +175,8 @@ def test_thumbnail_renderer(tmp_path, monkeypatch):
                             capture_output=True, cwd=APP_DIR, env=env, timeout=120, check=False)
     assert result.stdout.split() == ["done", "a", "done", "b"], result.stderr
     from PIL import Image
-    assert Image.open(tmp_path / "thumbs" / "a.png").size == (240, 160)
+    with Image.open(tmp_path / "thumbs" / "a.png") as image:
+        assert image.size == (240, 160)
 
 
 # ------------------------------------------------------------------ OpenRGB
@@ -261,7 +262,10 @@ def qt_env(tmp_path, monkeypatch):
     for key, value in {"BSM_CONFIG": tmp_path / "settings.json", "BSM_STATUS": tmp_path / "status.json",
                        "XDG_CONFIG_HOME": tmp_path / "cfg", "XDG_CACHE_HOME": tmp_path / "cache",
                        "XDG_STATE_HOME": tmp_path / "state", "QT_QPA_PLATFORM": "offscreen",
-                       "XDG_CURRENT_DESKTOP": "KDE", "LANGUAGE": "en", "LC_ALL": "C.UTF-8"}.items():
+                       "XDG_CURRENT_DESKTOP": "KDE", "LANGUAGE": "en", "LC_ALL": "C.UTF-8",
+                       # Qt's own event dispatcher: these tests share the process with GLib/GTK ones,
+                       # and two users of the GLib default context clash at interpreter exit.
+                       "QT_NO_GLIB": "1"}.items():
         monkeypatch.setenv(key, str(value))
     app = qt.QApplication.instance() or qt.QApplication([])
     made = []
@@ -531,3 +535,136 @@ def test_windows_never_overflow_horizontally(qt_env, width):
             if child.isVisible() and child.parentWidget() is body:
                 assert child.geometry().right() <= body.width(), (cls.__name__, width, child)
         window.hide()
+
+
+# ------------------------------------------------------------------ configuration window integration
+
+
+def test_session_socket_show_and_quit(qt_env, monkeypatch):
+    """The GTK window talks to a running tray app through its socket (no Qt there)."""
+    from screentray.app import ScreenTray
+    from traykit import base, session
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(qt_env.path))
+    qt_env.status([SCREEN])
+    qt_env.settings()
+    tray = make(qt_env, ScreenTray)
+    calls = []
+    server = base.listen(tray.app_id, lambda: calls.append("show"), lambda: calls.append("quit"))
+    try:
+        assert session.running(tray.app_id)
+        assert session.send(tray.app_id, "show") and session.send(tray.app_id, "quit")
+        end = time.monotonic() + 3
+        while len(calls) < 2 and time.monotonic() < end:
+            qt_env.app.processEvents()
+            time.sleep(0.01)
+        assert calls == ["show", "quit"]
+    finally:
+        server.close()
+    assert not session.running("big-screen-monitor-nothing")
+    assert not session.send("big-screen-monitor-nothing", "quit")
+
+
+def test_window_open_offers_the_tray_once(tmp_path, monkeypatch):
+    from traykit import autostart, session
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    monkeypatch.delenv("BSM_NO_TRAY_START", raising=False)
+    monkeypatch.setattr(session, "qt_available", lambda: True)
+    monkeypatch.setattr(session, "tray_host_available", lambda: True)
+    started, toasts, store = [], [], {}
+    monkeypatch.setattr(session, "start", lambda app_id: started.append(app_id) or True)
+    status = {"displays": [SCREEN]}
+    load, save = (lambda: dict(store)), (lambda data: store.update(data))
+    assert session.ensure_trays(status, load, save, toasts.append) == [session.SCREEN]
+    assert autostart.is_enabled(session.SCREEN) and not autostart.is_enabled(session.DEEPCOOL)
+    assert started == [session.SCREEN] and len(toasts) == 1 and store[session.OFFER_KEY] is True
+    # The user switches it off: opening the window again respects that.
+    autostart.disable(session.SCREEN)
+    started.clear()
+    status = {"displays": [SCREEN, cooler()]}
+    assert session.ensure_trays(status, load, save, toasts.append) == []
+    assert started == [] and not autostart.is_enabled(session.SCREEN)
+
+
+def test_window_open_starts_switched_on_trays_only_with_a_host(tmp_path, monkeypatch):
+    from traykit import autostart, session
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    monkeypatch.delenv("BSM_NO_TRAY_START", raising=False)
+    monkeypatch.setattr(session, "qt_available", lambda: True)
+    started = []
+    monkeypatch.setattr(session, "start", lambda app_id: started.append(app_id) or True)
+    autostart.enable(session.DEEPCOOL)
+    store = {session.OFFER_KEY: True}
+    monkeypatch.setattr(session, "tray_host_available", lambda: False)
+    session.ensure_trays({}, lambda: store, store.update, lambda _t: None)
+    assert started == []                                    # no tray on this desktop: nothing started
+    monkeypatch.setattr(session, "tray_host_available", lambda: True)
+    session.ensure_trays({}, lambda: store, store.update, lambda _t: None)
+    assert started == [session.DEEPCOOL]
+    monkeypatch.setenv("BSM_NO_TRAY_START", "1")
+    started.clear()
+    session.ensure_trays({}, lambda: store, store.update, lambda _t: None)
+    assert started == []
+
+
+def test_kinds_present():
+    from traykit import session
+    assert session.kinds_present({"displays": [SCREEN, cooler(), AX206]}) == {session.SCREEN, session.DEEPCOOL}
+    assert session.kinds_present(None) == set()
+
+
+def test_session_commands_are_never_lost(qt_env, monkeypatch):
+    """Short clients (connect, write, close), servers created and dropped in a row:
+    every command arrives and nothing aborts (PyQt6 aborts on an exception in a slot)."""
+    import gc
+    from traykit import base, session
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(qt_env.path))
+    for _round in range(40):
+        calls = []
+        server = base.listen("bsm-test-commands", lambda c=calls: c.append("show"),
+                             lambda c=calls: c.append("quit"))
+        assert session.send("bsm-test-commands", "show") and session.send("bsm-test-commands", "quit")
+        end = time.monotonic() + 3
+        while len(calls) < 2 and time.monotonic() < end:
+            qt_env.app.processEvents()
+            time.sleep(0.001)
+        assert calls == ["show", "quit"]
+        server.close()
+        del server
+        gc.collect()
+
+
+def test_session_split_commands_are_kept(qt_env, monkeypatch):
+    """A command split across reads ("qu" + "it") still runs; the hang-up ends the last word."""
+    import socket as sockets
+    from screentray.app import ScreenTray
+    from traykit import base, session
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(qt_env.path))
+    qt_env.status([SCREEN])
+    qt_env.settings()
+    tray = make(qt_env, ScreenTray)
+    calls = []
+    server = base.listen(tray.app_id, lambda: calls.append("show"), lambda: calls.append("quit"))
+
+    def pump(until):
+        end = time.monotonic() + 3
+        while not until() and time.monotonic() < end:
+            qt_env.app.processEvents()
+            time.sleep(0.01)
+
+    try:
+        with sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM) as client:
+            client.connect(session.socket_path(tray.app_id))
+            client.sendall(b"qu")
+            deadline = time.monotonic() + 0.3
+            pump(lambda: time.monotonic() > deadline)        # the half command is read
+            assert calls == []
+            client.sendall(b"it\nsh")
+            pump(lambda: calls == ["quit"])
+            assert calls == ["quit"]
+            client.sendall(b"ow")
+        pump(lambda: len(calls) == 2)
+        assert calls == ["quit", "show"]
+    finally:
+        server.close()

@@ -20,6 +20,12 @@ import config_gui  # noqa: E402
 from gi.repository import GLib  # noqa: E402
 
 from bsmd import settings  # noqa: E402
+from bsmd.displays import discovery  # noqa: E402
+
+# The displays come from the fake status only: whatever is plugged into the
+# machine running the tests must not appear (an unidentified USB device made
+# the "needs your choice" card show up and failed the dashboard checks).
+discovery.scan_usb = lambda sysfs=None: []
 
 context = GLib.MainContext.default()
 result = {"errors": [], "checks": {}}
@@ -91,6 +97,73 @@ def run_main(window):
     pump(1.5)
     check("hidden_previews_idle", frames(window) == before)
     check("renderers_inactive", not any(e["renderer"].active for e in window._previews))
+    trays = window.preferences_page.trays
+    check("tray_switches", sorted(trays.rows) == ["big-screen-monitor-deepcool", "big-screen-monitor-tray"]
+          and not any(row.get_active() for row in trays.rows.values()))
+    # Window open with Preferences already built: the tray switched on by the
+    # first-run offer must show on its switch (host and start simulated here).
+    from gui import preferences_page, tray_settings
+    from traykit import autostart, session
+    saved = (session.qt_available, session.tray_host_available, session.start, window.status)
+    session.qt_available, session.tray_host_available = (lambda: True), (lambda: True)
+    session.start = lambda app_id: True
+    os.environ.pop("BSM_NO_TRAY_START", None)
+    window.status = {"displays": [{"id": "usb-1-2", "source": {"profile": "turing_rev_a"},
+                                   "capabilities": {"output": "raster"}}]}
+    tray_settings.ensure_running(window, preferences_page.load_gui_settings, preferences_page.save_gui_settings)
+    pump(0.2)
+    check("tray_switch_follows_window_open", trays.rows["big-screen-monitor-tray"].get_active()
+          and not trays.rows["big-screen-monitor-deepcool"].get_active())
+    autostart.disable("big-screen-monitor-tray")
+    load, save = preferences_page.load_gui_settings, preferences_page.save_gui_settings
+
+    def offer(done):
+        data = load()
+        data[session.OFFER_KEY] = done
+        save(data)
+
+    # A cooler plugged in after the window opened gets the first-run offer too.
+    offer(False)
+    window.tray_kinds = set()
+    window.status = {"displays": [{"id": "usb-1-3", "source": {"profile": "deepcool_ak"},
+                                   "capabilities": {"output": "segment"}}]}
+    tray_settings.status_changed(window, load, save)
+    pump(0.2)
+    check("tray_offer_follows_new_device", autostart.is_enabled("big-screen-monitor-deepcool")
+          and trays.rows["big-screen-monitor-deepcool"].get_active() and load()[session.OFFER_KEY] is True)
+    trays._updating = True
+    trays.rows["big-screen-monitor-deepcool"].set_active(False)
+    trays._updating = False
+    autostart.disable("big-screen-monitor-deepcool")
+    # A switch flipped before any offer is the user's choice: no offer afterwards.
+    offer(False)
+    saved_send = session.send
+
+    class Launch:
+        def __init__(self):
+            self.alive, self.terminated = True, False
+
+        def poll(self):
+            return None if self.alive else 0
+
+        def terminate(self):
+            self.terminated, self.alive = True, False
+
+    launch = Launch()
+    session.start = lambda app_id: launch
+    session.send = lambda app_id, command: False          # still starting: no socket yet
+    switch = trays.rows["big-screen-monitor-tray"]
+    switch.set_active(True)
+    switch.set_active(False)
+    check("tray_switch_is_a_choice", load()[session.OFFER_KEY] is True
+          and not autostart.is_enabled("big-screen-monitor-tray"))
+    # Switched off while it was starting: it is ended, not left running.
+    trays._stop_launch("big-screen-monitor-tray", 1)
+    check("tray_switch_off_while_starting", launch.terminated and "big-screen-monitor-tray" not in trays.launches)
+    session.send = saved_send
+    session.qt_available, session.tray_host_available, session.start, window.status = saved
+    os.environ["BSM_NO_TRAY_START"] = "1"
+    trays.refresh()
 
     # Edit -> pending bar -> apply -> saved.
     window.show_section("home")

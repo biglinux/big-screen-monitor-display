@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.3.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.3.1-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-1403%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1409%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -41,6 +41,12 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.3.1 — Bandeja nas Preferências
+
+- **Preferências › Bandeja do sistema**: um interruptor para a bandeja das telas USB e outro para a dos coolers DeepCool. Ligado, a bandeja abre na hora e passa a iniciar com a sessão; desligado, ela fecha e sai do início automático. A página mostra se cada uma está rodando e avisa quando o desktop não tem bandeja (GNOME sem a extensão AppIndicator, Window Maker sem `big-wm-tray`) ou quando falta o PyQt, com o pacote certo.
+- **Ao abrir o Big Screen Monitor Display** a bandeja ligada é iniciada se não estiver rodando; na primeira vez, num desktop com bandeja, a do tipo de aparelho conectado é ligada (também quando o aparelho é conectado com a janela já aberta) e um aviso diz onde desligar. Depois que você mexe num interruptor, essa escolha nunca é desfeita.
+- Corrigido: a captura de temas do SmartMonitor deixava dois descritores abertos a cada troca de tema e podia travar se o processo escrevesse muito na saída; o agente de mídia usava APIs do GLib depreciadas; avisos de recurso agora fazem os testes falharem; desligar a bandeja enquanto ela ainda abria a deixava rodando; um comando dividido em duas leituras do socket se perdia.
 
 ## ✨ Novidades da 5.3.0 — Bandejas do sistema e openSUSE/Regata OS
 
@@ -734,7 +740,7 @@ Textos marcados com gettext (`locale/big-screen-monitor-display.pot`). Portuguê
 ## 🧪 Desenvolvimento
 
 ```bash
-python3 -m pytest -q tests                                  # 1351 testes, sem hardware (os de D-Bus usam um barramento privado)
+python3 -m pytest -q tests                                  # 1409 testes, sem hardware (os de D-Bus usam um barramento privado)
 ./tools/make_screenshots.sh                                 # regenera docs/images
 python3 usr/share/big-screen-monitor-display/main.py --simulate 480x320 --snapshot /tmp/f.png
 BSM_CONFIG=/tmp/s.json python3 usr/share/big-screen-monitor-display/config_gui.py

@@ -568,6 +568,7 @@ def _compiled(theme_spec, settings, stats, progress=None):
     import logging
     import subprocess
     import sys
+    import tempfile
     log = logging.getLogger("bsmd.smartmonitor")
     key_ = key(theme_spec)
     if key_ in _MEMORY:
@@ -605,19 +606,27 @@ def _compiled(theme_spec, settings, stats, progress=None):
         worker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "worker.py")
         started = time.monotonic()
         try:
-            proc = subprocess.Popen([sys.executable, "-I", worker], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE, text=True)
-            proc.stdin.write(json.dumps(request))
-            proc.stdin.close()
-            while proc.poll() is None:
-                if progress is not None and progress():
-                    proc.kill()
-                    raise TimeoutError("capture stopped")
-                if time.monotonic() - started > CAPTURE_TIMEOUT:
-                    proc.kill()
-                    raise TimeoutError("capture took too long")
-                time.sleep(0.2)
-            error = proc.stderr.read()
+            # The result comes back through the disk cache. stderr goes to a file read at
+            # the end (a pipe read only after exit would fill up and stall the worker);
+            # nothing is left open and a killed worker is reaped.
+            with tempfile.TemporaryFile("w+", encoding="utf-8") as errors, \
+                    subprocess.Popen([sys.executable, "-I", worker], stdin=subprocess.PIPE,
+                                     stdout=subprocess.DEVNULL, stderr=errors, text=True) as proc:
+                try:
+                    proc.stdin.write(json.dumps(request))
+                    proc.stdin.close()
+                    while proc.poll() is None:
+                        if progress is not None and progress():
+                            raise TimeoutError("capture stopped")
+                        if time.monotonic() - started > CAPTURE_TIMEOUT:
+                            raise TimeoutError("capture took too long")
+                        time.sleep(0.2)
+                finally:
+                    if proc.poll() is None:
+                        proc.kill()
+                        proc.wait()
+                errors.seek(0)
+                error = errors.read()
             if proc.returncode != 0:
                 raise RuntimeError(error.strip().splitlines()[-1] if error.strip() else f"exit {proc.returncode}")
         except (OSError, RuntimeError, TimeoutError) as error:
