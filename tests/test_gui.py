@@ -94,7 +94,7 @@ def test_window_flows(tmp_path):
                  "media_options_page", "display_cards_include_status", "display_detail_open", "display_override",
                  "dashboard_selector_visible", "dashboard_state_hidden", "kojiro_active", "kojiro_inactive",
                  "profile_card_sets_value", "profile_card_reverted", "renderers_stopped", "status_timer_removed",
-                 "tray_switches"):
+                 "tray_switches", "tray_switch_follows_window_open"):
         assert checks[name] is True, name
     assert checks["collapsed_at_default_width"] is False
     assert checks["brightness_controls"] >= 2

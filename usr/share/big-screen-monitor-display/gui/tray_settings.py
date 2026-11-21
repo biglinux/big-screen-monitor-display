@@ -24,6 +24,13 @@ from traykit import autostart, session  # noqa: E402
 def ensure_running(window, load_gui_settings, save_gui_settings):
     """On window open (GLib timeout): start the switched-on tray apps; offer them once."""
     session.ensure_trays(window.status, load_gui_settings, save_gui_settings, window.toast)
+    # The Preferences page may already be built (opened with --page preferences, or
+    # visited in the first seconds): show what was just switched on and started.
+    page = getattr(window, "preferences_page", None)
+    if page is not None:
+        page.trays.refresh()
+        for delay in (1500, 4000):
+            GLib.timeout_add(delay, page.trays.refresh)
     return False
 
 

@@ -100,6 +100,24 @@ def run_main(window):
     trays = window.preferences_page.trays
     check("tray_switches", sorted(trays.rows) == ["big-screen-monitor-deepcool", "big-screen-monitor-tray"]
           and not any(row.get_active() for row in trays.rows.values()))
+    # Window open with Preferences already built: the tray switched on by the
+    # first-run offer must show on its switch (host and start simulated here).
+    from gui import preferences_page, tray_settings
+    from traykit import autostart, session
+    saved = (session.qt_available, session.tray_host_available, session.start, window.status)
+    session.qt_available, session.tray_host_available = (lambda: True), (lambda: True)
+    session.start = lambda app_id: True
+    os.environ.pop("BSM_NO_TRAY_START", None)
+    window.status = {"displays": [{"id": "usb-1-2", "source": {"profile": "turing_rev_a"},
+                                   "capabilities": {"output": "raster"}}]}
+    tray_settings.ensure_running(window, preferences_page.load_gui_settings, preferences_page.save_gui_settings)
+    pump(0.2)
+    check("tray_switch_follows_window_open", trays.rows["big-screen-monitor-tray"].get_active()
+          and not trays.rows["big-screen-monitor-deepcool"].get_active())
+    autostart.disable("big-screen-monitor-tray")
+    session.qt_available, session.tray_host_available, session.start, window.status = saved
+    os.environ["BSM_NO_TRAY_START"] = "1"
+    trays.refresh()
 
     # Edit -> pending bar -> apply -> saved.
     window.show_section("home")
