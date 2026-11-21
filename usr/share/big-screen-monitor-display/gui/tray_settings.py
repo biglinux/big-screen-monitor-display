@@ -50,17 +50,23 @@ class TrayGroup:
         self.note.add_prefix(icon)
         self.note.set_subtitle_lines(0)
         self.group.add(self.note)
-        self.rows = {}
+        self.rows = {}         # app id -> Gtk.Switch
+        self.lines = {}        # app id -> Adw.ActionRow
         self.states = {}
         for app_id, (title, subtitle, _package) in session.APPS.items():
-            row = Adw.SwitchRow(title=_(title), subtitle=_(subtitle))
+            # The state label goes before the switch, so the switches stay aligned.
+            row = Adw.ActionRow(title=_(title), subtitle=_(subtitle))
             state = Gtk.Label(valign=Gtk.Align.CENTER)
             state.add_css_class("dim-label")
             row.add_suffix(state)
-            row.set_active(autostart.is_enabled(app_id))
-            row.connect("notify::active", self._toggled, app_id)
+            switch = Gtk.Switch(valign=Gtk.Align.CENTER, active=autostart.is_enabled(app_id))
+            switch.update_property([Gtk.AccessibleProperty.LABEL], [_(title)])
+            row.add_suffix(switch)
+            row.set_activatable_widget(switch)
+            switch.connect("notify::active", self._toggled, app_id)
             self.group.add(row)
-            self.rows[app_id] = row
+            self.lines[app_id] = row
+            self.rows[app_id] = switch
             self.states[app_id] = state
         self._updating = False
         self.refresh()
@@ -78,7 +84,7 @@ class TrayGroup:
         self.note.set_visible(not qt or host is False)
         self._updating = True
         for app_id, row in self.rows.items():
-            row.set_sensitive(qt)
+            self.lines[app_id].set_sensitive(qt)
             row.set_active(autostart.is_enabled(app_id))
             alive = session.running(app_id)
             self.states[app_id].set_label(_("Running") if alive else "")
