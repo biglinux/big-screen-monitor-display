@@ -21,7 +21,7 @@ from traykit.icons import screen_icon
 from traykit.qt import (QAction, QActionGroup, QButtonGroup, QComboBox, QGridLayout, QHBoxLayout, QIcon, QLabel,
                         QMenu, QPixmap, QPushButton, QSize, QSlider, QTimer, QToolButton, QWidget, Qt,
                         QtCore)
-from traykit.window import PanelWindow, muted_label, section_label
+from traykit.window import FlowLayout, PanelWindow, muted_label, section_label
 
 from . import catalog
 
@@ -149,6 +149,8 @@ class ScreenWindow(PanelWindow):
         label = QLabel(_("Apply to"))
         self.target = QComboBox()
         self.target.setAccessibleName(_("Display that receives the changes"))
+        self.target.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+        self.target.setMinimumContentsLength(10)
         label.setBuddy(self.target)
         row.addWidget(label)
         row.addWidget(self.target, 1)
@@ -181,9 +183,7 @@ class ScreenWindow(PanelWindow):
         body.addWidget(self.variant_title)
         self.variant_host = QWidget()
         self.variant_host.setStyleSheet(CHIP_STYLE)
-        self.variant_grid = QGridLayout(self.variant_host)
-        self.variant_grid.setContentsMargins(0, 0, 0, 0)
-        self.variant_grid.setSpacing(6)
+        self.variant_grid = FlowLayout(self.variant_host)
         body.addWidget(self.variant_host)
         self.variant_group = QButtonGroup(self)
         self.variant_buttons = []
@@ -204,7 +204,8 @@ class ScreenWindow(PanelWindow):
         bright.addWidget(self.slider, 1)
         bright.addWidget(self.bright_value)
         body.addLayout(bright)
-        presets = QHBoxLayout()
+        presets_host = QWidget()
+        presets = FlowLayout(presets_host)
         self.preset_buttons = []
         for value in catalog.BRIGHTNESS_PRESETS:
             button = QPushButton(f"{value}%")
@@ -215,7 +216,7 @@ class ScreenWindow(PanelWindow):
         self.power = QPushButton()
         self.power.clicked.connect(owner.toggle_power)
         presets.addWidget(self.power)
-        body.addLayout(presets)
+        body.addWidget(presets_host)
         self.bright_note = muted_label()
         body.addWidget(self.bright_note)
         self._slider_timer = QTimer(self)
@@ -228,18 +229,16 @@ class ScreenWindow(PanelWindow):
         body.addWidget(section_label(_("Orientation")))
         orient_host = QWidget()
         orient_host.setStyleSheet(CHIP_STYLE)
-        orient = QGridLayout(orient_host)
-        orient.setContentsMargins(0, 0, 0, 0)
-        orient.setSpacing(6)
+        orient = FlowLayout(orient_host)
         self.orient_group = QButtonGroup(self)
         self.orient_buttons = {}
-        for index, (key, name) in enumerate(catalog.ORIENTATIONS):
+        for key, name in catalog.ORIENTATIONS:
             button = QPushButton(_(name))
             button.setCheckable(True)
             button.clicked.connect(lambda _c=False, k=key: owner.set_orientation(k))
             self.orient_group.addButton(button)
             self.orient_buttons[key] = button
-            orient.addWidget(button, index // 2, index % 2)
+            orient.addWidget(button)
         body.addWidget(orient_host)
         body.addStretch(1)
 
@@ -252,7 +251,7 @@ class ScreenWindow(PanelWindow):
         self._syncing = False
 
     def _reflow(self, columns):
-        """Two cards per row on narrow windows, more when the window is wider."""
+        """As many cards per row as fit the visible width (never clipped)."""
         if columns == self._columns:
             return
         self._columns = columns
@@ -263,7 +262,11 @@ class ScreenWindow(PanelWindow):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        self._reflow(max(2, min(4, (self.width() - 40) // (CARD_SIZE.width() + 32))))
+        card = next(iter(self.cards.values()))
+        spacing = self.grid.spacing()
+        margins = self.body.contentsMargins()
+        width = self.scroll.viewport().width() - margins.left() - margins.right()
+        self._reflow(max(1, min(4, (width + spacing) // (card.sizeHint().width() + spacing))))
 
     def _slider_moved(self, value):
         self.bright_value.setText(f"{value}%")
@@ -281,14 +284,14 @@ class ScreenWindow(PanelWindow):
         if not has:
             return
         self.variant_title.setText(_("Colour scheme") if theme.key != "planet_accent" else _("Accent colour"))
-        for index, variant in enumerate(theme.variants):
+        for variant in theme.variants:
             button = QPushButton(_(variant.name))
             button.setCheckable(True)
             button.setChecked(variant.id == current)
             button.clicked.connect(lambda _c=False, t=theme.id, v=variant.id: owner.choose_theme(t, v))
             self.variant_group.addButton(button)
             self.variant_buttons.append(button)
-            self.variant_grid.addWidget(button, index // 4, index % 4)
+            self.variant_grid.addWidget(button)
 
 
 class ScreenTray(TrayApp):

@@ -508,3 +508,26 @@ def test_failed_save_shows_the_saved_value_again(qt_env, monkeypatch):
     qt_env.wait(tray)
     assert tray.window.cards["gkrellm"].isChecked() and not tray.window.cards["planet"].isChecked()
     assert seen and seen[0][0] == "Could not save the settings"
+
+
+@pytest.mark.parametrize("width", [360, 500, 800])
+def test_windows_never_overflow_horizontally(qt_env, width):
+    """Cards, chips and notes fit the visible width (nothing clipped at the right)."""
+    from deepcooltray.app import DeepCoolTray
+    from screentray.app import ScreenTray
+    qt_env.status([SCREEN, cooler()])
+    qt_env.settings(theme="standard")
+    for cls in (ScreenTray, DeepCoolTray):
+        tray = make(qt_env, cls)
+        window = tray.window
+        window.set_host_note("A long explanation " * 12)
+        window.resize(width, 700)
+        window.show()
+        for _ in range(5):
+            qt_env.app.processEvents()
+        body = window.scroll.widget()
+        assert body.width() <= window.scroll.viewport().width(), (cls.__name__, width)
+        for child in body.findChildren(qt_env.qt.QWidget):
+            if child.isVisible() and child.parentWidget() is body:
+                assert child.geometry().right() <= body.width(), (cls.__name__, width, child)
+        window.hide()

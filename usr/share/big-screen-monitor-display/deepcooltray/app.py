@@ -22,9 +22,9 @@ from bsmd.i18n import N_, _
 from traykit import autostart
 from traykit.base import TrayApp
 from traykit.icons import heat_colour, swatch_icon, value_icon
-from traykit.qt import (QAction, QActionGroup, QButtonGroup, QColor, QColorDialog, QComboBox, QGridLayout,
+from traykit.qt import (QAction, QActionGroup, QButtonGroup, QColor, QColorDialog, QComboBox,
                         QHBoxLayout, QLabel, QMenu, QPushButton, QIcon, QWidget, QtWidgets)
-from traykit.window import PanelWindow, muted_label, section_label
+from traykit.window import FlowLayout, PanelWindow, muted_label, section_label
 
 from . import openrgb
 
@@ -151,6 +151,8 @@ class DeepCoolWindow(PanelWindow):
         label = QLabel(_("Cooler"))
         self.target = QComboBox()
         self.target.setAccessibleName(_("Cooler that receives the changes"))
+        self.target.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+        self.target.setMinimumContentsLength(10)
         label.setBuddy(self.target)
         row.addWidget(label)
         row.addWidget(self.target, 1)
@@ -178,12 +180,11 @@ class DeepCoolWindow(PanelWindow):
         body.addWidget(self.on_cooler)
 
         # What the cooler shows.
-        body.addWidget(section_label(_("The cooler shows")))
+        self.mode_title = section_label(_("The cooler shows"))
+        body.addWidget(self.mode_title)
         self.mode_host = QWidget()
         self.mode_host.setStyleSheet(CHIP_STYLE)
-        self.mode_grid = QGridLayout(self.mode_host)
-        self.mode_grid.setContentsMargins(0, 0, 0, 0)
-        self.mode_grid.setSpacing(6)
+        self.mode_grid = FlowLayout(self.mode_host)
         body.addWidget(self.mode_host)
         self.mode_group = QButtonGroup(self)
         self.mode_buttons = {}
@@ -195,8 +196,7 @@ class DeepCoolWindow(PanelWindow):
         body.addWidget(self.unit_title)
         self.unit_host = QWidget()
         self.unit_host.setStyleSheet(CHIP_STYLE)
-        units = QHBoxLayout(self.unit_host)
-        units.setContentsMargins(0, 0, 0, 0)
+        units = FlowLayout(self.unit_host)
         self.unit_group = QButtonGroup(self)
         self.unit_buttons = {}
         for key, name in (("c", _("Celsius (°C)")), ("f", _("Fahrenheit (°F)"))):
@@ -206,7 +206,6 @@ class DeepCoolWindow(PanelWindow):
             self.unit_group.addButton(button)
             self.unit_buttons[key] = button
             units.addWidget(button)
-        units.addStretch(1)
         body.addWidget(self.unit_host)
         self.unit_note = muted_label()
         body.addWidget(self.unit_note)
@@ -225,7 +224,8 @@ class DeepCoolWindow(PanelWindow):
         body.addLayout(alarm)
         self.alarm_note = muted_label()
         body.addWidget(self.alarm_note)
-        self.notify_alarm = QtWidgets.QCheckBox(_("Also warn on the desktop when the alarm lights up"))
+        self.notify_alarm = QtWidgets.QCheckBox(_("Desktop notification"))
+        self.notify_alarm.setToolTip(_("Also warn on the desktop when the cooler's alarm lamp lights up."))
         self.notify_alarm.toggled.connect(owner.set_notify_alarm)
         body.addWidget(self.notify_alarm)
 
@@ -234,6 +234,9 @@ class DeepCoolWindow(PanelWindow):
         rgb = QHBoxLayout()
         self.rgb_device = QComboBox()
         self.rgb_device.setAccessibleName(_("OpenRGB device of the cooler's LEDs"))
+        # Long device names are elided instead of widening the window.
+        self.rgb_device.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+        self.rgb_device.setMinimumContentsLength(10)
         self.rgb_device.activated.connect(owner.rgb_device_chosen)
         self.rgb_find = QPushButton(_("Find Devices"))
         self.rgb_find.clicked.connect(owner.find_rgb_devices)
@@ -242,25 +245,23 @@ class DeepCoolWindow(PanelWindow):
         body.addLayout(rgb)
         self.rgb_host = QWidget()
         self.rgb_host.setStyleSheet(CHIP_STYLE)
-        colours = QGridLayout(self.rgb_host)
-        colours.setContentsMargins(0, 0, 0, 0)
-        colours.setSpacing(6)
+        colours = FlowLayout(self.rgb_host)
         self.rgb_group = QButtonGroup(self)
         self.rgb_buttons = {}
         items = [(hex_value, _(COLOUR_NAMES[name]), swatch_icon(hex_value)) for name, hex_value in openrgb.PRESETS]
         items += [(openrgb.RAINBOW, _("Rainbow"), swatch_icon(rainbow=True)),
                   (openrgb.OFF, _("Off"), swatch_icon(off=True))]
-        for index, (value, name, icon) in enumerate(items):
+        for value, name, icon in items:
             button = QPushButton(icon, name)
             button.setCheckable(True)
             button.clicked.connect(lambda _c=False, v=value: owner.set_colour(v))
             self.rgb_group.addButton(button)
             self.rgb_buttons[value] = button
-            colours.addWidget(button, index // 4, index % 4)
+            colours.addWidget(button)
         custom = QPushButton(_("Other…"))
         custom.clicked.connect(owner.custom_colour)
         self.rgb_custom = custom
-        colours.addWidget(custom, len(items) // 4, len(items) % 4)
+        colours.addWidget(custom)
         body.addWidget(self.rgb_host)
         self.rgb_note = muted_label()
         body.addWidget(self.rgb_note)
@@ -283,13 +284,13 @@ class DeepCoolWindow(PanelWindow):
                 self.mode_group.removeButton(button)
                 button.deleteLater()
             self.mode_buttons = {}
-            for index, (key, label) in enumerate(choices):
+            for key, label in choices:
                 button = QPushButton(label)
                 button.setCheckable(True)
                 button.clicked.connect(lambda _c=False, k=key: owner.set_mode(k))
                 self.mode_group.addButton(button)
                 self.mode_buttons[key] = button
-                self.mode_grid.addWidget(button, index // 2, index % 2)
+                self.mode_grid.addWidget(button)
         self.mode_group.setExclusive(False)
         for key, button in self.mode_buttons.items():
             button.setChecked(key == current)
@@ -533,6 +534,7 @@ class DeepCoolTray(TrayApp):
             else:
                 window.mode_note.setText("")
             window.mode_note.setVisible(bool(window.mode_note.text()))
+            window.mode_title.setVisible(bool(choices) or bool(window.mode_note.text()))
             unit_ok = bool(family and family.fahrenheit)
             window.unit_host.setVisible(unit_ok or family is None)
             window.unit_host.setEnabled(enabled and unit_ok)

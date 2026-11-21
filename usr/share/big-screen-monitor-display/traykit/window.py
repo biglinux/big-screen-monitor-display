@@ -8,8 +8,8 @@ Colours come from the desktop palette, so light and dark themes keep contrast.
 
 from bsmd.i18n import _
 
-from .qt import (QApplication, QFrame, QHBoxLayout, QIcon, QKeySequence, QLabel, QProgressBar, QPushButton,
-                 QScrollArea, QShortcut, QSizePolicy, QTimer, QVBoxLayout, QWidget, Qt)
+from .qt import (QApplication, QFrame, QHBoxLayout, QIcon, QKeySequence, QLabel, QPoint, QProgressBar, QPushButton,
+                 QRect, QScrollArea, QShortcut, QSize, QSizePolicy, QTimer, QtWidgets, QVBoxLayout, QWidget, Qt)
 
 STYLE = """
 QFrame#note, QFrame#message {
@@ -60,8 +60,8 @@ class PanelWindow(QWidget):
         self.setWindowTitle(title)
         self.setWindowIcon(QIcon.fromTheme(icon_name))
         self.setStyleSheet(STYLE)
-        self.setMinimumWidth(380)
-        self.resize(460, 640)
+        self.setMinimumWidth(360)
+        self.resize(500, 680)
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -94,7 +94,7 @@ class PanelWindow(QWidget):
         header.addWidget(self.pill, 0, Qt.AlignmentFlag.AlignTop)
         outer.addLayout(header)
 
-        scroll = QScrollArea()
+        scroll = self.scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -206,6 +206,62 @@ class PanelWindow(QWidget):
         else:
             event.accept()
             self.owner.quit()
+
+
+class FlowLayout(QtWidgets.QLayout):
+    """Chips laid out left to right, wrapping to the next line when the width ends."""
+
+    def __init__(self, parent=None, spacing=6):
+        super().__init__(parent)
+        self._items = []
+        self._spacing = spacing
+        self.setContentsMargins(0, 0, 0, 0)
+
+    def addItem(self, item):
+        self._items.append(item)
+
+    def count(self):
+        return len(self._items)
+
+    def itemAt(self, index):
+        return self._items[index] if 0 <= index < len(self._items) else None
+
+    def takeAt(self, index):
+        return self._items.pop(index) if 0 <= index < len(self._items) else None
+
+    def expandingDirections(self):
+        return Qt.Orientation(0)
+
+    def hasHeightForWidth(self):
+        return True
+
+    def heightForWidth(self, width):
+        return self._place(QRect(0, 0, width, 0), apply=False)
+
+    def setGeometry(self, rect):
+        super().setGeometry(rect)
+        self._place(rect, apply=True)
+
+    def sizeHint(self):
+        return self.minimumSize()
+
+    def minimumSize(self):
+        size = QSize()
+        for item in self._items:
+            size = size.expandedTo(item.minimumSize())
+        return size
+
+    def _place(self, rect, apply):
+        x, y, line = rect.x(), rect.y(), 0
+        for item in self._items:
+            hint = item.sizeHint()
+            if x + hint.width() > rect.right() + 1 and line > 0:
+                x, y, line = rect.x(), y + line + self._spacing, 0
+            if apply:
+                item.setGeometry(QRect(QPoint(x, y), hint))
+            x += hint.width() + self._spacing
+            line = max(line, hint.height())
+        return y + line - rect.y()
 
 
 def expanding():
