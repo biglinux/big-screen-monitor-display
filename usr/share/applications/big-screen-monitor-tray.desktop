@@ -1,10 +1,15 @@
 [Desktop Entry]
 Type=Application
-Name=Screen Monitor Tray
-Comment=System Tray controller for USB secondary screen monitor
-Exec=/usr/bin/screen-monitor-tray.sh
-Icon=screen-monitor-tray
+Name=Big Screen Monitor Tray
+Name[pt_BR]=Big Screen Monitor na bandeja
+GenericName=USB display controls
+GenericName[pt_BR]=Controles do display USB
+Comment=Theme gallery, brightness and orientation of the USB displays, from the system tray
+Comment[pt_BR]=Galeria de temas, brilho e orientação dos displays USB, pela bandeja do sistema
+Exec=/usr/bin/big-screen-monitor-tray
+Icon=big-screen-monitor-tray
 Terminal=false
-Categories=System;Monitor;HardwareSettings;
 StartupNotify=false
-X-KDE-autostart-after=panel
+StartupWMClass=big-screen-monitor-tray
+Categories=Settings;HardwareSettings;
+Keywords=monitor;display;lcd;screen;turing;tray;theme;brightness;

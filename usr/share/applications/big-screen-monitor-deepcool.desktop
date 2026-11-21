@@ -1,10 +1,14 @@
 [Desktop Entry]
 Type=Application
 Name=DeepCool Digital
-Comment=DeepCool Digital cooler system tray controller
-Exec=/usr/bin/deepcool-digital.sh
-Icon=deepcool-digital
+GenericName=Cooler display controls
+GenericName[pt_BR]=Controles do display do cooler
+Comment=CPU temperature in the system tray and the settings of DeepCool digital coolers
+Comment[pt_BR]=Temperatura da CPU na bandeja do sistema e as configurações dos coolers DeepCool Digital
+Exec=/usr/bin/big-screen-monitor-deepcool
+Icon=big-screen-monitor-deepcool
 Terminal=false
-Categories=System;Monitor;HardwareSettings;
 StartupNotify=false
-X-KDE-autostart-after=panel
+StartupWMClass=big-screen-monitor-deepcool
+Categories=Settings;HardwareSettings;
+Keywords=deepcool;cooler;ak400;ak500;ak620;ag400;temperature;cpu;tray;openrgb;
