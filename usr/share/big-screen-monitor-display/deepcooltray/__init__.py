@@ -1,0 +1,1 @@
+"""DeepCool Digital (tray app)."""
