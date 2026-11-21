@@ -6735,3 +6735,291 @@ msgstr ""
 "O planeta é desenhado na hora real e gira com uma nova imagem gravada neste "
 "intervalo: o display reinicia por cerca de 17 segundos a cada vez e a "
 "memória dele se desgasta com o uso."
+
+msgid "Could not save the settings"
+msgstr "Não foi possível salvar as configurações"
+
+msgid "Service restarted"
+msgstr "Serviço reiniciado"
+
+msgid "The displays reconnect in a few seconds."
+msgstr "Os displays se reconectam em alguns segundos."
+
+msgid "Could not restart the service"
+msgstr "Não foi possível reiniciar o serviço"
+
+msgid "Could not reconnect"
+msgstr "Não foi possível reconectar"
+
+msgid "Could not change the session start"
+msgstr "Não foi possível alterar o início com a sessão"
+
+msgid "{title} needs the Qt bindings for Python (PyQt6 or PyQt5)."
+msgstr "{title} precisa das bibliotecas Qt para Python (PyQt6 ou PyQt5)."
+
+msgid "Install them with:"
+msgstr "Instale com:"
+
+msgid "USB displays"
+msgstr "Displays USB"
+
+msgid "Theme gallery, brightness and orientation from an icon in the panel."
+msgstr "Galeria de temas, brilho e orientação num ícone do painel."
+
+msgid "DeepCool coolers"
+msgstr "Coolers DeepCool"
+
+msgid "CPU temperature in the panel and the cooler's display options."
+msgstr "Temperatura da CPU no painel e as opções do visor do cooler."
+
+msgid "GNOME shows tray icons only with the “AppIndicator and KStatusNotifierItem Support” extension. Install it from your distribution (gnome-shell-extension-appindicator) or from extensions.gnome.org and enable it in Extensions; the icon then appears the next time you open this app."
+msgstr "O GNOME só mostra ícones de bandeja com a extensão “AppIndicator and KStatusNotifierItem Support”. Instale-a pela sua distribuição (gnome-shell-extension-appindicator) ou pelo extensions.gnome.org e ative-a em Extensões; o ícone aparece na próxima vez que você abrir este aplicativo."
+
+msgid "Window Maker has no notification area: open the controls from the applications menu or a Dock icon whenever you need them; the display keeps working without it."
+msgstr "O Window Maker não tem área de notificação: abra os controles pelo menu de aplicativos ou por um ícone do Dock sempre que precisar; o display continua funcionando sem eles."
+
+msgid "This desktop has no notification area (system tray) running, so the controls are shown in this window. Add a system tray to your panel to get the icon."
+msgstr "Este desktop não tem área de notificação (bandeja do sistema) em execução, por isso os controles aparecem nesta janela. Adicione uma bandeja ao painel para ter o ícone."
+
+msgid "This desktop has no notification area (system tray) running. Add a system tray to your panel to get the icon; meanwhile the controls open in a window from the applications menu."
+msgstr "Este desktop não tem área de notificação (bandeja do sistema) em execução. Adicione uma bandeja ao painel para ter o ícone; enquanto isso, os controles abrem numa janela pelo menu de aplicativos."
+
+msgid "Tray icon turned on. You can switch it off in Preferences."
+msgstr "Ícone na bandeja ativado. Você pode desativá-lo em Preferências."
+
+msgid "Connection state"
+msgstr "Estado da conexão"
+
+msgid "Connected"
+msgstr "Conectado"
+
+msgid "Unstable connection"
+msgstr "Conexão instável"
+
+msgid "Starting…"
+msgstr "Iniciando…"
+
+msgid "Reconnecting…"
+msgstr "Reconectando…"
+
+msgid "Disconnected"
+msgstr "Desconectado"
+
+msgid "Apply to"
+msgstr "Aplicar a"
+
+msgid "Display that receives the changes"
+msgstr "Display que recebe as alterações"
+
+msgid "Brightness {value}%"
+msgstr "Brilho {value}%"
+
+msgid "Configuration…"
+msgstr "Configurações…"
+
+msgid "Open the complete configuration window"
+msgstr "Abre a janela de configuração completa"
+
+msgid "Restart Service"
+msgstr "Reiniciar Serviço"
+
+msgid "Start with the session"
+msgstr "Iniciar com a sessão"
+
+msgid "Service not running"
+msgstr "Serviço parado"
+
+msgid "{count} displays"
+msgstr "{count} displays"
+
+msgid "The monitor service is not running, so nothing reaches the displays. Start it below (administrator authorization)."
+msgstr "O serviço do monitor não está em execução, então nada chega aos displays. Inicie-o abaixo (autorização de administrador)."
+
+msgid "Connect a USB display. It appears here a moment after it is plugged in; your choices below are kept and used when it connects."
+msgstr "Conecte um display USB. Ele aparece aqui logo depois de ser conectado; suas escolhas abaixo são guardadas e usadas quando ele se conectar."
+
+msgid "More options for this theme are in the configuration window."
+msgstr "Mais opções deste tema estão na janela de configuração."
+
+msgid "Turn On"
+msgstr "Ligar"
+
+msgid "Turn Off"
+msgstr "Desligar"
+
+msgid "Switch the backlight off and on again; the theme keeps running."
+msgstr "Apaga e acende a luz de fundo; o tema continua rodando."
+
+msgid "This display has no adjustable backlight (its firmware does not offer it)."
+msgstr "Este display não tem luz de fundo ajustável (o firmware dele não oferece isso)."
+
+msgid "Theme: {name}"
+msgstr "Tema: {name}"
+
+msgid "Brightness: {value}%"
+msgstr "Brilho: {value}%"
+
+msgid "Theme Gallery…"
+msgstr "Galeria de Temas…"
+
+msgid "Could not start the service"
+msgstr "Não foi possível iniciar o serviço"
+
+msgid "Kojiro"
+msgstr "Kojiro"
+
+msgid "Landscape (flipped)"
+msgstr "Paisagem (invertida)"
+
+msgid "Portrait (flipped)"
+msgstr "Retrato (invertido)"
+
+msgid "Pink"
+msgstr "Rosa"
+
+msgid "DeepCool Digital"
+msgstr "DeepCool Digital"
+
+msgid "Cooler"
+msgstr "Cooler"
+
+msgid "Cooler that receives the changes"
+msgstr "Cooler que recebe as alterações"
+
+msgid "CPU now"
+msgstr "CPU agora"
+
+msgid "The cooler shows"
+msgstr "O cooler mostra"
+
+msgid "Desktop notification"
+msgstr "Notificação na área de trabalho"
+
+msgid "Also warn on the desktop when the cooler's alarm lamp lights up."
+msgstr "Também avisa na área de trabalho quando a luz de alarme do cooler acende."
+
+msgid "LED colour (OpenRGB)"
+msgstr "Cor dos LEDs (OpenRGB)"
+
+msgid "OpenRGB device of the cooler's LEDs"
+msgstr "Dispositivo OpenRGB dos LEDs do cooler"
+
+msgid "Find Devices"
+msgstr "Procurar Dispositivos"
+
+msgid "Rainbow"
+msgstr "Arco-íris"
+
+msgid "Other…"
+msgstr "Outra…"
+
+msgid "Close and reopen this cooler only"
+msgstr "Fecha e reabre só este cooler"
+
+msgid "No cooler connected"
+msgstr "Nenhum cooler conectado"
+
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgid "Usage"
+msgstr "Uso"
+
+msgid "Power"
+msgstr "Potência"
+
+msgid "Alternate"
+msgstr "Alternar"
+
+msgid "CPU at {value}: the alarm threshold of {name} was reached."
+msgstr "CPU a {value}: o limite de alarme do {name} foi atingido."
+
+msgid "CPU temperature alarm"
+msgstr "Alarme de temperatura da CPU"
+
+msgid "CPU: {temp} · {usage}"
+msgstr "CPU: {temp} · {usage}"
+
+msgid "No CPU temperature sensor found"
+msgstr "Nenhum sensor de temperatura da CPU encontrado"
+
+msgid "No CPU temperature sensor found (k10temp, coretemp or zenpower)."
+msgstr "Nenhum sensor de temperatura da CPU encontrado (k10temp, coretemp ou zenpower)."
+
+msgid "Read from {source}"
+msgstr "Lida de {source}"
+
+msgid "Waiting for the cooler's first update…"
+msgstr "Aguardando a primeira atualização do cooler…"
+
+msgid "On the cooler: {values}"
+msgstr "No cooler: {values}"
+
+msgid "The alarm lamp is lit."
+msgstr "A luz de alarme está acesa."
+
+msgid "The monitor service is not running, so nothing reaches the cooler. Start it below (administrator authorization)."
+msgstr "O serviço do monitor não está em execução, então nada chega ao cooler. Inicie-o abaixo (autorização de administrador)."
+
+msgid "Connect a DeepCool digital cooler (its USB cable goes to an internal USB header). It appears here a moment after the service finds it."
+msgstr "Conecte um cooler DeepCool Digital (o cabo USB dele vai a um conector USB interno). Ele aparece aqui logo depois que o serviço o encontra."
+
+msgid "This cooler always shows {fields}; its firmware decides the layout."
+msgstr "Este cooler sempre mostra {fields}; o firmware decide a disposição."
+
+msgid "Presentation chosen in the configuration window: {name}."
+msgstr "Apresentação escolhida na janela de configuração: {name}."
+
+msgid "“Follow the theme” lets the screen theme choose what fits."
+msgstr "“Seguir o tema” deixa o tema da tela escolher o que melhor combina."
+
+msgid "This cooler shows Celsius only."
+msgstr "Este cooler mostra só Celsius."
+
+msgid "LED colour"
+msgstr "Cor dos LEDs"
+
+msgid "Controls…"
+msgstr "Controles…"
+
+msgid "Reconnect the Cooler"
+msgstr "Reconectar o Cooler"
+
+msgid "No device (LEDs untouched)"
+msgstr "Nenhum dispositivo (LEDs sem alteração)"
+
+msgid "The cooler's LED strip is wired to the motherboard and is controlled with OpenRGB, which is not installed."
+msgstr "A fita de LEDs do cooler é ligada à placa-mãe e controlada pelo OpenRGB, que não está instalado."
+
+msgid "Choose the OpenRGB device the cooler's LED cable is connected to (usually the motherboard). No other device is ever changed."
+msgstr "Escolha o dispositivo OpenRGB ao qual o cabo de LEDs do cooler está ligado (normalmente a placa-mãe). Nenhum outro dispositivo é alterado."
+
+msgid "No OpenRGB device found"
+msgstr "Nenhum dispositivo OpenRGB encontrado"
+
+msgid "Check that OpenRGB sees your motherboard (it may need its i2c/SMBus setup)."
+msgstr "Verifique se o OpenRGB enxerga sua placa-mãe (pode ser preciso configurar o i2c/SMBus)."
+
+msgid "Could not change the LED colour"
+msgstr "Não foi possível mudar a cor dos LEDs"
+
+msgid "System tray"
+msgstr "Bandeja do sistema"
+
+msgid "Quick controls from an icon in the panel. A tray that is on also starts with the session."
+msgstr "Controles rápidos num ícone do painel. Uma bandeja ativada também inicia com a sessão."
+
+msgid "The tray apps need the Qt bindings for Python (PyQt6 or PyQt5)."
+msgstr "As bandejas precisam das bibliotecas Qt para Python (PyQt6 ou PyQt5)."
+
+msgid "Install them with: {command}"
+msgstr "Instale com: {command}"
+
+msgid "This desktop shows no tray icons right now"
+msgstr "Este desktop não está mostrando ícones de bandeja"
+
+msgid "Running"
+msgstr "Em execução"
+
+msgid "Switched on; this desktop has no tray to show the icon."
+msgstr "Ativada; este desktop não tem bandeja para mostrar o ícone."
