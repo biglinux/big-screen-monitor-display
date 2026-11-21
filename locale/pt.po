@@ -6694,6 +6694,12 @@ msgstr "Roda o cliente bsmd-ce no firmware original do navegador (nada é gravad
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Toque resistivo de um ponto: toque, segure e deslize no próprio painel."
 
+msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
+msgstr "Roda no BigFoston OS (Linux no navegador): abra o app Big Screen no aparelho."
+
+msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
+msgstr "Conecta pela rede USB em 192.168.7.2, porta TCP 7707."
+
 msgid "Horizontal"
 msgstr "Horizontal"
 
