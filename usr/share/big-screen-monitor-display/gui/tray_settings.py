@@ -56,7 +56,7 @@ class TrayGroup:
         for app_id, (title, subtitle, _package) in session.APPS.items():
             # The state label goes before the switch, so the switches stay aligned.
             row = Adw.ActionRow(title=_(title), subtitle=_(subtitle))
-            state = Gtk.Label(valign=Gtk.Align.CENTER)
+            state = Gtk.Label(valign=Gtk.Align.CENTER, margin_end=12)
             state.add_css_class("dim-label")
             row.add_suffix(state)
             switch = Gtk.Switch(valign=Gtk.Align.CENTER, active=autostart.is_enabled(app_id))
