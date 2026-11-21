@@ -90,6 +90,8 @@ class TrayApp(QObject):
         self._bridge = _Bridge()
         self._bridge.done.connect(self._deliver)
         self._busy = 0
+        self._saving = False
+        self._save_pending = None
         self._host_deadline = time.monotonic() + (HOST_WAIT_S if autostarted else 0)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.poll)
@@ -182,7 +184,7 @@ class TrayApp(QObject):
             self.status = control.read_status()
             self.on_status(self.status)
         settings_mtime = self._mtime(settings.config_path())
-        if force or settings_mtime != self._settings_mtime:
+        if (force or settings_mtime != self._settings_mtime) and not self._saving:
             self._settings_mtime = settings_mtime
             self.values = control.load_settings()
             self.on_settings(self.values)
@@ -195,16 +197,33 @@ class TrayApp(QObject):
 
     # ------------------------------------------------------------ settings
     def save(self, values, done=None):
-        """Write settings off the GUI thread; ``done(ok, message)`` on the GUI thread."""
+        """Write settings off the GUI thread; ``done(ok, message)`` on the GUI thread.
+
+        One write at a time: changes made while a write runs are merged into the
+        next one (always the newest values), so an older write can never land
+        after a newer one. Until then the values in memory are the truth."""
         self.values = values
+        if self._saving:
+            self._save_pending = (values, done)
+            return
+        self._saving = True
 
         def finished(result, error):
             ok, message = result if error is None else (False, str(error))
             if not ok:
                 log.warning("saving settings failed: %s", message)
                 self.notify(_("Could not save the settings"), message, error=True)
-            self._settings_mtime = None                          # reread what was really written
-            self.poll()
+            self._saving = False
+            if not ok and self._save_pending is None:
+                # Show what is really saved, not the choice that could not be written.
+                self.values = control.load_settings()
+                self.on_settings(self.values)
+            if self._save_pending is not None:
+                (next_values, next_done), self._save_pending = self._save_pending, None
+                self.save(next_values, next_done)
+            else:
+                self._settings_mtime = None                      # reread what was really written
+                self.poll()
             if done:
                 done(ok, message)
 

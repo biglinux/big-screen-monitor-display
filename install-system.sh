@@ -79,11 +79,11 @@ deps_for() {
             py="python$(python_suffix)"
             echo python3 "$py-Pillow" "$py-numpy" "$py-psutil" "$py-pyusb" "$py-pyserial" "$py-gobject" \
                  "$py-gobject-cairo" "$py-pycairo" "$py-PyQt6" typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 \
-                 libusb-1_0-0 pciutils rsvg-convert fontconfig polkit gettext-tools hicolor-icon-theme ;;
+                 libusb-1_0-0 pciutils rsvg-convert fontconfig polkit pkexec gettext-tools hicolor-icon-theme ;;
         debian)
             echo python3 python3-pil python3-numpy python3-psutil python3-usb python3-serial python3-gi \
                  python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libusb-1.0-0 pciutils librsvg2-bin fontconfig \
-                 polkitd gettext hicolor-icon-theme python3-pyqt6 ;;
+                 polkitd pkexec gettext hicolor-icon-theme python3-pyqt6 ;;
         fedora)
             echo python3 python3-pillow python3-numpy python3-psutil python3-pyusb python3-pyserial \
                  python3-gobject python3-cairo gtk4 libadwaita libusb1 pciutils librsvg2-tools fontconfig polkit \
@@ -117,6 +117,9 @@ install_deps() {
 }
 
 check_python() {
+    # Every change made in the windows reaches /etc through pkexec (openSUSE and
+    # Debian ship it apart from polkit).
+    command -v pkexec >/dev/null 2>&1 || die "pkexec is missing: settings could not be saved (install pkexec/polkit)"
     say "Checking the Python modules"
     python3 - <<'EOF' || die "a required Python module is missing (see above)"
 import importlib, sys

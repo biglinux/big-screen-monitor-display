@@ -446,3 +446,47 @@ def test_without_tray_host_window_is_shown_or_autostart_exits(qt_env, monkeypatc
     auto._host_deadline = 0
     auto.start()
     assert quits == [1] and not auto.window.isVisible()
+
+
+def test_rapid_changes_never_lose_the_newest_value(qt_env, monkeypatch):
+    """A slow first write must not land after the newer ones (writes are serialised)."""
+    from deepcooltray.app import DeepCoolTray
+    from traykit import base
+    qt_env.status([cooler()])
+    qt_env.settings()
+    tray = make(qt_env, DeepCoolTray)
+    real = base.control.save_settings
+    calls = []
+
+    def slow_first(values, helper=None):
+        calls.append(values)
+        if len(calls) == 1:
+            time.sleep(0.4)
+        return real(values, helper)
+
+    monkeypatch.setattr(base.control, "save_settings", slow_first)
+    tray.set_mode("usage")
+    tray.set_unit("f")
+    tray.set_alarm(75)
+    qt_env.wait(tray, 5)
+    assert len(calls) == 2                                  # the two later changes were merged into one write
+    assert qt_env.saved()["displays"]["usb-1-3"] == {"dc_preset": "custom", "dc_main": "usage",
+                                                     "dc_temp_unit": "f", "dc_alarm_temp": 75}
+
+
+def test_failed_save_shows_the_saved_value_again(qt_env, monkeypatch):
+    """No pkexec / authorization denied: the card goes back to the theme really in use."""
+    from screentray.app import ScreenTray
+    from traykit import base
+    qt_env.status([SCREEN])
+    qt_env.settings(theme="gkrellm")
+    tray = make(qt_env, ScreenTray)
+    seen = []
+    tray.notify = lambda title, message, error=False: seen.append((title, message))
+    monkeypatch.setattr(base.control, "save_settings",
+                        lambda values, helper=None: (False, "[Errno 2] No such file or directory: 'pkexec'"))
+    tray.choose_theme("planet")
+    assert tray.window.cards["planet"].isChecked()          # optimistic while saving
+    qt_env.wait(tray)
+    assert tray.window.cards["gkrellm"].isChecked() and not tray.window.cards["planet"].isChecked()
+    assert seen and seen[0][0] == "Could not save the settings"
