@@ -58,6 +58,24 @@ def test_status_states(tmp_path, monkeypatch):
     assert control.read_status(str(status)).state == "stale"
 
 
+def test_status_prefers_the_run_that_drives_displays(tmp_path, monkeypatch):
+    """System service (no display) and a manual run (one display) both fresh: no flipping."""
+    from bsmd import statusfile
+    monkeypatch.delenv("BSM_STATUS", raising=False)
+    system = tmp_path / "system.json"
+    monkeypatch.setattr(statusfile, "SYSTEM_STATUS", str(system))
+    monkeypatch.setenv("RUNTIME_DIRECTORY", str(tmp_path / "run"))
+    manual = tmp_path / "run" / "status.json"
+    manual.parent.mkdir()
+    manual.write_text(json.dumps({"displays": [{"id": "simulated-1"}]}))
+    system.write_text(json.dumps({"displays": []}))         # newer, but drives nothing
+    assert control.read_status().display("simulated-1")
+    old = time.time() - 60
+    os.utime(manual, (old, old))                             # manual run ended
+    assert control.read_status().displays == []
+    assert control.status_mtime() == os.path.getmtime(system)
+
+
 def test_display_kinds():
     assert control.is_deepcool({"source": {"profile": "deepcool_ag"}})
     assert not control.is_screen({"source": {"profile": "deepcool_ag"}})

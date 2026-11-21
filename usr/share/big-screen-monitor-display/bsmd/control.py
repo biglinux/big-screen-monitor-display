@@ -165,25 +165,48 @@ class ServiceStatus:
         return None
 
 
+def _status_candidates():
+    if os.environ.get("BSM_STATUS"):
+        return [os.environ["BSM_STATUS"]]
+    return [statusfile.SYSTEM_STATUS, statusfile.status_path()]
+
+
 def read_status(path=None):
-    """``ServiceStatus`` of the freshest status file (system service or manual run)."""
-    path = path or statusfile.find_status_file()
-    if not path:
-        return ServiceStatus(None, None)
-    try:
-        age = max(0.0, time.time() - os.path.getmtime(path))
-    except OSError:
-        return ServiceStatus(None, None)
-    return ServiceStatus(statusfile.read_status(path), age)
+    """``ServiceStatus`` of the system service or of a manual run.
+
+    When both are running (both files fresh), the one that drives displays
+    wins: picking only the newest file would flip between them every second."""
+    if path:
+        candidates = [path]
+    else:
+        candidates = _status_candidates()
+    best = None
+    now = time.time()
+    for candidate in candidates:
+        try:
+            age = max(0.0, now - os.path.getmtime(candidate))
+        except OSError:
+            continue
+        status = ServiceStatus(statusfile.read_status(candidate), age)
+        if best is None:
+            best = status
+            continue
+        rank = (status.state == "running", bool(status.displays), -age)
+        best_rank = (best.state == "running", bool(best.displays), -best.age)
+        if rank > best_rank:
+            best = status
+    return best or ServiceStatus(None, None)
 
 
 def status_mtime(path=None):
-    """Modification time of the status file, or ``None`` (cheap change detection)."""
-    path = path or statusfile.find_status_file()
-    try:
-        return os.path.getmtime(path) if path else None
-    except OSError:
-        return None
+    """Newest modification time of the status files, or ``None`` (cheap change detection)."""
+    times = []
+    for candidate in [path] if path else _status_candidates():
+        try:
+            times.append(os.path.getmtime(candidate))
+        except (OSError, TypeError):
+            continue
+    return max(times) if times else None
 
 
 def profile_of(entry):
