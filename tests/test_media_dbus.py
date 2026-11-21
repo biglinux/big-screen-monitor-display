@@ -34,6 +34,7 @@ def bus_address():
     yield address
     proc.terminate()
     proc.wait(timeout=5)
+    proc.stdout.close()
 
 
 def connect(address):

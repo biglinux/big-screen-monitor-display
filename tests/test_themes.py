@@ -228,7 +228,8 @@ def test_planet_options():
 
 
 def test_planet_no_fake_weather_or_volume():
-    source = open(legacy_themes.__file__, encoding="utf-8").read()
+    with open(legacy_themes.__file__, encoding="utf-8") as handle:
+        source = handle.read()
     assert '"SUNNY / WIND 3 / 22°C", font_mono' not in source
     assert '"28%", 28' not in source
 

@@ -70,7 +70,7 @@ def drive(tmp_path, scenario, displays=None):
     env = dict(os.environ, BSM_CONFIG=str(config), BSM_STATUS=str(status), GSETTINGS_BACKEND="memory",
                XDG_CONFIG_HOME=str(tmp_path / "config"), XDG_CACHE_HOME=str(tmp_path / "cache"),
                XDG_STATE_HOME=str(tmp_path / "state"), XDG_RUNTIME_DIR=str(tmp_path / "run"), LANGUAGE="en",
-               BSM_PREVIEW_ALWAYS="1")
+               BSM_PREVIEW_ALWAYS="1", BSM_NO_TRAY_START="1")
     os.makedirs(tmp_path / "run", mode=0o700, exist_ok=True)
     proc = subprocess.run(["dbus-run-session", "--", sys.executable, os.path.join(HERE, "gui_driver.py"), APP,
                            scenario], env=env, capture_output=True, text=True, timeout=240)
@@ -93,7 +93,8 @@ def test_window_flows(tmp_path):
                  "restore_not_saved", "use_theme_selects", "search_filters", "story_queued", "skin_selected",
                  "media_options_page", "display_cards_include_status", "display_detail_open", "display_override",
                  "dashboard_selector_visible", "dashboard_state_hidden", "kojiro_active", "kojiro_inactive",
-                 "profile_card_sets_value", "profile_card_reverted", "renderers_stopped", "status_timer_removed"):
+                 "profile_card_sets_value", "profile_card_reverted", "renderers_stopped", "status_timer_removed",
+                 "tray_switches"):
         assert checks[name] is True, name
     assert checks["collapsed_at_default_width"] is False
     assert checks["brightness_controls"] >= 2

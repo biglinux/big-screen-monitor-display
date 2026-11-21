@@ -4,6 +4,8 @@ import base64
 import time
 
 import pytest
+
+from conftest import pixels
 from PIL import Image
 
 from bsmd import runtime, settings, telemetry, themes
@@ -77,7 +79,7 @@ def test_registry_and_settings_agree():
 def test_every_skin_every_size_playing(skin, size):
     view = make_view([wire(art="cover")], active="org.mpris.MediaPlayer2.spotify", art="cover")
     image, _theme = render(view, size, bmp_skin=skin)
-    assert len(set(image.resize((32, 32)).getdata())) > 8          # not a blank frame
+    assert len(set(pixels(image.resize((32, 32))))) > 8          # not a blank frame
 
 
 @pytest.mark.parametrize("skin", skins.SKIN_IDS)
@@ -155,7 +157,7 @@ def test_idle_modes(mode):
     theme.inactive_since = time.monotonic() - 10                   # paused for a while
     image = themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode=mode, bmp_idle_after=5), ctx)
     if mode == "rest":
-        assert max(max(px) for px in image.resize((40, 40)).getdata()) < 120
+        assert max(max(px) for px in pixels(image.resize((40, 40)))) < 120
 
 
 def test_idle_hands_over_to_another_theme_and_comes_back():

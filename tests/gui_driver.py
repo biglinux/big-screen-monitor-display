@@ -20,6 +20,12 @@ import config_gui  # noqa: E402
 from gi.repository import GLib  # noqa: E402
 
 from bsmd import settings  # noqa: E402
+from bsmd.displays import discovery  # noqa: E402
+
+# The displays come from the fake status only: whatever is plugged into the
+# machine running the tests must not appear (an unidentified USB device made
+# the "needs your choice" card show up and failed the dashboard checks).
+discovery.scan_usb = lambda sysfs=None: []
 
 context = GLib.MainContext.default()
 result = {"errors": [], "checks": {}}
@@ -91,6 +97,9 @@ def run_main(window):
     pump(1.5)
     check("hidden_previews_idle", frames(window) == before)
     check("renderers_inactive", not any(e["renderer"].active for e in window._previews))
+    trays = window.preferences_page.trays
+    check("tray_switches", sorted(trays.rows) == ["big-screen-monitor-deepcool", "big-screen-monitor-tray"]
+          and not any(row.get_active() for row in trays.rows.values()))
 
     # Edit -> pending bar -> apply -> saved.
     window.show_section("home")

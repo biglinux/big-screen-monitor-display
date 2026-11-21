@@ -4,6 +4,8 @@ palettes and contrast, animation levels, overlays, caches and regressions of the
 import time
 
 import pytest
+
+from conftest import pixels
 from PIL import Image
 
 from bsmd import settings, themes
@@ -70,7 +72,7 @@ def test_new_settings_are_validated():
 @pytest.mark.parametrize("size", SIZES)
 def test_every_modern_skin_every_size(skin, size):
     image, _theme = render(playing(), size, bmp_skin=skin)
-    assert len(set(image.resize((32, 32)).getdata())) > 8
+    assert len(set(pixels(image.resize((32, 32))))) > 8
 
 
 STATES = {
