@@ -36,6 +36,8 @@ from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO
 from .health import (DEGRADED, DISCONNECTED, FAILED, HEALTHY, RECOVERING, RETRYING, STARTING,
                      STOPPED)
 from .settings import atomic_write_json
+from .statusfile import (SYSTEM_STATUS, find_status_file, read_status, runtime_dir,  # noqa: F401 (public API)
+                         state_dir, status_path)
 
 log = logging.getLogger("bsmd")
 
@@ -51,26 +53,6 @@ LED_RGB = {"off": (0, 0, 0), "white": (255, 255, 255), "red": (255, 0, 0), "gree
            "blue": (0, 0, 255), "cyan": (0, 255, 255), "magenta": (255, 0, 255), "yellow": (255, 255, 0),
            "orange": (255, 128, 0), "purple": (128, 0, 255)}
 MAX_SPOOL_FILES = 32
-
-
-def runtime_dir():
-    base = os.environ.get("RUNTIME_DIRECTORY", "").split(":")[0]
-    if not base:
-        base = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or f"/tmp/bsmd-{os.getuid()}",
-                            "big-screen-monitor-display")
-    return base
-
-
-def state_dir():
-    base = os.environ.get("STATE_DIRECTORY", "").split(":")[0]
-    if not base:
-        base = os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state"),
-                            "big-screen-monitor-display")
-    return base
-
-
-def status_path():
-    return os.path.join(runtime_dir(), "status.json")
 
 
 class RenderContext:
@@ -1330,36 +1312,6 @@ def stopped_frame(width, height):
         width_ = draw.textlength(text, font=font_)
         draw.text(((width - width_) / 2, y), text, font=font_, fill=color)
     return image
-
-
-SYSTEM_STATUS = "/run/big-screen-monitor-display/status.json"
-
-
-def find_status_file():
-    """BSM_STATUS when set (development), else the freshest of system service and manual run."""
-    if os.environ.get("BSM_STATUS"):
-        return os.environ["BSM_STATUS"] if os.path.exists(os.environ["BSM_STATUS"]) else None
-    candidates = [SYSTEM_STATUS, status_path()]
-    best, best_mtime = None, -1.0
-    for path in filter(None, candidates):
-        try:
-            mtime = os.path.getmtime(path)
-        except OSError:
-            continue
-        if mtime > best_mtime:
-            best, best_mtime = path, mtime
-    return best
-
-
-def read_status(path=None):
-    path = path or find_status_file()
-    if not path:
-        return None
-    try:
-        with open(path, "r", encoding="utf-8") as handle:
-            return json.load(handle)
-    except (OSError, ValueError):
-        return None
 
 
 def spool_command(command, status_file=None):

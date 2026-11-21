@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A896" />
+      <stop offset="100%" stop-color="#028090" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" ry="14" fill="url(#bg)" stroke="#00C49F" stroke-width="1.5" />
+  <!-- DeepCool style plus mark -->
+  <rect x="26" y="12" width="12" height="40" rx="3" ry="3" fill="#FFFFFF" opacity="0.95" />
+  <rect x="12" y="26" width="40" height="12" rx="3" ry="3" fill="#FFFFFF" opacity="0.95" />
+</svg>

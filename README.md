@@ -6,12 +6,12 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.2.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.3.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-watchdog-30d475)
-![Testes](https://img.shields.io/badge/testes-1351%20passando-success)
+![Testes](https://img.shields.io/badge/testes-1403%20passando-success)
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
@@ -41,6 +41,16 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.3.0 — Bandejas do sistema e openSUSE/Regata OS
+
+Contribuição de Marcos Queiroz Gomes ([PR #11](https://github.com/ruscher/big-screen-monitor-display/pull/11)), integrada e validada em máquinas virtuais e em hardware real.
+
+- **Bandeja das telas USB** (`big-screen-monitor-tray`): galeria com miniaturas reais dos sete temas e suas variantes de cor, brilho com atalhos, desligar/religar a tela, quatro orientações e, com várias telas, a escolha de qual recebe a mudança. Acompanha a conexão e a desconexão pelo próprio serviço.
+- **Bandeja DeepCool Digital** (`big-screen-monitor-deepcool`): temperatura da CPU no ícone (°C/°F, cor pelo limite de alarme), o que o cooler está mostrando, campo exibido, unidade e alarme conforme cada família (AK, AG, LS, AK PRO, LD, MYSTIQUE), aviso na área de trabalho quando o alarme acende e cor dos LEDs pelo OpenRGB — só no dispositivo escolhido. Sem sensor, mostra "—", nunca um número inventado.
+- **Funciona onde há bandeja e onde não há**: KDE Plasma, Cinnamon, GNOME com a extensão AppIndicator e o Big WindowMaker mostram o ícone; no GNOME de fábrica e no Window Maker sem bandeja os mesmos controles abrem numa janela que explica como ter o ícone. Temas claro e escuro, Wayland e X11.
+- **openSUSE, Regata OS, Debian/Ubuntu e Fedora**: `install-system.sh` reconhece a distribuição pelo `os-release`, instala os pacotes certos (com a versão do Python no openSUSE), nunca toca no `settings.json`, guarda uma cópia verificada antes de atualizar e registra o que instalou para o `uninstall-system.sh` remover exatamente isso.
+- Validação: openSUSE Tumbleweed (Plasma Wayland), BigLinux (Plasma Wayland e X11), BigCommunity (GNOME), Arch Linux, Linux Mint (Cinnamon) e Big WindowMaker; matriz completa em [docs/20-compatibilidade](docs/20-compatibilidade.md), arquitetura em [docs/19-bandejas](docs/19-bandejas.md) e o relatório da integração em [docs/22-integracao-pr11](docs/22-integracao-pr11.md).
 
 ## ✨ Novidades da 5.2.0 — SmartMonitor 3,5" e Big Media Player mais confiável
 
@@ -521,13 +531,26 @@ A instalação:
 
 Atualizações preservam as configurações e **respeitam o serviço desativado**.
 
+### openSUSE · Regata OS · Debian/Ubuntu · Fedora
+
+```bash
+git clone https://github.com/biglinux/big-screen-monitor-display.git
+cd big-screen-monitor-display
+./install-system.sh --print-deps   # mostra os pacotes deste sistema
+sudo ./install-system.sh           # instala dependências, arquivos e o serviço
+sudo ./uninstall-system.sh         # remove (as configurações ficam; --purge também as apaga)
+```
+
+Requer Python 3.10 ou mais novo. Detalhes, garantias e testes sem root em [docs/21-instalacao-manual](docs/21-instalacao-manual.md).
+
 ### Dependências
 
 | Tipo | Pacotes |
 | --- | --- |
 | Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit` |
 | Janela | `python-gobject`, `python-cairo`, `glib2`, `gtk4`, `libadwaita` ≥ 1.6, `hicolor-icon-theme` |
-| Opcionais | `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
+| Bandejas | `python-pyqt6` (PyQt5 também serve) |
+| Opcionais | `openrgb` (cor dos LEDs dos coolers DeepCool), `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB) |
 | Build | `gettext`, `git` |
 
 ---
@@ -539,6 +562,8 @@ Atualizações preservam as configurações e **respeitam o serviço desativado*
 | Ação | Comando / caminho |
 | --- | --- |
 | Abrir a configuração | menu do sistema → *Big Screen Monitor Display* · `big-screen-monitor-config.sh` |
+| Bandeja das telas | menu → *Big Screen Monitor Tray* · `big-screen-monitor-tray` |
+| Bandeja dos coolers DeepCool | menu → *DeepCool Digital* · `big-screen-monitor-deepcool` |
 | Estado do serviço | `systemctl status big-screen-monitor-display` (a linha **Status** diz o que está acontecendo) |
 | Diagnóstico no terminal | `python3 /usr/share/big-screen-monitor-display/main.py --diagnose` |
 | Relatório JSON | `python3 /usr/share/big-screen-monitor-display/main.py --status` |

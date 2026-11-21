@@ -9,6 +9,7 @@ Skipped when PyGObject or dbus-daemon are missing (minimal CI images).
 import os
 import shutil
 import subprocess
+import sys
 import time
 
 import pytest
@@ -206,7 +207,7 @@ def test_agent_control_interface_single_instance(bus_address, monkeypatch, tmp_p
     env = dict(os.environ, DBUS_SESSION_BUS_ADDRESS=bus_address, BSM_CONFIG=str(config),
                XDG_RUNTIME_DIR=str(tmp_path), XDG_CACHE_HOME=str(tmp_path))
     main = os.path.join(os.path.dirname(__file__), "..", "usr", "share", "big-screen-monitor-display", "main.py")
-    proc = subprocess.Popen(["python3", main, "--media-agent"], env=env, stdout=subprocess.DEVNULL,
+    proc = subprocess.Popen([sys.executable, main, "--media-agent"], env=env, stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL)
     try:
         conn = connect(bus_address)
@@ -215,7 +216,7 @@ def test_agent_control_interface_single_instance(bus_address, monkeypatch, tmp_p
         assert state["type"] == "snapshot" and state["players"] == []
         ok, message = agent.call_agent(conn, "next")
         assert not ok and message == "no media player"
-        second = subprocess.run(["python3", main, "--media-agent"], env=env, timeout=15, capture_output=True)
+        second = subprocess.run([sys.executable, main, "--media-agent"], env=env, timeout=15, capture_output=True)
         assert second.returncode == 0          # already running: exits at once
         assert proc.poll() is None
     finally:
