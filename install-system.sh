@@ -111,7 +111,9 @@ install_deps() {
                   die "pacman could not install the packages; update the system (pacman -Syu) and run again." ;;
         suse) zypper --non-interactive install --no-recommends "${packages[@]}" ;;
         # update refreshes the package lists only (no upgrade); a fresh system has none.
-        debian) apt-get update && apt-get install -y --no-install-recommends "${packages[@]}" ;;
+        # A source that cannot be read (a live system's cdrom://) must not stop the install.
+        debian) apt-get update || warn "apt-get update reported errors; installing with the lists available"
+                apt-get install -y --no-install-recommends "${packages[@]}" ;;
         fedora) dnf install -y "${packages[@]}" ;;
         *) die "Unknown distribution: install the dependencies listed in README.md and use --skip-deps." ;;
     esac
