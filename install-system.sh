@@ -101,8 +101,16 @@ optional_for() {
     esac
 }
 
+check_python_version() {
+    # The program needs Python 3.10+; openSUSE Leap 15 (and systems based on it)
+    # ship 3.6 as python3, whose python36-* packages would not do.
+    python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null ||
+        die "python3 is $(python3 -V 2>&1 | cut -d' ' -f2); Python 3.10 or newer is needed (on openSUSE Leap use Tumbleweed or Slowroll)."
+}
+
 install_deps() {
     local family="$1" packages
+    check_python_version
     read -r -a packages <<< "$(deps_for "$family")"
     say "Installing dependencies for ${family} ($(os_field PRETTY_NAME)): ${packages[*]}"
     case "$family" in
