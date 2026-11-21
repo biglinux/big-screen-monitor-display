@@ -633,3 +633,38 @@ def test_session_commands_are_never_lost(qt_env, monkeypatch):
         server.close()
         del server
         gc.collect()
+
+
+def test_session_split_commands_are_kept(qt_env, monkeypatch):
+    """A command split across reads ("qu" + "it") still runs; the hang-up ends the last word."""
+    import socket as sockets
+    from screentray.app import ScreenTray
+    from traykit import base, session
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(qt_env.path))
+    qt_env.status([SCREEN])
+    qt_env.settings()
+    tray = make(qt_env, ScreenTray)
+    calls = []
+    server = base.listen(tray.app_id, lambda: calls.append("show"), lambda: calls.append("quit"))
+
+    def pump(until):
+        end = time.monotonic() + 3
+        while not until() and time.monotonic() < end:
+            qt_env.app.processEvents()
+            time.sleep(0.01)
+
+    try:
+        with sockets.socket(sockets.AF_UNIX, sockets.SOCK_STREAM) as client:
+            client.connect(session.socket_path(tray.app_id))
+            client.sendall(b"qu")
+            deadline = time.monotonic() + 0.3
+            pump(lambda: time.monotonic() > deadline)        # the half command is read
+            assert calls == []
+            client.sendall(b"it\nsh")
+            pump(lambda: calls == ["quit"])
+            assert calls == ["quit"]
+            client.sendall(b"ow")
+        pump(lambda: len(calls) == 2)
+        assert calls == ["quit", "show"]
+    finally:
+        server.close()

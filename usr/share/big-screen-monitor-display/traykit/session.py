@@ -72,13 +72,13 @@ def command(app_id):
 
 
 def start(app_id):
-    """Start the tray app in the background (tray icon only: ``--autostart``)."""
+    """Start the tray app in the background (tray icon only: ``--autostart``); the
+    process, or None when it could not be started."""
     try:
-        subprocess.Popen(command(app_id) + ["--autostart"], start_new_session=True, stdin=subprocess.DEVNULL,
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
+        return subprocess.Popen(command(app_id) + ["--autostart"], start_new_session=True,
+                                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except OSError:
-        return False
+        return None
 
 
 def qt_available():
@@ -127,6 +127,14 @@ def host_hint(in_window=True):
 OFFER_KEY = "tray_offer_done"
 
 
+def mark_chosen(load_settings, save_settings):
+    """The user switched a tray on or off: no automatic offer after that."""
+    data = load_settings()
+    if not data.get(OFFER_KEY):
+        data[OFFER_KEY] = True
+        save_settings(data)
+
+
 def kinds_present(status):
     """Tray apps that match the displays the service reports."""
     from bsmd import control
@@ -153,6 +161,7 @@ def ensure_trays(status, load_settings, save_settings, notify):
     switched_on = []
     present = kinds_present(status)
     data = load_settings()
+    # OFFER_KEY is also set by a switch in Preferences: a choice the user made is never undone.
     if host and present and not data.get(OFFER_KEY):
         for app_id in sorted(present):
             if not autostart.is_enabled(app_id):

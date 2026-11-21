@@ -391,6 +391,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             self.media_page.set_active(key == "big_media_player")
         if key == "home":
             self.dashboard.update()
+        elif key == "preferences" and hasattr(self, "preferences_page"):
+            self.preferences_page.trays.refresh()       # a tray menu may have changed it
         elif key == "diagnostics":
             self._refresh_diagnostics()
         elif key == "performance":
@@ -1095,6 +1097,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.service_fresh = self._status_fresh()
         self.displays_page.refresh()
         self._update_sidebar_status()
+        tray_settings.status_changed(self, load_gui_settings, save_gui_settings)
         if self.current_section == "home" and hasattr(self, "dashboard"):
             self.dashboard.update()
         if hasattr(self, "diag_rows") and self.current_section == "diagnostics":

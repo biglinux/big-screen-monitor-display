@@ -310,6 +310,7 @@ class CommandServer(QLocalServer):
     def __init__(self, on_show, on_quit):
         super().__init__()
         self.on_show, self.on_quit = on_show, on_quit
+        self._partial = {}       # connection -> end of a command not yet complete
         self.newConnection.connect(self._accept)
 
     def _accept(self):
@@ -328,6 +329,7 @@ class CommandServer(QLocalServer):
 
     def _gone(self, connection):
         self._read(connection)
+        self._run(self._partial.pop(connection, "").split())    # the hang-up ends the last word
         try:
             connection.deleteLater()
         except RuntimeError:
@@ -340,8 +342,17 @@ class CommandServer(QLocalServer):
             data = bytes(connection.readAll())
         except (RuntimeError, AttributeError):   # already destroyed by Qt
             return
+        # A command may arrive split across reads ("qu" + "it\n"): only words that a
+        # separator (or the hang-up) ended are run; the rest waits for the next read.
+        text = self._partial.pop(connection, "") + data.decode("ascii", "replace")
+        words = text.split()
+        if words and not text[-1].isspace():
+            self._partial[connection] = words.pop()
+        self._run(words)
+
+    def _run(self, words):
         try:
-            for word in data.decode("ascii", "replace").split():
+            for word in words:
                 if word == "quit":
                     log.info("asked to quit (configuration window)")
                     self.on_quit()

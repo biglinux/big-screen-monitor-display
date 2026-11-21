@@ -23,6 +23,7 @@ from traykit import autostart, session  # noqa: E402
 
 def ensure_running(window, load_gui_settings, save_gui_settings):
     """On window open (GLib timeout): start the switched-on tray apps; offer them once."""
+    window.tray_kinds = session.kinds_present(window.status)
     session.ensure_trays(window.status, load_gui_settings, save_gui_settings, window.toast)
     # The Preferences page may already be built (opened with --page preferences, or
     # visited in the first seconds): show what was just switched on and started.
@@ -32,6 +33,23 @@ def ensure_running(window, load_gui_settings, save_gui_settings):
         for delay in (1500, 4000):
             GLib.timeout_add(delay, page.trays.refresh)
     return False
+
+
+def status_changed(window, load_gui_settings, save_gui_settings):
+    """A new status: a kind of device that was not there when the window opened (or
+    at the last check) gets the same treatment as on window open."""
+    known = getattr(window, "tray_kinds", None)
+    if known is None:                       # window-open check not done yet
+        return
+    present = session.kinds_present(window.status)
+    window.tray_kinds = present
+    if present - known:
+        ensure_running(window, load_gui_settings, save_gui_settings)
+
+
+def _settings():
+    from .preferences_page import load_gui_settings, save_gui_settings   # (it imports this module)
+    return load_gui_settings, save_gui_settings
 
 
 class TrayGroup:
@@ -69,6 +87,7 @@ class TrayGroup:
             self.rows[app_id] = switch
             self.states[app_id] = state
         self._updating = False
+        self.launches = {}       # app id -> process started from a switch
         self.refresh()
 
     def refresh(self):
@@ -95,17 +114,37 @@ class TrayGroup:
         if self._updating:
             return
         try:
+            session.mark_chosen(*_settings())
             if row.get_active():
                 autostart.enable(app_id)
                 if not session.running(app_id):
-                    session.start(app_id)
+                    process = session.start(app_id)
+                    if process is not None:
+                        self.launches[app_id] = process
                 if session.tray_host_available() is False:
                     self.window.toast(_("Switched on; this desktop has no tray to show the icon."))
             else:
                 autostart.disable(app_id)
-                session.send(app_id, "quit")
+                if not session.send(app_id, "quit"):
+                    # Still starting (no socket yet): ask again until it can hear it.
+                    GLib.timeout_add(500, self._stop_launch, app_id, 20)
         except OSError as error:
             self.window.toast(str(error))
         # The app needs a moment to start (or to end) before its state is right.
         for delay in (1500, 4000):
             GLib.timeout_add(delay, self.refresh)
+
+    def _stop_launch(self, app_id, tries):
+        """Switched off while the app was still starting: end it once it listens."""
+        process = self.launches.get(app_id)
+        if self.rows[app_id].get_active():
+            return False                    # switched on again meanwhile
+        if session.send(app_id, "quit") or process is None or process.poll() is not None:
+            self.launches.pop(app_id, None)
+            return False
+        if tries <= 1:                      # never listened: end the process itself
+            process.terminate()
+            self.launches.pop(app_id, None)
+            return False
+        GLib.timeout_add(500, self._stop_launch, app_id, tries - 1)
+        return False
