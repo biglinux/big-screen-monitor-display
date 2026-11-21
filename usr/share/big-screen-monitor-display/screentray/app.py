@@ -177,6 +177,7 @@ class ScreenWindow(PanelWindow):
             self.cards[theme.id] = card
         self._columns = 0
         self._reflow(2)
+        self.scroll.viewport().installEventFilter(self)
         body.addWidget(grid_host)
 
         self.variant_title = section_label("")
@@ -260,13 +261,21 @@ class ScreenWindow(PanelWindow):
             self.grid.removeWidget(card)
             self.grid.addWidget(card, index // columns, index % columns)
 
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
+    def eventFilter(self, watched, event):
+        # The viewport's own size is the one that counts: the window's first
+        # resize arrives before the layout settles (seen on Wayland).
+        if watched is self.scroll.viewport() and event.type() == QtCore.QEvent.Type.Resize:
+            self._fit_columns()
+        return super().eventFilter(watched, event)
+
+    def _fit_columns(self):
         card = next(iter(self.cards.values()))
         spacing = self.grid.spacing()
         margins = self.body.contentsMargins()
         width = self.scroll.viewport().width() - margins.left() - margins.right()
-        self._reflow(max(1, min(4, (width + spacing) // (card.sizeHint().width() + spacing))))
+        # Some styles report a size hint below the card's minimum width: use the largest.
+        card_width = max(card.sizeHint().width(), card.minimumSizeHint().width(), card.minimumWidth())
+        self._reflow(max(1, min(4, (width + spacing) // (card_width + spacing))))
 
     def _slider_moved(self, value):
         self.bright_value.setText(f"{value}%")
