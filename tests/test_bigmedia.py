@@ -14,6 +14,11 @@ SIZES = [(480, 320), (320, 480), (320, 240), (800, 480), (160, 80), (80, 160), (
          (1280, 720)]
 
 
+def pixels_of(image):
+    """Pixel sequence (Image.getdata is deprecated since Pillow 12.1)."""
+    return image.get_flattened_data() if hasattr(image, "get_flattened_data") else image.getdata()
+
+
 class Ctx(runtime.RenderContext):
     def __init__(self, view=None, preview=False):
         super().__init__(preview=preview)
@@ -77,7 +82,7 @@ def test_registry_and_settings_agree():
 def test_every_skin_every_size_playing(skin, size):
     view = make_view([wire(art="cover")], active="org.mpris.MediaPlayer2.spotify", art="cover")
     image, _theme = render(view, size, bmp_skin=skin)
-    assert len(set(image.resize((32, 32)).getdata())) > 8          # not a blank frame
+    assert len(set(pixels_of(image.resize((32, 32))))) > 8          # not a blank frame
 
 
 @pytest.mark.parametrize("skin", skins.SKIN_IDS)
@@ -155,7 +160,7 @@ def test_idle_modes(mode):
     theme.inactive_since = time.monotonic() - 10                   # paused for a while
     image = themes.render_for_panel(theme, 480, 320, values(bmp_idle_mode=mode, bmp_idle_after=5), ctx)
     if mode == "rest":
-        assert max(max(px) for px in image.resize((40, 40)).getdata()) < 120
+        assert max(max(px) for px in pixels_of(image.resize((40, 40)))) < 120
 
 
 def test_idle_hands_over_to_another_theme_and_comes_back():

@@ -24,12 +24,13 @@ import time
 from ... import frames
 from ..base import DISCONNECTED, NOT_FOUND, PROTOCOL, TIMEOUT, Capabilities, DeviceInfo, DisplayError, \
     RasterDriver, percent
-from ..transport import SerialTransport
+from ..transport import SerialTransport, TcpTransport
 from . import protocol as fsp
 
 log = logging.getLogger("bsmd")
 
 MODEL = "FOSTON FS-707DC Touch Display"
+LINUX_MODEL = "FOSTON FS-707DC (BigFoston OS)"
 
 
 class FostonDisplay(RasterDriver):
@@ -181,13 +182,18 @@ class FostonDisplay(RasterDriver):
                     raise DisplayError(TIMEOUT, f"no answer to {what} from {self.port}")
                 self._cond.wait(min(remaining, 0.25))
 
+    NO_CLIENT = "the bsmd-ce client is not running on the device (start it from the navigator menu)"
+
+    def _open_transport(self):
+        if not self.port:
+            raise DisplayError(NOT_FOUND, f"{self.DRIVER}: no serial port")
+        # USB serial function of Windows CE: no RTS/CTS, the device paces itself.
+        return SerialTransport(self.port, rtscts=False, read_timeout=0.2).open()
+
     # ------------------------------------------------------------ contract
     def open(self):
         if self.transport is None:
-            if not self.port:
-                raise DisplayError(NOT_FOUND, f"{self.DRIVER}: no serial port")
-            # USB serial function of Windows CE: no RTS/CTS, the device paces itself.
-            self.transport = SerialTransport(self.port, rtscts=False, read_timeout=0.2).open()
+            self.transport = self._open_transport()
         self._error = None
         self._replies.clear()
         self._running = True
@@ -210,8 +216,7 @@ class FostonDisplay(RasterDriver):
         except DisplayError as error:
             self.close()
             if error.kind == TIMEOUT:
-                raise DisplayError(TIMEOUT, "the bsmd-ce client is not running on the device "
-                                            "(start it from the navigator menu)") from error
+                raise DisplayError(TIMEOUT, self.NO_CLIENT) from error
             raise
         except ValueError as error:
             self.close()
@@ -245,8 +250,8 @@ class FostonDisplay(RasterDriver):
                    "brightness": "registry backlight (experimental)" if ack.brightness else "not supported"}
         self.info = DeviceInfo(self.DRIVER, MODEL, width, height, location=self.port or "", details=details)
         self._prev = None
-        log.info("[%s] %s: %s, WinCE %s, %dx%d, %s", self.port, MODEL, details["client"], details["windows_ce"],
-                 width, height, details["oem"] or "?")
+        log.info("[%s] %s: %s, %s %s, %dx%d, %s", self.port, MODEL, details["client"],
+                 details["platform"] or "Windows CE", details["windows_ce"], width, height, details["oem"] or "?")
         return self.info
 
     def close(self):
@@ -379,3 +384,41 @@ class FostonDisplay(RasterDriver):
         while self.events:
             events.append(self.events.popleft())
         return events
+
+
+class FostonLinuxDisplay(FostonDisplay):
+    """The FOSTON FS-707DC running BigFoston OS (Linux).
+
+    The same FSP protocol, served by the BigFoston shell's "Big Screen" app on
+    TCP port 7707 of the device's USB network address (192.168.7.2). TCP over
+    the USB network does not lose data like the Windows CE serial class, so the
+    flow-control window is larger."""
+
+    DRIVER = "foston_bigfoston"
+    HOST = "192.168.7.2"
+    TCP_PORT = 7707
+    WINDOW = 128 * 1024
+    NO_CLIENT = ("the Big Screen app is not open on the FOSTON "
+                 "(BigFoston OS: Home > Big Screen)")
+
+    def __init__(self, port=None, transport=None, options=None, clock=time.monotonic, host_name=None,
+                 host=None, tcp_port=None):
+        super().__init__(port=port, transport=transport, options=options, clock=clock, host_name=host_name)
+        self.host = host or self.HOST
+        self.tcp_port = tcp_port or self.TCP_PORT
+        self.port = port or f"tcp://{self.host}:{self.tcp_port}"
+        self.capabilities.transport = "network"
+
+    def _open_transport(self):
+        return TcpTransport(self.host, self.tcp_port, read_timeout=0.2).open()
+
+    def open(self):
+        info = super().open()
+        details = dict(info.details)
+        details["linux"] = details.pop("windows_ce", "")
+        details.pop("usb_previous_client", None)
+        details["brightness"] = "backlight driver" if self.capabilities.brightness else "not supported"
+        self.capabilities.notes = ("BigFoston OS " + details.get("client", "?"),)
+        self.info = DeviceInfo(self.DRIVER, LINUX_MODEL, info.width, info.height, location=self.port,
+                               details=details)
+        return self.info

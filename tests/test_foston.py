@@ -506,7 +506,8 @@ def test_gallery_thumbnails_are_real_renders():
     ready = {key[1]: image for key, image in ui.thumbs.done.items() if image is not None}
     assert "standard" in ready or ready, "no thumbnail rendered"
     image = next(iter(ready.values()))
-    assert image.width > 50 and len(set(image.getdata())) > 20                # a real picture, not a fill
+    pixels = image.get_flattened_data() if hasattr(image, "get_flattened_data") else image.getdata()
+    assert image.width > 50 and len(set(pixels)) > 20                        # a real picture, not a fill
 
 
 def test_touch_ui_portrait_layout_has_reachable_buttons():

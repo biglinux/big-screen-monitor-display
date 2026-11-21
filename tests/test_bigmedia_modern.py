@@ -17,6 +17,11 @@ SIZES = [(480, 320), (320, 480), (320, 240), (800, 480), (480, 800), (160, 80), 
          (480, 480), (1280, 400)]
 
 
+def pixels_of(image):
+    """Pixel sequence (Image.getdata is deprecated since Pillow 12.1)."""
+    return image.get_flattened_data() if hasattr(image, "get_flattened_data") else image.getdata()
+
+
 @pytest.fixture(scope="module", autouse=True)
 def stats():
     from bsmd import telemetry
@@ -70,7 +75,7 @@ def test_new_settings_are_validated():
 @pytest.mark.parametrize("size", SIZES)
 def test_every_modern_skin_every_size(skin, size):
     image, _theme = render(playing(), size, bmp_skin=skin)
-    assert len(set(image.resize((32, 32)).getdata())) > 8
+    assert len(set(pixels_of(image.resize((32, 32))))) > 8
 
 
 STATES = {

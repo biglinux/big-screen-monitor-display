@@ -88,6 +88,9 @@ class Profile:
         if self.id == "foston_fs707dc":
             from .foston.driver import FostonDisplay
             return FostonDisplay(port, options=options)
+        if self.id == "foston_bigfoston":
+            from .foston.driver import FostonLinuxDisplay
+            return FostonLinuxDisplay(options=options)
         if self.id == "smartmonitor_hid":
             from .smartmonitor import driver as smartmonitor_driver
             return smartmonitor_driver.create(candidate.device, options)
@@ -172,6 +175,16 @@ PROFILES = (
             (Rule(WINCE_VID, (WINCE_SERIAL_PID,), PROBABLE),),
             "A", "device-clients/wince",
             notes=(N_("Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."),
+                   N_("Single-point resistive touchscreen: tap, hold and swipe on the panel itself."),)),
+    Profile("foston_bigfoston", "FOSTON FS-707DC (BigFoston OS)", "FOSTON (MediaTek MT3351 navigators with BigFoston OS)",
+            ("FOSTON FS-707DC 7\" (BigFoston OS)",), N_("reported by the device (800x480 on the FS-707DC)"),
+            "FSP over TCP on the USB network (Big Screen app of BigFoston OS)", "network",
+            # Linux USB gadget (g_cdc) of BigFoston OS: its serial number names the device;
+            # the HELLO handshake with the Big Screen app confirms it.
+            (Rule(0x0525, (0xA4AA,), CONFIRMED, serial=("BIGFOSTON-FS707DC",)),),
+            "A", "https://github.com/ruscher/foston-monitor",
+            notes=(N_("Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."),
+                   N_("Connects over the USB network to 192.168.7.2, TCP port 7707."),
                    N_("Single-point resistive touchscreen: tap, hold and swipe on the panel itself."),)),
 )
 

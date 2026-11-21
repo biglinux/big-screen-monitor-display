@@ -69,7 +69,8 @@ class FakePlayer:
                       "CanPause": True, "CanSeek": True, "CanControl": True}
         self.root = {"Identity": identity, "DesktopEntry": name, "CanQuit": False, "CanRaise": False}
         node = Gio.DBusNodeInfo.new_for_xml(XML)
-        self.ids = [conn.register_object("/org/mpris/MediaPlayer2", iface, self._call, self._get, self._set)
+        register = getattr(conn, "register_object_with_closures2", None) or conn.register_object
+        self.ids = [register("/org/mpris/MediaPlayer2", iface, self._call, self._get, self._set)
                     for iface in node.interfaces]
         self.owner = Gio.bus_own_name_on_connection(conn, self.name, Gio.BusNameOwnerFlags.NONE, None, None)
 
