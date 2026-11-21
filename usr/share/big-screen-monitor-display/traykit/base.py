@@ -22,6 +22,7 @@ from bsmd import control, i18n, settings
 from bsmd.i18n import _
 
 from . import autostart
+from .session import desktop_name, host_hint, socket_path
 from .qt import (QApplication, QIcon, QLocalServer, QLocalSocket, QObject, QSystemTrayIcon, QTimer, Signal,
                  exec_app)
 
@@ -44,25 +45,6 @@ def setup_logging(name):
         pass
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s: %(message)s",
                         handlers=handlers)
-
-
-def desktop_name():
-    return (os.environ.get("XDG_CURRENT_DESKTOP") or os.environ.get("DESKTOP_SESSION") or "").lower()
-
-
-def host_hint():
-    """Why there is no tray icon on this desktop, and what to do (translated)."""
-    desktop = desktop_name()
-    if "gnome" in desktop or "ubuntu" in desktop:
-        return _("GNOME shows tray icons only with the “AppIndicator and KStatusNotifierItem Support” "
-                 "extension. Install it from your distribution (gnome-shell-extension-appindicator) or from "
-                 "extensions.gnome.org and enable it in Extensions; the icon then appears the next time you "
-                 "open this app.")
-    if "windowmaker" in desktop or "wlmaker" in desktop:
-        return _("Window Maker has no notification area. Open this window from the applications menu or a Dock "
-                 "icon whenever you need these controls; the display keeps working without it.")
-    return _("This desktop has no notification area (system tray) running, so the controls are shown in this "
-             "window. Add a system tray to your panel to get the icon.")
 
 
 class _Bridge(QObject):
@@ -306,14 +288,10 @@ class TrayApp(QObject):
 # ------------------------------------------------------------ single instance
 
 
-def _server_name(app_id):
-    return f"{app_id}-{os.getuid()}"
-
-
 def activate_running(app_id):
     """True when another instance runs (it was asked to show its window)."""
     socket = QLocalSocket()
-    socket.connectToServer(_server_name(app_id))
+    socket.connectToServer(socket_path(app_id))
     if not socket.waitForConnected(500):
         return False
     socket.write(b"show\n")
@@ -323,17 +301,27 @@ def activate_running(app_id):
     return True
 
 
-def listen(app_id, on_show):
+def listen(app_id, on_show, on_quit):
+    """Single-instance socket: ``show`` raises the window, ``quit`` ends the app
+    (used by the configuration window's switch)."""
     server = QLocalServer()
-    QLocalServer.removeServer(_server_name(app_id))       # stale socket of a crashed instance
-    if not server.listen(_server_name(app_id)):
+    QLocalServer.removeServer(socket_path(app_id))       # stale socket of a crashed instance
+    if not server.listen(socket_path(app_id)):
         log.warning("single-instance socket unavailable: %s", server.errorString())
         return server
+
+    def read(connection):
+        for line in bytes(connection.readAll()).decode("ascii", "replace").split():
+            if line == "quit":
+                log.info("asked to quit (configuration window)")
+                on_quit()
+            elif line == "show":
+                on_show()
 
     def accept():
         while server.hasPendingConnections():
             connection = server.nextPendingConnection()
-            connection.readyRead.connect(lambda c=connection: (c.readAll(), on_show()))
+            connection.readyRead.connect(lambda c=connection: read(c))
             connection.disconnected.connect(connection.deleteLater)
 
     server.newConnection.connect(accept)
@@ -356,7 +344,7 @@ def run(app_cls, argv=None):
             log.info("already running: asked the running instance to show its window")
         return 0
     tray_app = app_cls(app, autostarted=autostarted)
-    server = listen(app_cls.app_id, tray_app.show_window)
+    server = listen(app_cls.app_id, tray_app.show_window, tray_app.quit)
     app.aboutToQuit.connect(tray_app.shutdown)          # also on logout (session manager)
     tray_app.start()
     if (show or not autostarted) and tray_app.tray is not None:

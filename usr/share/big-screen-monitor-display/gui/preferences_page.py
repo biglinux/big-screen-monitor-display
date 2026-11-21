@@ -1,5 +1,5 @@
-"""Preferences section: startup, window appearance, language, feedback,
-restore defaults and about.
+"""Preferences section: startup, system tray, window appearance, language,
+feedback, restore defaults and about.
 
 The window style (follow the desktop / light / dark) is a preference of
 this window only, kept in ``$XDG_CONFIG_HOME/big-screen-monitor-display/gui.json``
@@ -19,6 +19,7 @@ from bsmd import __version__  # noqa: E402
 from bsmd.i18n import _  # noqa: E402
 
 from . import components as ui  # noqa: E402
+from .tray_settings import TrayGroup  # noqa: E402
 
 STYLES = (("system", Adw.ColorScheme.DEFAULT), ("light", Adw.ColorScheme.FORCE_LIGHT),
           ("dark", Adw.ColorScheme.FORCE_DARK))
@@ -62,7 +63,8 @@ class PreferencesPage:
 
         startup = Adw.PreferencesGroup(title=_("Startup"))
         startup.add(w.startup_row)
-        page_items = [startup]
+        self.trays = TrayGroup(window)
+        page_items = [startup, self.trays.group]
 
         look = Adw.PreferencesGroup(title=_("Appearance"),
                                     description=_("Only this window. The display themes have their own colours."))
@@ -119,6 +121,8 @@ class PreferencesPage:
 
         content = ui.page_layout(*page_items, maximum=760)
         self.page = ui.navigation_page(_("Preferences"), content, tag="preferences")
+        # The tray's own menu can switch it too: show the current state each time.
+        self.page.connect("showing", lambda _page: self.trays.refresh())
 
     def _on_style(self, row, _pspec):
         style = STYLES[row.get_selected()][0]

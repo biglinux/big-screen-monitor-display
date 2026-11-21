@@ -40,7 +40,8 @@ from gui import components as ui  # noqa: E402
 from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.brother_away_page import BrotherAwayPage  # noqa: E402
 from gui.dashboard import Dashboard  # noqa: E402
-from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
+from gui import tray_settings  # noqa: E402
+from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings, save_gui_settings  # noqa: E402
 from gui.theme_gallery import ThemeGallery  # noqa: E402
 
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
@@ -1323,6 +1324,8 @@ class ConfigApp(Adw.Application):
             if self.page:
                 window.show_section(LEGACY_PAGES.get(self.page, self.page))
         window.present()
+        # Tray apps switched on in Preferences run whenever the window opens (and are offered once).
+        GLib.timeout_add(1500, tray_settings.ensure_running, window, load_gui_settings, save_gui_settings)
         if self.screenshot:
             GLib.timeout_add(2500, self._save_screenshot, window)
 
