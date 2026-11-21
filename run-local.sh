@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export PYTHONPATH="${SCRIPT_DIR}/usr/share/big-screen-monitor-display:${PYTHONPATH}"
+# Run Big Screen Monitor Display from this source tree (development), with the
+# system Python and its modules - nothing is downloaded or installed.
+#
+#   ./run-local.sh                 the monitor itself (manual run, as your user)
+#   ./run-local.sh config          the configuration window
+#   ./run-local.sh tray            the USB screens tray app
+#   ./run-local.sh deepcool        the DeepCool tray app
+#   ./run-local.sh <main.py args>  anything main.py accepts (--help)
+set -euo pipefail
 
-if [ ! -d "${SCRIPT_DIR}/.venv" ]; then
-    echo "Ambiente virtual não encontrado em ${SCRIPT_DIR}/.venv. Criando..."
-    python3 -m venv "${SCRIPT_DIR}/.venv" --system-site-packages
-    "${SCRIPT_DIR}/.venv/bin/pip" install Pillow pyusb pyserial
+APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/usr/share/big-screen-monitor-display"
+export PYTHONPATH="${APP_DIR}${PYTHONPATH:+:${PYTHONPATH}}"
+
+if ! python3 -c 'import PIL, numpy, psutil, usb, serial' 2>/dev/null; then
+    echo "Missing Python modules. Show the packages for this system with:" >&2
+    echo "    ./install-system.sh --print-deps" >&2
+    exit 1
 fi
 
-exec "${SCRIPT_DIR}/.venv/bin/python3" "${SCRIPT_DIR}/usr/share/big-screen-monitor-display/main.py" "$@"
+case "${1:-}" in
+    config) shift; exec python3 "${APP_DIR}/config_gui.py" "$@" ;;
+    tray) shift; exec python3 "${APP_DIR}/screentray/main.py" "$@" ;;
+    deepcool) shift; exec python3 "${APP_DIR}/deepcooltray/main.py" "$@" ;;
+    *) exec python3 "${APP_DIR}/main.py" "$@" ;;
+esac
