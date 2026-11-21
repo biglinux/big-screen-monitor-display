@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Screen Monitor Tray
+Comment=System Tray controller for USB secondary screen monitor
+Exec=/usr/bin/screen-monitor-tray.sh
+Icon=screen-monitor-tray
+Terminal=false
+Categories=System;Monitor;HardwareSettings;
+StartupNotify=false
+X-KDE-autostart-after=panel

@@ -5,6 +5,7 @@ Thumbnails are drawn by the same ``themes.render_for_panel`` the service
 uses, at the size of the selected display, in the window's thumbnail worker.
 """
 
+import copy
 import fnmatch
 
 import gi
@@ -176,6 +177,17 @@ class ThemeGallery:
 
     def _use(self, theme_id):
         self.window._set("theme", theme_id)
+        displays = copy.deepcopy(self.window.values.get("displays") or {})
+        changed = False
+        for disp_id, entry in displays.items():
+            if isinstance(entry, dict) and "theme" in entry:
+                entry.pop("theme", None)
+                changed = True
+        if changed:
+            self.window.values["displays"] = displays
+            self.window._refresh_dirty()
+            if hasattr(self.window, "displays_page"):
+                self.window.displays_page.refresh(force=True)
         self._sync_detail(theme_id)
         self.refresh()
         self.window.toast(_("Theme selected. Press Apply to send it to the display."))
