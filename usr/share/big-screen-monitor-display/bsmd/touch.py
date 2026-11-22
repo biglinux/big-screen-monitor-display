@@ -55,7 +55,12 @@ QUIT_CONFIRM_SECONDS = 4.0        # second tap on "Exit" within this time closes
 BRIGHTNESS_STEP = 10
 THUMB_REFRESH = 600.0             # s before gallery thumbnails are rendered again
 OVERRIDE_KEYS = ("theme", "brightness", "orientation", "std_scheme", "gk_theme_color", "planet_accent",
-                 "oc_scheme", "bmp_skin", "kojiro")
+                 "oc_scheme", "bmp_skin", "kojiro",
+                 # chosen in the Android app's own menu (per phone)
+                 "performance_profile", "touch_media", "android_quality", "android_resolution",
+                 "android_auto_rotate", "android_keep_screen_on", "android_burn_in")
+# Big Media Player controls a touch panel may send to the media agent (MPRIS).
+MEDIA_ACTIONS = ("play_pause", "next", "previous", "volume_up", "volume_down", "mute")
 PAGES = ("bar", "menu", "themes", "style", "orientation", "test")
 
 # Adwaita (dark) colours, as in the configuration window.
@@ -91,6 +96,8 @@ ORIENTATIONS = (("horizontal", N_("Horizontal"), "orientation-landscape"),
                 ("vertical", N_("Vertical"), "orientation-portrait-left"),
                 ("horizontal_flipped", N_("Horizontal (upside down)"), "orientation-landscape-inverse"),
                 ("vertical_flipped", N_("Vertical (upside down)"), "orientation-portrait-right"))
+MEDIA_LABELS = {"play_pause": N_("Play / pause"), "next": N_("Next track"), "previous": N_("Previous track"),
+                "volume_up": N_("Volume up"), "volume_down": N_("Volume down"), "mute": N_("Mute")}
 STORIES = (("coconut_tree", N_("The coconut tree")), ("philosopher", N_("The philosopher")),
            ("shark", N_("The shark")), ("raft", N_("The raft")), ("ufo", N_("The UFO")),
            ("crab_glasses", N_("The crab with glasses")), ("gull_lunch", N_("The seagull's lunch")),
@@ -365,7 +372,12 @@ class TouchOverrides:
             return isinstance(value, dict)
         if key in settings_mod.SCHEMA:
             return settings_mod._coerce(key, value)[1]
+        if key in settings_mod.DISPLAY_SCHEMA and settings_mod.DISPLAY_SCHEMA[key][0] != "text":
+            return settings_mod._coerce_spec(key, value, settings_mod.DISPLAY_SCHEMA[key])[1]
         return False
+
+    def valid(self, key, value):
+        return key in OVERRIDE_KEYS and self._valid(key, value)
 
     def apply(self, settings):
         """Settings with the panel's choices; stale ones (changed in the window) are dropped."""
@@ -515,8 +527,22 @@ class TouchUI:
             self.host.request("invalidate")
         elif action == "style":
             self._apply_style(arg, now)
+        elif action == "media":
+            if arg in MEDIA_ACTIONS and getattr(self.host, "media_command", None) is not None:
+                ok = self.host.media_command(arg)
+                self.toast = (_(MEDIA_LABELS.get(arg, arg)) if ok else _("No media player"), now + 1.2)
+                if self.page == "bar":
+                    self.until = now + OVERLAY_SECONDS
         elif action == "orientation":
+            if arg == "auto":
+                self._set("android_auto_rotate", True)
+                self.toast = (_("Automatic"), now + 1.6)
+                self._open(None, now)
+                self.host.request("invalidate")
+                return
             self._set("orientation", arg)
+            if self._device_oriented():
+                self._set("android_auto_rotate", False)
             label = next((label for value, label, _icon in ORIENTATIONS if value == arg), arg)
             self.toast = (_(label), now + 1.6)
             self._open(None, now)
@@ -570,6 +596,41 @@ class TouchUI:
         with self.lock:
             self._open("test", self.clock())
         self.host.wake()
+
+    def set_override(self, key, value):
+        """A choice made outside the overlay (the Android app's own menu)."""
+        with self.lock:
+            self._set(key, value)
+            if key == "orientation" and self._device_oriented():
+                self._set("android_auto_rotate", False)
+        self.host.wake()
+
+    def command(self, name):
+        """Open the menu or change theme from a button outside the frame (Android app)."""
+        now = self.clock()
+        with self.lock:
+            if name == "menu":
+                self._open("menu", now)
+            elif name == "theme_next":
+                self._cycle_theme(1, now)
+            elif name == "theme_prev":
+                self._cycle_theme(-1, now)
+            elif name == "close_overlay":
+                self._open(None, now)
+        self.host.wake()
+
+    def _device_oriented(self):
+        return bool(getattr(self.host, "device_oriented", lambda: False)())
+
+    def _media_player(self):
+        """(snapshot, active player) when the Big Media Player controls apply, else (None, None)."""
+        media = getattr(self.host, "media", None)
+        snapshot = media() if media is not None else None
+        if not snapshot or not snapshot.get("players"):
+            return None, None
+        players = snapshot["players"]
+        player = next((p for p in players if p.get("bus") == snapshot.get("active")), None) or players[0]
+        return snapshot, player
 
     def apply(self, settings):
         with self.lock:
@@ -749,8 +810,11 @@ class TouchUI:
         if not getattr(self.host, "brightness_supported", lambda: True)():
             # Only what the hardware really does: no backlight control on the FS-707DC firmware.
             layout = [entry for entry in layout if entry[1] != "brightness"]
+        media = self._media_layout(settings)
+        if media:
+            layout = media
         if width < height:          # portrait: fewer, larger buttons
-            layout = [entry for entry in layout if entry[0] != "label"]
+            layout = [entry for entry in layout if entry[0] not in ("label", "track")]
         units = sum(entry[3] for entry in layout)
         unit = (width - pad * (len(layout) + 1)) / units
         x = pad
@@ -761,6 +825,11 @@ class TouchUI:
             if icon == "label":
                 self._text(draw, center, _(THEME_LABELS.get(theme, theme or "")), bar * 0.28, bold=True,
                            max_width=w - 8)
+            elif icon == "track":
+                self._text(draw, (center[0], center[1] - bar * 0.12), arg[0], bar * 0.22, bold=True,
+                           max_width=w - 8)
+                self._text(draw, (center[0], center[1] + bar * 0.17), arg[1], bar * 0.17, fill=DIM,
+                           max_width=w - 8)
             else:
                 self._card(draw, box, action, arg, color=(*ACCENT, 240) if arg == "menu" else CARD)
                 size = int(min(w, bar - 2 * pad) * 0.5)
@@ -770,8 +839,38 @@ class TouchUI:
                                size * 0.8, bold=True)
                 elif not self._paste_icon(layer, icon, center, size):
                     self._text(draw, center, {"go-previous": "◀", "go-next": "▶", "view-app-grid": "▦",
-                                              "window-close": "✕"}.get(icon, "?"), size, bold=True)
+                                              "window-close": "✕", "media-skip-backward": "⏮",
+                                              "media-skip-forward": "⏭", "media-playback-start": "▶",
+                                              "media-playback-pause": "⏸", "audio-volume-low": "−",
+                                              "audio-volume-high": "+", "audio-volume-muted": "🔇"}.get(icon, "?"),
+                               size, bold=True)
             x += w + pad
+
+    def _media_layout(self, settings):
+        """Bar buttons for the Big Media Player: only what the player and the
+        volume control really offer (no button that would do nothing)."""
+        if settings.get("theme") != "big_media_player" or not settings.get("touch_media", True):
+            return None
+        snapshot, player = self._media_player()
+        if player is None:
+            return None
+        can = player.get("can") or {}
+        playing = player.get("status") == "Playing"
+        layout = []
+        if can.get("previous"):
+            layout.append(("media-skip-backward", "media", "previous", 1))
+        if can.get("pause" if playing else "play") or can.get("control"):
+            layout.append(("media-playback-pause" if playing else "media-playback-start", "media", "play_pause",
+                           1.2))
+        if can.get("next"):
+            layout.append(("media-skip-forward", "media", "next", 1))
+        title = player.get("title") or player.get("identity") or ""
+        layout.append(("track", None, (title, player.get("artist") or player.get("identity") or ""), 2.4))
+        if (snapshot.get("volume") or {}).get("available"):
+            layout += [("audio-volume-low", "media", "volume_down", 1), ("audio-volume-high", "media", "volume_up", 1),
+                       ("audio-volume-muted", "media", "mute", 1)]
+        layout += [("view-app-grid", "page", "menu", 1), ("window-close", "close", None, 1)]
+        return layout
 
     # pages -----------------------------------------------------------------
     def _page_menu(self, layer, draw, area, settings):
@@ -781,6 +880,8 @@ class TouchUI:
         options = style_options(theme)
         orientation = settings.get("orientation", "horizontal")
         o_label = next((label for value, label, _icon in ORIENTATIONS if value == orientation), orientation)
+        if self._device_oriented() and settings.get("android_auto_rotate"):
+            o_label = N_("Automatic")
         armed = self.clock() < self.quit_armed_until
         tiles = [("view-grid", _("Themes"), _(THEME_LABELS.get(theme, theme or "")), "page", "themes", ACCENT),
                  ("media-playback-start" if theme == "brother_away" else "color-select",
@@ -788,8 +889,10 @@ class TouchUI:
                   style_label or (_("Choose a story") if theme == "brother_away" else "—"),
                   "page", "style", (192, 97, 203)),
                  ("rotation-allowed", _("Orientation"), _(o_label), "page", "orientation", (38, 162, 105)),
-                 ("input-touchpad", _("Touch test"), _("Draw with your finger"), "test", None, (229, 165, 10)),
-                 ("find-location", _("Calibrate"), _("Device calibration"), "calibrate", None, (98, 160, 234))]
+                 ("input-touchpad", _("Touch test"), _("Draw with your finger"), "test", None, (229, 165, 10))]
+        if getattr(self.host, "can_calibrate", lambda: True)():
+            tiles.append(("find-location", _("Calibrate"), _("Device calibration"), "calibrate", None,
+                          (98, 160, 234)))
         if getattr(self.host, "can_quit", lambda: False)():
             tiles.append(("system-shutdown", _("Tap again to exit") if armed else _("Exit to the device menu"),
                           _("Back to the GPS main menu"), "quit", None, DANGER))
@@ -890,14 +993,26 @@ class TouchUI:
     def _page_orientation(self, layer, draw, area, settings):
         width, height = area[2] + area[0], area[3]
         current = settings.get("orientation", "horizontal")
-        cols = self._cols(width, height, 4, 2)
+        choices = ORIENTATIONS
+        if self._device_oriented():
+            # A phone or tablet can also follow its own sensor.
+            choices = (("auto", N_("Automatic"), "rotation-allowed"),) + ORIENTATIONS
+            if settings.get("android_auto_rotate"):
+                current = "auto"
+        cols = self._cols(width, height, len(choices) if len(choices) <= 4 else 3, 2)
         gap = max(8, (area[2] - area[0]) // 60)
-        for box, (value, label, _icon) in zip(self._grid(area, len(ORIENTATIONS), cols, gap), ORIENTATIONS):
+        for box, (value, label, icon) in zip(self._grid(area, len(choices), cols, gap), choices):
             selected = value == current
             self._card(draw, box, "orientation", value, selected=selected)
             bw, bh = box[2] - box[0], box[3] - box[1]
-            self._screen_glyph(draw, (box[0] + bw / 2, box[1] + bh * 0.42), min(bw * 0.62, bh * 0.5), value,
-                               ACCENT if selected else TEXT)
+            if value == "auto":
+                size = int(min(bw * 0.5, bh * 0.4))
+                if not self._paste_icon(layer, icon, (box[0] + bw / 2, box[1] + bh * 0.42), size,
+                                        ACCENT if selected else TEXT):
+                    self._text(draw, (box[0] + bw / 2, box[1] + bh * 0.42), "⟳", size, bold=True)
+            else:
+                self._screen_glyph(draw, (box[0] + bw / 2, box[1] + bh * 0.42), min(bw * 0.62, bh * 0.5), value,
+                                   ACCENT if selected else TEXT)
             self._text(draw, (box[0] + bw / 2, box[1] + bh * 0.84), _(label), min(bh * 0.065, 22),
                        bold=selected, max_width=bw - 12)
             if selected:

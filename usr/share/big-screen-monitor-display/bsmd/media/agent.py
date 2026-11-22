@@ -448,6 +448,7 @@ class Agent:
         publisher = ipc.Publisher()
         core = MediaCore(self.conn, self.store.get(), sink=publisher.publish, on_state=self._emit_changed)
         publisher.on_connect = lambda path: GLib.idle_add(self._resend)
+        publisher.on_command = lambda action: GLib.idle_add(self._remote_command, action)
         self.core, self.publisher, self.registration = core, publisher, registration
         self.unused_since = None
         publisher.start()
@@ -471,6 +472,13 @@ class Agent:
                                     Gio.DBusCallFlags.NONE, 2000, None)
             except GLib.Error:
                 pass
+
+    def _remote_command(self, action):
+        """A Big Media Player control touched on a display (checked again here)."""
+        if self.core is not None and action in ipc.REMOTE_ACTIONS:
+            log.info("media agent: %s from a touch display", action)
+            self.core.command(action)
+        return False
 
     def _resend(self):
         if self.core is not None:

@@ -144,6 +144,44 @@ class UsbSource:
         return result
 
 
+class AndroidSource:
+    """A paired phone or tablet; present while its app holds a link to the hub."""
+
+    def __init__(self, runtime, device_id):
+        self.runtime = runtime
+        self.device_id = device_id
+        self.profile = None
+
+    def present(self):
+        hub = self.runtime.android
+        return hub is not None and hub.available(self.device_id)
+
+    def create(self, settings):
+        from .displays.android.driver import AndroidDisplay
+        hub = self.runtime.android
+        link = hub.claim(self.device_id) if hub is not None else None
+        if link is None:
+            raise DisplayError(NOT_FOUND, "the phone is not connected")
+        return AndroidDisplay(link, settings, clock=self.runtime.clock,
+                              release=lambda old: hub.release(self.device_id, old))
+
+    def preferred_name(self):
+        hub = self.runtime.android
+        hello = hub.hello(self.device_id) if hub is not None else None
+        if hello is not None:
+            return hello.name
+        entry = hub.store.get(self.device_id) if hub is not None and hub.store is not None else None
+        return entry.get("name") if entry else None
+
+    def describe(self):
+        hub = self.runtime.android
+        hello = hub.hello(self.device_id) if hub is not None else None
+        return {"profile": "android", "name": self.preferred_name() or "Android",
+                "transport": "android", "validation": "B", "confidence": "confirmed", "ids": None,
+                "port": None, "model": " ".join(p for p in (hello.manufacturer, hello.model) if p) if hello else None,
+                "android": hello.android if hello else None}
+
+
 # ---------------------------------------------------------------- session
 
 class _TouchHost:
@@ -175,6 +213,27 @@ class _TouchHost:
     def can_quit(self):
         """The client on the device can be closed from the panel (FOSTON)."""
         return hasattr(self.session.driver, "quit_client")
+
+    def can_calibrate(self):
+        return hasattr(self.session.driver, "calibrate")
+
+    def device_oriented(self):
+        """The device rotates itself (Android): orientation also offers "automatic"."""
+        driver = self.session.driver
+        return driver is not None and getattr(driver.capabilities, "orientation", "panel") == "device"
+
+    def media(self):
+        """Media snapshot for the touch controls; None when off or unavailable."""
+        if not self.session.settings().get("touch_media", True):
+            return None
+        try:
+            state = self.session.ctx.media()
+        except Exception:  # noqa: BLE001
+            return None
+        return state.snapshot if state is not None and state.connected else None
+
+    def media_command(self, action, value=0.0):
+        return self.session.runtime.media_command(action, value)
 
     def brightness_supported(self):
         driver = self.session.driver
@@ -250,24 +309,63 @@ class DisplaySession:
         ui, driver = self.touch, self.driver
         if ui is None or driver is None or not self.settings().get("touch_enabled", True):
             return
-        x, y = touch.native_to_render(event.x, event.y, driver.native_size, self.settings().get("orientation"))
+        x, y = touch.native_to_render(event.x, event.y, driver.native_size, self._orientation(self.settings()))
         self.stats["touch_events"] = self.stats.get("touch_events", 0) + 1
         self.stats["touch_latency_ms"] = round((self.clock() - event.received) * 1000.0, 1)
         ui.handle(event.kind, x, y)
+
+    # Settings the app's own menu may change on this display (touch overrides:
+    # the configuration window still wins as soon as it changes the same key).
+    DEVICE_SETTABLE = ("android_quality", "android_resolution", "android_auto_rotate", "android_keep_screen_on",
+                       "android_burn_in", "performance_profile", "orientation", "touch_media", "brightness", "theme")
+
+    def _on_device_command(self, name, body):
+        """A command from the app's own menu (the driver checked it is on its list)."""
+        ui = self.touch
+        if name == "set":
+            key, value = body.get("key"), body.get("value")
+            if ui is None or key not in self.DEVICE_SETTABLE or not ui.overrides.valid(key, value):
+                return
+            ui.set_override(key, value)
+            if key == "brightness":
+                self.request("brightness", value)
+            self.request("device_settings")
+            self.request("invalidate")
+            self.wake_render.set()
+            return
+        if ui is None or not self.settings().get("touch_enabled", True):
+            return
+        if name == "media":
+            action = body.get("action")
+            if action in touch.MEDIA_ACTIONS and self.settings().get("touch_media", True):
+                self.runtime.media_command(action)
+            return
+        ui.command(name)
 
     def name(self):
         name = self.settings().get("name")
         if name:
             return name
+        preferred = getattr(self.source, "preferred_name", None)
+        if preferred is not None and preferred():
+            return preferred()
         if self.device_info:
             return self.device_info.model
         return self.source.describe().get("name") or self.id
+
+    def _orientation(self, settings):
+        """Mounting the runtime rotates frames for; a device that rotates itself
+        (Android) gets frames already drawn at its own aspect."""
+        driver = self.driver
+        if driver is not None and getattr(driver.capabilities, "orientation", "panel") == "device":
+            return "horizontal"
+        return settings.get("orientation")
 
     def _render_size(self, settings):
         if not self.device_info:
             return None
         native = self.driver.native_size if self.driver else (self.device_info.width, self.device_info.height)
-        return frames.render_size(native, settings.get("orientation"))
+        return frames.render_size(native, self._orientation(settings))
 
     def _model_name(self):
         return self.device_info.model if self.device_info else None
@@ -290,6 +388,8 @@ class DisplaySession:
             self.request("leds", new.get("led_color"))
         if new.get("orientation") != old.get("orientation"):
             self.request("invalidate")
+        if hasattr(self.driver, "apply_settings"):
+            self.request("device_settings")
         self.wake_render.set()
 
     # ------------------------------------------------------------ lifecycle
@@ -531,7 +631,7 @@ class DisplaySession:
             if self.driver.capabilities.sensors and now - self.last_sensors > 5.0:
                 self.last_sensors = now
                 self._read_sensors()
-            image = frames.to_native(frame, self.driver.native_size, self.settings().get("orientation"))
+            image = frames.to_native(frame, self.driver.native_size, self._orientation(self.settings()))
             self._io("present", lambda: self.driver.present(image))
         self._close_display()
 
@@ -574,6 +674,8 @@ class DisplaySession:
                 theme = self.theme
                 if theme is not None and hasattr(theme, "play_story"):
                     theme.play_story(args[0])
+            elif command == "device_settings" and hasattr(self.driver, "apply_settings"):
+                self._io("settings", lambda: self.driver.apply_settings(self.settings()))
             elif command == "quit_client" and hasattr(self.driver, "quit_client"):
                 # The device closes its client and returns to its own menu (USB back to storage).
                 self.record("client_quit", health.SEVERITY_INFO, "client closed on the device by request")
@@ -644,10 +746,9 @@ class DisplaySession:
             if self.stop_event.is_set() and self.link.state in (HEALTHY, DEGRADED) and \
                     getattr(driver.capabilities, "output", "raster") != TELEMETRY:
                 try:
-                    settings = self.settings()
+                    orientation = self._orientation(self.settings())
                     driver.present(frames.to_native(stopped_frame(*frames.render_size(
-                        driver.native_size, settings.get("orientation"))), driver.native_size,
-                        settings.get("orientation")))
+                        driver.native_size, orientation)), driver.native_size, orientation))
                 except Exception:  # noqa: BLE001 - best effort on shutdown
                     pass
             driver.close()
@@ -725,6 +826,10 @@ class DisplaySession:
         self.device_info = info
         self.ctx.shape = getattr(driver.capabilities, "shape", "rect")
         self._setup_touch(driver)
+        if hasattr(driver, "on_command"):
+            driver.on_command = self._on_device_command
+        if hasattr(driver, "on_wake"):
+            driver.on_wake = self.wake_render.set
         self.last_io = self.last_full = self.clock()
         took = None if self.recovery_started is None else round(self.clock() - self.recovery_started, 2)
         self.link.to(HEALTHY, "display ready")
@@ -797,7 +902,7 @@ class DisplaySession:
         image = themes.intro_frame(size[0], size[1], settings)
         if image is not None and self.driver is not None:
             self._io("intro", lambda: self.driver.present(
-                frames.to_native(image, self.driver.native_size, settings.get("orientation"))))
+                frames.to_native(image, self.driver.native_size, self._orientation(settings))))
             self.stop_event.wait(0.6)
 
     def _connect_failed(self, error, driver):
@@ -939,7 +1044,7 @@ class Runtime:
     SUPERVISE_EVERY = 1.0
 
     def __init__(self, store, notifier=None, simulate=None, service=False,
-                 status_file=None, state_directory=None, clock=time.monotonic, scan=None):
+                 status_file=None, state_directory=None, clock=time.monotonic, scan=None, android=None):
         self.store = store
         self.notifier = notifier
         if simulate is not None and not isinstance(simulate, (list, tuple)):
@@ -976,6 +1081,15 @@ class Runtime:
         self._removed_recoveries = 0
         self.media_hub = None          # started when a display uses the Big Media Player theme
         self._media_lock = threading.Lock()   # sessions ask from their own threads: start it once
+        # Android phones and tablets (bsmd/displays/android). The hub listens on the
+        # network only when "android_network" is on; tests pass their own hub.
+        if android is None and simulate is None:
+            from .displays.android.hub import AndroidHub
+            android = AndroidHub(self.state_directory, on_link=self._android_link_ready, clock=clock)
+        elif android is not None and android.on_link is None:
+            android.on_link = self._android_link_ready
+        self.android = android
+        self._android_wake = threading.Event()
 
     # ------------------------------------------------------------ compatibility
     @property
@@ -1089,6 +1203,14 @@ class Runtime:
             if session.theme is not None and session.theme.info.id == "big_media_player":
                 session.wake_render.set()
 
+    def media_command(self, action, value=0.0):
+        """A Big Media Player control touched on a panel: forwarded to the media
+        agent of the active session (MPRIS there). False when nobody can do it."""
+        hub = self.media_hub
+        if hub is None or not hasattr(hub, "command"):
+            return False
+        return hub.command(action, value)
+
     def wake_collector_needs(self):
         sessions = [s for s in list(self.sessions.values()) if s.theme is not None]
         ids = {s.theme.info.id for s in sessions}
@@ -1127,6 +1249,7 @@ class Runtime:
 
     def stop(self):
         self.stop_event.set()
+        self._android_wake.set()
         for session in list(self.sessions.values()):
             session.stop()
 
@@ -1168,7 +1291,9 @@ class Runtime:
             if now - last_status >= self.STATUS_EVERY:
                 last_status = now
                 self.write_status()
-            self.stop_event.wait(self.SUPERVISE_EVERY)
+            self._android_wake.wait(self.SUPERVISE_EVERY)
+            if self.stop_event.is_set():
+                break
         self._shutdown()
         return self.exit_code
 
@@ -1176,6 +1301,8 @@ class Runtime:
         if self.notifier:
             self.notifier.stopping()
         self.collector.stop()
+        if self.android is not None:
+            self.android.stop()
         if self.media_hub is not None:
             self.media_hub.stop()
         sessions = list(self.sessions.values())
@@ -1215,6 +1342,8 @@ class Runtime:
                 self._add_session(candidate.id, UsbSource(self, candidate.id))
         self.pending = pending
         for display_id in list(self.sessions):
+            if display_id.startswith("android-"):
+                continue                  # managed by _supervise_android
             if (display_id not in self.candidates
                     and now - self.last_seen.get(display_id, now) > self.SESSION_LINGER):
                 self._remove_session(display_id, "display unplugged")
@@ -1225,6 +1354,53 @@ class Runtime:
                                       "no supported display connected", action="waiting for it")
             if self.idle_link.state == DISCONNECTED:
                 self.idle_link.to(RETRYING, "polling for displays")
+
+    # ------------------------------------------------------------ android
+    def _android_link_ready(self, _device_id):
+        """A phone finished its handshake (hub thread): add its session soon."""
+        self._android_wake.set()
+
+    def _supervise_android(self):
+        hub = self.android
+        settings = self._settings()
+        if not hub.ready and not getattr(self, "_android_prepared", False):
+            self._android_prepared = True     # identity and paired list (shown in the window)
+            hub.prepare()
+        # Network on: every interface (TLS, paired devices only). Network off but USB
+        # on: loopback only, for phones tunnelled over USB debugging (adb reverse).
+        host = "0.0.0.0" if settings.get("android_network") else \
+            ("127.0.0.1" if settings.get("android_usb", True) else None)
+        if host is not None:
+            port = int(settings.get("android_port", 7717))
+            if (hub.port, hub.host) != (port, host) and not hub.listen(port, host) and \
+                    getattr(self, "_android_error", None) != hub.error:
+                self.incidents.record("android_listen", health.SEVERITY_WARNING, hub.error or "cannot listen",
+                                      action="Android phones cannot connect over the network")
+            self._android_error = hub.error
+        elif hub.listener is not None:
+            hub.stop_listening()
+        aoa = getattr(hub, "aoa", None)
+        if aoa is not None:
+            aoa.step(settings)
+        self._android_wake.clear()
+        now = self.clock()
+        from .displays.android.protocol import display_id
+        for device_id in hub.devices():
+            display = display_id(device_id)
+            self.last_seen[display] = now
+            entry = settings_mod.merged(settings, display)
+            if not entry.get("enabled", True):
+                if display in self.sessions:
+                    self._remove_session(display, "display disabled in the settings")
+                hub.disconnect(device_id, "disabled")
+                continue
+            if display not in self.sessions:
+                self._add_session(display, AndroidSource(self, device_id))
+        for display in [d for d in self.sessions if d.startswith("android-")]:
+            session = self.sessions[display]
+            if (session.driver is None and not session.source.present()
+                    and now - self.last_seen.get(display, now) > self.SESSION_LINGER):
+                self._remove_session(display, "phone disconnected")
 
     # ------------------------------------------------------------ supervisor
     def _supervise(self):
@@ -1239,6 +1415,12 @@ class Runtime:
             except Exception as error:  # noqa: BLE001 - never let discovery stop the supervisor
                 log.exception("discovery failed")
                 self.incidents.record("discovery_error", health.SEVERITY_WARNING, repr(error))
+        if self.android is not None:
+            try:
+                self._supervise_android()
+            except Exception as error:  # noqa: BLE001 - never let Android stop the supervisor
+                log.exception("android supervision failed")
+                self.incidents.record("android_error", health.SEVERITY_WARNING, repr(error))
         self._read_spool()
         self.wake_collector_needs()       # Kojiro widgets can change what must be sampled
         reasons = []
@@ -1323,6 +1505,21 @@ class Runtime:
             self.request("clear_pattern", display=display)
         elif action in ("calibrate", "touch_test", "quit_client"):
             self.request(action, display=display)
+        elif action.startswith("android_"):
+            hub = self.android
+            if hub is None:
+                return
+            if action == "android_pair_open":
+                hub.open_pairing(command["ticket"], command["secret"], command["seconds"])
+            elif action == "android_pair_close":
+                hub.close_pairing()
+            elif action in ("android_approve", "android_deny"):
+                hub.decide(command["request"], action == "android_approve")
+            elif action == "android_revoke":
+                hub.revoke(display)
+                if display in self.sessions:
+                    self._remove_session(display, "pairing removed")
+            self.write_status()
         else:
             self.request("pattern", command["pattern"], float(command["seconds"]), display=display)
 
@@ -1371,6 +1568,7 @@ class Runtime:
             "sound_events": next((list(s.theme.sound_events) for s in sessions
                                   if getattr(s.theme, "sound_events", None)), []),
             "media": self.media_hub.status() if self.media_hub is not None else None,
+            "android": self.android.status() if self.android is not None else None,
         }
 
     def write_status(self):

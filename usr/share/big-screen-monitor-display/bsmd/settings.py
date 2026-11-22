@@ -81,6 +81,13 @@ SCHEMA = {
     "network_iface": (*_choice("auto", "eth", "wifi"), "auto"),
     "language": (*_choice("auto", "pt", "en"), "auto"),
     "performance_profile": (*_choice("auto", "economy", "balanced", "fluid"), "auto"),
+    # Android phones and tablets as displays (bsmd/displays/android). The service
+    # only listens on the local network when this is switched on.
+    "android_network": (*BOOL, False),
+    "android_port": (*_int(1024, 65535), 7717),
+    # USB cable without debugging: Android Open Accessory, only for phones
+    # already paired (or plugged while "Add Android" is open).
+    "android_usb": (*BOOL, True),
     "gk_theme_color": (*_choice("urlicht", "classic", "cyber_red"), "urlicht"),
     # Standard dashboard ("Padrão")
     "std_scheme": (*_choice(*STD_SCHEMES), "dark"),
@@ -280,13 +287,24 @@ DISPLAY_SCHEMA = {
     "rev_c_size": (*_choice("auto", "2.1", "2.8", "5", "8.8"), "auto"),
     "led_color": (*_choice(*LED_COLORS), "off"),
     "touch_enabled": (*BOOL, True),       # touch panels (FOSTON): interact on the panel itself
+    "touch_media": (*BOOL, True),         # Big Media Player controls on a touch panel
+    # Android displays: picture quality, render size (long side), rotation and screen.
+    "android_quality": (*_choice("auto", "lossless", "balanced", "economy"), "auto"),
+    "android_resolution": (*_choice("auto", "native", "1920", "1280", "960", "640"), "auto"),
+    "android_auto_rotate": (*BOOL, False),
+    "android_keep_screen_on": (*BOOL, True),
+    "android_burn_in": (*BOOL, True),
 }
-GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback"}
+GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback", "android_network",
+               "android_port", "android_usb"}
 MAX_DISPLAYS = 16
 # Per-display commands accepted from the configuration window (command spool).
-SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test", "quit_client")
+SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test", "quit_client",
+                 "android_pair_open", "android_pair_close", "android_approve", "android_deny", "android_revoke")
 PATTERN_NAMES = ("identify", "bars", "grid", "gradient", "orientation", "white", "black")
-DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?)$")
+DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?|android-[0-9a-f]{12})$")
+ANDROID_SECRET = re.compile(r"^[A-Za-z0-9_-]{22,64}$")      # base64url, >= 128 bits
+ANDROID_REQUEST = re.compile(r"^[0-9a-f]{16}$")
 
 
 def defaults():
@@ -353,6 +371,24 @@ def validate_command(command):
         seconds = command.get("seconds", 10)
         clean["pattern"] = command["pattern"]
         clean["seconds"] = max(2, min(60, int(seconds))) if isinstance(seconds, (int, float)) else 10
+    elif action == "android_pair_open":
+        # The window generates the pairing secret and shows it as a QR code; it
+        # reaches the service only through this root-owned spool, never the
+        # world-readable status file.
+        secret, ticket = command.get("secret"), command.get("ticket")
+        if not (isinstance(secret, str) and ANDROID_SECRET.match(secret)
+                and isinstance(ticket, str) and ANDROID_REQUEST.match(ticket)):
+            return None
+        seconds = command.get("seconds", 300)
+        clean.update(secret=secret, ticket=ticket,
+                     seconds=max(30, min(900, int(seconds))) if isinstance(seconds, (int, float)) else 300)
+    elif action in ("android_approve", "android_deny"):
+        request = command.get("request")
+        if not (isinstance(request, str) and ANDROID_REQUEST.match(request)):
+            return None
+        clean["request"] = request
+    elif action == "android_revoke" and not display.startswith("android-"):
+        return None
     return clean
 
 
