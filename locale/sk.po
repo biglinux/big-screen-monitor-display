@@ -4134,7 +4134,7 @@ msgid ""
 msgstr ""
 "1. Nainštalujte do telefónu aplikáciu Big Screen Monitor Display ({url}).\n"
 "2. Pripojte telefón do rovnakej siete ako tento počítač.\n"
-"3. Namierte fotoaparát telefónu na tento kód a otvorte odkaz, alebo otvorte aplikáciu a ťuknite na „Naskenovať kód“."
+"3. Namierte fotoaparát telefónu na tento kód a otvorte odkaz, alebo otvorte aplikáciu a ťuknite na „Scan the code“."
 
 #: usr/share/big-screen-monitor-display/gui/android_page.py:291
 msgid "Pairing QR code"

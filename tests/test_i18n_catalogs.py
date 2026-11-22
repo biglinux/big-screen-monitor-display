@@ -20,7 +20,9 @@ def _msgids(path):
     """Message ids of a .po/.pot file (multi-line strings joined)."""
     text = subprocess.run(["msgcat", "--no-wrap", "--no-location", path], capture_output=True, text=True,
                           check=True).stdout
-    return set(re.findall(r'^msgid "(.+)"$', text, re.M))
+    ids = set(re.findall(r'^msgid "(.+)"$', text, re.M))
+    plurals = set(re.findall(r'^msgid "(.+)"\nmsgid_plural "(.+)"$', text, re.M))
+    return ids | {f"{one}\0{many}" for one, many in plurals}
 
 
 @needs_gettext
@@ -48,6 +50,9 @@ def test_catalog_is_valid_and_complete(name):
                             capture_output=True, text=True, env=dict(os.environ, LC_ALL="C"))
     assert result.returncode == 0, result.stderr
     assert "fuzzy" not in result.stderr and "untranslated" not in result.stderr, result.stderr
+    # every message of the template is in the catalog (none deleted by hand)
+    compared = subprocess.run(["msgcmp", path, POT], capture_output=True, text=True, env=dict(os.environ, LC_ALL="C"))
+    assert compared.returncode == 0, compared.stderr
     with open(path, encoding="utf-8") as handle:
         header = handle.read(4000)
     assert f'"Language: {name[:-3]}\\n"' in header

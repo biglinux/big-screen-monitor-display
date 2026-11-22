@@ -62,3 +62,26 @@ def test_original_maps_a_translation_back(monkeypatch):
     monkeypatch.setattr(i18n, "_translation", Catalog())
     assert i18n.original("ПАМЯТЬ") == "MEMORY"
     assert i18n.original("other") == "other"
+
+
+def test_original_undoes_formatted_and_joined_messages(monkeypatch):
+    class Catalog:
+        _catalog = {"": "header", ("{count} process", 0): "{count} 个进程", "up {time}": "运行 {time}",
+                    "Free {value:.1f} GB": "可用 {value:.1f} GB"}
+    monkeypatch.setattr(i18n, "_translation", Catalog())
+    assert i18n.original("589 个进程") == "589 process"
+    assert i18n.original("可用 3.5 GB") == "Free 3.5 GB"
+    assert i18n.original("运行 1d 19:40  ·  589 个进程  ·  performance") == "up 1d 19:40  ·  589 process  ·  performance"
+    assert i18n.original("nothing") == "nothing"
+
+
+def test_metrics_cover_the_fallback_face(monkeypatch):
+    path = fonts._system_font_for("使用", False)
+    if path is None:
+        pytest.skip("no CJK font installed")
+    font = fonts.truetype(DEJAVU, 14)
+    before = font.getmetrics()
+    font.getlength("使用率")                                         # picks the fallback face
+    after = font.getmetrics()
+    other = fonts._ORIGINAL_TRUETYPE(path, 14).getmetrics()
+    assert after == (max(before[0], other[0]), max(before[1], other[1]))

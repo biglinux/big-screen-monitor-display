@@ -107,6 +107,14 @@ class FallbackFont(ImageFont.FreeTypeFont):
             self._choice[text] = choice
         return choice
 
+    def getmetrics(self):
+        """Ascent and descent covering this face and every fallback it has used."""
+        ascent, descent = super().getmetrics()
+        for fallback in list(self._fallbacks.values()):
+            other = fallback.getmetrics()
+            ascent, descent = max(ascent, other[0]), max(descent, other[1])
+        return ascent, descent
+
     # Pillow measures and draws through these; each one asks the font that
     # will really draw the text.
     def getmask(self, text, *args, **kwargs):

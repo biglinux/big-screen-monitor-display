@@ -4134,7 +4134,7 @@ msgid ""
 msgstr ""
 "1. Instalirajte aplikaciju Big Screen Monitor Display na telefon ({url}).\n"
 "2. Povežite telefon na istu mrežu kao i ovo računalo.\n"
-"3. Usmjerite kameru telefona na ovaj kôd i otvorite poveznicu ili otvorite aplikaciju i dodirnite „Skeniraj kôd”."
+"3. Usmjerite kameru telefona na ovaj kôd i otvorite poveznicu ili otvorite aplikaciju i dodirnite „Scan the code”."
 
 #: usr/share/big-screen-monitor-display/gui/android_page.py:291
 msgid "Pairing QR code"
