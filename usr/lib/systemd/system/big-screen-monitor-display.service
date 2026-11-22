@@ -63,11 +63,16 @@ LockPersonality=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 RestrictNamespaces=yes
-# AF_INET only for the FOSTON with BigFoston OS (FSP over TCP on its USB
-# network, 192.168.7.2:7707); every other IP address stays blocked.
+# AF_INET for the FOSTON with BigFoston OS (FSP over TCP on its USB network,
+# 192.168.7.2:7707) and for Android displays (TLS on TCP 7717, discovery on
+# UDP 7718). The service only listens on the local network when "Android
+# phones over the network" is switched on (off by default); without it, only
+# 127.0.0.1 (adb reverse). Public addresses stay blocked either way: a phone
+# can only reach the service from loopback, private and link-local networks
+# (home Wi-Fi, Ethernet, USB tethering).
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET
 IPAddressDeny=any
-IPAddressAllow=127.0.0.0/8 ::1/128 192.168.7.0/24
+IPAddressAllow=127.0.0.0/8 ::1/128 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
 SystemCallErrorNumber=EPERM

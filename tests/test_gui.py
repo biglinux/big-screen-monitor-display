@@ -42,11 +42,12 @@ def gui_available():
 needs_gui = pytest.mark.skipif(not gui_available(), reason="needs a graphical session with GTK4/libadwaita")
 
 
-def fake_status(path, displays):
+def fake_status(path, displays, extra=None):
     status = {"version": "test", "state": "healthy", "uptime_s": 60, "stalled": False, "recoveries": 0,
               "device": displays[0]["device"] if displays else None, "displays": displays, "pending": [],
               "incidents": [], "stats": {"fps": 8.0, "target_fps": 8}, "process": {"cpu_percent": 1.0,
                                                                                        "rss_mb": 80}}
+    status.update(extra or {})
     with open(path, "w", encoding="utf-8") as handle:
         json.dump(status, handle)
     os.utime(path, (time.time(), time.time()))
@@ -61,12 +62,12 @@ def simulated(display_id, size):
             "recoveries": 0}
 
 
-def drive(tmp_path, scenario, displays=None):
+def drive(tmp_path, scenario, displays=None, extra=None):
     config = tmp_path / "settings.json"
     settings.save(settings.defaults(), str(config))
     status = tmp_path / "status.json"
     if displays is not None:
-        fake_status(status, displays)
+        fake_status(status, displays, extra)
     env = dict(os.environ, BSM_CONFIG=str(config), BSM_STATUS=str(status), GSETTINGS_BACKEND="memory",
                XDG_CONFIG_HOME=str(tmp_path / "config"), XDG_CACHE_HOME=str(tmp_path / "cache"),
                XDG_STATE_HOME=str(tmp_path / "state"), XDG_RUNTIME_DIR=str(tmp_path / "run"), LANGUAGE="en",
@@ -231,3 +232,44 @@ def test_theme_signature_follows_only_relevant_keys(config_gui):
     base = theme_signature(values, info)
     assert theme_signature(dict(values, std_scheme="nord"), info) == base       # another theme's option
     assert theme_signature(dict(values, planet_accent="red"), info) != base
+
+
+ANDROID_STATUS = {"android": {
+    "ready": True, "listening": True, "network": True, "port": 7717, "error": None,
+    "server_id": "0123456789abcdef0123456789abcdef", "name": "Test PC", "fingerprint": "A" * 43,
+    "addresses": [{"iface": "eth0", "address": "192.168.1.20"}], "pairing_open": False,
+    "requests": [{"request": "0011223344556677", "name": "Tablet", "model": "Lenovo Tab", "code": "123456",
+                  "transport": "wifi", "address": "192.168.1.30", "expires_in_s": 90}],
+    "paired": [{"display_id": "android-0123456789ab", "name": "Galaxy S24", "model": "SM-S921B",
+                "manufacturer": "samsung", "paired_at": 1, "last_seen": time.time(), "last_transport": "wifi"}],
+    "connected": [{"display_id": "android-0123456789ab", "transport": "wifi", "address": "192.168.1.31",
+                   "in_use": True, "bytes_in": 10, "bytes_out": 2000}],
+    "counters": {}}}
+
+
+def android_display():
+    entry = simulated("android-0123456789ab", (1280, 576))
+    entry.update(name="Galaxy S24", source={"profile": "android", "name": "Galaxy S24", "transport": "android"},
+                 device={"driver": "android", "model": "samsung SM-S921B", "width": 1280, "height": 576,
+                         "location": "wifi 192.168.1.31",
+                         "details": {"android": "14", "app": "1.0.0", "screen": "2340x1080", "density_dpi": 450,
+                                     "transport": "wifi", "address": "192.168.1.31", "tls": True}},
+                 capabilities={"brightness": True, "partial_update": True, "encoding": "rgb888+zlib/jpeg",
+                               "orientation": "device", "touch": "single"})
+    return entry
+
+
+@needs_gui
+def test_android_in_my_displays(tmp_path):
+    pytest.importorskip("qrcode")
+    checks = drive(tmp_path, "android", [simulated("simulated", (480, 320)), android_display()], ANDROID_STATUS)
+    assert checks["android_group"] is True and checks["android_card"] is True
+    assert checks["android_card_title"] == "Galaxy S24"
+    assert checks["android_request_rows"] == 2              # one request + one paired phone
+    assert "192.168.1.20" in checks["android_state"]
+    assert checks["android_approve_sent"] == ["android_approve"]
+    assert checks["android_detail"] is True
+    assert "Wi-Fi" in checks["android_connection"] and "TLS" in checks["android_protocol"]
+    assert checks["android_qr"] is True and "192.168.1.20:7717" in checks["android_address"]
+    assert checks["android_pair_open"] is True and checks["android_secret_not_in_status"] is True
+    assert checks["android_pair_closed"] is True

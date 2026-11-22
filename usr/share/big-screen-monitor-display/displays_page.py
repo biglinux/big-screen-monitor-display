@@ -26,7 +26,7 @@ from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page, smartmonitor_view  # noqa: E402
+from gui import android_page, deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -49,7 +49,7 @@ PROFILES = (("auto", N_("Automatic (recommended)")), ("economy", N_("Economy")),
 LED_LABELS = {"off": N_("Off"), "white": N_("White"), "red": N_("Red"), "green": N_("Green"), "blue": N_("Blue"),
               "cyan": N_("Cyan"), "magenta": N_("Magenta"), "yellow": N_("Yellow"), "orange": N_("Orange"),
               "purple": N_("Purple")}
-TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated")}
+TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated"), "android": N_("Android")}
 
 
 def send_display_command(command, run_helper):
@@ -79,7 +79,13 @@ class DisplayEntry:
         self.unknown = False        # serial device no family recognises
 
     @property
+    def android(self):
+        return self.id.startswith("android-")
+
+    @property
     def title(self):
+        if self.android and self.status and self.status.get("name"):
+            return self.status["name"]
         if self.status and self.status.get("device"):
             return self.status["device"]["model"]
         if self.candidate and self.candidate.best:
@@ -134,8 +140,9 @@ class DisplaysPage:
             description=_("Identified by their USB ids, but their protocol is not implemented here. Nothing is sent "
                           "to them."), visible=False)
         self.deepcool_rows = []
-        self.content = ui.page_layout(intro, self.grid, self.empty, self.other_group, self.deepcool_group,
-                                      maximum=1200)
+        self.android = android_page.AndroidGroup(self)
+        self.content = ui.page_layout(intro, self.grid, self.empty, self.android.group, self.other_group,
+                                      self.deepcool_group, maximum=1200)
         self.page = ui.navigation_page(_("My Displays"), self.content, tag="displays", header_end=[refresh])
 
     def add_defaults(self, group):
@@ -202,6 +209,7 @@ class DisplaysPage:
         for entry in self.entries.values():
             self._update_card(entry)
             self._update_detail(entry)
+        self.android.update()
         if self._announce:
             self._announce = False
             count = sum(1 for e in self.entries.values() if e.candidate)
@@ -211,7 +219,8 @@ class DisplaysPage:
     def _rebuild(self):
         self.grid.clear()
         for display_id, entry in self.entries.items():
-            icon = "power-profile-performance-symbolic" if self._family(entry) else "video-display-symbolic"
+            icon = "power-profile-performance-symbolic" if self._family(entry) else \
+                "phone-symbolic" if entry.android else "video-display-symbolic"
             card = ui.Card(entry.title, icon=icon)
             self.grid.add_card(display_id, card)
         self.empty.set_visible(not self.entries)
@@ -440,12 +449,15 @@ class DisplaysPage:
                                        "(about 20 seconds).")))
 
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
+            if entry.android:
+                android_page.detail_rows(self, hardware, display_id, own)
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None
             auto_label = _("Automatic ({model})").format(model=_(detected)) if detected else _("Automatic")
             options = [("auto", auto_label)] + [(p.id, _(p.name)) for p in registry.PROFILES]
-            hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
-                                     lambda value: self._model_changed(display_id, value),
-                                     _("Choose manually only if detection is wrong or ambiguous.")))
+            if not entry.android:
+                hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
+                                         lambda value: self._model_changed(display_id, value),
+                                         _("Choose manually only if detection is wrong or ambiguous.")))
             profile_id = own.get("profile", "auto")
             effective = registry.get(profile_id) if profile_id != "auto" else (
                 entry.candidate.auto_profile() if entry.candidate else None)
@@ -575,6 +587,11 @@ class DisplaysPage:
         if firmware:
             details.append(_("Firmware: {version}").format(version=firmware))
         rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(details) or "—"))
+        if entry.android and status:
+            connection, protocol, lines = android_page.describe(status)
+            rows["connection"].set_subtitle(GLib.markup_escape_text(connection))
+            rows["protocol"].set_subtitle(GLib.markup_escape_text(protocol))
+            rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(lines) or "—"))
         sensors = status.get("sensors") or {}
         page.sensors.set_visible(bool(sensors))
         if sensors:
@@ -668,9 +685,11 @@ class DisplaysPage:
             return
         self.window.toast(_("Client installed at {path}. Reset the navigator before starting it.").format(path=path))
 
-    def command(self, command):
+    def command(self, command, quiet=False):
         def worker():
             ok, message = send_display_command(command, self.run_helper)
+            if ok and quiet:
+                return
             GLib.idle_add(lambda: (self.window.toast(_("Sent to the display.")) if ok else
                                    self.window._error(_("The display did not receive the command"), message))
                           and False)
