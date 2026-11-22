@@ -15,8 +15,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HAS_OPENAI_KEY: ${{ secrets.OPENAI_KEY != '' }}
     steps:
       - uses: actions/checkout@v7
       - name: If Template exit
@@ -33,58 +31,15 @@ jobs:
             cancel
           fi
       
-      - name: Install Translator Dependencies
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-          git \
-          gettext \
-          npm
-          # Install attranslator
-          sudo npm install --location=global attranslate
-
       ## Tmate ##
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
-      # Without the OPENAI_KEY secret (forks) big-auto-translator prints
-      # "Atualize o workflow de tradução" and runs `sleep infinity`: the job
-      # would hang until GitHub kills it after 6 h, so the step is skipped.
-      # A translation API failure or a very long run must not block the build
-      # either: the limit keeps the job under 6 h and the hooks still run.
-      - name: Translate Package
-        if: ${{ env.HAS_OPENAI_KEY == 'true' }}
-        continue-on-error: true
-        timeout-minutes: 300
-        shell: bash #-O extglob {0}
-        env:
-          AZURE_KEY: ${{ secrets.AZURE_KEY }}
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-        run: |
-          cd ..
-          git clone https://github.com/biglinux/big-auto-translator.git
-          mv big-auto-translator/gettext_po_generator_github.sh .
-          sudo cp -f big-auto-translator/openai-translate.js /usr/local/lib/node_modules/attranslate/dist/services/openai-translate.js
-          gitfolder=$(echo ${{ github.repository }} | rev | cut -d "/" -f1 | rev)
-          # export OriginalLang=pt-BR
-          bash gettext_po_generator_github.sh $gitfolder
-
-      - name: Update github
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add --all
-          if [ -n "$(git commit -m "translate $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then exit 0; fi
-
-      - name: Push changes
-        continue-on-error: true
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
+      # Translations are made in the repository (locale/*.po, docs/i18n.md) and
+      # checked by the Tests workflow; this job only asks BigLinux to build
+      # the package. (The automatic translator needed an OpenAI key and slept
+      # forever without one.)
       - name: Send Hooks BigLinux Build Package
         shell: bash
         run: |
