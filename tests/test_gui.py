@@ -153,6 +153,10 @@ def test_service_stopped_states(tmp_path):
 @needs_gui
 def test_narrow_window_collapses(tmp_path):
     checks = drive(tmp_path, "narrow", [simulated("simulated", (480, 320))])
+    if checks["width"] > 420:
+        # Some compositors (wlmaker, the Big WindowMaker Wayland session) place new windows
+        # at their own size: the narrow layout cannot be reached, so there is nothing to check.
+        pytest.skip(f"the compositor ignored the requested 400 px width (got {checks['width']} px)")
     assert checks["collapsed"] is True
     assert checks["adaptive_narrow"] is True
     assert checks["min_width_fits"] is True

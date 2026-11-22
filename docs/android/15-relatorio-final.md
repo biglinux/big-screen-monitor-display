@@ -10,7 +10,7 @@ de hardware ou de execução · ❌ não feito.
 
 | Critério | Situação |
 |---|---|
-| APK instala e abre | ⏳ código completo; compilação no GitHub Actions; nenhum aparelho nesta máquina |
+| APK instala e abre | ✅ APK gerado no GitHub Actions (5.4.0, minSdk 21); ⏳ instalação em aparelho real |
 | Opções Rede e USB | 🧪 implementadas (telas no código); ⏳ visual no aparelho |
 | Rede com o backend real | 🧪 backend real + cliente de referência sobre TLS (36 testes); ⏳ app real |
 | USB pelo método documentado | 🧪 AOA com pyusb simulado; ⏳ cabo e aparelho reais. Ancoragem e adb usam o caminho de rede testado |
@@ -33,15 +33,15 @@ de hardware ou de execução · ❌ não feito.
 | Quatro cores de estado | 🧪 regras testadas; ✅ vermelho visto na bandeja real |
 | Seleção do display no menu | 🧪 testes offscreen; ⏳ menu aberto na sessão real |
 | Comandos só no display escolhido | 🧪 |
-| Displays USB continuam funcionando | 🧪 suíte inteira: 1515 passaram, 1 falha pré-existente |
+| Displays USB continuam funcionando | 🧪 suíte inteira: 1515 passaram local (1 pulado pelo compositor) e 100 % no CI |
 
 ## Critérios — Qualidade
 
 | Critério | Situação |
 |---|---|
-| Sem regressões conhecidas | ✅ suíte Linux (1 falha pré-existente na `main`, documentada) |
-| Sem erros de compilação | ✅ Python; ⏳ Kotlin (CI) |
-| Análise estática | 🟡 `ruff` indisponível aqui; imports não usados verificados por AST; lint Android no CI |
+| Sem regressões conhecidas | ✅ suíte Linux local e CI |
+| Sem erros de compilação | ✅ Python e Kotlin (CI, sem avisos do compilador) |
+| Análise estática | ✅ lint Android "No Issues Found"; Python: imports não usados verificados por AST (`ruff` indisponível na máquina) |
 | Sem vazamentos conhecidos | ✅ `ResourceWarning` é erro na suíte; ⏳ sessão longa |
 | Sem permissões desnecessárias | ✅ app só com rede; serviço sem acesso a celulares fora do modo acessório |
 | Sem credenciais expostas | ✅ status sem tokens/segredos (testado); nenhuma chave de assinatura criada |
@@ -50,10 +50,8 @@ de hardware ou de execução · ❌ não feito.
 
 ## Limitações reais
 
-1. **Sem validação em aparelho** — tudo do lado Android (UI, TLS Java, decodificação, toque, AOA)
-   aguarda o primeiro APK do CI e um celular. O código Kotlin não foi compilado nesta máquina (sem
-   JDK; o download de um JDK foi bloqueado pelas permissões do ambiente e a opção escolhida foi
-   compilar só no GitHub Actions).
+1. **Sem validação em aparelho** — o APK compila, passa no lint e nos testes JUnit, mas a UI, o TLS
+   do lado Java, a decodificação, o toque e o AOA ainda precisam de um celular de verdade.
 2. **AOA** pode não existir ou estar restrito em alguns aparelhos recentes; exige modo MTP/PTP para
    a sessão ter acesso ao celular.
 3. **Edição do Kojiro pelo toque** não implementada (evita um segundo editor incompatível; o editor
@@ -64,7 +62,7 @@ de hardware ou de execução · ❌ não feito.
 
 ## Próximos passos
 
-1. Rodar o workflow `Android app`, instalar o APK de depuração em 2–3 aparelhos (um Android 5–7,
+1. Instalar o APK de depuração (artefato do workflow `Android app`) em 2–3 aparelhos (um Android 5–7,
    um recente, um tablet) e preencher os ⏳ de [10](10-testes.md)/[11](11-desempenho.md).
 2. Testar AOA com cabo em aparelhos de fabricantes diferentes.
 3. Testes instrumentados num módulo à parte; sessão de 24 h; medir bateria.

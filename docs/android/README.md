@@ -32,11 +32,11 @@ O ícone no Big WindowMaker e o ícone symbolic da bandeja estão em [docs/windo
 | 2. Arquitetura e protocolo (com testes) | ✅ [02](02-arquitetura.md), [03](03-protocolo.md) |
 | 3. Rede (backend Linux + app) | ✅ backend testado de ponta a ponta com cliente de referência; app ⏳ sem aparelho |
 | 4. USB | 🟡 AOA implementado e testado com USB simulado; ⏳ hardware real |
-| 5. APK | 🟡 código completo; compilação só no GitHub Actions (sem JDK nesta máquina) |
+| 5. APK | ✅ compilado no GitHub Actions (lint sem achados, JUnit ok); ⏳ aparelho |
 | 6. Touchscreen | ✅ no computador (gestos, menu, mídia); ⏳ no aparelho |
 | 7. Meus Displays | ✅ testado na janela real (GTK, sessão wlmaker) |
 | 8. Ícone no Big WindowMaker | ✅ Wayland (wlmaker) verificado; X11 só via Xwayland |
 | 9. Bandeja | ✅ ícone verificado no `big-wm-tray`; menu por testes offscreen |
 | 10. Otimização | ✅ medições do lado Linux ([11](11-desempenho.md)); ⏳ no aparelho |
 | 11. Testes e correções | ✅ suíte Linux; ⏳ testes instrumentados Android |
-| 12. Compilação e entrega | 🟡 workflow pronto; APK depende do CI |
+| 12. Compilação e entrega | ✅ APK de depuração e release (sem assinatura) como artefato do CI |

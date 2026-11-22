@@ -49,7 +49,7 @@ Instale o aplicativo **Big Screen Monitor Display** (Android 5.0+) e adicione o 
 - **Wi-Fi/Ethernet** (desligado por padrão; TLS, aparelhos pareados, endereços públicos bloqueados) ou **cabo USB sem depuração** (acessório Android); ancoragem USB e `adb reverse` também funcionam.
 - Mesma identidade em qualquer transporte: trocar do Wi-Fi para o cabo não cria outro display.
 - Sem serviço em segundo plano nem permissões além de rede no celular; o computador nunca recebe mouse ou teclado do celular.
-- Situação honesta: backend, janela e protocolo testados no computador (cliente de referência sobre TLS); **o app ainda precisa ser validado em aparelhos** — veja [docs/android](docs/android/README.md) e o [relatório](docs/android/15-relatorio-final.md).
+- Situação honesta: backend, janela e protocolo testados no computador (cliente de referência sobre TLS); o APK compila e passa no lint e nos testes no GitHub Actions; **falta validar em aparelhos** — veja [docs/android](docs/android/README.md) e o [relatório](docs/android/15-relatorio-final.md).
 
 Também nesta versão: ícone oficial no **Big WindowMaker** (o `.desktop` agora tem o nome do `app_id`) e bandeja com **monitor symbolic** e ponto de estado verde/amarelo/vermelho/cinza, com escolha do display e "Todos os displays" ([docs/windowmaker](docs/windowmaker/)).
 

@@ -306,6 +306,7 @@ def run_stopped(window):
 
 def run_narrow(window):
     pump(1.5)
+    check("width", window.get_width())
     check("collapsed", window.split.get_collapsed())
     check("adaptive_narrow", config_gui.ui.ADAPTIVE.narrow)
     window.show_section("themes")

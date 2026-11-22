@@ -4,7 +4,9 @@
 
 | Comando | Resultado |
 |---|---|
-| `python -m pytest -q -p no:cacheprovider` (suíte inteira) | **1515 passaram, 1 falhou** — `test_gui.py::test_narrow_window_collapses`, que já falha na `origin/main` nesta mesma sessão (o wlmaker não aplica o tamanho pedido); pré-existente |
+| `python -m pytest -q -p no:cacheprovider` (suíte inteira, local) | **1515 passaram, 1 pulado** — `test_narrow_window_collapses` pula quando o compositor ignora a largura pedida (o wlmaker abriu a janela com 1645 px em vez de 400); no CI ele roda |
+| GitHub Actions `Tests` (PyQt6 e PyQt5, Ubuntu) | ✅ toda a suíte |
+| GitHub Actions `Android app` | ✅ JUnit 6/6 (vetores do protocolo), **lint: "No Issues Found"**, APK de depuração (1,1 MB) e de release (200 KB, sem assinatura), `minSdkVersion 21`, `targetSdkVersion 36`, só `INTERNET` e `ACCESS_NETWORK_STATE` (conferido com `aapt2 dump badging`) |
 | `python -m pytest tests/test_android.py` (×3 seguidas) | 37/37 em cada uma das 3 execuções |
 | `python -m pytest tests/test_gui.py -k android` | janela real GTK/libadwaita: grupo Android, pedido, card do celular, página, diálogo com QR, spool |
 | `python3 tools/android-bench.py …` | ver [11](11-desempenho.md) |
@@ -27,10 +29,9 @@ com o hub/runtime reais.
 
 ## O que NÃO foi testado (sem o equipamento nesta máquina)
 
-* **Nenhum aparelho Android físico** e nenhum emulador (sem JDK/imagens de sistema): o APK, a
-  interface do app, TLS do lado Java, decodificação real, toque real, rotação, brilho, AOA real,
-  ancoragem USB e adb reverse ficam pendentes. O APK é compilado e o JUnit roda no GitHub Actions
-  (`.github/workflows/android.yml`) — resultado do CI ainda não observado nesta entrega.
+* **Nenhum aparelho Android físico** e nenhum emulador (sem JDK/imagens de sistema nesta máquina):
+  a interface do app, TLS do lado Java, decodificação real, toque real, rotação, brilho, AOA real,
+  ancoragem USB e adb reverse ficam pendentes. O APK compila, passa no lint e no JUnit no CI.
 * Testes instrumentados no Android (Espresso) não foram escritos: dependeriam de AndroidX, que o app
   evita de propósito (Android 5.0+); fica como próximo passo com um módulo de teste separado.
 * Suspensão/retomada do PC, sessões longas (> 1 h), consumo de bateria no celular.

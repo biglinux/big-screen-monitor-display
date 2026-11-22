@@ -468,7 +468,12 @@ def test_stalled_phone_does_not_block_the_others(android_runtime):
     before = fast.frames
     assert wait_for(lambda: fast.frames >= before + 3, timeout=10)
     slow_session = app.sessions[slow.welcome["display_id"]]
-    assert wait_for(lambda: slow_session.link.state != health.HEALTHY, timeout=15)
+    # Two timeouts in a row (6 s each): the stuck phone's session reconnects, and stays out
+    # of HEALTHY (it does not flip back on the next frame).
+    assert wait_for(lambda: slow_session.recovery_started is not None or slow_session.recoveries, timeout=20)
+    assert wait_for(lambda: slow.bye is not None or not slow.running, timeout=5)
+    assert any(i["kind"] == "transport_timeout" and i.get("display") == slow_session.id
+               for i in app.incidents.recent(100))
     assert app.sessions[fast.welcome["display_id"]].link.state == health.HEALTHY
     slow.close()
     fast.close()

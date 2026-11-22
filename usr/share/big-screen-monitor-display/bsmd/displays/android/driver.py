@@ -215,7 +215,9 @@ class AndroidDisplay(RasterDriver):
                            DisplayError(DISCONNECTED, "the phone disconnected"))
                 remaining = deadline - self.clock()
                 if remaining <= 0:
-                    self._awaiting = None
+                    # Keep waiting for the same frame: the next attempt times out too,
+                    # and two errors in a row make the session reconnect. Clearing it
+                    # would let the following frame "succeed" and hide a stuck phone.
                     self._prev = None
                     raise DisplayError(TIMEOUT, "the phone stopped showing frames")
                 self.cond.wait(min(remaining, 0.25))
