@@ -15,6 +15,7 @@ written to the world-readable status file.
 """
 
 import secrets
+import threading
 import time
 import urllib.parse
 
@@ -109,6 +110,8 @@ class AndroidGroup:
         self.group.add(self.state_row)
         self.dynamic = []
         self._signature = None
+        self._usb_signature = None
+        self.usb_rows = []
 
     # ------------------------------------------------------------ refresh
     def update(self):
@@ -123,8 +126,58 @@ class AndroidGroup:
         if signature != self._signature:
             self._signature = signature
             self._rebuild(requests, paired, connected)
+        self._update_usb(status)
         if self.dialog is not None:
             self.dialog.update(status)
+
+    def _update_usb(self, status):
+        """Phones on a USB cable right now (sysfs, read-only): offer to use one as a display."""
+        from bsmd.displays.android import aoa
+        try:
+            phones = aoa.android_phones()
+        except OSError:
+            phones = []
+        if not self.window.values.get("android_usb", True):
+            phones = []
+        signature = tuple((p["path"], p["serial"]) for p in phones)
+        if signature == self._usb_signature:
+            return
+        self._usb_signature = signature
+        for row in self.usb_rows:
+            self.group.remove(row)
+        self.usb_rows = []
+        known = {entry.get("usb") for entry in (status or {}).get("paired") or [] if entry.get("usb")}
+        for phone in phones:
+            name = " ".join(part for part in (phone.get("manufacturer"), phone.get("product")) if part) or _("Phone")
+            paired = aoa.serial_hash(phone["serial"]) in known
+            row = Adw.ActionRow(title=GLib.markup_escape_text(name),
+                                subtitle=_("On the USB cable · paired") if paired else _("On the USB cable"))
+            row.add_prefix(Gtk.Image.new_from_icon_name("drive-removable-media-symbolic"))
+            button = Gtk.Button(label=_("Use as Display"), valign=Gtk.Align.CENTER)
+            button.set_tooltip_text(_("Asks the phone to open the Big Screen Monitor Display app (USB accessory, "
+                                      "no debugging)"))
+            button.connect("clicked", lambda _b, p=phone: self._use_usb(p))
+            row.add_suffix(button)
+            self.group.add(row)
+            self.usb_rows.append(row)
+
+    def _use_usb(self, phone):
+        from bsmd.displays.android import aoa
+        from bsmd.displays.base import DisplayError
+
+        def work():
+            try:
+                aoa.switch_to_accessory(phone)
+                message = _("Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a "
+                            "permanent display). The first time, allow the code shown here.")
+            except DisplayError as error:
+                message = _("The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB "
+                            "and make sure the app is installed.").format(error=error)
+            except Exception as error:  # noqa: BLE001 - permission (no uaccess) and the like
+                message = _("No access to the phone ({error}). Choose \"File transfer\" for USB on the phone "
+                            "and try again.").format(error=error)
+            GLib.idle_add(lambda: self.window.toast(message) and False)
+        threading.Thread(target=work, daemon=True).start()
 
     def _update_state(self, status):
         if self.window.status is None:

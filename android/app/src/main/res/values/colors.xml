@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light: Adwaita-like, accent of the configuration window; status colours of the logo bars. -->
+    <color name="background">#FFFAFAFB</color>
+    <color name="card">#FFFFFFFF</color>
+    <color name="outline">#1F000000</color>
+    <color name="text">#FF1E1E22</color>
+    <color name="text_dim">#FF5E5E66</color>
+    <color name="accent">#FF1C71D8</color>
+    <color name="accent_soft">#1F1C71D8</color>
+    <color name="on_accent">#FFFFFFFF</color>
+    <color name="ripple">#331C71D8</color>
+    <color name="overlay">#E61E1E22</color>
+</resources>

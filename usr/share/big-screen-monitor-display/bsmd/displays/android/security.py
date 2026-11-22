@@ -181,7 +181,7 @@ class DeviceStore:
             self._save()
         return token
 
-    def seen(self, dev_id, transport, name=None):
+    def seen(self, dev_id, transport, name=None, usb=None):
         with self.lock:
             entry = self.devices.get(dev_id)
             if entry is None:
@@ -190,6 +190,8 @@ class DeviceStore:
             entry["last_transport"] = transport
             if name:
                 entry["name"] = name
+            if usb:
+                entry["usb"] = usb          # hash of the USB serial (aoa.serial_hash): replug -> display again
             self._save()
 
     def revoke(self, display_id):
@@ -207,7 +209,7 @@ class DeviceStore:
             return [{"display_id": entry["display_id"], "name": entry.get("name", ""),
                      "model": entry.get("model", ""), "manufacturer": entry.get("manufacturer", ""),
                      "paired_at": entry.get("paired_at"), "last_seen": entry.get("last_seen"),
-                     "last_transport": entry.get("last_transport", "")}
+                     "last_transport": entry.get("last_transport", ""), "usb": entry.get("usb")}
                     for entry in self.devices.values()]
 
 

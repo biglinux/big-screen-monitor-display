@@ -317,7 +317,8 @@ class DisplaySession:
     # Settings the app's own menu may change on this display (touch overrides:
     # the configuration window still wins as soon as it changes the same key).
     DEVICE_SETTABLE = ("android_quality", "android_resolution", "android_auto_rotate", "android_keep_screen_on",
-                       "android_burn_in", "performance_profile", "orientation", "touch_media", "brightness", "theme")
+                       "android_burn_in", "performance_profile", "orientation", "touch_media", "touch_enabled",
+                       "brightness", "theme")
 
     def _on_device_command(self, name, body):
         """A command from the app's own menu (the driver checked it is on its list)."""

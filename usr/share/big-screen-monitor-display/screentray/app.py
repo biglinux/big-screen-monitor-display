@@ -318,6 +318,10 @@ class ScreenTray(TrayApp):
         self._thumbs_pending = None
         self._thumb_keys = {}
         self.menu = QMenu()
+        # Phones already paired over USB become displays again when plugged in
+        # (Android Open Accessory, asked from this session: bsmd/displays/android/aoa.py).
+        from bsmd.displays.android.aoa import AutoSwitcher
+        self._usb_phones = AutoSwitcher()
 
     # ------------------------------------------------------------ build
     def build(self):
@@ -430,6 +434,11 @@ class ScreenTray(TrayApp):
 
     # ------------------------------------------------------------ status / settings
     def on_status(self, status):
+        try:
+            self._usb_phones.step((status.data or {}).get("android"),
+                                  enabled=bool((self.values or {}).get("android_usb", True)))
+        except Exception:  # noqa: BLE001 - a phone that misbehaves must not break the tray
+            pass
         # An unplugged display stays the target (shown as unavailable): changes are never
         # redirected to another display behind the user's back.
         entry = next((e for e in self.screens() if e.get("id") == self.target_id), None)

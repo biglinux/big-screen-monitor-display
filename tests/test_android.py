@@ -168,7 +168,7 @@ def hub(tmp_path):
     hubs = []
 
     def make(**kwargs):
-        made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", **kwargs)
+        made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", usb=False, **kwargs)
         port = free_port_pair()
         assert made.listen(port, host="127.0.0.1"), made.error
         hubs.append(made)
@@ -337,7 +337,7 @@ def android_runtime(tmp_path):
 
     def start(data=None):
         config = tmp_path / "settings.json"
-        made = AndroidHub(str(tmp_path / "state"), host_name="Test PC")
+        made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", usb=False)
         port = free_port_pair()
         assert made.listen(port, host="127.0.0.1")
         # Network off, USB on: the runtime keeps a loopback listener on this port.
@@ -588,3 +588,171 @@ def test_zlib_rect_is_plain_rgb():
     image = Image.new("RGB", (3, 1), (9, 8, 7))
     payload = bsdp.encode_rect(image, (0, 0, 3, 1), (3, 1), "lossless", (bsdp.FMT_RGB_ZLIB,)).payload
     assert zlib.decompress(payload[bsdp.RECT_HEADER.size:]) == bytes([9, 8, 7] * 3)
+
+
+# ------------------------------------------------------------------ USB accessory (AOA)
+
+from bsmd.displays.android import aoa  # noqa: E402
+from bsmd.displays.discovery import UsbDevice  # noqa: E402
+
+
+def fake_device(root, name, vid, pid, serial="", interfaces=(), product="Phone"):
+    path = root / name
+    path.mkdir(parents=True)
+    for key, value in (("idVendor", f"{vid:04x}"), ("idProduct", f"{pid:04x}"), ("serial", serial),
+                       ("busnum", "3"), ("devnum", "7"), ("product", product), ("manufacturer", "Maker")):
+        (path / key).write_text(value + "\n")
+    for index, (cls, sub, proto) in enumerate(interfaces):
+        iface = path / f"{name}:1.{index}"
+        iface.mkdir()
+        (iface / "bInterfaceClass").write_text(cls)
+        (iface / "bInterfaceSubClass").write_text(sub)
+        (iface / "bInterfaceProtocol").write_text(proto)
+
+
+def test_android_phones_are_recognised_by_their_interfaces(tmp_path):
+    fake_device(tmp_path, "3-1", 0x04E8, 0x6860, "R58M", [aoa.MTP])              # Samsung, file transfer
+    fake_device(tmp_path, "3-2", 0x18D1, 0x4EE7, "PIX", [aoa.ADB])              # Pixel, debugging
+    fake_device(tmp_path, "3-3", 0x1908, 0x0102, "", [("ff", "00", "00")])      # AX206 display
+    fake_device(tmp_path, "3-4", 0x18D1, 0x2D00, "R58M", [("ff", "ff", "00")])  # already an accessory
+    phones = aoa.android_phones(str(tmp_path))
+    assert [p["path"] for p in phones] == ["3-1", "3-2"]
+    assert phones[0]["serial"] == "R58M" and phones[0]["bus"] == 3 and phones[0]["address"] == 7
+
+
+class FakeTimeout(Exception):
+    pass
+
+
+class FakeUsb:
+    """Just enough of pyusb (usb.core + usb.util) for AOA."""
+    USBTimeoutError = FakeTimeout
+    ENDPOINT_IN, ENDPOINT_OUT = 0x80, 0x00
+
+    def __init__(self, device):
+        self.device = device
+        self.util = self
+
+    def find(self, **_kwargs):
+        return self.device
+
+    @staticmethod
+    def endpoint_direction(address):
+        return address & 0x80
+
+    def claim_interface(self, device, _interface):
+        device.claimed = True
+
+    def release_interface(self, device, _interface):
+        device.claimed = False
+
+    def dispose_resources(self, _device):
+        pass
+
+    @staticmethod
+    def find_descriptor(intf, custom_match):
+        return next((ep for ep in intf if custom_match(ep)), None)
+
+
+class Endpoint:
+    def __init__(self, sock, address):
+        self.sock = sock
+        self.bEndpointAddress = address
+
+    def read(self, size, timeout=500):
+        self.sock.settimeout(timeout / 1000)
+        try:
+            data = self.sock.recv(size)
+        except socket.timeout:
+            raise FakeTimeout() from None
+        if not data:
+            raise OSError("unplugged")
+        return data
+
+    def write(self, data, timeout=3000):
+        self.sock.sendall(bytes(data))
+        return len(data)
+
+
+class AccessoryDevice:
+    bus, address = 3, 9
+
+    def __init__(self, protocol=2):
+        self.protocol = protocol
+        self.transfers = []
+        self.claimed = False
+        self.pc_end, self.phone_end = socket.socketpair()
+
+    def ctrl_transfer(self, request_type, request, value, index, data=None, timeout=None):
+        self.transfers.append((request_type, request, index, bytes(data) if isinstance(data, bytes) else data))
+        if request == aoa.GET_PROTOCOL:
+            return bytes([self.protocol, 0])
+        return 0
+
+    def is_kernel_driver_active(self, _interface):
+        return False
+
+    def set_configuration(self):
+        pass
+
+    def get_active_configuration(self):
+        return {(0, 0): [Endpoint(self.pc_end, 0x81), Endpoint(self.pc_end, 0x01)]}
+
+
+def test_switch_sends_the_aoa_sequence():
+    device = AccessoryDevice()
+    assert aoa.switch_to_accessory({"vid": 1, "pid": 2, "bus": 3, "address": 9}, usb_core=FakeUsb(device)) == 2
+    requests = [(t[1], t[2]) for t in device.transfers]
+    assert requests == [(51, 0)] + [(52, i) for i in range(6)] + [(53, 0)]
+    assert device.transfers[2][3] == b"BigScreenMonitorDisplay\0"       # model string the app filters on
+    old = AccessoryDevice(protocol=0)
+    with pytest.raises(DisplayError):
+        aoa.switch_to_accessory({"vid": 1, "pid": 2, "bus": 3, "address": 9}, usb_core=FakeUsb(old))
+    assert [t[1] for t in old.transfers] == [51]                       # nothing else sent to it
+    for dev in (device, old):
+        dev.pc_end.close()
+        dev.phone_end.close()
+
+
+def test_auto_switch_only_for_phones_paired_over_usb(tmp_path):
+    fake_device(tmp_path, "3-1", 0x04E8, 0x6860, "KNOWN", [aoa.MTP])
+    fake_device(tmp_path, "3-2", 0x04E8, 0x6860, "STRANGER", [aoa.MTP])
+    switched = []
+    clock = [100.0]
+    auto = aoa.AutoSwitcher(str(tmp_path), switch=switched.append, clock=lambda: clock[0])
+    status = {"paired": [{"display_id": "android-0123456789ab", "usb": aoa.serial_hash("KNOWN")}]}
+    assert [p["serial"] for p in auto.step(status)] == ["KNOWN"]
+    assert auto.step(status) == []                                     # once per plug (a minute)
+    clock[0] += 61
+    assert len(auto.step(status)) == 1
+    assert auto.step(status, enabled=False) == [] and aoa.AutoSwitcher(str(tmp_path)).step({"paired": []}) == []
+    assert "KNOWN" not in json.dumps(status)                           # only a hash is remembered
+
+
+def test_accessory_link_pairs_and_is_remembered(tmp_path):
+    device = AccessoryDevice()
+    made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", usb=False)
+    made.prepare()
+    info = UsbDevice(path="3-1", vid=aoa.GOOGLE_VID, pid=0x2D00, serial="R58M", bus=3, address=9)
+    watcher = aoa.AccessoryWatcher(made, scan=lambda: [info], usb_core=FakeUsb(device), usb_util=FakeUsb(device))
+    made.aoa = watcher
+    try:
+        watcher.step({"android_usb": True})
+        assert device.claimed and "3-1" in watcher.bridges
+        client = Client(sock=device.phone_end, transport="usb-accessory").connect()
+        challenge = client.hello()
+        assert challenge["need"] == "pair" and challenge["fp"] == ""          # no TLS on the cable
+        result = {}
+        thread = threading.Thread(target=lambda: result.setdefault("ok", client.pair_confirm()))
+        thread.start()
+        assert wait_for(lambda: made.status()["requests"])
+        assert made.status()["requests"][0]["transport"] == "usb-accessory"
+        made.decide(made.status()["requests"][0]["request"], True)
+        thread.join(5)
+        assert result["ok"] and wait_for(lambda: made.available(client.device_id))
+        assert made.status()["paired"][0]["usb"] == aoa.serial_hash("R58M")
+        watcher.step({"android_usb": False})                              # switched off: nothing new adopted
+    finally:
+        made.stop()
+        device.pc_end.close()
+        device.phone_end.close()

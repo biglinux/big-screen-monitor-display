@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#FF19191C</color>
+    <color name="card">#FF26262B</color>
+    <color name="outline">#24FFFFFF</color>
+    <color name="text">#FFF5F5F7</color>
+    <color name="text_dim">#FFB4B4BC</color>
+    <color name="accent">#FF78AEED</color>
+    <color name="accent_soft">#2978AEED</color>
+    <color name="on_accent">#FF0E1A2A</color>
+    <color name="ripple">#3378AEED</color>
+    <color name="overlay">#E6101012</color>
+</resources>

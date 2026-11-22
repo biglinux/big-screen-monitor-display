@@ -46,7 +46,7 @@ DISCOVERY_PER_SECOND = 20
 
 class AndroidHub:
     def __init__(self, state_directory, on_link=None, clock=time.monotonic, host_name=None,
-                 identity=None, store=None):
+                 identity=None, store=None, usb=True):
         import os
         self.directory = os.path.join(state_directory, "android")
         self.identity = identity or ServerIdentity(self.directory, host_name)
@@ -69,6 +69,12 @@ class AndroidHub:
         self.ready = False
         self.counters = {"accepted": 0, "rejected": 0, "paired": 0, "auth_failed": 0, "tls_failed": 0,
                          "discovery": 0}
+        # Phones that switched to USB accessory mode (bsmd/displays/android/aoa.py).
+        if usb:
+            from .aoa import AccessoryWatcher
+            self.aoa = AccessoryWatcher(self, clock=clock)
+        else:
+            self.aoa = None
 
     # ------------------------------------------------------------ lifecycle
     def prepare(self):
@@ -139,6 +145,8 @@ class AndroidHub:
         self.stop_listening()
         for dev_id, link in self._all_links():
             self._drop(dev_id, link, "service stopping", bye="shutdown")
+        if self.aoa is not None:
+            self.aoa.stop()
 
     def _all_links(self):
         with self.lock:
@@ -442,7 +450,7 @@ class AndroidHub:
         if token is not None:
             self.counters["paired"] += 1
             log.info("android %s: %s paired", link.address, hello.name)
-        self.store.seen(hello.device_id, link.transport, hello.name)
+        self.store.seen(hello.device_id, link.transport, hello.name, usb=getattr(link, "usb_hash", None))
         self.failures.pop(link.address, None)
         link.device_id = hello.device_id
         welcome = {"display_id": bsdp.display_id(hello.device_id), "server_id": self.identity.server_id,
@@ -499,6 +507,7 @@ class AndroidHub:
             "pairing_open": self.pairing.is_open(),
             "requests": self.pairing.public(),
             "paired": self.store.public() if self.store is not None else [],
+            "usb_error": self.aoa.error if self.aoa is not None else None,
             "connected": [{"display_id": bsdp.display_id(dev_id), "transport": link.transport,
                            "address": link.address, "in_use": in_use, "bytes_in": link.bytes_in,
                            "bytes_out": link.bytes_out}

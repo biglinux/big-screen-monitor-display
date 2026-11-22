@@ -57,7 +57,7 @@ THUMB_REFRESH = 600.0             # s before gallery thumbnails are rendered aga
 OVERRIDE_KEYS = ("theme", "brightness", "orientation", "std_scheme", "gk_theme_color", "planet_accent",
                  "oc_scheme", "bmp_skin", "kojiro",
                  # chosen in the Android app's own menu (per phone)
-                 "performance_profile", "touch_media", "android_quality", "android_resolution",
+                 "performance_profile", "touch_media", "touch_enabled", "android_quality", "android_resolution",
                  "android_auto_rotate", "android_keep_screen_on", "android_burn_in")
 # Big Media Player controls a touch panel may send to the media agent (MPRIS).
 MEDIA_ACTIONS = ("play_pause", "next", "previous", "volume_up", "volume_down", "mute")
