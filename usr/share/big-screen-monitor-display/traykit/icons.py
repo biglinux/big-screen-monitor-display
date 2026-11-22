@@ -1,13 +1,18 @@
 """Tray icons drawn at every size the panel may ask for (crisp on HiDPI).
 
-Each icon has a dark outline and a light inner mark, so it reads on light and
-dark panels alike. The state colours match the window's status pill.
+The screens' icon is a monochrome (symbolic) monitor drawn in the panel's
+text colour, with a status dot; the DeepCool badge carries a number. Both
+read on light and dark panels alike.
 """
 
-from .qt import QColor, QFont, QIcon, QPainter, QPainterPath, QPen, QPixmap, QRectF, Qt
+import os
+
+from .qt import QColor, QFont, QIcon, QPainter, QPainterPath, QPalette, QPen, QPixmap, QRectF, Qt, QtCore, \
+    QtWidgets
+
+QPointF = QtCore.QPointF
 
 SIZES = (16, 22, 24, 32, 48, 64, 128)
-STATE_COLOURS = {"ok": "#2e7d32", "warning": "#ef6c00", "error": "#c62828", "off": "#757575"}
 
 
 def heat_colour(celsius, alarm=None):
@@ -41,26 +46,107 @@ def _icon(draw):
     return icon
 
 
-def screen_icon(state="ok"):
-    """A small monitor with a status dot (connected, warning, error, off)."""
+# Status dot of the symbolic tray icon (screentray.states colours). GNOME palette
+# tones bright enough for dark panels; each dot has a darker rim of its own hue
+# so yellow and green still read on light panels.
+DOT_COLOURS = {"green": "#2ec27e", "yellow": "#f5c211", "red": "#e01b24", "grey": "#9a9996"}
+LIGHT_FOREGROUND, DARK_FOREGROUND = "#f6f5f4", "#241f31"
+
+
+def panel_foreground(app=None, desktop=None):
+    """Colour of the symbols on the panel that hosts the tray icon.
+
+    The tray gets a picture, not an icon name (the status dot is drawn into
+    it), so the panel cannot recolour it like a "-symbolic" theme icon: the
+    monochrome monitor is drawn in the panel's text colour instead. GNOME
+    Shell's top bar is dark in both styles; elsewhere the panel follows the
+    desktop colour scheme (Qt 6.5+), else the lightness of the palette's text.
+    """
+    desktop = (desktop if desktop is not None else os.environ.get("XDG_CURRENT_DESKTOP", "")).lower()
+    if "gnome" in desktop.split(":"):
+        return QColor(LIGHT_FOREGROUND)
+    app = app or QtWidgets.QApplication.instance()
+    if app is None:
+        return QColor(DARK_FOREGROUND)
+    schemes = getattr(QtCore.Qt, "ColorScheme", None)
+    scheme = getattr(app.styleHints(), "colorScheme", None)
+    if schemes is not None and scheme is not None:
+        value = scheme()
+        if value == schemes.Dark:
+            return QColor(LIGHT_FOREGROUND)
+        if value == schemes.Light:
+            return QColor(DARK_FOREGROUND)
+    text = app.palette().color(QPalette.ColorRole.WindowText)
+    return QColor(LIGHT_FOREGROUND) if text.lightness() > 128 else QColor(DARK_FOREGROUND)
+
+
+def _stroke(size):
+    # 1 px at 16, 2 px at 22-32: whole pixels keep the outline crisp.
+    return float(max(1, round(size / 14)))
+
+
+def draw_monitor(painter, size, foreground):
+    """Monochrome monitor: screen outline, neck and foot (same shape as the -symbolic SVG)."""
+    width = _stroke(size)
+    half = width / 2
+    pen = QPen(QColor(foreground), width)
+    pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+    pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+    painter.setPen(pen)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
+    unit = size / 16.0
+    # 16 px grid: screen x 1..15, y 2..11.5; strokes centred on whole/half pixels.
+    left, top = round(1 * unit) + half, round(2 * unit) + half
+    right, bottom = round(15 * unit) - half, round(11.5 * unit) - half
+    painter.drawRoundedRect(QRectF(left, top, right - left, bottom - top), 1.5 * unit, 1.5 * unit)
+    centre = size / 2 if int(width) % 2 == 0 else round(size / 2 - 0.5) + 0.5
+    foot = round(14.5 * unit) - half
+    painter.drawLine(QPointF(centre, bottom + half), QPointF(centre, foot))
+    painter.drawLine(QPointF(round(5 * unit) + half, foot), QPointF(round(11 * unit) - half, foot))
+
+
+def draw_dot(painter, size, dot):
+    """Status dot at the upper right, inside a transparent gap (never merges with the outline);
+    the stand stays whole, so the shape still reads as a monitor at 16 px."""
+    radius = max(2.5, size * 0.19)
+    cx, cy = size - radius - 0.5, radius + 0.5
+    gap = radius + max(1.0, size / 16)
+    painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
+    painter.setPen(Qt.PenStyle.NoPen)
+    painter.setBrush(QColor(0, 0, 0))
+    painter.drawEllipse(QRectF(cx - gap, cy - gap, 2 * gap, 2 * gap))
+    painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+    colour = QColor(DOT_COLOURS.get(dot, DOT_COLOURS["grey"]))
+    painter.setBrush(colour)
+    painter.setPen(QPen(colour.darker(150), max(1.0, size / 24)))
+    painter.drawEllipse(QRectF(cx - radius, cy - radius, 2 * radius, 2 * radius))
+
+
+def screen_icon(dot="green", foreground=None):
+    """Tray icon of the USB screens: symbolic monitor in the panel's text colour + status dot.
+
+    ``dot``: green, yellow, red or grey (screentray.states). A stopped service
+    also dims the monitor, so it reads without relying on colour alone."""
+    foreground = QColor(foreground) if foreground is not None else panel_foreground()
+
     def draw(painter, size):
-        s = size / 32.0
-        outline = QPen(QColor("#1b1f24"), max(1.0, 1.6 * s))
-        painter.setPen(outline)
-        painter.setBrush(QColor("#1565c0") if state != "off" else QColor("#78909c"))
-        painter.drawRoundedRect(QRectF(2 * s, 4 * s, 28 * s, 19 * s), 3 * s, 3 * s)
-        painter.setBrush(QColor("#e3f2fd") if state != "off" else QColor("#cfd8dc"))
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.drawRect(QRectF(5 * s, 7 * s, 22 * s, 13 * s))
-        painter.setPen(outline)
-        painter.setBrush(QColor("#455a64"))
-        painter.drawRect(QRectF(13 * s, 23 * s, 6 * s, 4 * s))
-        painter.drawRoundedRect(QRectF(8 * s, 26.5 * s, 16 * s, 3 * s), 1.5 * s, 1.5 * s)
-        if state != "ok":
-            painter.setBrush(QColor(STATE_COLOURS.get(state, STATE_COLOURS["off"])))
-            painter.setPen(QPen(QColor("#ffffff"), max(1.0, 1.4 * s)))
-            painter.drawEllipse(QRectF(19 * s, 15 * s, 12 * s, 12 * s))
+        painter.setOpacity(0.55 if dot == "grey" else 1.0)
+        draw_monitor(painter, size, foreground)
+        painter.setOpacity(1.0)
+        draw_dot(painter, size, dot)
     return _icon(draw)
+
+
+def dot_icon(dot, size=16):
+    """Small coloured dot for menu entries (state of each display)."""
+    pixmap, painter = _canvas(size)
+    colour = QColor(DOT_COLOURS.get(dot, DOT_COLOURS["grey"]))
+    painter.setBrush(colour)
+    painter.setPen(QPen(colour.darker(150), 1))
+    radius = size * 0.28
+    painter.drawEllipse(QRectF(size / 2 - radius, size / 2 - radius, 2 * radius, 2 * radius))
+    painter.end()
+    return QIcon(pixmap)
 
 
 def value_icon(text, colour, connected=True):

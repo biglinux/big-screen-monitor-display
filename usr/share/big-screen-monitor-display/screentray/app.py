@@ -17,34 +17,32 @@ from bsmd.i18n import N_, _
 
 from traykit import autostart
 from traykit.base import TrayApp
-from traykit.icons import screen_icon
+from traykit.icons import dot_icon, screen_icon
 from traykit.qt import (QAction, QActionGroup, QButtonGroup, QComboBox, QGridLayout, QHBoxLayout, QIcon, QLabel,
-                        QMenu, QPixmap, QPushButton, QSize, QSlider, QTimer, QToolButton, QWidget, Qt,
-                        QtCore)
+                        QMenu, QMessageBox, QPixmap, QPushButton, QSize, QSlider, QTimer, QToolButton, QWidget,
+                        Qt, QtCore)
 from traykit.window import FlowLayout, PanelWindow, muted_label, section_label
 
-from . import catalog
+from . import catalog, states
 
 log = logging.getLogger("bsmd.screentray")
 APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 THUMB_DIR = os.path.join(APP_DIR, "screentray", "thumbnails")
 CACHE_DIR = os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"),
                          "big-screen-monitor-display", "tray-thumbnails")
-STATE_FILE = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"),
-                          "big-screen-monitor-display", "screen-tray.json")
 CARD_SIZE = QSize(168, 112)
 ALL = ""
 
-# status display state -> (pill kind, label)
-STATE_TEXT = {
-    "healthy": ("ok", N_("Connected")),
-    "degraded": ("warning", N_("Unstable connection")),
-    "starting": ("warning", N_("Starting…")),
-    "recovering": ("warning", N_("Reconnecting…")),
-    "retrying": ("warning", N_("Reconnecting…")),
-    "disconnected": ("error", N_("Disconnected")),
-    "failed": ("error", N_("Not responding")),
-}
+# Colour of screentray.states -> status pill of the window (traykit.window.STATES).
+PILL = {states.GREEN: "ok", states.YELLOW: "warning", states.RED: "error", states.GREY: "off"}
+# Settings a display must support to receive them (key -> capability in the status).
+NEEDS = {"brightness": "brightness"}
+
+
+def state_file():
+    """Tray choices of this user (last selected display, brightness to restore)."""
+    return os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"),
+                        "big-screen-monitor-display", "screen-tray.json")
 
 
 def display_name(entry):
@@ -65,7 +63,7 @@ def display_size(entry, orientation):
 
 def _load_state():
     try:
-        with open(STATE_FILE, encoding="utf-8") as handle:
+        with open(state_file(), encoding="utf-8") as handle:
             data = json.load(handle)
         return data if isinstance(data, dict) else {}
     except (OSError, ValueError):
@@ -73,14 +71,15 @@ def _load_state():
 
 
 def _save_state(data):
+    path = state_file()
     try:
-        os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
-        tmp = STATE_FILE + ".tmp"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        tmp = path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as handle:
             json.dump(data, handle, indent=2)
-        os.replace(tmp, STATE_FILE)
+        os.replace(tmp, path)
     except OSError as error:
-        log.warning("could not save %s: %s", STATE_FILE, error)
+        log.warning("could not save %s: %s", path, error)
 
 
 class ThemeCard(QToolButton):
@@ -309,8 +308,11 @@ class ScreenTray(TrayApp):
 
     def __init__(self, app, autostarted=False):
         super().__init__(app, autostarted)
-        self.target_id = ALL
         self.local = _load_state()
+        # The last display chosen in the menu or the window survives restarts; when it is
+        # unplugged it stays selected (shown as unavailable), never silently replaced.
+        target = self.local.get("target")
+        self.target_id = target if isinstance(target, str) else ALL
         self._menu_signature = None
         self._thumbs = None
         self._thumbs_pending = None
@@ -322,6 +324,15 @@ class ScreenTray(TrayApp):
         autostart.migrate_legacy(self.app_id)
         self.window = ScreenWindow(self)
         self.window.target.currentIndexChanged.connect(self._target_changed)
+        # The symbolic monitor is drawn in the panel's text colour: redraw when the desktop
+        # switches between light and dark (Qt 6.5+; older Qt follows the palette change).
+        style_hints = getattr(self.app, "styleHints", None)
+        changed = getattr(style_hints(), "colorSchemeChanged", None) if style_hints else None
+        if changed is not None:
+            changed.connect(lambda *_a: self.refresh_tray())
+        palette_changed = getattr(self.app, "paletteChanged", None)
+        if palette_changed is not None:
+            palette_changed.connect(lambda *_a: self.refresh_tray())
 
     def tray_menu(self):
         return self.menu
@@ -333,11 +344,22 @@ class ScreenTray(TrayApp):
     def screens(self):
         return [entry for entry in self.status.displays if control.is_screen(entry)]
 
+    def target_available(self):
+        """False when the remembered display is not in the service status now."""
+        return not self.target_id or any(entry.get("id") == self.target_id for entry in self.screens())
+
     def target_entries(self):
+        """Status entries of the displays that receive the commands (none when the chosen one is gone)."""
         screens = self.screens()
         if self.target_id:
             return [entry for entry in screens if entry.get("id") == self.target_id]
         return screens
+
+    def target_label(self):
+        if not self.target_id:
+            return _("All displays")
+        entry = next((e for e in self.screens() if e.get("id") == self.target_id), None)
+        return display_name(entry) if entry else (self.local.get("target_name") or self.target_id)
 
     def effective(self):
         """Values the target uses: one display's merged settings, or the global ones."""
@@ -348,58 +370,100 @@ class ScreenTray(TrayApp):
             return control.effective(self.values, screens[0].get("id"))
         return dict(self.values)
 
+    def display_state(self, entry):
+        return states.classify(dict(entry, _name=display_name(entry)),
+                               control.effective(self.values, entry.get("id")), self.status.running)
+
+    def display_states(self):
+        """State of every display in the menu, plus a chosen display that is gone."""
+        result = [self.display_state(entry) for entry in self.screens()]
+        if not self.target_available():
+            result.append(states.classify({"id": self.target_id, "_name": self.target_label(), "_absent": True},
+                                          service_running=self.status.running))
+        return result
+
+    def target_states(self):
+        if self.target_id:
+            return [s for s in self.display_states() if s.id == self.target_id]
+        return [self.display_state(entry) for entry in self.screens()]
+
     def _icon_state(self):
-        if not self.status.running:
-            return "error" if self.status.state == "stale" else "off"
-        entries = self.target_entries()
-        if not entries:
-            return "off"
-        kinds = [STATE_TEXT.get(entry.get("state"), ("warning", ""))[0] for entry in entries]
-        return "error" if "error" in kinds else "warning" if "warning" in kinds else "ok"
+        """Colour of the status dot: grey (service), else the worst of the target displays."""
+        return states.aggregate(self.target_states(), self.status.running)
 
     def _state_text(self):
+        colour, label, count = states.summary(self.target_states(), self.status.running)
         if self.status.state == "missing":
-            return "off", _("Service not running")
-        if self.status.state == "stale":
-            return "error", _("Service stopped")
-        entries = self.target_entries()
-        if not entries:
-            return "off", _("No display connected")
-        if len(entries) == 1:
-            kind, label = STATE_TEXT.get(entries[0].get("state"), ("warning", entries[0].get("state", "?")))
-            return kind, _(label)
-        kind = self._icon_state()
-        return kind, _("{count} displays").format(count=len(entries))
+            label = N_("Service not running")
+        text = _(label)
+        if count > 1:
+            text = _("{count} displays: {state}").format(count=count, state=text)
+        return PILL[colour], text
+
+    def supports(self, key, entry):
+        need = NEEDS.get(key)
+        return not need or bool((entry.get("capabilities") or {}).get(need))
 
     def brightness_supported(self):
-        return any((entry.get("capabilities") or {}).get("brightness") for entry in self.target_entries())
+        return any(self.supports("brightness", entry) for entry in self.target_entries())
+
+    def orientation_supported(self):
+        # Every raster display can be rotated (the service rotates the frames); a gone one cannot.
+        return bool(self.target_entries())
+
+    def select_target(self, display_id):
+        """Display that receives the menu's and the window's changes ("" = all of them)."""
+        display_id = display_id or ALL
+        if display_id == self.target_id:
+            return
+        self.target_id = display_id
+        self.local["target"] = display_id
+        entry = next((e for e in self.screens() if e.get("id") == display_id), None)
+        if entry is not None:
+            self.local["target_name"] = display_name(entry)
+        elif not display_id:
+            self.local.pop("target_name", None)
+        _save_state(self.local)
+        log.info("commands now go to %s", display_id or "all displays")
+        self._sync_target_combo()
+        self.sync()
 
     # ------------------------------------------------------------ status / settings
     def on_status(self, status):
-        screens = self.screens()
-        ids = [entry.get("id") for entry in screens]
-        if self.target_id and self.target_id not in ids:
-            self.target_id = ALL                      # unplugged: back to all displays
-        if self.window is not None:
-            combo = self.window.target
-            wanted = [(ALL, _("All displays"))] + [(entry.get("id"), display_name(entry)) for entry in screens]
-            current = [(combo.itemData(i), combo.itemText(i)) for i in range(combo.count())]
-            if current != wanted:
-                combo.blockSignals(True)
-                combo.clear()
-                for value, text in wanted:
-                    combo.addItem(text, value)
-                combo.setCurrentIndex(max(0, combo.findData(self.target_id)))
-                combo.blockSignals(False)
-            self.window.target_row.setVisible(len(screens) > 1)
+        # An unplugged display stays the target (shown as unavailable): changes are never
+        # redirected to another display behind the user's back.
+        entry = next((e for e in self.screens() if e.get("id") == self.target_id), None)
+        if entry is not None and self.local.get("target_name") != display_name(entry):
+            self.local["target_name"] = display_name(entry)
+            _save_state(self.local)
+        self._sync_target_combo()
         self.sync()
+
+    def _sync_target_combo(self):
+        if self.window is None:
+            return
+        combo = self.window.target
+        wanted = [(ALL, _("All displays"))]
+        for state in self.display_states():
+            text = state.name if state.state == states.CONNECTED else f"{state.name} — {_(state.label)}"
+            wanted.append((state.id, text))
+        current = [(combo.itemData(i), combo.itemText(i)) for i in range(combo.count())]
+        if current != wanted:
+            combo.blockSignals(True)
+            combo.clear()
+            for value, text in wanted:
+                combo.addItem(text, value)
+            combo.blockSignals(False)
+        combo.blockSignals(True)
+        combo.setCurrentIndex(max(0, combo.findData(self.target_id)))
+        combo.blockSignals(False)
+        self.window.target_row.setVisible(len(wanted) > 2)
 
     def on_settings(self, values):
         self.sync()
 
     def _target_changed(self, index):
-        self.target_id = self.window.target.itemData(index) or ALL
-        self.sync()
+        self.select_target(self.window.target.itemData(index) or ALL)
 
     def sync(self):
         """Window, menu, icon and tooltip from the status and the settings."""
@@ -409,12 +473,17 @@ class ScreenTray(TrayApp):
         if self.window is not None:
             window = self.window
             window._syncing = True
-            subtitle = display_name(entries[0]) if len(entries) == 1 else ""
+            subtitle = display_name(entries[0]) if len(entries) == 1 else \
+                (self.target_label() if self.target_id else "")
             window.set_state(kind, text, subtitle)
             has_screen = bool(entries)
             if self.status.state != "running":
                 window.empty.setText(_("The monitor service is not running, so nothing reaches the displays. "
                                        "Start it below (administrator authorization)."))
+            elif not self.target_available():
+                window.empty.setText(_("“{name}” is not connected now. Its theme can still be chosen (used when it "
+                                       "connects again); brightness and orientation wait for it. Choose another "
+                                       "display above.").format(name=self.target_label()))
             elif not self.screens():
                 window.empty.setText(_("Connect a USB display. It appears here a moment after it is plugged in; "
                                        "your choices below are kept and used when it connects."))
@@ -430,7 +499,7 @@ class ScreenTray(TrayApp):
                                      if theme_id in ("kojiro", "big_media_player", "brother_away") else "")
             window.more_note.setVisible(bool(window.more_note.text()))
             brightness = int(values.get("brightness", 70))
-            supported = self.brightness_supported() or not has_screen
+            supported = self.brightness_supported() or (not has_screen and self.target_available())
             window.slider.setValue(max(catalog.BRIGHTNESS_MIN, brightness))
             window.bright_value.setText(f"{brightness}%" if brightness else _("Off"))
             for widget in [window.slider, window.power, *window.preset_buttons]:
@@ -444,6 +513,7 @@ class ScreenTray(TrayApp):
             orientation = values.get("orientation", "horizontal")
             for key, button in window.orient_buttons.items():
                 button.setChecked(key == orientation)
+                button.setEnabled(self.target_available())
             window.service_button.setText(_("Start Service") if self.status.state != "running"
                                           else _("Restart Service"))
             window._syncing = False
@@ -460,6 +530,8 @@ class ScreenTray(TrayApp):
         kind, text = self._state_text()
         theme = catalog.BY_ID.get(values.get("theme", "standard"))
         lines = [_("Big Screen Monitor"), text]
+        if len(self.display_states()) > 1 or not self.target_available():
+            lines.append(_("Changes go to: {name}").format(name=self.target_label()))
         if theme is not None:
             lines.append(_("Theme: {name}").format(name=_(theme.name)))
         if self.brightness_supported():
@@ -469,16 +541,21 @@ class ScreenTray(TrayApp):
     # ------------------------------------------------------------ menu
     def _rebuild_menu(self, values, kind, text):
         theme_id = values.get("theme", "standard")
+        displays = self.display_states()
         signature = (kind, text, theme_id, tuple(values.get(t.key, "") for t in catalog.THEMES if t.key),
                      values.get("brightness"), values.get("orientation"), self.brightness_supported(),
-                     self.status.state, autostart.is_enabled(self.app_id))
+                     self.status.state, autostart.is_enabled(self.app_id), self.target_id, tuple(displays))
         if signature == self._menu_signature:
             return                       # rebuilding an open menu would close it
         self._menu_signature = signature
         menu = self.menu
         menu.clear()
-        header = menu.addAction(text)
+        # Service first, then the displays: a stopped service is never shown as a display problem.
+        service = (_("Service running") if self.status.running else
+                   _("Service not running") if self.status.state == "missing" else _("Service stopped"))
+        header = menu.addAction(dot_icon(states.GREEN if self.status.running else states.GREY), service)
         header.setEnabled(False)
+        self._add_display_menu(menu, displays)
         menu.addSeparator()
         themes_menu = menu.addMenu(QIcon.fromTheme("preferences-desktop-theme"), _("Theme"))
         group = QActionGroup(themes_menu)
@@ -514,6 +591,7 @@ class ScreenTray(TrayApp):
         power = bright_menu.addAction(_("Turn On") if values.get("brightness") == 0 else _("Turn Off"))
         power.triggered.connect(self.toggle_power)
         orient_menu = menu.addMenu(QIcon.fromTheme("object-rotate-right-symbolic"), _("Orientation"))
+        orient_menu.setEnabled(self.target_available())
         orient_group = QActionGroup(orient_menu)
         for key, name in catalog.ORIENTATIONS:
             action = QAction(_(name), orient_menu, checkable=True)
@@ -534,6 +612,40 @@ class ScreenTray(TrayApp):
         menu.addSeparator()
         menu.addAction(QIcon.fromTheme("application-exit-symbolic"), _("Quit"), self.quit)
 
+    def _add_display_menu(self, menu, displays):
+        """Which display receives the changes: a radio list with each display's state."""
+        if not displays:
+            note = menu.addAction(_("No display connected"))
+            note.setEnabled(False)
+            return
+        if len(displays) == 1 and self.target_id in (ALL, displays[0].id):
+            only = displays[0]
+            line = menu.addAction(dot_icon(only.colour), f"{only.name} — {_(only.label)}")
+            line.setToolTip(_(only.detail) if only.detail else "")
+            line.setEnabled(False)
+            return
+        connected = sum(1 for s in displays if s.state == states.CONNECTED)
+        sub = menu.addMenu(QIcon.fromTheme("video-display-symbolic"),
+                           _("Display: {name}").format(name=self.target_label()))
+        sub.setToolTipsVisible(True)
+        group = QActionGroup(sub)
+        group.setExclusive(True)
+        every = QAction(_("All displays"), sub, checkable=True)
+        every.setChecked(not self.target_id)
+        every.setToolTip(_("{connected} of {count} connected").format(connected=connected, count=len(displays)))
+        every.triggered.connect(lambda _c=False: self.select_target(ALL))
+        group.addAction(every)
+        sub.addAction(every)
+        sub.addSeparator()
+        for state in displays:
+            action = QAction(dot_icon(state.colour), f"{state.name} — {_(state.label)}", sub, checkable=True)
+            action.setChecked(state.id == self.target_id)
+            if state.detail:
+                action.setToolTip(_(state.detail))
+            action.triggered.connect(lambda _c=False, d=state.id: self.select_target(d))
+            group.addAction(action)
+            sub.addAction(action)
+
     def set_autostart(self, enabled):
         super().set_autostart(enabled)
         if self.window is not None:
@@ -544,19 +656,61 @@ class ScreenTray(TrayApp):
         self.sync()
 
     # ------------------------------------------------------------ changes
+    def overridden_by(self, updates):
+        """Displays whose own choice for one of ``updates`` "All displays" would replace."""
+        displays = self.values.get("displays") or {}
+        names = {entry.get("id"): display_name(entry) for entry in self.screens()}
+        found = []
+        for display_id, entry in displays.items():
+            if not isinstance(entry, dict):
+                continue
+            if any(key in entry and entry[key] != value for key, value in updates.items()):
+                found.append(names.get(display_id, display_id))
+        return sorted(found)
+
+    def confirm(self, title, text):
+        """Ask before replacing per-display choices (tests replace this)."""
+        answer = QMessageBox.question(self.window if self.window is not None and self.window.isVisible() else None,
+                                      title, text)
+        return answer == QMessageBox.StandardButton.Yes
+
     def apply(self, updates):
-        """Write ``updates`` for the target: one display, or every display."""
+        """Write ``updates`` for the target: one display, or every display.
+
+        * a chosen display that is gone keeps its theme choices (used when it comes
+          back), but brightness and orientation are not sent anywhere else;
+        * "All displays" over displays with their own choice asks first, because
+          their individual setting is replaced for good;
+        * a setting that needs a capability (brightness) only goes to the displays
+          that have it."""
+        if not self.target_available() and set(updates) & {"brightness", "orientation"}:
+            log.info("not applied: %s is not connected", self.target_id)
+            return False
+        screens = self.screens()
+        if not self.target_id and len(screens) > 1:
+            replaced = self.overridden_by(updates)
+            if replaced and not self.confirm(
+                    _("Apply to all displays?"),
+                    _("These displays have their own setting, which will be replaced: {names}.")
+                    .format(names=", ".join(replaced))):
+                self.sync()
+                return False
         values = self.values
-        single = self.screens()[0].get("id") if not self.target_id and len(self.screens()) == 1 else None
+        single = screens[0].get("id") if not self.target_id and len(screens) == 1 else None
         for key, value in updates.items():
             if self.target_id:
                 values = control.set_display(values, self.target_id, key, value)
+            elif key in NEEDS and screens and not all(self.supports(key, entry) for entry in screens):
+                for entry in screens:
+                    if self.supports(key, entry):
+                        values = control.set_display(values, entry.get("id"), key, value)
             else:
                 values = control.set_global(values, key, value, clear_overrides=True)
         log.info("apply %s to %s", updates, self.target_id or single or "all displays")
         self.save(values, lambda ok, message: self.window and ok and message and
                   self.window.show_message(message))
         self.sync()
+        return True
 
     def choose_theme(self, theme_id, variant_id=""):
         if not variant_id:

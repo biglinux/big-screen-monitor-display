@@ -76,6 +76,7 @@ for file in usr/bin/big-screen-monitor-config.sh usr/bin/big-screen-monitor-disp
             usr/share/applications/deepcool-digital.desktop usr/share/applications/screen-monitor-tray.desktop \
             usr/share/icons/hicolor/scalable/apps/${PKGNAME}.svg \
             usr/share/icons/hicolor/scalable/apps/big-screen-monitor-tray.svg \
+            usr/share/icons/hicolor/symbolic/apps/big-screen-monitor-tray-symbolic.svg \
             usr/share/icons/hicolor/scalable/apps/big-screen-monitor-deepcool.svg \
             usr/share/icons/hicolor/scalable/apps/deepcool-digital.svg \
             usr/share/icons/hicolor/scalable/apps/screen-monitor-tray.svg \
