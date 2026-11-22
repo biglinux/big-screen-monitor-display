@@ -13,7 +13,7 @@ import os
 import sys
 
 from bsmd import __version__, control
-from bsmd.i18n import N_, _
+from bsmd.i18n import N_, _, ngettext
 
 from traykit import autostart
 from traykit.base import TrayApp
@@ -401,7 +401,7 @@ class ScreenTray(TrayApp):
             label = N_("Service not running")
         text = _(label)
         if count > 1:
-            text = _("{count} displays: {state}").format(count=count, state=text)
+            text = ngettext("{count} display: {state}", "{count} displays: {state}", count).format(count=count, state=text)
         return PILL[colour], text
 
     def supports(self, key, entry):
@@ -641,7 +641,8 @@ class ScreenTray(TrayApp):
         group.setExclusive(True)
         every = QAction(_("All displays"), sub, checkable=True)
         every.setChecked(not self.target_id)
-        every.setToolTip(_("{connected} of {count} connected").format(connected=connected, count=len(displays)))
+        every.setToolTip(ngettext("{connected} of {count} connected", "{connected} of {count} connected", connected).format(
+            connected=connected, count=len(displays)))
         every.triggered.connect(lambda _c=False: self.select_target(ALL))
         group.addAction(every)
         sub.addAction(every)

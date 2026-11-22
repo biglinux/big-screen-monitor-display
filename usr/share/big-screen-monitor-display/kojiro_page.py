@@ -20,7 +20,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
 from bsmd import settings, telemetry  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from bsmd.kojiro import data as kdata  # noqa: E402
 from bsmd.kojiro import model, presets, store, wallpaper  # noqa: E402
 from bsmd.kojiro.engine import KojiroTheme  # noqa: E402
@@ -645,7 +645,8 @@ class KojiroPage:
         set_prop = lambda key: (lambda value: self.state.set_prop(wid, key, value))  # noqa: E731
         set_opt = lambda key: (lambda value: self.state.set_opt(wid, key, value))   # noqa: E731
         count = len(self.state.selection)
-        title = _(model.type_label(widget_type)) + (_(" (+{n} selected)").format(n=count - 1) if count > 1 else "")
+        title = _(model.type_label(widget_type)) + (ngettext(" (+{n} selected)", " (+{n} selected)", count - 1).format(n=count - 1)
+                                                       if count > 1 else "")
         head = self._group(self.element_page, self._element_groups, title, wid)
         head.add(self._switch_row(_("Visible"), w.get("visible", True), set_prop("visible")))
         head.add(self._switch_row(_("Lock position"), w.get("locked"), set_prop("locked")))
@@ -1239,7 +1240,9 @@ class KojiroPage:
         self._refresh_appearance()
         self._refresh_general()
         if problems:
-            self.window.toast(_("Loaded; {n} invalid values were replaced by defaults.").format(n=len(problems)))
+            self.window.toast(ngettext("Loaded; {n} invalid value was replaced by its default.",
+                                       "Loaded; {n} invalid values were replaced by defaults.", len(problems)).format(
+                n=len(problems)))
         else:
             self.window.toast(_("Layout loaded."))
 
@@ -1354,7 +1357,7 @@ class KojiroPage:
             parts = [f"{gpu.get('percent', 0):.0f}%", kdata.temperature_text(gpu.get("temp_value"))]
             if gpu.get("mem_total_mb"):
                 parts.append(f"VRAM {kdata.size_text(gpu['mem_total_mb'])}")
-            parts.append(_("video engine: {v}").format(v=gpu.get("video_engine") or _("not reported")))
+            parts.append(_("video encode/decode: {v}").format(v=gpu.get("video_engine") or _("not reported")))
             sensors.add(Adw.ActionRow(title=f"GPU {index}: {gpu.get('name')}", subtitle=" · ".join(parts)))
         fans = telemetry.find_fans()
         sensors.add(Adw.ActionRow(title=_("Fans"), subtitle=", ".join(f["id"] for f in fans) or _("none reported")))

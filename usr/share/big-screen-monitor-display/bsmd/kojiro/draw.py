@@ -11,8 +11,9 @@ import math
 import os
 import subprocess
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from .. import fonts
 from ..themes import FONT_DIR
 
 MIN_FONT = 8
@@ -67,9 +68,9 @@ def font_file(family, bold):
 def font(family, size, bold=False):
     size = max(1, int(size))
     try:
-        return ImageFont.truetype(font_file(family, bold), size)
+        return fonts.truetype(font_file(family, bold), size)
     except OSError:
-        return ImageFont.truetype(os.path.join(FONT_DIR, BUNDLED[("default", bold)]), size)
+        return fonts.truetype(os.path.join(FONT_DIR, BUNDLED[("default", bold)]), size)
 
 
 def resolve_family(widget_family, theme_family, text_style):

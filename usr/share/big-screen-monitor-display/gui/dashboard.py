@@ -14,7 +14,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from bsmd import settings, themes  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 
 from . import components as ui  # noqa: E402
 
@@ -205,7 +205,8 @@ class Dashboard:
             return
         count = sum(1 for d in status.get("displays") or [] if d.get("connected"))
         if count:
-            text = _("Service running · {count} display(s)").format(count=count)
+            text = ngettext("Service running · {count} display", "Service running · {count} displays",
+                            count).format(count=count)
             ui.set_pill(self.service_pill, text, "success" if status.get("state") == "healthy" else "warning")
         else:
             ui.set_pill(self.service_pill, _("Service running · waiting for a display"), "warning")

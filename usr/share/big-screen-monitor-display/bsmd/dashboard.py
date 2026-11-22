@@ -15,7 +15,7 @@ from datetime import datetime
 from PIL import Image, ImageDraw
 
 from . import legacy_themes as legacy
-from .i18n import N_, _
+from .i18n import N_, _, ngettext
 from .telemetry import (CPU_USAGE_HISTORY, CPU_SYSTEM_HISTORY, GPU_MEM_HISTORY, GPU_USAGE_HISTORY,
                         NET_RX_HISTORY, NET_TX_HISTORY, RAM_USAGE_HISTORY, STATS_LOCK, SYSTEM_STATS)
 from .themes import ui_font
@@ -538,7 +538,7 @@ def draw_footer(p, lay, box, s, stats):
     load = stats.get("load_avg") or (0, 0, 0)
     parts.append(_("load {a:.2f} {b:.2f} {c:.2f}").format(a=load[0], b=load[1], c=load[2]))
     if stats.get("proc_count"):
-        parts.append(_("{count} processes").format(count=stats["proc_count"]))
+        parts.append(ngettext("{count} process", "{count} processes", stats["proc_count"]).format(count=stats["proc_count"]))
     if stats.get("power_profile"):
         parts.append(stats["power_profile"])
     separator = "  ·  "

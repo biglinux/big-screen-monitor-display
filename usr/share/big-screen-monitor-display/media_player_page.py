@@ -20,7 +20,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
 from bsmd import runtime, settings, themes  # noqa: E402
 from bsmd.bigmedia import skins  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from bsmd.media import agent as media_agent, artwork, hub, model  # noqa: E402
 from gui import components as ui  # noqa: E402
 
@@ -308,7 +308,7 @@ class MediaPlayerPage:
             ("clock", _("Big clock")), ("telemetry", _("Expanded telemetry")), ("rest", _("Rest (dark, small clock)")),
             ("theme", _("Another theme"))]))
         idle.add(w._scale("bmp_idle_after", _("After a pause of (s)"), 5, 3600, 5))
-        idle.add(w._combo("bmp_idle_theme", _("Other theme"), [
+        idle.add(w._combo("bmp_idle_theme", _("Theme to show"), [
             (tid, _(themes.REGISTRY[tid].name)) for tid in settings.SCHEMA["bmp_idle_theme"][1]],
             _("Returns to the player as soon as playback starts.")))
         idle.add(w._switch("bmp_idle_dim", _("Dim the display")))
@@ -784,7 +784,8 @@ class MediaPlayerPage:
         status = self.window.status or {}
         media = status.get("media")
         if media:
-            text = _("Socket {path}: {state}; {count} message(s), {invalid} rejected")
+            text = ngettext("Socket {path}: {state}; {count} message, {invalid} rejected",
+                            "Socket {path}: {state}; {count} messages, {invalid} rejected", media.get("messages", 0))
             self.diag["service"].set_subtitle(text.format(
                 path=media.get("socket"), state=_("receiving") if media.get("connected") else _("no agent data"),
                 count=media.get("messages", 0), invalid=media.get("invalid", 0) + media.get("rejected", 0)))
@@ -805,7 +806,8 @@ class MediaPlayerPage:
             self.diag["audio"].set_subtitle(f"{backend}; {vol['output'] or '—'}" +
                                             (f"; {vol['error']}" if vol["error"] else ""))
             files, size = self.core.loader.cache.usage()
-            self.diag["art"].set_subtitle(_("{files} image(s), {size:.1f} MB").format(files=files,
+            self.diag["art"].set_subtitle(ngettext("{files} image, {size:.1f} MB", "{files} images, {size:.1f} MB",
+                                                   files).format(files=files,
                                                                                      size=size / 1048576))
             errors = list(self.core.errors)[-5:] + list((self.agent_info.get("agent") or {}).get("errors") or [])[-3:]
             self.diag["errors"].set_subtitle("\n".join(errors[-6:]) or _("None"))

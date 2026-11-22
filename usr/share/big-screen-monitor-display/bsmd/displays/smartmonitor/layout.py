@@ -33,7 +33,8 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
-from ...i18n import _
+from ... import fonts
+from ...i18n import N_, _
 from . import imgdat
 
 LAYOUT_VERSION = 1
@@ -57,7 +58,7 @@ UNITS = ("KB/s", "MB/s")
 
 def _font(name, size):
     try:
-        return ImageFont.truetype(os.path.join(FONT_DIR, name), size)
+        return fonts.truetype(os.path.join(FONT_DIR, name), size)
     except OSError:
         return ImageFont.load_default()
 
@@ -99,12 +100,12 @@ def dashboard_spec(settings, stats):
         "host": (stats.get("hostname") or "")[:22],
         "name": (settings.get("name") or "").strip()[:22],
         "rotation": rotation,
-        "labels": {
-            "cpu": "CPU", "gpu": "GPU", "system": _("SYSTEM"), "memory": _("MEMORY"), "network": _("NETWORK"),
-            "usage": _("USAGE %"), "temp": _("TEMP °F") if settings.get("std_temp_unit") == "f" else _("TEMP °C"),
-            "vram": "VRAM %", "used": _("USED GB"), "swap": "SWAP %", "uptime": _("UPTIME h"),
-            "load": _("LOAD %"), "io": _("DISK MB/s"), "down": _("DOWN"), "up": _("UP"), "disk": _("DISK %"), "of": _("of"),
-        },
+        "labels": {key: _(text) for key, text in {
+            "cpu": "CPU", "gpu": "GPU", "system": N_("SYSTEM"), "memory": N_("MEMORY"), "network": N_("NETWORK"),
+            "usage": N_("USAGE %"), "temp": N_("TEMP °F") if settings.get("std_temp_unit") == "f" else N_("TEMP °C"),
+            "vram": "VRAM %", "used": N_("USED GB"), "swap": "SWAP %", "uptime": N_("UPTIME h"),
+            "load": N_("LOAD %"), "io": N_("DISK MB/s"), "down": N_("DOWN"), "up": N_("UP"), "disk": N_("DISK %"),
+        }.items()},
     }
 
 

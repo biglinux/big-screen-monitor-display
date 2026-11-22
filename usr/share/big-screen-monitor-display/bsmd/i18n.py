@@ -9,6 +9,16 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 _LOCAL_LOCALEDIR = os.path.abspath(os.path.join(_HERE, "..", "..", "..", "..", "locale-build"))
 LOCALEDIR = _LOCAL_LOCALEDIR if os.path.isdir(_LOCAL_LOCALEDIR) else "/usr/share/locale"
 
+# Catalogs shipped in locale/ (code, name in that language), for the language choice.
+LANGUAGES = (
+    ("pt", "Português (Brasil)"), ("en", "English"), ("bg", "Български"), ("cs", "Čeština"),
+    ("da", "Dansk"), ("de", "Deutsch"), ("el", "Ελληνικά"), ("es", "Español"), ("et", "Eesti"),
+    ("fi", "Suomi"), ("fr", "Français"), ("he", "עברית"), ("hr", "Hrvatski"), ("hu", "Magyar"),
+    ("is", "Íslenska"), ("it", "Italiano"), ("ja", "日本語"), ("ko", "한국어"), ("nb", "Norsk bokmål"),
+    ("nl", "Nederlands"), ("pl", "Polski"), ("ro", "Română"), ("ru", "Русский"), ("sk", "Slovenčina"),
+    ("sv", "Svenska"), ("tr", "Türkçe"), ("uk", "Українська"), ("zh", "中文（简体）"),
+)
+
 _translation = gettext.translation(DOMAIN, LOCALEDIR, fallback=True)
 _language = None
 
@@ -34,6 +44,20 @@ def current_language():
         if value:
             return value.split(":")[0].split(".")[0]
     return "en"
+
+
+_originals = (None, {})
+
+
+def original(text):
+    """The source (English) message ``text`` was translated from, or ``text``."""
+    global _originals
+    translation = _translation
+    if _originals[0] is not translation:
+        catalog = getattr(translation, "_catalog", None) or {}
+        _originals = (translation, {value: key for key, value in catalog.items()
+                                    if isinstance(key, str) and key and isinstance(value, str)})
+    return _originals[1].get(text, text)
 
 
 def _(message):

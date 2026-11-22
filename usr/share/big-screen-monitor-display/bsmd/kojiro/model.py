@@ -41,7 +41,7 @@ WIDGET_TYPES = {
     "vram": (N_("VRAM"), ("bar", "bar_segmented", "bar_gradient", "ring", "semi", "text"), "bar", (260, 56),
              2.0, "usage"),
     "fan": (N_("Fan"), ("icon", "ring", "text"), "icon", (150, 70), 2.0, None),
-    "encdec": (N_("Video engine"), ("text", "bar", "ring"), "text", (170, 54), 2.0, None),
+    "encdec": (N_("Video encode/decode"), ("text", "bar", "ring"), "text", (170, 54), 2.0, None),
     "disk": (N_("Disk"), ("ring", "semi", "bar", "bar_segmented", "text", "hud"), "hud", (200, 90), 5.0, "usage"),
     "net_down": (N_("Download"), ("text", "graph_area", "graph_line", "graph_bars", "sparkline"), "text",
                  (200, 50), 1.0, None),

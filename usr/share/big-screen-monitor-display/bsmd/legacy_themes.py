@@ -27,6 +27,7 @@ import numpy as np
 import psutil
 from PIL import Image, ImageDraw, ImageFont
 
+from . import fonts
 from .telemetry import (CPU_SYSTEM_HISTORY, CPU_TEMP_HISTORY, CPU_USAGE_HISTORY,  # noqa: F401
                         CPU_USER_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, GPU_USAGE_HISTORY,
                         NET_RX_HISTORY, NET_TX_HISTORY, RAM_USAGE_HISTORY, SYSTEM_STATS)
@@ -39,7 +40,7 @@ def _cached_truetype(path, size):
     return _ORIGINAL_TRUETYPE(path, size)
 
 
-_ORIGINAL_TRUETYPE = ImageFont.truetype
+_ORIGINAL_TRUETYPE = fonts.truetype
 
 
 class _FontCache:

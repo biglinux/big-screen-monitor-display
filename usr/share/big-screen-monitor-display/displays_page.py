@@ -24,7 +24,7 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from gui import components as ui  # noqa: E402
 from gui import android_page, deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
@@ -213,7 +213,7 @@ class DisplaysPage:
         if self._announce:
             self._announce = False
             count = sum(1 for e in self.entries.values() if e.candidate)
-            self.window.toast(_("{count} display(s) found.").format(count=count) if count else
+            self.window.toast(ngettext("{count} display found.", "{count} displays found.", count).format(count=count) if count else
                               _("No display found. Check the cable and the USB port."))
 
     def _rebuild(self):

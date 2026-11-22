@@ -4,6 +4,7 @@ that answers YMODEM like the firmware."""
 
 import datetime
 import json
+import os
 import time
 
 import pytest
@@ -851,7 +852,7 @@ def test_values_not_on_screen_beat_repeats_and_large_decimals():
 
     def number(cand, part="whole"):
         return imgdat.Number(0, (0, 0, 10, 9), (255, 255, 255), imgdat.Atlas((1,) * 12, 1, bytes(12)))
-    items, index = [], 0
+    items = []
     for _ in range(capture.MAX_NUMBERS - 4):                         # a screen almost full of clocks
         items.append((0, number("hour"), {"cand": "hour", "part": "whole"}, 0))
     items += [(0, number("hour"), {"cand": "hour", "part": "whole"}, 1),          # a repeat
@@ -904,3 +905,46 @@ def test_gkrellm_cpu_split_and_interfaces_are_live_fields():
         assert fields.noise(base)["net_ifaces"]["enp6s0"]["rx_history"] == [70, 70]   # graphs: never frozen
     finally:
         fields.set_ifaces({})
+
+
+def _panel_overflows(translate):
+    """Dashboard captions that would not fit the 480x320 panel with ``translate``."""
+    font = lambda size: layout._font(layout.SANS_BOLD, size)  # noqa: E731
+    caption, title = font(11), font(15)
+    card_w = (layout.SIZE[0] - 8 * 2 - 8) // 2
+    mid = layout.digit_atlas(17).widths[0]
+    unit = layout.word_atlas(layout.UNITS, 12).widths[0]
+    label = translate
+    column = card_w // 2 - 6 - 12                     # one of the two captions of a card
+    problems = []
+    for msgid in ("USAGE %", "TEMP °C", "TEMP °F", "USED GB", "UPTIME h", "LOAD %"):
+        if caption.getlength(label(msgid)) > column:
+            problems.append(msgid)
+    for msgid in ("DOWN", "UP"):
+        if caption.getlength(label(msgid)) + 5 + unit > column:
+            problems.append(msgid)
+    for head, corner, digits in (("SYSTEM", "DISK MB/s", 4), ("MEMORY", "SWAP %", 3), ("NETWORK", "DISK %", 3)):
+        title_end = 12 + title.getlength(label(head)) + 4      # 4 px between title and corner
+        corner_start = card_w - 12 - mid * digits - 6 - caption.getlength(label(corner))
+        if title_end > corner_start:
+            problems.append(f"{head} + {corner}")
+    return problems
+
+
+def test_dashboard_captions_fit_the_panel_in_every_catalog(tmp_path):
+    import gettext
+    import subprocess
+    locale_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "locale")
+    assert not _panel_overflows(lambda message: message)
+    failures = {}
+    for name in sorted(os.listdir(locale_dir)):
+        if not name.endswith(".po"):
+            continue
+        mo = tmp_path / (name[:-3] + ".mo")
+        subprocess.run(["msgfmt", "-o", str(mo), os.path.join(locale_dir, name)], check=True)
+        with open(mo, "rb") as handle:
+            catalog = gettext.GNUTranslations(handle)
+        problems = _panel_overflows(catalog.gettext)
+        if problems:
+            failures[name] = problems
+    assert not failures

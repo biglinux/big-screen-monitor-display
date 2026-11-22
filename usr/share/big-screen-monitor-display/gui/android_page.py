@@ -26,7 +26,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from bsmd.displays.android import protocol as bsdp  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from gui import components as ui  # noqa: E402
 
 PAIR_SECONDS = 300
@@ -78,7 +78,8 @@ def ago(timestamp):
         return _("{minutes} min ago").format(minutes=int(seconds // 60))
     if seconds < 129600:
         return _("{hours} h ago").format(hours=int(seconds // 3600))
-    return _("{days} days ago").format(days=int(seconds // 86400))
+    days = int(seconds // 86400)
+    return ngettext("{days} day ago", "{days} days ago", days).format(days=days)
 
 
 class AndroidGroup:
