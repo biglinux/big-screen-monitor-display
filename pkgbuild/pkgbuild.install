@@ -27,6 +27,8 @@ _refresh_system() {
 post_install() {
 	_refresh_system
 	systemctl enable --now "${_service}"
+	echo ":: Android phones and tablets can be displays too (My Displays > Add Android)."
+	echo "   App: https://github.com/ruscher/big-screen-monitor-display/releases/latest/download/big-screen-monitor-display.apk"
 }
 
 ## arg 1:  the new package version
