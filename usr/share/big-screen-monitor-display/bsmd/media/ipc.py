@@ -3,8 +3,13 @@
 Transport: one AF_UNIX stream socket owned by the service
 (``/run/big-screen-monitor-display/media.sock``; ``$XDG_RUNTIME_DIR/...``
 for manual runs). Frames are a 4-byte big-endian length followed by a UTF-8
-JSON object (see :mod:`bsmd.media.model`). Data flows one way, agent ->
-service: the service never sends commands into the user session.
+JSON object (see :mod:`bsmd.media.model`). Data flows agent -> service, with
+one exception: a Big Media Player control touched on a touch display (FOSTON,
+Android) goes back as ``{"type": "command", "action": ...}``, where
+``action`` is one of :data:`REMOTE_ACTIONS` (play/pause, next, previous,
+volume and mute - nothing that opens, launches or reads anything). The agent
+checks the list again and runs it on the active MPRIS player as if the
+user had pressed the same button in the window.
 
 Authentication: the kernel reports the peer's uid (SO_PEERCRED). Only the
 user of the active session on seat0 is rendered (``/run/systemd/seats``),
@@ -32,6 +37,8 @@ MAX_FRAME = 2 * 1024 * 1024
 MAX_CLIENTS = 8
 MAX_FRAMES_PER_SECOND = 60
 HEADER = struct.Struct(">I")
+REMOTE_ACTIONS = ("play_pause", "next", "previous", "volume_up", "volume_down", "mute")
+REMOTE_PER_SECOND = 10
 SEATS_DIR = "/run/systemd/seats"
 
 
@@ -238,6 +245,20 @@ class Server:
             except Exception:  # noqa: BLE001 - a bad message must never kill the server
                 log.exception("media message handler failed")
 
+    def send(self, uid, message):
+        """Send ``message`` to the agents of ``uid``; True when one took it."""
+        frame = encode(message)
+        sent = False
+        for sock, state in list(self.clients.items()):
+            if state["uid"] != uid:
+                continue
+            try:
+                sock.send(frame)         # tiny frame on a local socket: never blocks for long
+                sent = True
+            except (BlockingIOError, OSError):
+                continue
+        return sent
+
     def _drop(self, sock):
         state = self.clients.pop(sock, None)
         try:
@@ -269,17 +290,74 @@ class Publisher:
         self.failures = {}
         self.connected = set()
         self.on_connect = None
+        self.on_command = None            # callable(action) for commands from the service
+        self.decoders = {}
+        self.sock_lock = threading.Lock()
         self.thread = threading.Thread(target=self._loop, name="media-publisher", daemon=True)
+        self.reader = threading.Thread(target=self._read_loop, name="media-commands", daemon=True)
 
     def start(self):
         self.thread.start()
+        self.reader.start()
+
+    def _read_loop(self):
+        """Commands sent back by the service (touch controls). Only the
+        actions of REMOTE_ACTIONS reach ``on_command``."""
+        import select
+        window = (time.monotonic(), 0)
+        while not self.stop_event.is_set():
+            with self.sock_lock:
+                items = list(self.sockets.items())
+            if not items:
+                self.stop_event.wait(0.5)
+                continue
+            try:
+                ready, _, _ = select.select([sock for _path, sock in items], [], [], 0.5)
+            except (OSError, ValueError):
+                continue
+            for path, sock in items:
+                if sock not in ready:
+                    continue
+                try:
+                    data = sock.recv(4096)
+                except BlockingIOError:
+                    continue
+                except OSError:
+                    data = b""
+                if not data:
+                    with self.sock_lock:
+                        if self.sockets.get(path) is sock:
+                            self._close(path)
+                    continue
+                try:
+                    messages = self.decoders.setdefault(path, FrameDecoder()).feed(data)
+                except ValueError:
+                    with self.sock_lock:
+                        if self.sockets.get(path) is sock:
+                            self._close(path)
+                    continue
+                for message in messages:
+                    action = message.get("action") if isinstance(message, dict) else None
+                    if message.get("type") != "command" or action not in REMOTE_ACTIONS:
+                        continue
+                    now = time.monotonic()
+                    if now - window[0] >= 1.0:
+                        window = (now, 0)
+                    if window[1] >= REMOTE_PER_SECOND:
+                        continue
+                    window = (window[0], window[1] + 1)
+                    if self.on_command is not None:
+                        self.on_command(action)
 
     def stop(self):
         self.stop_event.set()
         self.wake.set()
         self.thread.join(timeout=2.0)
-        for sock in self.sockets.values():
-            sock.close()
+        if self.reader.is_alive():
+            self.reader.join(timeout=2.0)
+        with self.sock_lock:
+            for sock in self.sockets.values():
+                sock.close()
 
     def publish(self, message, coalesce=None):
         """``coalesce`` (e.g. "snapshot") keeps only the newest message of that kind."""
@@ -315,12 +393,16 @@ class Publisher:
                     frames.append(encode(message))
                 except (ValueError, TypeError):
                     continue
-            for path, sock in list(self.sockets.items()):
+            with self.sock_lock:
+                targets = list(self.sockets.items())
+            for path, sock in targets:
                 try:
                     for frame in frames:
                         sock.sendall(frame)
                 except OSError:
-                    self._close(path)
+                    with self.sock_lock:
+                        if self.sockets.get(path) is sock:
+                            self._close(path)
 
     def _connect(self):
         now = time.monotonic()
@@ -339,7 +421,9 @@ class Publisher:
                 if error.errno not in (errno.ENOENT, errno.ECONNREFUSED):
                     log.debug("media socket %s: %s", path, error)
                 continue
-            self.sockets[path] = sock
+            with self.sock_lock:
+                self.sockets[path] = sock
+                self.decoders.pop(path, None)
             self.failures[path] = 0
             self.connected.add(path)
             if self.on_connect:

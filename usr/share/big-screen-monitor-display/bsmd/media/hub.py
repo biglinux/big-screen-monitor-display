@@ -133,6 +133,24 @@ class MediaHub:
         if self.on_change:
             self.on_change()
 
+    # ------------------------------------------------------------ commands
+    def command(self, action, value=0.0):
+        """Forward a touch control to the agent of the session being shown."""
+        if action not in ipc.REMOTE_ACTIONS or self.server is None:
+            return False
+        now = self.clock()
+        window = getattr(self, "_cmd_window", (now, 0))
+        if now - window[0] >= 1.0:
+            window = (now, 0)
+        if window[1] >= ipc.REMOTE_PER_SECOND:
+            return False
+        self._cmd_window = (window[0], window[1] + 1)
+        with self.lock:
+            uid = self._pick_uid()
+        if uid is None:
+            return False
+        return self.server.send(uid, {"type": "command", "v": 1, "action": action})
+
     # ------------------------------------------------------------ output
     def _pick_uid(self):
         now = self.clock()

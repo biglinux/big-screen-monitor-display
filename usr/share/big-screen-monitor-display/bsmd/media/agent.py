@@ -30,6 +30,22 @@ from gi.repository import Gio, GLib
 from .. import __version__, settings as settings_mod
 from . import artwork, ipc, model, mpris, selection, volume
 
+
+def unix_signal_add(signum, handler):
+    """GLibUnix.signal_add (PyGObject >= 3.52); GLib.unix_signal_add before it."""
+    try:
+        gi.require_version("GLibUnix", "2.0")
+        from gi.repository import GLibUnix
+        return GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, signum, handler)
+    except (ImportError, ValueError, AttributeError):
+        return GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, handler)
+
+
+def register_object(conn, path, interface, method_call, get_property=None, set_property=None):
+    """Gio's closure-based registration (register_object is deprecated in PyGObject 3.52+)."""
+    register = getattr(conn, "register_object_with_closures2", None) or conn.register_object
+    return register(path, interface, method_call, get_property, set_property)
+
 log = logging.getLogger("bsmd.media")
 
 
@@ -432,6 +448,7 @@ class Agent:
         publisher = ipc.Publisher()
         core = MediaCore(self.conn, self.store.get(), sink=publisher.publish, on_state=self._emit_changed)
         publisher.on_connect = lambda path: GLib.idle_add(self._resend)
+        publisher.on_command = lambda action: GLib.idle_add(self._remote_command, action)
         self.core, self.publisher, self.registration = core, publisher, registration
         self.unused_since = None
         publisher.start()
@@ -455,6 +472,13 @@ class Agent:
                                     Gio.DBusCallFlags.NONE, 2000, None)
             except GLib.Error:
                 pass
+
+    def _remote_command(self, action):
+        """A Big Media Player control touched on a display (checked again here)."""
+        if self.core is not None and action in ipc.REMOTE_ACTIONS:
+            log.info("media agent: %s from a touch display", action)
+            self.core.command(action)
+        return False
 
     def _resend(self):
         if self.core is not None:

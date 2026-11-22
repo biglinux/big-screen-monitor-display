@@ -74,30 +74,30 @@ deps_for() {
         arch)
             echo python python-pillow python-numpy python-psutil python-pyusb libusb python-pyserial pciutils \
                  librsvg fontconfig polkit python-gobject python-cairo glib2 gtk4 libadwaita hicolor-icon-theme \
-                 gettext python-pyqt6 ;;
+                 gettext python-pyqt6 openssl ;;
         suse)
             py="python$(python_suffix)"
             echo python3 "$py-Pillow" "$py-numpy" "$py-psutil" "$py-pyusb" "$py-pyserial" "$py-gobject" \
                  "$py-gobject-cairo" "$py-pycairo" "$py-PyQt6" typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 \
-                 libusb-1_0-0 pciutils rsvg-convert fontconfig polkit pkexec gettext-tools hicolor-icon-theme ;;
+                 libusb-1_0-0 pciutils rsvg-convert fontconfig polkit pkexec gettext-tools hicolor-icon-theme openssl ;;
         debian)
             echo python3 python3-pil python3-numpy python3-psutil python3-usb python3-serial python3-gi \
                  python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libusb-1.0-0 pciutils librsvg2-bin fontconfig \
-                 polkitd pkexec gettext hicolor-icon-theme python3-pyqt6 ;;
+                 polkitd pkexec gettext hicolor-icon-theme python3-pyqt6 openssl ;;
         fedora)
             echo python3 python3-pillow python3-numpy python3-psutil python3-pyusb python3-pyserial \
                  python3-gobject python3-cairo gtk4 libadwaita libusb1 pciutils librsvg2-tools fontconfig polkit \
-                 gettext hicolor-icon-theme python3-pyqt6 ;;
+                 gettext hicolor-icon-theme python3-pyqt6 openssl ;;
     esac
 }
 
 # Optional features, never installed silently (named at the end).
 optional_for() {
     case "$1" in
-        arch) echo "lm_sensors openrgb playerctl libpulse alsa-utils" ;;
-        suse) echo "sensors OpenRGB playerctl pulseaudio-utils alsa-utils" ;;
-        debian) echo "lm-sensors openrgb playerctl pulseaudio-utils alsa-utils" ;;
-        fedora) echo "lm_sensors openrgb playerctl pulseaudio-utils alsa-utils" ;;
+        arch) echo "lm_sensors openrgb playerctl libpulse alsa-utils python-qrcode" ;;
+        suse) echo "sensors OpenRGB playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
+        debian) echo "lm-sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
+        fedora) echo "lm_sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
     esac
 }
 
@@ -197,9 +197,12 @@ remove_legacy() {
     local file
     for file in usr/bin/deepcool-digital usr/bin/deepcool-digital.sh usr/bin/screen-monitor-tray \
                 usr/bin/screen-monitor-tray.sh usr/share/applications/deepcool-digital.desktop \
-                usr/share/applications/screen-monitor-tray.desktop; do
+                usr/share/applications/screen-monitor-tray.desktop \
+                usr/share/applications/${PKGNAME}.desktop; do
+        # ${PKGNAME}.desktop: renamed after the application id (5.3.2), so the window's
+        # Wayland app_id finds its launcher (and icon) in docks and task bars.
         [ -e "${ROOT}/${file}" ] || [ -L "${ROOT}/${file}" ] || continue
-        if grep -qs "/usr/share/${PKGNAME}/" "${ROOT}/${file}" || \
+        if grep -qs "/usr/share/${PKGNAME}/\|/usr/bin/big-screen-monitor-config.sh" "${ROOT}/${file}" || \
                 [ "$(readlink "${ROOT}/${file}" 2>/dev/null)" = "/usr/bin/${file##*/}.sh" ]; then
             rm -f "${ROOT}/${file}"
             say "removed old ${file}"

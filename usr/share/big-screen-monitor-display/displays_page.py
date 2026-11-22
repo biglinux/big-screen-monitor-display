@@ -26,7 +26,7 @@ from bsmd import patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page, smartmonitor_view  # noqa: E402
+from gui import android_page, deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -49,7 +49,7 @@ PROFILES = (("auto", N_("Automatic (recommended)")), ("economy", N_("Economy")),
 LED_LABELS = {"off": N_("Off"), "white": N_("White"), "red": N_("Red"), "green": N_("Green"), "blue": N_("Blue"),
               "cyan": N_("Cyan"), "magenta": N_("Magenta"), "yellow": N_("Yellow"), "orange": N_("Orange"),
               "purple": N_("Purple")}
-TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated")}
+TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated"), "android": N_("Android")}
 
 
 def send_display_command(command, run_helper):
@@ -79,7 +79,13 @@ class DisplayEntry:
         self.unknown = False        # serial device no family recognises
 
     @property
+    def android(self):
+        return self.id.startswith("android-")
+
+    @property
     def title(self):
+        if self.android and self.status and self.status.get("name"):
+            return self.status["name"]
         if self.status and self.status.get("device"):
             return self.status["device"]["model"]
         if self.candidate and self.candidate.best:
@@ -134,8 +140,9 @@ class DisplaysPage:
             description=_("Identified by their USB ids, but their protocol is not implemented here. Nothing is sent "
                           "to them."), visible=False)
         self.deepcool_rows = []
-        self.content = ui.page_layout(intro, self.grid, self.empty, self.other_group, self.deepcool_group,
-                                      maximum=1200)
+        self.android = android_page.AndroidGroup(self)
+        self.content = ui.page_layout(intro, self.grid, self.empty, self.android.group, self.other_group,
+                                      self.deepcool_group, maximum=1200)
         self.page = ui.navigation_page(_("My Displays"), self.content, tag="displays", header_end=[refresh])
 
     def add_defaults(self, group):
@@ -202,6 +209,7 @@ class DisplaysPage:
         for entry in self.entries.values():
             self._update_card(entry)
             self._update_detail(entry)
+        self.android.update()
         if self._announce:
             self._announce = False
             count = sum(1 for e in self.entries.values() if e.candidate)
@@ -211,7 +219,8 @@ class DisplaysPage:
     def _rebuild(self):
         self.grid.clear()
         for display_id, entry in self.entries.items():
-            icon = "power-profile-performance-symbolic" if self._family(entry) else "video-display-symbolic"
+            icon = "power-profile-performance-symbolic" if self._family(entry) else \
+                "phone-symbolic" if entry.android else "video-display-symbolic"
             card = ui.Card(entry.title, icon=icon)
             self.grid.add_card(display_id, card)
         self.empty.set_visible(not self.entries)
@@ -277,6 +286,11 @@ class DisplaysPage:
         card = self.grid.cards[entry.id]
         own = self._entry_settings(entry.id)
         effective = settings.merged(self.window.values, entry.id)
+        live_theme = ((entry.status or {}).get("settings") or {}).get("theme")
+        if live_theme and effective.get("theme") == settings.merged(self.window.saved, entry.id).get("theme"):
+            # Chosen on the display itself (touch panel, Android): show what it really shows,
+            # unless the window has an unapplied change of its own.
+            effective["theme"] = live_theme
         state, _kind = self._state(entry)
         family = self._family(entry)
         if family is not None:
@@ -440,12 +454,15 @@ class DisplaysPage:
                                        "(about 20 seconds).")))
 
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
+            if entry.android:
+                android_page.detail_rows(self, hardware, display_id, own)
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None
             auto_label = _("Automatic ({model})").format(model=_(detected)) if detected else _("Automatic")
             options = [("auto", auto_label)] + [(p.id, _(p.name)) for p in registry.PROFILES]
-            hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
-                                     lambda value: self._model_changed(display_id, value),
-                                     _("Choose manually only if detection is wrong or ambiguous.")))
+            if not entry.android:
+                hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
+                                         lambda value: self._model_changed(display_id, value),
+                                         _("Choose manually only if detection is wrong or ambiguous.")))
             profile_id = own.get("profile", "auto")
             effective = registry.get(profile_id) if profile_id != "auto" else (
                 entry.candidate.auto_profile() if entry.candidate else None)
@@ -461,6 +478,8 @@ class DisplaysPage:
                                          lambda value: self._set(display_id, "led_color",
                                                                  None if value == "off" else value),
                                          _("Only the flagship model has LEDs.")))
+            if effective is not None and effective.id == "foston_fs707dc":
+                self._foston_rows(hardware, display_id, own)
             rows = {}
             for key, title in (("state", _("State")), ("resolution", _("Resolution")),
                                ("connection", _("Connection")), ("protocol", _("Protocol")),
@@ -573,6 +592,11 @@ class DisplaysPage:
         if firmware:
             details.append(_("Firmware: {version}").format(version=firmware))
         rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(details) or "—"))
+        if entry.android and status:
+            connection, protocol, lines = android_page.describe(status)
+            rows["connection"].set_subtitle(GLib.markup_escape_text(connection))
+            rows["protocol"].set_subtitle(GLib.markup_escape_text(protocol))
+            rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(lines) or "—"))
         sensors = status.get("sensors") or {}
         page.sensors.set_visible(bool(sensors))
         if sensors:
@@ -623,9 +647,54 @@ class DisplaysPage:
         dialog.connect("response", response)
         dialog.present(self.window)
 
-    def command(self, command):
+    def _foston_rows(self, group, display_id, own):
+        """FOSTON FS-707DC: touchscreen on the panel and the Windows CE client."""
+        touch_row = Adw.SwitchRow(title=_("Touchscreen"), active=own.get("touch_enabled", True),
+                                  subtitle=_("Tap, hold and swipe on the panel itself; the computer's keyboard "
+                                             "focus and mouse are never touched."))
+        touch_row.connect("notify::active", lambda r, _p: self._set(display_id, "touch_enabled",
+                                                                    None if r.get_active() else False))
+        group.add(touch_row)
+        for title, subtitle, action, icon in (
+                (_("Touch test"), _("Draws your finger's path on the panel (hold to leave)"), "touch_test",
+                 "input-touchscreen-symbolic"),
+                (_("Calibrate touch"), _("Opens the navigator's own calibration (tap the crosses)"), "calibrate",
+                 "find-location-symbolic"),
+                (_("Close the client on the navigator"),
+                 _("Returns the navigator to its main menu and USB storage mode"), "quit_client",
+                 "application-exit-symbolic")):
+            row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
+            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+            row.connect("activated", lambda *_a, a=action: self.command({"action": a, "display": display_id}))
+            group.add(row)
+        install_row = Adw.ActionRow(
+            title=_("Install the client on the navigator"),
+            subtitle=_("With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. "
+                       "Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."),
+            activatable=True)
+        install_row.add_prefix(Gtk.Image.new_from_icon_name("document-save-symbolic"))
+        install_row.connect("activated", lambda *_a: self._foston_install())
+        group.add(install_row)
+
+    def _foston_install(self):
+        from bsmd.displays.foston import install
+        try:
+            volumes = install.find_volumes()
+            if not volumes:
+                self.window.toast(_("No navigator mounted as USB storage. Quit the client on the navigator "
+                                    "(Exit button) and open its volume in the file manager."))
+                return
+            path = install.install(volumes[0])
+        except OSError as error:
+            self.window.toast(_("Could not install the client: {error}").format(error=error))
+            return
+        self.window.toast(_("Client installed at {path}. Reset the navigator before starting it.").format(path=path))
+
+    def command(self, command, quiet=False):
         def worker():
             ok, message = send_display_command(command, self.run_helper)
+            if ok and quiet:
+                return
             GLib.idle_add(lambda: (self.window.toast(_("Sent to the display.")) if ok else
                                    self.window._error(_("The display did not receive the command"), message))
                           and False)

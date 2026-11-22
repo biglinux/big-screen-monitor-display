@@ -306,6 +306,7 @@ def run_stopped(window):
 
 def run_narrow(window):
     pump(1.5)
+    check("width", window.get_width())
     check("collapsed", window.split.get_collapsed())
     check("adaptive_narrow", config_gui.ui.ADAPTIVE.narrow)
     window.show_section("themes")
@@ -355,7 +356,53 @@ def run_deepcool(window):
     window.close()
 
 
-SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool}
+def run_android(window):
+    """An Android phone next to a simulated panel; a pairing request waiting."""
+    import glob
+    pump(1.5)
+    window.show_section("displays")
+    pump(2.0)
+    displays = window.displays_page
+    group = displays.android
+    check("android_group", group.group.get_visible())
+    card = displays.grid.cards.get("android-0123456789ab")
+    check("android_card", card is not None)
+    check("android_card_title", card.title.get_label() if card else "")
+    check("android_card_subtitle", card.subtitle.get_label() if card else "")
+    check("android_request_rows", len(group.dynamic))
+    check("android_state", group.state_row.get_subtitle())
+    spool = os.path.join(os.path.dirname(os.environ["BSM_STATUS"]), "commands")
+    group._decide("0011223344556677", True)
+    pump(1.0)
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    check("android_approve_sent", [c.get("action") for c in sent])
+    for path in glob.glob(os.path.join(spool, "*.json")):
+        os.unlink(path)
+    displays.open_display("android-0123456789ab")
+    pump(0.8)
+    page = displays.details.get("android-0123456789ab")
+    check("android_detail", page is not None)
+    check("android_connection", page.rows["connection"].get_subtitle() if page else "")
+    check("android_protocol", page.rows["protocol"].get_subtitle() if page else "")
+    group.open_pairing()
+    pump(1.5)
+    dialog = group.dialog
+    check("android_qr", bool(dialog and dialog.picture.get_paintable() is not None and dialog.picture.get_visible()))
+    check("android_address", dialog.address_row.get_subtitle() if dialog else "")
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    opened = [c for c in sent if c.get("action") == "android_pair_open"]
+    check("android_pair_open", bool(opened) and len(opened[0].get("secret", "")) >= 22)
+    status = open(os.environ["BSM_STATUS"]).read()
+    check("android_secret_not_in_status", bool(opened) and opened[0]["secret"] not in status)
+    dialog.dialog.close()
+    pump(1.0)
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    check("android_pair_closed", any(c.get("action") == "android_pair_close" for c in sent))
+    window.close()
+
+
+SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool,
+             "android": run_android}
 original = config_gui.ConfigWindow.__init__
 
 

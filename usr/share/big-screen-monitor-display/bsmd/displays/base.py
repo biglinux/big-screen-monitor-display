@@ -80,6 +80,10 @@ class Capabilities:
     output: str = "raster"               # raster (framebuffer) or telemetry (structured CPU values)
     metrics: tuple = ()                  # telemetry: metrics the firmware shows, physical order
     display: str = "lcd"                 # lcd or segment (numeric)
+    touch: str = ""                      # "" none, "single" single-point touchscreen (events via on_input)
+    # "panel": the runtime rotates frames for the mounting; "device": the device
+    # rotates itself (Android) and frames are drawn at its current aspect.
+    orientation: str = "panel"
 
     def as_dict(self):
         return {key: (list(value) if isinstance(value, tuple) else value)

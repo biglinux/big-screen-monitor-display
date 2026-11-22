@@ -1,7 +1,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: big-screen-monitor-display 5.0.0\n"
+"Project-Id-Version: big-screen-monitor-display 5.4.0\n"
+"PO-Revision-Date: 2026-11-22 15:00-0300\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: BigLinux Team\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -6811,6 +6812,21 @@ msgstr "Aplicar a"
 msgid "Display that receives the changes"
 msgstr "Display que recebe as alterações"
 
+msgid "Exit to the device menu"
+msgstr "Sair para o menu do GPS"
+
+msgid "Tap again to exit"
+msgstr "Toque de novo para sair"
+
+msgid "Closing…"
+msgstr "Saindo…"
+
+msgid "Touch test"
+msgstr "Teste de toque"
+
+msgid "Calibrate"
+msgstr "Calibrar"
+
 msgid "Brightness {value}%"
 msgstr "Brilho {value}%"
 
@@ -6864,6 +6880,9 @@ msgstr "Galeria de Temas…"
 
 msgid "Could not start the service"
 msgstr "Não foi possível iniciar o serviço"
+
+msgid "Touch test - hold to leave"
+msgstr "Teste de toque – segure para sair"
 
 msgid "Kojiro"
 msgstr "Kojiro"
@@ -7023,3 +7042,460 @@ msgstr "Em execução"
 
 msgid "Switched on; this desktop has no tray to show the icon."
 msgstr "Ativada; este desktop não tem bandeja para mostrar o ícone."
+
+msgid "Touchscreen"
+msgstr "Tela sensível ao toque"
+
+msgid "Tap, hold and swipe on the panel itself; the computer's keyboard focus and mouse are never touched."
+msgstr "Toque, segure e deslize no próprio painel; o foco do teclado e o mouse do computador nunca são afetados."
+
+msgid "Draws your finger's path on the panel (hold to leave)"
+msgstr "Desenha o caminho do dedo no painel (segure para sair)"
+
+msgid "Calibrate touch"
+msgstr "Calibrar o toque"
+
+msgid "Opens the navigator's own calibration (tap the crosses)"
+msgstr "Abre a calibração do próprio navegador (toque nas cruzes)"
+
+msgid "Close the client on the navigator"
+msgstr "Fechar o cliente no navegador"
+
+msgid "Returns the navigator to its main menu and USB storage mode"
+msgstr "Volta o navegador ao menu principal e ao modo de armazenamento USB"
+
+msgid "Install the client on the navigator"
+msgstr "Instalar o cliente no navegador"
+
+msgid "With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."
+msgstr "Com o navegador conectado como armazenamento USB: copia o bsmd-ce.exe para a pasta BigScreen. Depois dê reset no navegador e escolha BigScreen\\bsmd-ce.exe como caminho da navegação."
+
+msgid "No navigator mounted as USB storage. Quit the client on the navigator (Exit button) and open its volume in the file manager."
+msgstr "Nenhum navegador montado como armazenamento USB. Feche o cliente no navegador (botão Sair) e abra o volume dele no gerenciador de arquivos."
+
+msgid "Could not install the client: {error}"
+msgstr "Não foi possível instalar o cliente: {error}"
+
+msgid "Client installed at {path}. Reset the navigator before starting it."
+msgstr "Cliente instalado em {path}. Dê reset no navegador antes de abri-lo."
+
+msgid "reported by the device (800x480 on the FS-707DC)"
+msgstr "informada pelo aparelho (800x480 no FS-707DC)"
+
+msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
+msgstr "Roda o cliente bsmd-ce no firmware original do navegador (nada é gravado)."
+
+msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
+msgstr "Toque resistivo de um ponto: toque, segure e deslize no próprio painel."
+
+msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
+msgstr "Roda no BigFoston OS (Linux no navegador): abra o app Big Screen no aparelho."
+
+msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
+msgstr "Conecta pela rede USB em 192.168.7.2, porta TCP 7707."
+
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Horizontal (upside down)"
+msgstr "Horizontal (invertida)"
+
+msgid "Vertical (upside down)"
+msgstr "Vertical (invertida)"
+
+msgid "The coconut tree"
+msgstr "O coqueiro"
+
+msgid "The philosopher"
+msgstr "O filósofo"
+
+msgid "The shark"
+msgstr "O tubarão"
+
+msgid "The raft"
+msgstr "A jangada"
+
+msgid "The UFO"
+msgstr "O disco voador"
+
+msgid "The crab with glasses"
+msgstr "O caranguejo de óculos"
+
+msgid "The mermaid"
+msgstr "A sereia"
+
+msgid "Starry night"
+msgstr "Noite estrelada"
+
+msgid "Rain again"
+msgstr "Chuva de novo"
+
+msgid "Gone fishing"
+msgstr "Pescaria"
+
+msgid "Skin"
+msgstr "Skin"
+
+msgid "Choose a story"
+msgstr "Escolha uma história"
+
+msgid "Draw with your finger"
+msgstr "Desenhe com o dedo"
+
+msgid "Device calibration"
+msgstr "Calibração do aparelho"
+
+msgid "Back to the GPS main menu"
+msgstr "Volta ao menu principal do GPS"
+
+msgid "This theme has no options here."
+msgstr "Este tema não tem opções aqui."
+
+msgid "Switched off"
+msgstr "Desligado"
+
+msgid "Unavailable"
+msgstr "Indisponível"
+
+msgid "All displays working"
+msgstr "Todos os displays funcionando"
+
+msgid "Attention needed on a display"
+msgstr "Um display precisa de atenção"
+
+msgid "Service running"
+msgstr "Serviço funcionando"
+
+msgid "{count} displays: {state}"
+msgstr "{count} displays: {state}"
+
+msgid "Changes go to: {name}"
+msgstr "Alterações vão para: {name}"
+
+msgid "Display: {name}"
+msgstr "Display: {name}"
+
+msgid "{connected} of {count} connected"
+msgstr "{connected} de {count} conectados"
+
+msgid "Apply to all displays?"
+msgstr "Aplicar a todos os displays?"
+
+msgid "These displays have their own setting, which will be replaced: {names}."
+msgstr "Estes displays têm um ajuste próprio, que será substituído: {names}."
+
+msgid ""
+"“{name}” is not connected now. Its theme can still be chosen (used when it "
+"connects again); brightness and orientation wait for it. Choose another "
+"display above."
+msgstr ""
+"“{name}” não está conectado agora. O tema ainda pode ser escolhido (vale "
+"quando ele voltar); brilho e orientação esperam por ele. Escolha outro "
+"display acima."
+
+msgid "The display is connected but does not answer."
+msgstr "O display está conectado, mas não responde."
+
+msgid "Unplug the display's cable and plug it in again."
+msgstr "Desconecte o cabo do display e conecte de novo."
+
+msgid "The display is not connected."
+msgstr "O display não está conectado."
+
+msgid "This display is not connected now. Choose another one or plug it in."
+msgstr "Este display não está conectado agora. Escolha outro ou conecte-o."
+
+msgid "The backlight is off; the theme keeps running."
+msgstr "A luz de fundo está apagada; o tema continua rodando."
+
+msgid "Turned off in the configuration window."
+msgstr "Desligado na janela de configuração."
+
+msgid "Transfers are failing now and then; the service keeps retrying."
+msgstr "Algumas transferências falham; o serviço continua tentando."
+
+msgid "The service is reconnecting to the display."
+msgstr "O serviço está reconectando ao display."
+
+msgid "The monitor service is not running."
+msgstr "O serviço de monitoramento não está rodando."
+
+# Android phones and tablets (gui/android_page.py, bsmd/touch.py)
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "Ethernet"
+msgstr "Ethernet"
+
+msgid "USB cable"
+msgstr "Cabo USB"
+
+msgid "USB (tethering)"
+msgstr "USB (ancoragem)"
+
+msgid "USB (debugging)"
+msgstr "USB (depuração)"
+
+msgid "Automatic (lossless over USB)"
+msgstr "Automática (sem perdas no USB)"
+
+msgid "Lossless (sharpest)"
+msgstr "Sem perdas (mais nítida)"
+
+msgid "Economy (least traffic)"
+msgstr "Econômica (menos tráfego)"
+
+msgid "Automatic (by performance)"
+msgstr "Automático (pelo desempenho)"
+
+msgid "Native resolution"
+msgstr "Resolução nativa"
+
+msgid "Up to 1920 px"
+msgstr "Até 1920 px"
+
+msgid "Up to 1280 px"
+msgstr "Até 1280 px"
+
+msgid "Up to 960 px"
+msgstr "Até 960 px"
+
+msgid "Up to 640 px"
+msgstr "Até 640 px"
+
+msgid "just now"
+msgstr "agora há pouco"
+
+msgid "{minutes} min ago"
+msgstr "há {minutes} min"
+
+msgid "{hours} h ago"
+msgstr "há {hours} h"
+
+msgid "{days} days ago"
+msgstr "há {days} dias"
+
+msgid "Android phones and tablets"
+msgstr "Celulares e tablets Android"
+
+msgid "Install the Big Screen Monitor Display app on the phone and add it here: it becomes one more display, with its own theme and settings, and its touchscreen controls the theme."
+msgstr "Instale o aplicativo Big Screen Monitor Display no celular e adicione-o aqui: ele vira mais um display, com tema e configurações próprios, e a tela sensível ao toque controla o tema."
+
+msgid "Add Android…"
+msgstr "Adicionar Android…"
+
+msgid "Connect over the network (Wi-Fi or Ethernet)"
+msgstr "Conectar pela rede (Wi-Fi ou Ethernet)"
+
+msgid "The computer accepts paired phones on the local network (encrypted, port 7717). Off: nothing listens on the network."
+msgstr "O computador aceita celulares pareados na rede local (criptografado, porta 7717). Desligado: nada fica escutando na rede."
+
+msgid "Connect over a USB cable"
+msgstr "Conectar por cabo USB"
+
+msgid "Phones already paired open the app when plugged in (USB accessory, no debugging needed). USB tethering and USB debugging also work."
+msgstr "Celulares já pareados abrem o aplicativo ao serem ligados no cabo (acessório USB, sem precisar de depuração). Ancoragem USB e depuração USB também funcionam."
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Phone"
+msgstr "Celular"
+
+msgid "On the USB cable · paired"
+msgstr "No cabo USB · pareado"
+
+msgid "On the USB cable"
+msgstr "No cabo USB"
+
+msgid "Use as Display"
+msgstr "Usar como display"
+
+msgid "Asks the phone to open the Big Screen Monitor Display app (USB accessory, no debugging)"
+msgstr "Pede ao celular que abra o aplicativo Big Screen Monitor Display (acessório USB, sem depuração)"
+
+msgid "Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a permanent display). The first time, allow the code shown here."
+msgstr "Confirme no celular: abrir o Big Screen Monitor Display (marque \"Sempre\" para usá-lo como display permanente). Na primeira vez, permita o código que aparecer aqui."
+
+msgid "The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB and make sure the app is installed."
+msgstr "O celular não mudou de modo: {error}. No celular, escolha \"Transferência de arquivos\" para o USB e confira se o aplicativo está instalado."
+
+msgid "No access to the phone ({error}). Choose \"File transfer\" for USB on the phone and try again."
+msgstr "Sem acesso ao celular ({error}). Escolha \"Transferência de arquivos\" para o USB no celular e tente de novo."
+
+msgid "This version of the service has no Android support yet; restart it."
+msgstr "Esta versão do serviço ainda não tem suporte a Android; reinicie-o."
+
+msgid "Waiting for phones at {addresses} (port {port})"
+msgstr "Aguardando celulares em {addresses} (porta {port})"
+
+msgid "Network off: only phones on a USB cable can connect."
+msgstr "Rede desligada: só celulares no cabo USB podem conectar."
+
+msgid "Off: no phone can connect."
+msgstr "Desligado: nenhum celular pode conectar."
+
+msgid "{name} wants to connect"
+msgstr "{name} quer se conectar"
+
+msgid "Code {code} · {model} · {transport} {address}"
+msgstr "Código {code} · {model} · {transport} {address}"
+
+msgid "Refuse"
+msgstr "Recusar"
+
+msgid "Allow"
+msgstr "Permitir"
+
+msgid "Only if the phone shows the same code"
+msgstr "Só se o celular mostrar o mesmo código"
+
+msgid "not connected"
+msgstr "desconectado"
+
+msgid "Android"
+msgstr "Android"
+
+msgid "last seen {when}"
+msgstr "visto {when}"
+
+msgid "Remove pairing"
+msgstr "Remover pareamento"
+
+msgid "Remove {name}?"
+msgstr "Remover {name}?"
+
+msgid "this phone"
+msgstr "este celular"
+
+msgid "The phone disconnects now and has to be added again to show the themes. Its settings on this computer are kept."
+msgstr "O celular desconecta agora e precisará ser adicionado de novo para mostrar os temas. As configurações dele neste computador são mantidas."
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "The service is not running"
+msgstr "O serviço não está em execução"
+
+msgid "Start the monitoring service, then add the phone."
+msgstr "Inicie o serviço de monitoramento e depois adicione o celular."
+
+msgid "Add Android"
+msgstr "Adicionar Android"
+
+msgid "1. Install the Big Screen Monitor Display app on the phone ({url}).\n2. Connect the phone to the same network as this computer.\n3. Point the phone's camera at this code and open the link, or open the app and tap \"Scan the code\"."
+msgstr "1. Instale o aplicativo Big Screen Monitor Display no celular ({url}).\n2. Conecte o celular à mesma rede deste computador.\n3. Aponte a câmera do celular para este código e abra o link, ou abra o aplicativo e toque em \"Ler o código\"."
+
+msgid "Pairing QR code"
+msgstr "QR Code de pareamento"
+
+msgid "Connections over the network are off."
+msgstr "As conexões pela rede estão desligadas."
+
+msgid "Switch on"
+msgstr "Ligar"
+
+msgid "Without the camera"
+msgstr "Sem a câmera"
+
+msgid "In the app, choose this computer in the list (or add it by address). This window then shows a code: allow it only if the phone shows the same code."
+msgstr "No aplicativo, escolha este computador na lista (ou adicione-o pelo endereço). Esta janela mostra então um código: permita somente se o celular mostrar o mesmo código."
+
+msgid "Address of this computer"
+msgstr "Endereço deste computador"
+
+msgid "Certificate fingerprint"
+msgstr "Impressão digital do certificado"
+
+msgid "{name} added"
+msgstr "{name} adicionado"
+
+msgid "It now appears in My Displays. Another phone can use the new code."
+msgstr "Ele já aparece em Meus Displays. Outro celular pode usar o novo código."
+
+msgid "Not on a network (switch the network connection on)"
+msgstr "Fora da rede (ligue a conexão pela rede)"
+
+msgid "Install python-qrcode to see the QR code; the manual way below works without it."
+msgstr "Instale o python-qrcode para ver o QR Code; o caminho manual abaixo funciona sem ele."
+
+msgid "This code changes in {minutes}:{seconds:02d}"
+msgstr "Este código muda em {minutes}:{seconds:02d}"
+
+msgid "Press Apply to let phones connect over the network."
+msgstr "Toque em Aplicar para permitir celulares pela rede."
+
+msgid "Picture quality"
+msgstr "Qualidade da imagem"
+
+msgid "Charts and text are always sent without loss; this affects photos and wallpapers."
+msgstr "Gráficos e textos são sempre enviados sem perdas; isto afeta fotos e papéis de parede."
+
+msgid "Drawing size"
+msgstr "Tamanho do desenho"
+
+msgid "Themes are drawn at this size and scaled to the screen: smaller is lighter for the computer and the network."
+msgstr "Os temas são desenhados neste tamanho e ampliados para a tela: menor pesa menos para o computador e para a rede."
+
+msgid "Rotate with the phone"
+msgstr "Girar com o celular"
+
+msgid "Follow the phone's sensor instead of the orientation chosen above."
+msgstr "Seguir o sensor do celular em vez da orientação escolhida acima."
+
+msgid "Keep the screen on"
+msgstr "Manter a tela ligada"
+
+msgid "While the theme is shown (permanent display)."
+msgstr "Enquanto o tema aparece (display permanente)."
+
+msgid "Burn-in protection"
+msgstr "Proteção contra burn-in"
+
+msgid "Moves the picture by a few pixels from time to time (OLED screens)."
+msgstr "Desloca a imagem alguns pixels de vez em quando (telas OLED)."
+
+msgid "Swipe to change theme, hold for the menu; nothing reaches the computer's mouse or keyboard."
+msgstr "Deslize para trocar de tema, segure para o menu; nada chega ao mouse ou ao teclado do computador."
+
+msgid "Media controls on the touchscreen"
+msgstr "Controles de mídia no toque"
+
+msgid "Big Media Player: play, pause, next and volume on the phone (only what the player offers)."
+msgstr "Big Media Player: reproduzir, pausar, próxima e volume no celular (só o que o reprodutor oferece)."
+
+msgid "The phone has to be added again"
+msgstr "O celular precisará ser adicionado de novo"
+
+msgid "BSDP {version} · {security}"
+msgstr "BSDP {version} · {security}"
+
+msgid "TLS, paired device"
+msgstr "TLS, aparelho pareado"
+
+msgid "USB cable, paired device"
+msgstr "Cabo USB, aparelho pareado"
+
+msgid "Android {version} · app {app}"
+msgstr "Android {version} · aplicativo {app}"
+
+msgid "Screen {screen} · {dpi} dpi"
+msgstr "Tela {screen} · {dpi} dpi"
+
+msgid "Play / pause"
+msgstr "Reproduzir / pausar"
+
+msgid "Next track"
+msgstr "Próxima faixa"
+
+msgid "Previous track"
+msgstr "Faixa anterior"
+
+msgid "Volume up"
+msgstr "Aumentar volume"
+
+msgid "Volume down"
+msgstr "Diminuir volume"

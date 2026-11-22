@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.3.1-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.4.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -41,6 +41,21 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.4.0 — Android como display, Big WindowMaker e bandeja
+
+Instale o aplicativo **Big Screen Monitor Display** (Android 5.0+) e adicione o celular em **Meus Displays › Adicionar Android…** lendo o QR Code com a câmera, ou escolhendo o computador na lista e conferindo o mesmo código nas duas telas. O celular vira mais um display, com os mesmos temas (Padrão, GKrellM, Planet, Computador Antigo, Brother Away, Kojiro, Big Media Player), tema e ajustes próprios, e a tela sensível ao toque troca o tema, abre o menu com miniaturas reais e controla o Big Media Player (só o que o player oferece). Os temas continuam sendo desenhados no computador — uma implementação só —, e o celular recebe apenas as áreas que mudaram.
+
+- **Wi-Fi/Ethernet** (desligado por padrão; TLS, aparelhos pareados, endereços públicos bloqueados) ou **cabo USB sem depuração** (acessório Android); ancoragem USB e `adb reverse` também funcionam.
+- Mesma identidade em qualquer transporte: trocar do Wi-Fi para o cabo não cria outro display.
+- Sem serviço em segundo plano nem permissões além de rede no celular; o computador nunca recebe mouse ou teclado do celular.
+- Situação honesta: backend, janela e protocolo testados no computador (cliente de referência sobre TLS); o APK compila e passa no lint e nos testes no GitHub Actions; **falta validar em aparelhos** — veja [docs/android](docs/android/README.md) e o [relatório](docs/android/15-relatorio-final.md).
+
+Também nesta versão: ícone oficial no **Big WindowMaker** (o `.desktop` agora tem o nome do `app_id`) e bandeja com **monitor symbolic** e ponto de estado verde/amarelo/vermelho/cinza, com escolha do display e "Todos os displays" ([docs/windowmaker](docs/windowmaker/)).
+
+### 🧭 FOSTON FS-707DC vira display touch
+
+Um navegador GPS de 2010 (Windows CE 5, MediaTek MT3351, 800×480 resistivo) passa a mostrar os temas do Big Screen Monitor **e a responder ao toque**, sem gravar firmware: o cliente `bsmd-ce` (32 KB, C) roda pelo menu "caminho da navegação", troca o USB para serial e fala o protocolo FSP com o serviço. Toque, deslize e segure na própria tela para trocar tema, abrir a galeria ou testar o toque — sem tocar no foco do teclado nem no mouse do computador. Medido no aparelho: 7 quadros completos/s, ~130 atualizações pequenas/s, PING de 2 ms. Detalhes em [docs/foston-fs707dc](docs/foston-fs707dc/13-relatorio-final.md).
 
 ## ✨ Novidades da 5.3.1 — Bandeja nas Preferências
 
@@ -204,6 +219,7 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
 | **SmartMonitor HID** (`0483:0065`) | "3.5 inch PC CPU Data Monitor" (llhmi / llTechCo) | 480×320 | USB HID · imagem gravada + valores | ✅ **A** — testado em hardware real |
+| **FOSTON FS-707DC Touch Display** (`045e:00ce`) | navegador GPS Windows CE 7" com o cliente `bsmd-ce` | 800×480 (informada pelo aparelho) | USB serial · FSP + **toque** | ✅ **A** — vídeo, toque e reconexão validados no aparelho ([docs](docs/foston-fs707dc/13-relatorio-final.md)) |
 
 ### SmartMonitor 3,5" HID
 

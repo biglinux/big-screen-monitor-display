@@ -1,0 +1,61 @@
+{
+ "auth_proof": "87lmKZ-xZRhtpnR8bobQTe0uAdBAqryw8et6v8PjgaA",
+ "brightness": "425301520000000137",
+ "client_nonce": "QEFCQ0RFRkdISUpLTE1OTw",
+ "device_id": "00112233445566778899aabbccddeeff",
+ "display_id": "android-5947d7c33d78",
+ "fingerprint": "ZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXp7fH1-f4CBgoM",
+ "json_view": "42530104000000137b2277223a313038302c2268223a323334307d",
+ "pair_proof": "IizWgttHfGoKtesZN5H333eVk0e66nrOh2CctG3n2ww",
+ "ping": "425301090000000401020304",
+ "present": "42530151000000080000004d050002d0",
+ "presented": "42530105000000080000004d000c0001",
+ "rect_fill": "425301500000001100080009000a000b004000300000102030",
+ "rect_zlib": "425301500000001e0000000000040002000400020100780163646266c440bf1ad801064b01ac",
+ "rect_zlib_pixels": [
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   250,
+   128,
+   7
+  ]
+ ],
+ "sas": "930992",
+ "server_nonce": "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8",
+ "token": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+ "touch": "425301060000000c0200020101040000075bcd15"
+}

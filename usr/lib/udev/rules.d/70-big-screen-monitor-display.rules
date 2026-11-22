@@ -43,6 +43,14 @@ SUBSYSTEM=="tty", ATTRS{idVendor}=="0525", ATTRS{idProduct}=="a4a7", ATTRS{seria
 SUBSYSTEM=="tty", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="0121|0106", ATTRS{serial}=="20080411", \
     MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
 
+# FOSTON FS-707DC (Windows CE navigator running the bsmd-ce client): the
+# Windows CE USB serial function (ipaq driver). 045e:00ce is shared by every
+# Windows CE device, so the rule is also pinned to the product string of this
+# firmware; ModemManager must not probe it (AT commands would reach the client).
+SUBSYSTEM=="tty", ATTRS{idVendor}=="045e", ATTRS{idProduct}=="00ce", \
+    ATTRS{product}=="Generic Serial (PROTOTYPE--Remember to change idVendor)", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+
 # ------------------------------------------------------------ HID panels
 # SmartMonitor 3.5" HID panel (llhmi.com / llTechCo, sold as "3.5 inch PC CPU
 # Data Monitor"): only the hidraw node of 0483:0065, never other STMicro devices.
@@ -79,3 +87,11 @@ ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{serial}=="CT21
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="3633", \
     ATTR{idProduct}=="0001|0002|0003|0004|0006|0008|0009|000a|0010|0011|0012", \
     TEST=="power/control", ATTR{power/control}="on"
+
+# ------------------------------------------------------------ Android phones
+# Android Open Accessory mode (18d1:2d00 accessory, 2d01 accessory + adb): a
+# phone only takes these ids after the user's session asked it to open the Big
+# Screen Monitor Display app (window or screen tray, bsmd/displays/android/aoa.py).
+# The service is never given phones in their usual (MTP, PTP, adb) modes.
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="18d1", ATTR{idProduct}=="2d00|2d01", \
+    MODE="0660", GROUP="big-screen-monitor", TAG+="uaccess"
