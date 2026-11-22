@@ -7152,3 +7152,72 @@ msgstr "Volta ao menu principal do GPS"
 
 msgid "This theme has no options here."
 msgstr "Este tema não tem opções aqui."
+
+msgid "Switched off"
+msgstr "Desligado"
+
+msgid "Unavailable"
+msgstr "Indisponível"
+
+msgid "All displays working"
+msgstr "Todos os displays funcionando"
+
+msgid "Attention needed on a display"
+msgstr "Um display precisa de atenção"
+
+msgid "Service running"
+msgstr "Serviço funcionando"
+
+msgid "{count} displays: {state}"
+msgstr "{count} displays: {state}"
+
+msgid "Changes go to: {name}"
+msgstr "Alterações vão para: {name}"
+
+msgid "Display: {name}"
+msgstr "Display: {name}"
+
+msgid "{connected} of {count} connected"
+msgstr "{connected} de {count} conectados"
+
+msgid "Apply to all displays?"
+msgstr "Aplicar a todos os displays?"
+
+msgid "These displays have their own setting, which will be replaced: {names}."
+msgstr "Estes displays têm um ajuste próprio, que será substituído: {names}."
+
+msgid ""
+"“{name}” is not connected now. Its theme can still be chosen (used when it "
+"connects again); brightness and orientation wait for it. Choose another "
+"display above."
+msgstr ""
+"“{name}” não está conectado agora. O tema ainda pode ser escolhido (vale "
+"quando ele voltar); brilho e orientação esperam por ele. Escolha outro "
+"display acima."
+
+msgid "The display is connected but does not answer."
+msgstr "O display está conectado, mas não responde."
+
+msgid "Unplug the display's cable and plug it in again."
+msgstr "Desconecte o cabo do display e conecte de novo."
+
+msgid "The display is not connected."
+msgstr "O display não está conectado."
+
+msgid "This display is not connected now. Choose another one or plug it in."
+msgstr "Este display não está conectado agora. Escolha outro ou conecte-o."
+
+msgid "The backlight is off; the theme keeps running."
+msgstr "A luz de fundo está apagada; o tema continua rodando."
+
+msgid "Turned off in the configuration window."
+msgstr "Desligado na janela de configuração."
+
+msgid "Transfers are failing now and then; the service keeps retrying."
+msgstr "Algumas transferências falham; o serviço continua tentando."
+
+msgid "The service is reconnecting to the display."
+msgstr "O serviço está reconectando ao display."
+
+msgid "The monitor service is not running."
+msgstr "O serviço de monitoramento não está rodando."

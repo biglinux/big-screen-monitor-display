@@ -30,12 +30,13 @@ QProgressBar#busy { max-height: 3px; border: 0; background: transparent; }
 QProgressBar#busy::chunk { background: palette(highlight); }
 """
 
-# state -> (dot colour, label); colours readable on light and dark backgrounds
+# state -> (dot colour, label); the tray icon's dot colours (traykit.icons.DOT_COLOURS:
+# green, yellow, red, grey), one shade deeper so the dot also reads on light windows
 STATES = {
-    "ok": ("#2e7d32", ""),
-    "warning": ("#ef6c00", ""),
-    "error": ("#c62828", ""),
-    "off": ("#757575", ""),
+    "ok": ("#26a269", ""),
+    "warning": ("#e5a50a", ""),
+    "error": ("#e01b24", ""),
+    "off": ("#9a9996", ""),
 }
 
 

@@ -38,6 +38,7 @@ def test_clean_install_and_idempotent_reinstall(tmp_path):
     files = manifest(dest)
     for wanted in ("/usr/bin/big-screen-monitor-tray", "/usr/bin/big-screen-monitor-deepcool",
                    "/usr/share/applications/big-screen-monitor-tray.desktop",
+                   "/usr/share/applications/br.com.biglinux.BigScreenMonitorDisplay.desktop",
                    "/usr/share/applications/big-screen-monitor-deepcool.desktop",
                    "/usr/share/icons/hicolor/scalable/apps/big-screen-monitor-deepcool.svg",
                    "/usr/share/big-screen-monitor-display/traykit/base.py",
@@ -141,3 +142,14 @@ def test_pkgbuild_declares_tray_dependencies():
         text = handle.read()
     assert "'python-pyqt6'" in text
     assert "screentray/main.py" in text and "deepcooltray/main.py" in text
+
+
+def test_upgrade_replaces_the_launcher_renamed_after_the_application_id(tmp_path):
+    dest = tmp_path / "root"
+    apps = dest / "usr/share/applications"
+    apps.mkdir(parents=True)
+    old = apps / "big-screen-monitor-display.desktop"
+    old.write_text("[Desktop Entry]\nName=Big Screen Monitor Display\nExec=/usr/bin/big-screen-monitor-config.sh\n")
+    run(INSTALL, "--destdir", str(dest))
+    assert not old.exists()                                     # no second menu entry after an upgrade
+    assert (apps / "br.com.biglinux.BigScreenMonitorDisplay.desktop").exists()

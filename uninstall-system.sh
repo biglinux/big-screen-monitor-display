@@ -70,11 +70,13 @@ for file in usr/bin/big-screen-monitor-config.sh usr/bin/big-screen-monitor-disp
             usr/lib/systemd/system/sleep.target.wants/${PKGNAME}-sleep.service \
             usr/lib/udev/rules.d/70-${PKGNAME}.rules usr/lib/sysusers.d/${PKGNAME}.conf \
             usr/share/polkit-1/actions/org.biglinux.big-screen-monitor.policy \
-            usr/share/applications/${PKGNAME}.desktop usr/share/applications/big-screen-monitor-tray.desktop \
+            usr/share/applications/${PKGNAME}.desktop usr/share/applications/br.com.biglinux.BigScreenMonitorDisplay.desktop \
+            usr/share/applications/big-screen-monitor-tray.desktop \
             usr/share/applications/big-screen-monitor-deepcool.desktop \
             usr/share/applications/deepcool-digital.desktop usr/share/applications/screen-monitor-tray.desktop \
             usr/share/icons/hicolor/scalable/apps/${PKGNAME}.svg \
             usr/share/icons/hicolor/scalable/apps/big-screen-monitor-tray.svg \
+            usr/share/icons/hicolor/symbolic/apps/big-screen-monitor-tray-symbolic.svg \
             usr/share/icons/hicolor/scalable/apps/big-screen-monitor-deepcool.svg \
             usr/share/icons/hicolor/scalable/apps/deepcool-digital.svg \
             usr/share/icons/hicolor/scalable/apps/screen-monitor-tray.svg \

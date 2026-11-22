@@ -32,7 +32,8 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from bsmd import (APP_ID, SERVICE_NAME, __version__, control, dashboard, diagnostics, runtime, settings,  # noqa: E402
+from bsmd import (APP_ID, APPLICATION_ID, SERVICE_NAME, __version__, control, dashboard, diagnostics,  # noqa: E402
+                  runtime, settings,
                   sound, telemetry, themes)
 from bsmd.i18n import N_, _  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
@@ -1303,10 +1304,14 @@ LEGACY_PAGES = {"display": "displays", "theme_kojiro": "kojiro", "theme_big_medi
 
 class ConfigApp(Adw.Application):
     def __init__(self, screenshot=None, page=None):
-        super().__init__(application_id="br.com.biglinux.BigScreenMonitorDisplay",
+        super().__init__(application_id=APPLICATION_ID,
                          flags=Gio.ApplicationFlags.NON_UNIQUE if screenshot else Gio.ApplicationFlags.DEFAULT_FLAGS)
+        # Window identity (docs/windowmaker/icon-windowmaker.md): Wayland app_id = APPLICATION_ID
+        # = name of the .desktop file; X11 WM_CLASS = prgname = StartupWMClass; and the icon by
+        # name for every window (GTK publishes it as _NET_WM_ICON on X11, which Window Maker uses).
         GLib.set_prgname(APP_ID)
         GLib.set_application_name(_("Big Screen Monitor Display"))
+        Gtk.Window.set_default_icon_name(APP_ID)
         self.screenshot = screenshot
         self.page = page
 

@@ -366,13 +366,14 @@ def test_screen_tray_brightness_power_and_hotplug(qt_env):
     # Unplugged: the service drops the display; the tray follows without opening any device.
     qt_env.status([])
     tray.poll()
-    assert tray._state_text()[1] == "No display connected" and tray._icon_state() == "off"
+    assert tray._state_text()[1] == "No display connected" and tray._icon_state() == "red"
     qt_env.status([SCREEN])
     tray.poll()
-    assert tray._icon_state() == "ok"
+    assert tray._icon_state() == "green"
     qt_env.status([SCREEN], age=60)                              # service stopped refreshing
     tray.poll()
-    assert tray._state_text()[0] == "error"
+    # Grey "service stopped", never "display disconnected": the display itself may be fine.
+    assert tray._state_text() == ("off", "Service stopped") and tray._icon_state() == "grey"
 
 
 def test_screen_tray_menu_not_rebuilt_without_changes(qt_env):
