@@ -303,9 +303,11 @@ def test_handshake_rejects_garbage_and_silence(hub):
         raw.sendall(b"hello\r\n")
         raw.settimeout(5)
         try:
-            assert raw.recv(100) == b""
+            data = raw.recv(100)
         except ConnectionResetError:
-            pass                                          # reset: closed as well
+            data = b""                                    # reset: closed as well
+        # Closed, or a TLS alert record (0x15) first, depending on the OpenSSL build: never BSDP data.
+        assert data == b"" or data[0] == 0x15
     assert wait_for(lambda: made.counters["tls_failed"] >= 1, timeout=3)
 
 

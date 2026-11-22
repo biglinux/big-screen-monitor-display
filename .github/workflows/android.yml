@@ -22,10 +22,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - uses: android-actions/setup-android@v4
-        with:
-          # The default list still asks for the removed "tools" package.
-          packages: "platform-tools platforms;android-36 build-tools;36.0.0"
+      # The runner's Android SDK (licences accepted) is used as it is; AGP fetches platform 36.
       - uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: "9.7.1"
