@@ -249,6 +249,7 @@ ANDROID_STATUS = {"android": {
 
 def android_display():
     entry = simulated("android-0123456789ab", (1280, 576))
+    entry["settings"] = {"theme": "kojiro"}         # chosen on the phone (touch), not in settings.json
     entry.update(name="Galaxy S24", source={"profile": "android", "name": "Galaxy S24", "transport": "android"},
                  device={"driver": "android", "model": "samsung SM-S921B", "width": 1280, "height": 576,
                          "location": "wifi 192.168.1.31",
@@ -265,6 +266,7 @@ def test_android_in_my_displays(tmp_path):
     checks = drive(tmp_path, "android", [simulated("simulated", (480, 320)), android_display()], ANDROID_STATUS)
     assert checks["android_group"] is True and checks["android_card"] is True
     assert checks["android_card_title"] == "Galaxy S24"
+    assert "Kojiro" in checks["android_card_subtitle"]        # the theme the phone really shows
     assert checks["android_request_rows"] == 2              # one request + one paired phone
     assert "192.168.1.20" in checks["android_state"]
     assert checks["android_approve_sent"] == ["android_approve"]

@@ -286,6 +286,11 @@ class DisplaysPage:
         card = self.grid.cards[entry.id]
         own = self._entry_settings(entry.id)
         effective = settings.merged(self.window.values, entry.id)
+        live_theme = ((entry.status or {}).get("settings") or {}).get("theme")
+        if live_theme and effective.get("theme") == settings.merged(self.window.saved, entry.id).get("theme"):
+            # Chosen on the display itself (touch panel, Android): show what it really shows,
+            # unless the window has an unapplied change of its own.
+            effective["theme"] = live_theme
         state, _kind = self._state(entry)
         family = self._family(entry)
         if family is not None:

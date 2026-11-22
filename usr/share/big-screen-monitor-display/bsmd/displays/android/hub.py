@@ -386,7 +386,11 @@ class AndroidHub:
         return False
 
     def _handshake(self, link, cert_fp, inbox):
-        hello = bsdp.Hello.parse(self._next(link, inbox, HANDSHAKE_TIMEOUT, {bsdp.HELLO}).json())
+        body = self._next(link, inbox, HANDSHAKE_TIMEOUT, {bsdp.HELLO}).json()
+        if bsdp.integer(body.get("proto"), 0, 255) != bsdp.VERSION:
+            # Tell the app why (it asks to update) instead of just closing.
+            return self._reject(link, bsdp.R_VERSION, f"this computer speaks BSDP {bsdp.VERSION}")
+        hello = bsdp.Hello.parse(body)
         if link.transport == "network" and hello.transport in ("wifi", "ethernet", "usb-tether"):
             link.transport = hello.transport
         elif link.transport in ("network", "usb-adb") and hello.transport == "usb-adb":

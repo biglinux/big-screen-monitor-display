@@ -283,6 +283,13 @@ def test_pairing_by_confirmation_can_be_refused(hub):
     client.close()
 
 
+def test_other_protocol_version_is_told_to_update(hub):
+    made = hub()
+    client = Client(made.port).connect()
+    assert client.hello({"proto": 2}) is None and client.reject["reason"] == bsdp.R_VERSION
+    client.close()
+
+
 def test_handshake_rejects_garbage_and_silence(hub):
     made = hub()
     import ssl
@@ -299,7 +306,7 @@ def test_handshake_rejects_garbage_and_silence(hub):
             assert raw.recv(100) == b""
         except ConnectionResetError:
             pass                                          # reset: closed as well
-    assert made.counters["tls_failed"] >= 1
+    assert wait_for(lambda: made.counters["tls_failed"] >= 1, timeout=3)
 
 
 def test_revoking_drops_the_connection(hub):
@@ -756,3 +763,42 @@ def test_accessory_link_pairs_and_is_remembered(tmp_path):
         made.stop()
         device.pc_end.close()
         device.phone_end.close()
+
+
+def test_touch_menu_offers_calibration_only_where_it_exists():
+    class Host:
+        calibrate = False
+
+        def base_settings(self):
+            return {"theme": "standard"}
+
+        def request(self, *args):
+            pass
+
+        def wake(self):
+            pass
+
+        def name(self):
+            return "Phone"
+
+        def state(self):
+            return "healthy"
+
+        def can_calibrate(self):
+            return self.calibrate
+
+        def device_oriented(self):
+            return True
+
+    host = Host()
+    ui = touch.TouchUI(host, thumbnails=False)
+    ui.command("menu")
+    ui.decorate(Image.new("RGB", (1280, 720)), host.base_settings())
+    assert "calibrate" not in [action for _box, action, _arg in ui.buttons]
+    host.calibrate = True
+    ui.decorate(Image.new("RGB", (1280, 720)), host.base_settings())
+    assert "calibrate" in [action for _box, action, _arg in ui.buttons]
+    ui.command("menu")
+    ui._open("orientation", ui.clock())
+    ui.decorate(Image.new("RGB", (1280, 720)), host.base_settings())
+    assert ("orientation", "auto") in [(a, arg) for _box, a, arg in ui.buttons]     # phones can follow the sensor

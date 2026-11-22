@@ -283,7 +283,7 @@ class PairDialog:
             _("1. Install the Big Screen Monitor Display app on the phone ({url}).\n"
               "2. Connect the phone to the same network as this computer.\n"
               "3. Point the phone's camera at this code and open the link, or open the app and tap "
-              "\"Scan code\".").format(url=APP_URL), dim=False)
+              "\"Scan the code\".").format(url=APP_URL), dim=False)
         box.append(self.steps)
         self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, height_request=280,
                                    halign=Gtk.Align.CENTER, width_request=280)

@@ -42,8 +42,11 @@ DeviceAllow=char-hidraw rw
 Nice=10
 CPUWeight=20
 IOSchedulingClass=idle
-MemoryHigh=192M
-MemoryMax=320M
+# Measured (docs/android/11-desempenho.md): every theme at 1280x576 for an
+# Android phone ~170 MB, at 1920x864 ("Fluid") ~255 MB; theme caches grow with
+# the drawing size. USB panels alone stay near 90 MB.
+MemoryHigh=256M
+MemoryMax=384M
 
 # Sandboxing
 ProtectSystem=strict

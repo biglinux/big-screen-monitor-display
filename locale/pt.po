@@ -7221,3 +7221,280 @@ msgstr "O serviço está reconectando ao display."
 
 msgid "The monitor service is not running."
 msgstr "O serviço de monitoramento não está rodando."
+
+# Android phones and tablets (gui/android_page.py, bsmd/touch.py)
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "Ethernet"
+msgstr "Ethernet"
+
+msgid "USB cable"
+msgstr "Cabo USB"
+
+msgid "USB (tethering)"
+msgstr "USB (ancoragem)"
+
+msgid "USB (debugging)"
+msgstr "USB (depuração)"
+
+msgid "Automatic (lossless over USB)"
+msgstr "Automática (sem perdas no USB)"
+
+msgid "Lossless (sharpest)"
+msgstr "Sem perdas (mais nítida)"
+
+msgid "Economy (least traffic)"
+msgstr "Econômica (menos tráfego)"
+
+msgid "Automatic (by performance)"
+msgstr "Automático (pelo desempenho)"
+
+msgid "Native resolution"
+msgstr "Resolução nativa"
+
+msgid "Up to 1920 px"
+msgstr "Até 1920 px"
+
+msgid "Up to 1280 px"
+msgstr "Até 1280 px"
+
+msgid "Up to 960 px"
+msgstr "Até 960 px"
+
+msgid "Up to 640 px"
+msgstr "Até 640 px"
+
+msgid "just now"
+msgstr "agora há pouco"
+
+msgid "{minutes} min ago"
+msgstr "há {minutes} min"
+
+msgid "{hours} h ago"
+msgstr "há {hours} h"
+
+msgid "{days} days ago"
+msgstr "há {days} dias"
+
+msgid "Android phones and tablets"
+msgstr "Celulares e tablets Android"
+
+msgid "Install the Big Screen Monitor Display app on the phone and add it here: it becomes one more display, with its own theme and settings, and its touchscreen controls the theme."
+msgstr "Instale o aplicativo Big Screen Monitor Display no celular e adicione-o aqui: ele vira mais um display, com tema e configurações próprios, e a tela sensível ao toque controla o tema."
+
+msgid "Add Android…"
+msgstr "Adicionar Android…"
+
+msgid "Connect over the network (Wi-Fi or Ethernet)"
+msgstr "Conectar pela rede (Wi-Fi ou Ethernet)"
+
+msgid "The computer accepts paired phones on the local network (encrypted, port 7717). Off: nothing listens on the network."
+msgstr "O computador aceita celulares pareados na rede local (criptografado, porta 7717). Desligado: nada fica escutando na rede."
+
+msgid "Connect over a USB cable"
+msgstr "Conectar por cabo USB"
+
+msgid "Phones already paired open the app when plugged in (USB accessory, no debugging needed). USB tethering and USB debugging also work."
+msgstr "Celulares já pareados abrem o aplicativo ao serem ligados no cabo (acessório USB, sem precisar de depuração). Ancoragem USB e depuração USB também funcionam."
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Phone"
+msgstr "Celular"
+
+msgid "On the USB cable · paired"
+msgstr "No cabo USB · pareado"
+
+msgid "On the USB cable"
+msgstr "No cabo USB"
+
+msgid "Use as Display"
+msgstr "Usar como display"
+
+msgid "Asks the phone to open the Big Screen Monitor Display app (USB accessory, no debugging)"
+msgstr "Pede ao celular que abra o aplicativo Big Screen Monitor Display (acessório USB, sem depuração)"
+
+msgid "Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a permanent display). The first time, allow the code shown here."
+msgstr "Confirme no celular: abrir o Big Screen Monitor Display (marque \"Sempre\" para usá-lo como display permanente). Na primeira vez, permita o código que aparecer aqui."
+
+msgid "The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB and make sure the app is installed."
+msgstr "O celular não mudou de modo: {error}. No celular, escolha \"Transferência de arquivos\" para o USB e confira se o aplicativo está instalado."
+
+msgid "No access to the phone ({error}). Choose \"File transfer\" for USB on the phone and try again."
+msgstr "Sem acesso ao celular ({error}). Escolha \"Transferência de arquivos\" para o USB no celular e tente de novo."
+
+msgid "This version of the service has no Android support yet; restart it."
+msgstr "Esta versão do serviço ainda não tem suporte a Android; reinicie-o."
+
+msgid "Waiting for phones at {addresses} (port {port})"
+msgstr "Aguardando celulares em {addresses} (porta {port})"
+
+msgid "Network off: only phones on a USB cable can connect."
+msgstr "Rede desligada: só celulares no cabo USB podem conectar."
+
+msgid "Off: no phone can connect."
+msgstr "Desligado: nenhum celular pode conectar."
+
+msgid "{name} wants to connect"
+msgstr "{name} quer se conectar"
+
+msgid "Code {code} · {model} · {transport} {address}"
+msgstr "Código {code} · {model} · {transport} {address}"
+
+msgid "Refuse"
+msgstr "Recusar"
+
+msgid "Allow"
+msgstr "Permitir"
+
+msgid "Only if the phone shows the same code"
+msgstr "Só se o celular mostrar o mesmo código"
+
+msgid "not connected"
+msgstr "desconectado"
+
+msgid "Android"
+msgstr "Android"
+
+msgid "last seen {when}"
+msgstr "visto {when}"
+
+msgid "Remove pairing"
+msgstr "Remover pareamento"
+
+msgid "Remove {name}?"
+msgstr "Remover {name}?"
+
+msgid "this phone"
+msgstr "este celular"
+
+msgid "The phone disconnects now and has to be added again to show the themes. Its settings on this computer are kept."
+msgstr "O celular desconecta agora e precisará ser adicionado de novo para mostrar os temas. As configurações dele neste computador são mantidas."
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "The service is not running"
+msgstr "O serviço não está em execução"
+
+msgid "Start the monitoring service, then add the phone."
+msgstr "Inicie o serviço de monitoramento e depois adicione o celular."
+
+msgid "Add Android"
+msgstr "Adicionar Android"
+
+msgid "1. Install the Big Screen Monitor Display app on the phone ({url}).\n2. Connect the phone to the same network as this computer.\n3. Point the phone's camera at this code and open the link, or open the app and tap \"Scan the code\"."
+msgstr "1. Instale o aplicativo Big Screen Monitor Display no celular ({url}).\n2. Conecte o celular à mesma rede deste computador.\n3. Aponte a câmera do celular para este código e abra o link, ou abra o aplicativo e toque em \"Ler o código\"."
+
+msgid "Pairing QR code"
+msgstr "QR Code de pareamento"
+
+msgid "Connections over the network are off."
+msgstr "As conexões pela rede estão desligadas."
+
+msgid "Switch on"
+msgstr "Ligar"
+
+msgid "Without the camera"
+msgstr "Sem a câmera"
+
+msgid "In the app, choose this computer in the list (or add it by address). This window then shows a code: allow it only if the phone shows the same code."
+msgstr "No aplicativo, escolha este computador na lista (ou adicione-o pelo endereço). Esta janela mostra então um código: permita somente se o celular mostrar o mesmo código."
+
+msgid "Address of this computer"
+msgstr "Endereço deste computador"
+
+msgid "Certificate fingerprint"
+msgstr "Impressão digital do certificado"
+
+msgid "{name} added"
+msgstr "{name} adicionado"
+
+msgid "It now appears in My Displays. Another phone can use the new code."
+msgstr "Ele já aparece em Meus Displays. Outro celular pode usar o novo código."
+
+msgid "Not on a network (switch the network connection on)"
+msgstr "Fora da rede (ligue a conexão pela rede)"
+
+msgid "Install python-qrcode to see the QR code; the manual way below works without it."
+msgstr "Instale o python-qrcode para ver o QR Code; o caminho manual abaixo funciona sem ele."
+
+msgid "This code changes in {minutes}:{seconds:02d}"
+msgstr "Este código muda em {minutes}:{seconds:02d}"
+
+msgid "Press Apply to let phones connect over the network."
+msgstr "Toque em Aplicar para permitir celulares pela rede."
+
+msgid "Picture quality"
+msgstr "Qualidade da imagem"
+
+msgid "Charts and text are always sent without loss; this affects photos and wallpapers."
+msgstr "Gráficos e textos são sempre enviados sem perdas; isto afeta fotos e papéis de parede."
+
+msgid "Drawing size"
+msgstr "Tamanho do desenho"
+
+msgid "Themes are drawn at this size and scaled to the screen: smaller is lighter for the computer and the network."
+msgstr "Os temas são desenhados neste tamanho e ampliados para a tela: menor pesa menos para o computador e para a rede."
+
+msgid "Rotate with the phone"
+msgstr "Girar com o celular"
+
+msgid "Follow the phone's sensor instead of the orientation chosen above."
+msgstr "Seguir o sensor do celular em vez da orientação escolhida acima."
+
+msgid "Keep the screen on"
+msgstr "Manter a tela ligada"
+
+msgid "While the theme is shown (permanent display)."
+msgstr "Enquanto o tema aparece (display permanente)."
+
+msgid "Burn-in protection"
+msgstr "Proteção contra burn-in"
+
+msgid "Moves the picture by a few pixels from time to time (OLED screens)."
+msgstr "Desloca a imagem alguns pixels de vez em quando (telas OLED)."
+
+msgid "Swipe to change theme, hold for the menu; nothing reaches the computer's mouse or keyboard."
+msgstr "Deslize para trocar de tema, segure para o menu; nada chega ao mouse ou ao teclado do computador."
+
+msgid "Media controls on the touchscreen"
+msgstr "Controles de mídia no toque"
+
+msgid "Big Media Player: play, pause, next and volume on the phone (only what the player offers)."
+msgstr "Big Media Player: reproduzir, pausar, próxima e volume no celular (só o que o reprodutor oferece)."
+
+msgid "The phone has to be added again"
+msgstr "O celular precisará ser adicionado de novo"
+
+msgid "BSDP {version} · {security}"
+msgstr "BSDP {version} · {security}"
+
+msgid "TLS, paired device"
+msgstr "TLS, aparelho pareado"
+
+msgid "USB cable, paired device"
+msgstr "Cabo USB, aparelho pareado"
+
+msgid "Android {version} · app {app}"
+msgstr "Android {version} · aplicativo {app}"
+
+msgid "Screen {screen} · {dpi} dpi"
+msgstr "Tela {screen} · {dpi} dpi"
+
+msgid "Play / pause"
+msgstr "Reproduzir / pausar"
+
+msgid "Next track"
+msgstr "Próxima faixa"
+
+msgid "Previous track"
+msgstr "Faixa anterior"
+
+msgid "Volume up"
+msgstr "Aumentar volume"
+
+msgid "Volume down"
+msgstr "Diminuir volume"

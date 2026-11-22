@@ -367,6 +367,7 @@ def run_android(window):
     card = displays.grid.cards.get("android-0123456789ab")
     check("android_card", card is not None)
     check("android_card_title", card.title.get_label() if card else "")
+    check("android_card_subtitle", card.subtitle.get_label() if card else "")
     check("android_request_rows", len(group.dynamic))
     check("android_state", group.state_row.get_subtitle())
     spool = os.path.join(os.path.dirname(os.environ["BSM_STATUS"]), "commands")
