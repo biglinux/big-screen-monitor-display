@@ -35,7 +35,7 @@ from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 from bsmd import (APP_ID, APPLICATION_ID, SERVICE_NAME, __version__, control, dashboard, diagnostics,  # noqa: E402
                   runtime, settings,
                   sound, telemetry, themes)
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
 from gui import deepcool_page, smartmonitor_view  # noqa: E402
@@ -1118,7 +1118,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         elif not connected:
             kind, text = "warning", _("Waiting for a display")
         elif status.get("state") == "healthy":
-            kind, text = "success", _("Running · {count} display(s)").format(count=len(connected))
+            kind, text = "success", ngettext("Running · {count} display", "Running · {count} displays",
+                                                len(connected)).format(count=len(connected))
         else:
             kind, text = "warning", diagnostics.describe_state(status)
         self.status_dot.add_css_class(kind)
@@ -1143,7 +1144,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             fps=min(stats.get("fps", 0), stats.get("target_fps", 0) or 99), target=stats.get("target_fps", 0)))
         self.perf_rows["usb"].set_subtitle(f"{stats.get('transfer_ms', 0):.1f} ms")
         self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "
-                                            + _("{frames} frames").format(frames=stats.get("frames_sent", 0)))
+                                            + ngettext("{frames} frame", "{frames} frames", stats.get("frames_sent", 0)).format(
+                                                frames=stats.get("frames_sent", 0)))
         self.perf_rows["drop"].set_subtitle(str(stats.get("frames_dropped", 0)))
 
     def _refresh_diagnostics(self):
@@ -1242,7 +1244,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.results_group.set_visible(True)
         problems = sum(1 for c in report["checks"] if not c["ok"])
         self.toast(_("No problems found.") if not problems else
-                   _("{count} item(s) need attention.").format(count=problems))
+                   ngettext("{count} item needs attention.", "{count} items need attention.", problems).format(
+                       count=problems))
 
     def _export(self):
         dialog = Gtk.FileDialog(title=_("Export diagnostics"),

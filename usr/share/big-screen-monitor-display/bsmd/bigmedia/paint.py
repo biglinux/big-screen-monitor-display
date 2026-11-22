@@ -359,7 +359,9 @@ def text_mask(text, size, bold=False, mono=False, pixel=False):
         fnt = font(size, bold, mono)
         ascent, descent = fnt.getmetrics()
         length = int(math.ceil(fnt.getlength(text or " "))) + 2
-        mask = Image.new("L", (max(1, length), ascent + descent + 2), 0)
+        # a text drawn with a fallback face (bsmd.fonts) may be taller than this one
+        height = max(ascent + descent, fnt.getbbox(text or " ")[3])
+        mask = Image.new("L", (max(1, length), height + 2), 0)
         ImageDraw.Draw(mask).text((1, 1), text, font=fnt, fill=255)
     _TEXT_CACHE[key] = mask
     while len(_TEXT_CACHE) > TEXT_CACHE_SIZE:

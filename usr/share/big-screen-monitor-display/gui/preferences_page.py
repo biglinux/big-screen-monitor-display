@@ -15,7 +15,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gtk  # noqa: E402
 
-from bsmd import __version__  # noqa: E402
+from bsmd import __version__, i18n  # noqa: E402
 from bsmd.i18n import _  # noqa: E402
 
 from . import components as ui  # noqa: E402
@@ -75,8 +75,7 @@ class PreferencesPage:
         self.style_row.set_selected(keys.index(current) if current in keys else 0)
         self.style_row.connect("notify::selected", self._on_style)
         look.add(self.style_row)
-        look.add(w._combo("language", _("Language"), [("auto", _("As the system")), ("pt", "Português (Brasil)"),
-                                                      ("en", "English")],
+        look.add(w._combo("language", _("Language"), [("auto", _("As the system")), *i18n.LANGUAGES],
                           _("Used by the display themes; the window follows the system after a restart.")))
         page_items.append(look)
 

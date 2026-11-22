@@ -16,6 +16,8 @@ import re
 import tempfile
 import threading
 
+from .i18n import LANGUAGES
+
 SYSTEM_CONFIG = "/etc/big-screen-monitor-display/settings.json"
 LEGACY_RELATIVE = os.path.join(".config", "big-screen-monitor", "settings.json")
 MAX_FILE_SIZE = 512 * 1024      # Kojiro layouts (and per-display copies) need more than the 4.0 limit
@@ -79,7 +81,7 @@ SCHEMA = {
     # Application
     "theme": (*_choice(*THEME_IDS, *LEGACY_STANDARD), "standard"),
     "network_iface": (*_choice("auto", "eth", "wifi"), "auto"),
-    "language": (*_choice("auto", "pt", "en"), "auto"),
+    "language": (*_choice("auto", *(code for code, _name in LANGUAGES)), "auto"),
     "performance_profile": (*_choice("auto", "economy", "balanced", "fluid"), "auto"),
     # Android phones and tablets as displays (bsmd/displays/android). The service
     # only listens on the local network when this is switched on.

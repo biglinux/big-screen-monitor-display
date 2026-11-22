@@ -15,9 +15,10 @@ from datetime import datetime
 import psutil
 from PIL import Image, ImageDraw, ImageFont
 
+from . import fonts
 from . import legacy_themes as legacy
 from .dashboard import MONTHS, WEEKDAYS, fit, format_uptime, text_height
-from .i18n import _
+from .i18n import _, ngettext
 from .telemetry import (CPU_SYSTEM_HISTORY, CPU_USAGE_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, STATS_LOCK,
                         SYSTEM_STATS)
 
@@ -67,7 +68,7 @@ _FONTS = {}
 def _mono_cache(path, size):
     key = (path, size)
     if key not in _FONTS:
-        _FONTS[key] = ImageFont.truetype(path, size)
+        _FONTS[key] = fonts.truetype(path, size)
     return _FONTS[key]
 
 
@@ -336,7 +337,7 @@ def _cores_draw(cv, x, y, w, stats, s):
         top = y + h - h * min(1.0, value / 100)
         cv.d.rectangle((bx + 1, top, bx + width - 1, y + h), fill=cv.c["accent"])
     peak = max(cores) if cores else 0
-    cv.pair(x, y + h + 1, w, _("{count} cores").format(count=len(cores)), _("max {value:.0f}%").format(value=peak),
+    cv.pair(x, y + h + 1, w, ngettext("{count} core", "{count} cores", len(cores)).format(count=len(cores)), _("max {value:.0f}%").format(value=peak),
             cv.c["dim"], cv.c["text"], cv.small)
 
 
@@ -350,7 +351,7 @@ def _proc_draw(cv, x, y, w, stats, s):
     cores = max(1, len(stats.get("cpu_cores_percent") or []))
     y = cv.chart(x, y, w, list(stats.get("load_history") or []), float(cores), current=load[0])
     count = stats.get("proc_count")
-    cv.pair(x, y, w, _("{count} procs").format(count=count) if count else "-- procs",
+    cv.pair(x, y, w, ngettext("{count} proc", "{count} procs", count).format(count=count) if count else "-- procs",
             f"{load[0]:.2f} {load[1]:.2f}", cv.c["text"], cv.c["dim"])
 
 
@@ -582,7 +583,8 @@ def _docker_draw(cv, x, y, w, stats, s):
     elif ok is None:
         text = "..."
     else:
-        text = _("{count} containers").format(count=len(output.splitlines()))
+        text = ngettext("{count} container", "{count} containers", len(output.splitlines())).format(
+            count=len(output.splitlines()))
     cv.pair(x, y, w, text, "", cv.c["text"])
 
 
