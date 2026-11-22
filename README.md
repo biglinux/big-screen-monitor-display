@@ -42,6 +42,10 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
+## 🧭 Novo: FOSTON FS-707DC vira display touch
+
+Um navegador GPS de 2010 (Windows CE 5, MediaTek MT3351, 800×480 resistivo) passa a mostrar os temas do Big Screen Monitor **e a responder ao toque**, sem gravar firmware: o cliente `bsmd-ce` (32 KB, C) roda pelo menu "caminho da navegação", troca o USB para serial e fala o protocolo FSP com o serviço. Toque, deslize e segure na própria tela para trocar tema, abrir a galeria ou testar o toque — sem tocar no foco do teclado nem no mouse do computador. Medido no aparelho: 7 quadros completos/s, ~130 atualizações pequenas/s, PING de 2 ms. Detalhes em [docs/foston-fs707dc](docs/foston-fs707dc/13-relatorio-final.md).
+
 ## ✨ Novidades da 5.3.1 — Bandeja nas Preferências
 
 - **Preferências › Bandeja do sistema**: um interruptor para a bandeja das telas USB e outro para a dos coolers DeepCool. Ligado, a bandeja abre na hora e passa a iniciar com a sessão; desligado, ela fecha e sai do início automático. A página mostra se cada uma está rodando e avisa quando o desktop não tem bandeja (GNOME sem a extensão AppIndicator, Window Maker sem `big-wm-tray`) ou quando falta o PyQt, com o pacote certo.
@@ -204,6 +208,7 @@ Escuro, Claro, Neon e Cyberpunk viraram o tema **Padrão** com 8 esquemas de cor
 | **WeAct Studio FS V1** | 3,5" (com sensor de temperatura/umidade) e 0,96" | 320×480 · 80×160 | serial | 🧪 **B** |
 | **Turing USB** | 2,8" redondo, 4,6", 5,2", 8", 8,8", 9,2", 12,3" | até 720×1920 | USB · libusb, PNG/JPEG | 🧪 **B** |
 | **SmartMonitor HID** (`0483:0065`) | "3.5 inch PC CPU Data Monitor" (llhmi / llTechCo) | 480×320 | USB HID · imagem gravada + valores | ✅ **A** — testado em hardware real |
+| **FOSTON FS-707DC Touch Display** (`045e:00ce`) | navegador GPS Windows CE 7" com o cliente `bsmd-ce` | 800×480 (informada pelo aparelho) | USB serial · FSP + **toque** | ✅ **A** — vídeo, toque e reconexão validados no aparelho ([docs](docs/foston-fs707dc/13-relatorio-final.md)) |
 
 ### SmartMonitor 3,5" HID
 

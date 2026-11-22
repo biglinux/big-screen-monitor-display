@@ -28,7 +28,7 @@ from datetime import datetime
 
 from PIL import Image, ImageDraw
 
-from . import __version__, frames, health, i18n, patterns, settings as settings_mod, telemetry, themes
+from . import __version__, frames, health, i18n, patterns, settings as settings_mod, telemetry, themes, touch
 from .displays import discovery, registry
 from .displays.ax206 import AX206
 from .displays.base import DISCONNECTED as GONE, EXTERNAL_KINDS, FATAL_KINDS, IO, NEEDS_REPLUG, NOT_FOUND, PROTOCOL, \
@@ -146,6 +146,41 @@ class UsbSource:
 
 # ---------------------------------------------------------------- session
 
+class _TouchHost:
+    """What the touch interface may do with its session."""
+
+    def __init__(self, session):
+        self.session = session
+
+    def base_settings(self):
+        return self.session.base_settings()
+
+    def request(self, command, *args):
+        self.session.request(command, *args)
+        self.session.wake_render.set()
+
+    def wake(self):
+        self.session.wake_render.set()
+
+    def name(self):
+        return self.session.name()
+
+    def state(self):
+        return self.session.link.state
+
+    def panel_size(self):
+        settings = self.session.settings()
+        return self.session._render_size(settings)
+
+    def can_quit(self):
+        """The client on the device can be closed from the panel (FOSTON)."""
+        return hasattr(self.session.driver, "quit_client")
+
+    def brightness_supported(self):
+        driver = self.session.driver
+        return bool(driver is not None and driver.capabilities.brightness)
+
+
 class DisplaySession:
     """One panel: render and transport threads, link state, recovery, stats."""
 
@@ -184,6 +219,7 @@ class DisplaySession:
         self._sent_times = collections.deque(maxlen=256)
         self.last_metrics = None
         self._applied = None
+        self.touch = None                  # touch.TouchUI once a touch panel is connected
 
     # ------------------------------------------------------------ helpers
     def _on_link_change(self, old, new, reason):
@@ -193,8 +229,31 @@ class DisplaySession:
     def record(self, kind, severity, message, **fields):
         return self.runtime.incidents.record(kind, severity, message, display=self.id, **fields)
 
-    def settings(self):
+    def base_settings(self):
         return settings_mod.merged(self.runtime.store.get(), self.id)
+
+    def settings(self):
+        settings = self.base_settings()
+        return self.touch.apply(settings) if self.touch is not None else settings
+
+    # ------------------------------------------------------------ touch
+    def _setup_touch(self, driver):
+        """Route the panel's own touches to the on-panel interface (never to the desktop)."""
+        if not getattr(driver.capabilities, "touch", "") or not hasattr(driver, "on_input"):
+            return
+        if self.touch is None:
+            self.touch = touch.TouchUI(_TouchHost(self), touch.state_path(self.runtime.state_directory, self.id),
+                                       clock=self.clock)
+        driver.on_input = self._on_touch
+
+    def _on_touch(self, event):
+        ui, driver = self.touch, self.driver
+        if ui is None or driver is None or not self.settings().get("touch_enabled", True):
+            return
+        x, y = touch.native_to_render(event.x, event.y, driver.native_size, self.settings().get("orientation"))
+        self.stats["touch_events"] = self.stats.get("touch_events", 0) + 1
+        self.stats["touch_latency_ms"] = round((self.clock() - event.received) * 1000.0, 1)
+        ui.handle(event.kind, x, y)
 
     def name(self):
         name = self.settings().get("name")
@@ -427,8 +486,12 @@ class DisplaySession:
                 self.stop_event.wait(1.0)
                 continue
             beat.end(True)
+            if self.touch is not None:
+                image = self.touch.decorate(image, settings)
             self.mailbox.put(image)
             interval = theme.frame_interval(settings, self.ctx)
+            if self.touch is not None and self.touch.active():
+                interval = min(interval, touch.ACTIVE_INTERVAL)
             deadline = started + interval
             # Backpressure: never render further ahead than one frame.
             self.mailbox.wait_consumed(timeout=2.0)
@@ -503,6 +566,18 @@ class DisplaySession:
                 self._apply_leds(args[0])
             elif command == "invalidate":
                 self.driver.invalidate()
+            elif command == "calibrate" and hasattr(self.driver, "calibrate"):
+                self._io("calibrate", self.driver.calibrate)
+            elif command == "touch_test" and self.touch is not None:
+                self.touch.start_test()
+            elif command == "ba_story":
+                theme = self.theme
+                if theme is not None and hasattr(theme, "play_story"):
+                    theme.play_story(args[0])
+            elif command == "quit_client" and hasattr(self.driver, "quit_client"):
+                # The device closes its client and returns to its own menu (USB back to storage).
+                self.record("client_quit", health.SEVERITY_INFO, "client closed on the device by request")
+                self._io("quit_client", self.driver.quit_client)
             elif command in ("reconnect", "recover"):
                 self.record("recovery_requested", health.SEVERITY_INFO, args[0], model=self._model_name())
                 self._begin_recovery(args[0])
@@ -649,6 +724,7 @@ class DisplaySession:
         self.driver = driver
         self.device_info = info
         self.ctx.shape = getattr(driver.capabilities, "shape", "rect")
+        self._setup_touch(driver)
         self.last_io = self.last_full = self.clock()
         took = None if self.recovery_started is None else round(self.clock() - self.recovery_started, 2)
         self.link.to(HEALTHY, "display ready")
@@ -812,6 +888,8 @@ class DisplaySession:
             "attention": self.attention,
             "sensors": dict(self.sensors),
             "pattern": self.pattern[0] if self.pattern else None,
+            "touch": None if self.touch is None else {"events": self.touch.events, "page": self.touch.page,
+                                                      "overrides": sorted(self.touch.overrides.values)},
             "metrics": self.last_metrics,
             "incidents": [entry for entry in self.runtime.incidents.recent(60)
                           if entry.get("display") == self.id][-15:],
@@ -1243,6 +1321,8 @@ class Runtime:
             self.request("pattern", "identify", 8.0, display=display)
         elif action == "clear_pattern":
             self.request("clear_pattern", display=display)
+        elif action in ("calibrate", "touch_test", "quit_client"):
+            self.request(action, display=display)
         else:
             self.request("pattern", command["pattern"], float(command["seconds"]), display=display)
 

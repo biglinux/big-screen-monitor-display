@@ -19,6 +19,7 @@ SIZES = [(480, 320), (320, 480), (320, 240), (800, 480), (480, 800), (160, 80), 
          (480, 480), (1280, 400)]
 
 
+
 @pytest.fixture(scope="module", autouse=True)
 def stats():
     from bsmd import telemetry

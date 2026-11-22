@@ -63,7 +63,11 @@ LockPersonality=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 RestrictNamespaces=yes
-RestrictAddressFamilies=AF_UNIX AF_NETLINK
+# AF_INET only for the FOSTON with BigFoston OS (FSP over TCP on its USB
+# network, 192.168.7.2:7707); every other IP address stays blocked.
+RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET
+IPAddressDeny=any
+IPAddressAllow=127.0.0.0/8 ::1/128 192.168.7.0/24
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
 SystemCallErrorNumber=EPERM
