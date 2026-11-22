@@ -350,7 +350,8 @@ def android_runtime(tmp_path):
         port = free_port_pair()
         assert made.listen(port, host="127.0.0.1")
         # Network off, USB on: the runtime keeps a loopback listener on this port.
-        settings.save(dict(data or {"theme": "standard"}, android_port=port), str(config))
+        # Animated by default: frames keep coming even on an idle CI machine.
+        settings.save(dict(data or {"theme": "brother_away"}, android_port=port), str(config))
         app = FastRuntime(settings.SettingsStore(str(config)), notifier=FakeNotifier(),
                           status_file=str(tmp_path / "run" / "status.json"),
                           state_directory=str(tmp_path / "state"), scan=lambda: [], android=made)
@@ -457,7 +458,9 @@ def test_transport_switch_keeps_one_display(android_runtime):
 
 
 def test_stalled_phone_does_not_block_the_others(android_runtime):
-    app, made, _config = android_runtime()
+    # An animated theme: there is always a new frame waiting for the stalled phone
+    # (a static theme on an idle computer may legitimately send nothing new).
+    app, made, _config = android_runtime({"theme": "brother_away"})
     slow = paired_client(made, name="Slow")
     fast = paired_client(made, name="Fast")
     assert wait_for(lambda: slow.frames >= 1 and fast.frames >= 1, timeout=10)
