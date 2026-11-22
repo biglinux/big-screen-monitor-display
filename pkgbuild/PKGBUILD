@@ -41,6 +41,7 @@ optdepends=(
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
     'openrgb: LED colour of DeepCool coolers wired to the motherboard ARGB header (DeepCool tray app)'
     'python-qrcode: QR code to add Android phones and tablets (My Displays > Add Android)'
+    'noto-fonts-cjk: Chinese, Japanese and Korean text on the displays (otherwise drawn in English)'
 )
 makedepends=('gettext' 'git')
 pkgver=$(date +%y.%m.%d)

@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.4.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.5.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -41,6 +41,17 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.5.0 — 28 idiomas
+
+O Big Screen Monitor Display agora fala **28 idiomas**, com as 1731 mensagens traduzidas e revisadas em todos: português do Brasil, inglês, alemão, búlgaro, chinês (simplificado), coreano, croata, dinamarquês, eslovaco, espanhol, estoniano, finlandês, francês, grego, hebraico, holandês, húngaro, islandês, italiano, japonês, norueguês (bokmål), polonês, romeno, russo, sueco, tcheco, turco e ucraniano.
+
+- **Preferências › Idioma** lista todos eles pelo nome nativo, além de "Como o sistema".
+- **Plurais de verdade**: contagens como "3 displays encontrados" usam `ngettext`, com as formas certas para línguas de 3 ou 4 plurais (russo, polonês, tcheco, ucraniano, hebraico…).
+- **Sem quadradinhos nos displays**: os temas desenham com fontes próprias, sem chinês, japonês e coreano. Agora o texto que a fonte não tem é desenhado com uma fonte do sistema (por exemplo `noto-fonts-cjk`) ou, sem nenhuma, em inglês.
+- **Rótulos do painel SmartMonitor/FOSTON** medidos em pixels em todas as línguas por um teste.
+- **Tradução sem travar o GitHub Actions**: o workflow não chama mais o tradutor automático, que exigia uma chave da OpenAI e ficava parado até o limite de 6 h. As traduções ficam no repositório e `tools/update-pot.sh` atualiza o modelo; veja [docs/i18n.md](docs/i18n.md).
+- Corrigido: o catálogo norueguês se chamava `no` e nunca era encontrado (agora `nb`); o `.pot` estava desatualizado (1083 de 1731 mensagens); textos em inglês ambíguos ou desatualizados ("Video engine", a descrição do Big Media Player, "Other theme").
 
 ## ✨ Novidades da 5.4.0 — Android como display, Big WindowMaker e bandeja
 
@@ -712,7 +723,7 @@ O Automático limita os temas animados a 8 fps (as poses são desenhadas "em doi
 
 ### Traduções
 
-Textos marcados com gettext (`locale/big-screen-monitor-display.pot`). Português completo em `locale/pt.po` (cerca de 1450 mensagens); as demais línguas são geradas pelo tradutor automático do BigLinux e compiladas no PKGBUILD.
+Textos marcados com gettext (`locale/big-screen-monitor-display.pot`, 1731 mensagens) e traduzidos em 28 idiomas em `locale/*.po`, compilados no PKGBUILD. Depois de mudar um texto, rode `tools/update-pot.sh`; os testes falham se o `.pot` não acompanhar o código ou se algum catálogo tiver mensagem sem tradução. Como as traduções são feitas e revisadas: [docs/i18n.md](docs/i18n.md).
 
 ---
 

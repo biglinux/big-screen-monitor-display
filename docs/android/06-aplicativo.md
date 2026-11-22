@@ -1,6 +1,6 @@
 # 06 — Aplicativo Android
 
-`android/` — pacote `br.com.biglinux.bigscreen` (depuração: `.debug`), versão 5.4.0 (a mesma do programa no computador), **Android 5.0+**
+`android/` — pacote `br.com.biglinux.bigscreen` (depuração: `.debug`), versão 5.5.0 (a mesma do programa no computador), **Android 5.0+**
 (minSdk 21, targetSdk 36).
 
 ## Tecnologia escolhida
