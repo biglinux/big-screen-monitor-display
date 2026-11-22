@@ -197,9 +197,12 @@ remove_legacy() {
     local file
     for file in usr/bin/deepcool-digital usr/bin/deepcool-digital.sh usr/bin/screen-monitor-tray \
                 usr/bin/screen-monitor-tray.sh usr/share/applications/deepcool-digital.desktop \
-                usr/share/applications/screen-monitor-tray.desktop; do
+                usr/share/applications/screen-monitor-tray.desktop \
+                usr/share/applications/${PKGNAME}.desktop; do
+        # ${PKGNAME}.desktop: renamed after the application id (5.3.2), so the window's
+        # Wayland app_id finds its launcher (and icon) in docks and task bars.
         [ -e "${ROOT}/${file}" ] || [ -L "${ROOT}/${file}" ] || continue
-        if grep -qs "/usr/share/${PKGNAME}/" "${ROOT}/${file}" || \
+        if grep -qs "/usr/share/${PKGNAME}/\|/usr/bin/big-screen-monitor-config.sh" "${ROOT}/${file}" || \
                 [ "$(readlink "${ROOT}/${file}" 2>/dev/null)" = "/usr/bin/${file##*/}.sh" ]; then
             rm -f "${ROOT}/${file}"
             say "removed old ${file}"
