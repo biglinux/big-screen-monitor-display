@@ -279,3 +279,5 @@ def test_android_in_my_displays(tmp_path):
     assert checks["android_qr"] is True and "192.168.1.20:7717" in checks["android_address"]
     assert checks["android_pair_open"] is True and checks["android_secret_not_in_status"] is True
     assert checks["android_pair_closed"] is True
+    assert "releases/latest/download/big-screen-monitor-display.apk" in checks["android_steps"]
+    assert 0 < checks["android_steps_width"] <= 560 - 48

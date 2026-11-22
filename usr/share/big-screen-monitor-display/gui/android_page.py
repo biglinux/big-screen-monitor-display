@@ -23,14 +23,15 @@ import gi  # noqa: E402
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, Gtk  # noqa: E402
+from gi.repository import Adw, GLib, Gtk, Pango  # noqa: E402
 
 from bsmd.displays.android import protocol as bsdp  # noqa: E402
 from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from gui import components as ui  # noqa: E402
 
 PAIR_SECONDS = 300
-APP_URL = "https://github.com/ruscher/big-screen-monitor-display/releases"
+# Always the newest app: android.yml publishes this fixed name on every v* release.
+APP_URL = "https://github.com/ruscher/big-screen-monitor-display/releases/latest/download/big-screen-monitor-display.apk"
 TRANSPORTS = {"wifi": N_("Wi-Fi"), "ethernet": N_("Ethernet"), "usb-accessory": N_("USB cable"),
               "usb-tether": N_("USB (tethering)"), "usb-adb": N_("USB (debugging)"), "network": N_("Network"),
               "other": N_("Network")}
@@ -285,6 +286,9 @@ class PairDialog:
               "2. Connect the phone to the same network as this computer.\n"
               "3. Point the phone's camera at this code and open the link, or open the app and tap "
               "\"Scan the code\".").format(url=APP_URL), dim=False)
+        # the long download URL must wrap inside the dialog, and can be copied
+        self.steps.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        self.steps.set_selectable(True)
         box.append(self.steps)
         self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, height_request=280,
                                    halign=Gtk.Align.CENTER, width_request=280)

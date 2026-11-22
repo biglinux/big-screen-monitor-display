@@ -13,8 +13,22 @@ Firewall: liberar TCP 7717 e UDP 7718 se houver (ver 04).
 
 ## No celular
 
-Instalar o APK (Android 5.0+). Fora de uma loja, o Android pede "Permitir fontes desconhecidas"
-para o aplicativo usado para abrir o arquivo.
+Baixar o APK da versão mais nova, direto pelo navegador do celular (Android 5.0+):
+
+**<https://github.com/ruscher/big-screen-monitor-display/releases/latest/download/big-screen-monitor-display.apk>**
+
+O endereço não muda entre versões: cada release do GitHub traz o arquivo com esse nome, uma cópia
+com a versão no nome (`big-screen-monitor-display-5.5.1.apk`) e o `SHA256SUMS`. A janela
+*Adicionar Android…* mostra o mesmo endereço. Fora de uma loja, o Android pede "Permitir fontes
+desconhecidas" para o aplicativo usado para abrir o arquivo.
+
+Enquanto o projeto não tiver chave de assinatura, o APK publicado é a compilação de depuração
+(pacote `br.com.biglinux.bigscreen.debug`, assinada com a chave de depuração do Gradle): instala e
+funciona igual. Cada build do CI gera uma chave de depuração nova, então de uma versão para a
+outra o Android recusa a atualização ("conflito com pacote existente"): é preciso desinstalar a
+anterior e parear de novo. Isso só acaba com a chave oficial nos segredos `BSMD_*` (abaixo), que
+nenhuma etapa automática cria. Uma versão assinada com a chave oficial tem outro pacote
+(`br.com.biglinux.bigscreen`) e é instalada ao lado da de depuração.
 
 ## Compilar o APK
 
@@ -40,7 +54,10 @@ senha foi criada nesta entrega.
 ### GitHub Actions
 
 `.github/workflows/android.yml` roda JUnit, lint, `assembleDebug` e `assembleRelease` a cada mudança
-em `android/` ou nos vetores do protocolo, e publica os APKs e relatórios como artefato. Para
+em `android/` ou nos vetores do protocolo, e publica os APKs e relatórios como artefato. Numa tag
+`v*` (por exemplo `v5.5.1`, igual ao `versionName`), o mesmo workflow cria a release e anexa
+`big-screen-monitor-display.apk`, a cópia com versão e o `SHA256SUMS`: o APK assinado quando os
+segredos existem, senão o de depuração — nunca um APK sem assinatura. Para
 assinar no CI, cadastrar os segredos `BSMD_KEYSTORE_BASE64` (keystore em base64),
 `BSMD_KEYSTORE_PASSWORD`, `BSMD_KEY_ALIAS` e `BSMD_KEY_PASSWORD`.
 

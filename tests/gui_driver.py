@@ -389,6 +389,9 @@ def run_android(window):
     dialog = group.dialog
     check("android_qr", bool(dialog and dialog.picture.get_paintable() is not None and dialog.picture.get_visible()))
     check("android_address", dialog.address_row.get_subtitle() if dialog else "")
+    check("android_steps", dialog.steps.get_label() if dialog else "")
+    # the download URL wraps inside the 560 px dialog instead of widening it
+    check("android_steps_width", dialog.steps.get_width() if dialog else -1)
     sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
     opened = [c for c in sent if c.get("action") == "android_pair_open"]
     check("android_pair_open", bool(opened) and len(opened[0].get("secret", "")) >= 22)
