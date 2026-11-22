@@ -24,8 +24,11 @@ desconhecidas" para o aplicativo usado para abrir o arquivo.
 
 Enquanto o projeto não tiver chave de assinatura, o APK publicado é a compilação de depuração
 (pacote `br.com.biglinux.bigscreen.debug`, assinada com a chave de depuração do Gradle): instala e
-funciona igual, mas uma futura versão assinada com a chave oficial terá outro pacote e será
-instalada ao lado dela.
+funciona igual. Cada build do CI gera uma chave de depuração nova, então de uma versão para a
+outra o Android recusa a atualização ("conflito com pacote existente"): é preciso desinstalar a
+anterior e parear de novo. Isso só acaba com a chave oficial nos segredos `BSMD_*` (abaixo), que
+nenhuma etapa automática cria. Uma versão assinada com a chave oficial tem outro pacote
+(`br.com.biglinux.bigscreen`) e é instalada ao lado da de depuração.
 
 ## Compilar o APK
 

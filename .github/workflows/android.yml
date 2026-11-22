@@ -88,8 +88,11 @@ jobs:
           cp "$apk" dist/big-screen-monitor-display.apk
           cp "$apk" "dist/big-screen-monitor-display-$version.apk"
           (cd dist && sha256sum -- *.apk > SHA256SUMS)
+          # A new release is created as a draft and published only after the
+          # upload, so releases/latest never points at a release without the APK.
           if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG" --verify-tag --title "$TAG" \
+            gh release create "$TAG" --verify-tag --draft --title "$TAG" \
               --notes "Big Screen Monitor Display $version. Android app: big-screen-monitor-display.apk (see README)."
           fi
           gh release upload "$TAG" dist/* --clobber
+          gh release edit "$TAG" --draft=false

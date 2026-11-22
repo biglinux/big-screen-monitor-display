@@ -597,7 +597,7 @@ Requer Python 3.10 ou mais novo. Detalhes, garantias e testes sem root em [docs/
 2. No computador, abra **Big Screen Monitor Display › Meus Displays › Celulares e tablets Android**, ligue **Conectar pela rede** e aplique.
 3. Toque em **Adicionar Android…** e leia o QR Code com a câmera do celular (ou abra o app e toque em "Scan the code"). O celular vira mais um display. Também funciona pelo **cabo USB, sem depuração**.
 
-Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/ruscher/big-screen-monitor-display/releases). Enquanto o projeto não tiver chave de assinatura oficial, o APK publicado é a compilação de depuração (pacote `br.com.biglinux.bigscreen.debug`): instala e funciona normalmente. O app pede só permissões de rede. Compilar o APK, firewall e detalhes: [docs/android](docs/android/12-instalacao-e-apk.md).
+Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/ruscher/big-screen-monitor-display/releases). Enquanto o projeto não tiver chave de assinatura oficial, o APK publicado é a compilação de depuração (pacote `br.com.biglinux.bigscreen.debug`): instala e funciona normalmente, mas cada versão sai assinada com uma chave de depuração diferente, então **para atualizar é preciso desinstalar a versão anterior** (o pareamento é refeito em segundos). Com a chave oficial cadastrada nos segredos do repositório, as atualizações passam a ser diretas. O app pede só permissões de rede. Compilar o APK, firewall e detalhes: [docs/android](docs/android/12-instalacao-e-apk.md).
 
 ### Dependências
 
