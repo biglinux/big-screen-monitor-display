@@ -68,7 +68,7 @@ object Discovery {
                 } catch (timeout: SocketTimeoutException) {
                     continue
                 }
-                parse(packet)?.let { found.putIfAbsent(it.serverId, it) }
+                parse(packet)?.let { if (!found.containsKey(it.serverId)) found[it.serverId] = it }   // putIfAbsent: API 24
             }
         }
         return found.values.toList()

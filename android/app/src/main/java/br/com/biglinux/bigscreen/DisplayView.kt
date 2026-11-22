@@ -16,7 +16,7 @@ import android.view.View
  * touch interface on the computer recognises taps, holds and swipes.
  * Two fingers open the app's own menu instead (nothing is sent).
  */
-class DisplayView(context: Context, private val canvas: FrameCanvas) : View(context) {
+class DisplayView(context: Context) : View(context) {
     interface Listener {
         fun onTouch(kind: Int, x: Int, y: Int)
         fun onViewSize(w: Int, h: Int)
@@ -25,6 +25,7 @@ class DisplayView(context: Context, private val canvas: FrameCanvas) : View(cont
     }
 
     var listener: Listener? = null
+    var canvas = FrameCanvas()          // the activity hands its own in
     var touchEnabled = true
     var shiftX = 0
     var shiftY = 0

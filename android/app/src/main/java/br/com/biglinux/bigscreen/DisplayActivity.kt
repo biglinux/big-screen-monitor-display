@@ -29,6 +29,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import kotlin.random.Random
 
 /**
@@ -79,7 +80,7 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
     override fun onStart() {
         super.onStart()
         started = true
-        active = this
+        activeRef = WeakReference(this)
         applyImmersive()
         watchNetwork(true)
         display.post { connect() }
@@ -88,7 +89,7 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
     override fun onStop() {
         super.onStop()
         started = false
-        if (active === this) active = null
+        if (activeRef?.get() === this) activeRef = null
         handler.removeCallbacksAndMessages(null)
         watchNetwork(false)
         session?.close("paused")
@@ -102,15 +103,6 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
         canvas.release()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        session?.close("closed")
-        session = null
-        startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_STAY, true)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-        finish()
-    }
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) applyImmersive()
@@ -120,7 +112,8 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
     private fun build(): View {
         val c = this
         val root = FrameLayout(c)
-        display = DisplayView(c, canvas)
+        display = DisplayView(c)
+        display.canvas = canvas
         display.listener = this
         root.addView(display, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT))
@@ -492,14 +485,9 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
                 2 -> s?.command(JSONObject().put("cmd", "theme_next"))
                 3 -> startActivity(Intent(this, SettingsActivity::class.java))
                 4 -> diagnostics()
-                5 -> onBackPressedCompat()
+                5 -> goHome()
             }
         }.show()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun onBackPressedCompat() {
-        onBackPressed()
     }
 
     private fun diagnostics() {
@@ -581,11 +569,11 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
         const val PREF_IMMERSIVE = "immersive"
         const val PREF_PRESENTATION = "presentation"
 
-        /** The running display (settings screen talks to its session). */
-        @Volatile var active: DisplayActivity? = null
+        /** The running display (the settings screen talks to its session); weak: never keeps it alive. */
+        @Volatile private var activeRef: WeakReference<DisplayActivity>? = null
         @Volatile var lastConfig: JSONObject? = null
 
-        fun session(): Session? = active?.session
+        fun session(): Session? = activeRef?.get()?.session
 
         fun forComputer(context: Context, serverId: String, address: String? = null): Intent =
             Intent(context, DisplayActivity::class.java).putExtra(EXTRA_SERVER, serverId).also {

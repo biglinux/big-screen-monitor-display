@@ -82,6 +82,8 @@
     <string name="orientation_vertical_flipped">Vertical, upside down</string>
     <string name="immersive">Full screen</string>
     <string name="immersive_sub">Hide the status and navigation bars</string>
+    <string name="presentation">Presentation mode</string>
+    <string name="presentation_sub">Only the theme: the menu button never appears (two fingers still open the menu)</string>
     <string name="keep_screen_on">Keep the screen on</string>
     <string name="keep_screen_on_sub">While the theme is shown (permanent display)</string>
     <string name="burn_in">Burn-in protection</string>

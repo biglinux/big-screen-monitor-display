@@ -81,6 +81,8 @@
     <string name="orientation_vertical_flipped">Vertical, invertida</string>
     <string name="immersive">Tela cheia</string>
     <string name="immersive_sub">Esconder as barras de status e de navegação</string>
+    <string name="presentation">Modo apresentação</string>
+    <string name="presentation_sub">Só o tema: o botão de menu nunca aparece (dois dedos continuam abrindo o menu)</string>
     <string name="keep_screen_on">Manter a tela ligada</string>
     <string name="keep_screen_on_sub">Enquanto o tema aparece (display permanente)</string>
     <string name="burn_in">Proteção contra burn-in</string>

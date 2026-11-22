@@ -422,7 +422,14 @@ class Session(
     }
 }
 
-/** Accepts the computer's self-signed certificate and keeps its fingerprint; the session pins it. */
+/**
+ * The computer's certificate is self-signed (no CA can vouch for a PC on a home network), so the
+ * platform's trust store cannot validate it. Trust comes from pinning instead: the session compares
+ * this fingerprint with the one from the QR code or a previous pairing, and a first pairing by
+ * confirmation only succeeds when both screens show the same code, which covers this fingerprint.
+ * Nothing is ever sent before that check (docs/android/09-seguranca.md).
+ */
+@android.annotation.SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
 class PinningTrustManager : X509TrustManager {
     @Volatile var fingerprint: ByteArray? = null
 

@@ -66,6 +66,10 @@ class SettingsActivity : Activity() {
             })
             card.addView(Ui.switchRow(c, getString(R.string.immersive), getString(R.string.immersive_sub),
                 store.bool(DisplayActivity.PREF_IMMERSIVE, true)) { store.setBool(DisplayActivity.PREF_IMMERSIVE, it) })
+            card.addView(Ui.switchRow(c, getString(R.string.presentation), getString(R.string.presentation_sub),
+                store.bool(DisplayActivity.PREF_PRESENTATION, false)) {
+                store.setBool(DisplayActivity.PREF_PRESENTATION, it)
+            })
         }
         section(remote, R.string.section_screen) { card ->
             card.addView(Ui.switchRow(c, getString(R.string.keep_screen_on), getString(R.string.keep_screen_on_sub),
