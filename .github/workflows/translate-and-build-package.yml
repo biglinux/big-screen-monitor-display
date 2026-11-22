@@ -15,8 +15,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_OPENAI_KEY: ${{ secrets.OPENAI_KEY != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: If Template exit
         shell: bash
         run: |
@@ -47,10 +49,15 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
-      # A translation API failure (e.g. OpenAI 429) must not block the
-      # package build: the hooks below still run with the catalogs we have.
+      # Without the OPENAI_KEY secret (forks) big-auto-translator prints
+      # "Atualize o workflow de tradução" and runs `sleep infinity`: the job
+      # would hang until GitHub kills it after 6 h, so the step is skipped.
+      # A translation API failure or a very long run must not block the build
+      # either: the limit keeps the job under 6 h and the hooks still run.
       - name: Translate Package
+        if: ${{ env.HAS_OPENAI_KEY == 'true' }}
         continue-on-error: true
+        timeout-minutes: 300
         shell: bash #-O extglob {0}
         env:
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
