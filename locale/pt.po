@@ -1,7 +1,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: big-screen-monitor-display 5.0.0\n"
+"Project-Id-Version: big-screen-monitor-display 5.4.0\n"
+"PO-Revision-Date: 2026-11-22 15:00-0300\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: BigLinux Team\n"
 "Language-Team: Portuguese (Brazil)\n"
