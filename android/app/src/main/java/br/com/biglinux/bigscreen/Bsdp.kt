@@ -150,7 +150,7 @@ object Bsdp {
         val cw = b.short.toInt() and 0xFFFF
         val ch = b.short.toInt() and 0xFFFF
         val format = b.get().toInt() and 0xFF
-        if (w == 0 || h == 0 || cw < 16 || ch < 16 || x + w > cw || y + h > ch || cw > 8192 || ch > 8192) {
+        if (w == 0 || h == 0 || x + w > cw || y + h > ch || cw > 8192 || ch > 8192) {
             throw ProtocolException("bad rectangle")
         }
         return RectHeader(x, y, w, h, cw, ch, format)

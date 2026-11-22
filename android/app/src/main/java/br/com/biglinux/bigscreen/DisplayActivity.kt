@@ -127,6 +127,8 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
         overlay = Ui.column(c, 24).apply {
             gravity = Gravity.CENTER_HORIZONTAL
             background = Ui.rounded(c, R.color.overlay, 28)
+            // Screen readers read state changes (connecting, code, disconnected) as they happen.
+            accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
         }
         overlay.addView(ImageView(c).apply {
             setImageResource(R.drawable.logo)
@@ -193,7 +195,6 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
                     LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(Ui.dp(this@DisplayActivity, 6), 0,
                     Ui.dp(this@DisplayActivity, 6), 0) })
         }
-        overlay.announceForAccessibility("$title. $text")
     }
 
     private fun hideOverlay() {

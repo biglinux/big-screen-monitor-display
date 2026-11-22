@@ -81,7 +81,7 @@ class BsdpTest {
 
     @Test
     fun brokenInputIsRefused() {
-        for (bad in listOf("XX0101000000", "425302010000000000")) {
+        for (bad in listOf("58580101000000", "425302010000000000")) {   // "XX" header, version 2
             try {
                 Bsdp.parseAll(ByteArray(bad.length / 2) { i -> bad.substring(i * 2, i * 2 + 2).toInt(16).toByte() })
                 fail("accepted $bad")
