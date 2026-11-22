@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: If Template exit
         shell: bash
         run: |
@@ -49,8 +49,13 @@ jobs:
 
       # A translation API failure (e.g. OpenAI 429) must not block the
       # package build: the hooks below still run with the catalogs we have.
+      # The translator writes each language as soon as it is done, so a time
+      # limit below the job's 6 h lets the finished languages be committed and
+      # the package be built; the next run only translates what is missing.
+      # (Without it the job hit 6 h with 26 empty languages and saved nothing.)
       - name: Translate Package
         continue-on-error: true
+        timeout-minutes: 300
         shell: bash #-O extglob {0}
         env:
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
