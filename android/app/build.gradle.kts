@@ -1,3 +1,5 @@
+import java.util.Properties
+
 // Kotlin is compiled by AGP 9's built-in Kotlin support (no separate plugin).
 plugins {
     id("com.android.application")
@@ -6,7 +8,7 @@ plugins {
 // Release signing only from the environment (CI secrets or a local
 // keystore.properties that is never committed): no key lives in the repository.
 val signingFile = rootProject.file("keystore.properties")
-val signingProps = java.util.Properties().apply {
+val signingProps = Properties().apply {
     if (signingFile.exists()) signingFile.inputStream().use { load(it) }
 }
 fun signing(name: String): String? = System.getenv("BSMD_$name") ?: signingProps.getProperty(name.lowercase())
