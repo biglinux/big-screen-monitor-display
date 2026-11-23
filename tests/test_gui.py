@@ -242,6 +242,23 @@ def test_pairing_code_carries_the_vpn_address(config_gui):
     assert len(query["a"][0].split(",")) == 5
 
 
+def test_add_android_option_opens_the_pairing_code(config_gui, monkeypatch):
+    seen = {}
+
+    class App:                       # the real one sets the GLib application name once per process
+        def __init__(self, screenshot=None, page=None, add_android=False):
+            seen.update(add=add_android, page=page)
+
+        def run(self, argv):
+            seen["argv"] = argv
+            return 0
+    monkeypatch.setattr(config_gui, "ConfigApp", App)
+    assert config_gui.main(["prog", "--add-android"]) == 0
+    assert seen == {"add": True, "page": None, "argv": ["prog"]}
+    assert config_gui.main(["prog", "--page", "displays"]) == 0
+    assert seen == {"add": False, "page": "displays", "argv": ["prog"]}
+
+
 @pytest.mark.parametrize("libadwaita", ["1.6", "1.7+"])
 def test_kojiro_inspector_builds_on_every_supported_libadwaita(config_gui, monkeypatch, libadwaita):
     """Adw.InlineViewSwitcher only exists from libadwaita 1.7; the package asks for 1.6."""

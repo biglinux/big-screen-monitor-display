@@ -629,6 +629,7 @@ Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/
 | Ação | Comando / caminho |
 | --- | --- |
 | Abrir a configuração | menu do sistema → *Big Screen Monitor Display* · `big-screen-monitor-config.sh` |
+| Adicionar celular Android (QR Code) | `big-screen-monitor-config.sh --add-android` |
 | Bandeja das telas | menu → *Big Screen Monitor Tray* · `big-screen-monitor-tray` |
 | Bandeja dos coolers DeepCool | menu → *DeepCool Digital* · `big-screen-monitor-deepcool` |
 | Estado do serviço | `systemctl status big-screen-monitor-display` (a linha **Status** diz o que está acontecendo) |
