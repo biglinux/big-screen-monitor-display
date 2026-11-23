@@ -4,11 +4,47 @@
 
 Meus Displays › Celulares e tablets Android › **Conectar pela rede** (desligado por padrão) e
 **Aplicar**. O serviço passa a escutar TCP **7717** (TLS) e UDP **7718** (descoberta) em todas as
-interfaces. A unidade systemd só aceita endereços de loopback, privados (10/8, 172.16/12, 192.168/16)
-e link-local (169.254/16): mesmo com a porta exposta, nada de fora da rede local chega ao serviço.
+interfaces. A unidade systemd só aceita endereços de loopback, privados (10/8, 172.16/12, 192.168/16),
+link-local (169.254/16) e da faixa das VPNs Tailscale/Headscale/NetBird (100.64/10, que não é roteada
+na Internet): mesmo com a porta exposta, nada da Internet pública chega ao serviço.
 Porta configurável (`android_port`). Desligado e com USB ligado, escuta só em `127.0.0.1` (adb).
 
 O computador no cabo e o celular no Wi-Fi funcionam, desde que estejam na mesma rede IP.
+
+## Acesso remoto (Tailscale)
+
+Para usar o display longe de casa, pelos dados móveis ou outro Wi-Fi:
+
+1. Instale o [Tailscale](https://tailscale.com) no computador e no celular, na mesma conta (tailnet).
+2. No computador, "Conectar pela rede" ligado e aplicado (a janela mostra em "Estado" o endereço
+   `100.x.y.z (tailscale0)` junto com o da rede de casa).
+3. Pareie em casa normalmente (QR Code ou código). A partir daí o app já sabe os dois endereços:
+   o QR Code leva o do Tailscale, e a cada conexão o computador informa ao app os endereços atuais
+   (campo `addresses` do `WELCOME`). Fora de casa, com o Tailscale ligado no celular, basta abrir o app.
+4. Já pareado antes desta versão? Conecte uma vez em casa (o app aprende o endereço da VPN) ou
+   use **Adicionar pelo endereço** com o IP do Tailscale (`100.x.y.z`) ou o nome MagicDNS do computador.
+
+Como funciona:
+
+* O serviço anuncia, nesta ordem: o endereço da rede da rota padrão (casa), os da faixa 100.64/10
+  (Tailscale), as demais redes locais e as outras VPNs (ZeroTier, WireGuard). Bridges de contêineres
+  e VMs (`docker`, `virbr`, `podman`…) e endereços públicos nunca são anunciados.
+* O app tenta **todos os endereços ao mesmo tempo**; os da VPN começam 300 ms depois, para que em
+  casa a rede local direta vença. Fica a primeira conexão que responder (até 8 s para o primeiro
+  pacote do Tailscale, que pode passar por um relay DERP).
+* A segurança não muda: TLS com certificado fixado e token do pareamento, iguais aos do Wi-Fi.
+  Quem não está pareado não passa do handshake, mesmo dentro da tailnet.
+* O app reconecta assim que uma rede — inclusive a VPN — fica disponível, e mostra o transporte
+  **VPN (Tailscale)** na lista e no diagnóstico; a janela do computador mostra **VPN**.
+* Pelos dados móveis, prefira **Qualidade › Economia** se o plano for limitado.
+
+Firewall: o Tailscale no Linux já aceita o que chega por `tailscale0` (cadeia `ts-input`). Se o
+firewall do computador filtrar mesmo assim (por exemplo regras do UFW só para `192.168.0.0/24`):
+
+```bash
+sudo ufw allow in on tailscale0 to any port 7717 proto tcp
+sudo ufw allow in on tailscale0 to any port 7718 proto udp
+```
 
 ## Descoberta
 
@@ -46,6 +82,6 @@ endereço** (`192.168.1.20` ou `192.168.1.20:7717`). A janela mostra o endereço
 ## Diagnóstico de firewall
 
 Se nenhum computador responde: conferir "Conectar pela rede" ligado e aplicado; liberar TCP 7717 e
-UDP 7718 no firewall do PC (`firewall-cmd --add-port=7717/tcp --add-port=7718/udp`, ou `ufw allow
+UDP 7718 no firewall do PC (para o Tailscale, veja [Acesso remoto](#acesso-remoto-tailscale)) (`firewall-cmd --add-port=7717/tcp --add-port=7718/udp`, ou `ufw allow
 7717/tcp` e `ufw allow 7718/udp`); conferir que o celular não está em rede de visitantes isolada.
 A janela mostra em "Estado" os endereços em que o serviço está esperando.

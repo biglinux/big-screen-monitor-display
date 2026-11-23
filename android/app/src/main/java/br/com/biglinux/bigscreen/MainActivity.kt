@@ -207,6 +207,7 @@ class MainActivity : Activity() {
 
     private fun transportLabel(transport: String): String = when {
         transport.startsWith("usb") -> getString(R.string.connect_usb)
+        transport == "vpn" -> getString(R.string.transport_vpn)
         transport.isEmpty() -> ""
         else -> getString(R.string.connect_network)
     }

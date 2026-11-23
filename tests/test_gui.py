@@ -228,6 +228,61 @@ def test_gui_preferences_are_per_user(config_gui, tmp_path, monkeypatch):
     assert preferences_page.load_gui_settings() == {}
 
 
+def test_pairing_code_carries_the_vpn_address(config_gui):
+    import urllib.parse
+    from gui.android_page import pairing_url
+    status = {"server_id": "a" * 32, "name": "PC", "fingerprint": "fp", "port": 7717,
+              "addresses": [{"iface": "enp7s0", "address": "192.168.0.235", "kind": "lan"},
+                            {"iface": "tailscale0", "address": "100.109.119.104", "kind": "vpn"},
+                            {"iface": "enp10s0u4", "address": "192.168.7.1", "kind": "lan"},
+                            {"iface": "zt0", "address": "172.29.133.40", "kind": "vpn"},
+                            {"iface": "zt1", "address": "192.168.193.137", "kind": "vpn"}]}
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(pairing_url(status, "t" * 16, "s")).query)
+    assert query["a"][0].split(",")[:2] == ["192.168.0.235", "100.109.119.104"]
+    assert len(query["a"][0].split(",")) == 5
+
+
+def test_add_android_option_opens_the_pairing_code(config_gui, monkeypatch):
+    seen = {}
+
+    class App:                       # the real one sets the GLib application name once per process
+        def __init__(self, screenshot=None, page=None, add_android=False):
+            seen.update(add=add_android, page=page)
+
+        def run(self, argv):
+            seen["argv"] = argv
+            return 0
+    monkeypatch.setattr(config_gui, "ConfigApp", App)
+    assert config_gui.main(["prog", "--add-android"]) == 0
+    assert seen == {"add": True, "page": None, "argv": ["prog"]}
+    assert config_gui.main(["prog", "--page", "displays"]) == 0
+    assert seen == {"add": False, "page": "displays", "argv": ["prog"]}
+
+
+@pytest.mark.parametrize("libadwaita", ["1.6", "1.7+"])
+def test_kojiro_inspector_builds_on_every_supported_libadwaita(config_gui, monkeypatch, libadwaita):
+    """Adw.InlineViewSwitcher only exists from libadwaita 1.7; the package asks for 1.6."""
+    import kojiro_page
+    from gi.repository import Adw, Gtk
+    if not Gtk.init_check():
+        pytest.skip("no display for GTK")
+
+    class Adw16:
+        def __getattr__(self, name):
+            if name.startswith("InlineViewSwitcher"):
+                raise AttributeError(name)
+            return getattr(Adw, name)
+    if libadwaita == "1.6":
+        monkeypatch.setattr(kojiro_page, "Adw", Adw16())
+    page = kojiro_page.KojiroPage.__new__(kojiro_page.KojiroPage)
+    page._refresh_advanced = lambda: None
+    box = page._inspector()
+    switcher = box.get_first_child()
+    expected = "ViewSwitcher" if libadwaita == "1.6" else "InlineViewSwitcher"
+    assert type(switcher).__name__ == expected
+    assert page.inspector.get_pages().get_n_items() == 6
+
+
 def test_theme_signature_follows_only_relevant_keys(config_gui):
     from bsmd import themes
     from gui.theme_gallery import theme_signature

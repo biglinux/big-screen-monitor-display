@@ -492,9 +492,13 @@ class KojiroPage:
     def _inspector(self):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, width_request=320)
         self.inspector = Adw.ViewStack(vexpand=True)
-        switcher = Adw.InlineViewSwitcher(stack=self.inspector, margin_start=8, margin_end=8, margin_top=4,
-                                          display_mode=Adw.InlineViewSwitcherDisplayMode.ICONS)
-        switcher.add_css_class("flat")
+        margins = {"margin_start": 8, "margin_end": 8, "margin_top": 4}
+        if hasattr(Adw, "InlineViewSwitcher"):          # libadwaita 1.7+
+            switcher = Adw.InlineViewSwitcher(stack=self.inspector, **margins,
+                                              display_mode=Adw.InlineViewSwitcherDisplayMode.ICONS)
+            switcher.add_css_class("flat")
+        else:                                           # libadwaita 1.6 (the minimum): same pages, wider tabs
+            switcher = Adw.ViewSwitcher(stack=self.inspector, policy=Adw.ViewSwitcherPolicy.NARROW, **margins)
         box.append(switcher)
         box.append(self.inspector)
         self.element_page = Adw.PreferencesPage()

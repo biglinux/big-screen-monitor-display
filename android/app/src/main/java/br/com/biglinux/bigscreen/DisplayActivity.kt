@@ -344,7 +344,11 @@ class DisplayActivity : Activity(), SessionListener, DisplayView.Listener {
                 }
             }
             try {
-                manager.registerNetworkCallback(NetworkRequest.Builder().build(), callback)
+                // VPNs too: a request without this skips them, so Tailscale coming up never
+                // triggered the reconnection away from home.
+                val request = NetworkRequest.Builder()
+                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN).build()
+                manager.registerNetworkCallback(request, callback)
                 networkCallback = callback
             } catch (error: Exception) {
                 // without ACCESS_NETWORK_STATE on some ROMs: backoff only

@@ -26,7 +26,7 @@ Limites: 64 KiB por mensagem vinda do app, 8 MiB vinda do PC, JSON ≤ 64 KiB, t
 | `0x0B BYE` | ambos | JSON {reason} |
 | `0x41 CHALLENGE` | PC→app | JSON: server_id, name, nonce, need ("auth"/"pair"), pairing, fp |
 | `0x42 PAIR_WAIT` | PC→app | JSON: code (6 dígitos), timeout |
-| `0x43 WELCOME` | PC→app | JSON: display_id, server_id, name; token e fp só ao parear |
+| `0x43 WELCOME` | PC→app | JSON: display_id, server_id, name, addresses (endereços IPv4 da rede local e da VPN em que o serviço escuta, os melhores primeiro; ausente sem "Conectar pela rede"); token e fp só ao parear |
 | `0x44 REJECT` | PC→app | JSON: reason (version, unknown_device, auth_failed, denied, expired, busy, rate_limited, revoked, disabled, replaced) |
 | `0x45 CONFIG` | PC→app | JSON: orientation (landscape/portrait/reverse_*/auto), keep_screen_on, burn_in, touch, touch_media, theme, quality, profile, resolution, canvas |
 | `0x50 RECT` | PC→app | u16 x,y,w,h, u16 largura/altura do quadro, u8 formato (0 fill RGB, 1 RGB+zlib, 2 JPEG, 3 PNG, 4 WebP), u8 0, dados |

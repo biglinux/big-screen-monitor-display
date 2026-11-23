@@ -3,7 +3,7 @@ pkgdesc="Big Screen Monitor Display - hardware monitor, animated themes and the 
 depends=(
     # runtime
     'bash'                # /usr/bin launchers
-    'python'              # >= 3.10
+    'python>=3.10'
     'python-pillow'       # rendering
     'python-numpy'        # RGB565 conversion and dirty rectangles
     'python-psutil'       # CPU, memory, disk, network, battery
@@ -19,9 +19,9 @@ depends=(
     # configuration window
     'python-gobject'
     'python-cairo'        # Kojiro Design Studio canvas
-    'glib2'
+    'glib2>=2.80'         # GLibUnix (signals of the window and the tray apps)
     'gtk4'
-    'libadwaita'          # >= 1.6
+    'libadwaita>=1.6'     # Adw.Spinner; Adw.InlineViewSwitcher used when present (1.7+)
     'hicolor-icon-theme'
     # tray apps (USB screens and DeepCool coolers; switched on/off in Preferences)
     'python-pyqt6'
@@ -41,6 +41,7 @@ optdepends=(
     'python-cryptography: faster header encryption for Turing USB panels (a built-in fallback exists)'
     'openrgb: LED colour of DeepCool coolers wired to the motherboard ARGB header (DeepCool tray app)'
     'python-qrcode: QR code to add Android phones and tablets (My Displays > Add Android)'
+    'tailscale: use the Android display away from home through the Tailscale VPN (100.64.0.0/10)'
     'noto-fonts-cjk: Chinese, Japanese and Korean text on the displays (otherwise drawn in English)'
 )
 makedepends=('gettext' 'git')

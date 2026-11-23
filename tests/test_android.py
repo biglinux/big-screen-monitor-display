@@ -323,6 +323,101 @@ def test_revoking_drops_the_connection(hub):
     assert not again.login() and again.reject["reason"] == bsdp.R_UNKNOWN
 
 
+# ------------------------------------------------------------------ remote access (Tailscale / VPN)
+
+def test_addresses_put_the_home_network_first_and_keep_the_vpn():
+    from bsmd.displays.android.hub import order_addresses
+    entries = [("zt4hoippeg", "192.168.193.137"), ("docker0", "172.17.0.1"), ("lo", "127.0.0.1"),
+               ("enp10s0u4", "192.168.7.1"), ("tailscale0", "100.109.119.104"), ("enp7s0", "192.168.0.235"),
+               ("wan0", "8.8.8.8"), ("virbr0", "192.168.122.1"), ("enp7s0", "fe80::1"), ("wlan0", "not an ip"),
+               ("wg0", "10.8.0.2"), ("enp7s0", "192.168.0.235")]
+    ordered = order_addresses(entries, {"enp7s0"})
+    assert [entry["address"] for entry in ordered] == [
+        "192.168.0.235",            # the default route: the home network, fastest at home
+        "100.109.119.104",          # Tailscale: the way in from anywhere, kept in the short QR list
+        "192.168.7.1",              # other local networks
+        "192.168.193.137", "10.8.0.2"]   # other VPNs (ZeroTier, WireGuard)
+    kinds = {entry["address"]: entry["kind"] for entry in ordered}
+    assert kinds["100.109.119.104"] == kinds["10.8.0.2"] == kinds["192.168.193.137"] == "vpn"
+    assert kinds["192.168.0.235"] == kinds["192.168.7.1"] == "lan"
+    # Public, loopback, bridge and IPv6 addresses never leave the computer.
+    assert len(order_addresses([("eth0", f"10.0.0.{n}") for n in range(20)])) == 8
+
+
+def test_default_route_interfaces_are_read_from_the_kernel_table(tmp_path):
+    from bsmd.displays.android.hub import default_route_interfaces
+    table = tmp_path / "route"
+    table.write_text("Iface\tDestination\tGateway\tFlags\tRefCnt\tUse\tMetric\tMask\n"
+                     "enp7s0\t00000000\t0100A8C0\t0003\t0\t0\t100\t00000000\n"
+                     "enp7s0\t0000A8C0\t00000000\t0001\t0\t0\t100\t00FFFFFF\n"
+                     "tailscale0\t0040A864\t00000000\t0001\t0\t0\t0\t00C0FFFF\n")
+    assert default_route_interfaces(str(table)) == {"enp7s0"}
+    assert default_route_interfaces(str(tmp_path / "missing")) == set()
+
+
+def test_vpn_phone_learns_the_addresses_and_is_shown_as_vpn(tmp_path):
+    """A phone that came in through Tailscale is labelled VPN, and every WELCOME tells the app
+    the computer's addresses, so a phone paired at home finds it through the VPN later."""
+    made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", usb=False)
+    made.prepare()
+    made.network_addresses = lambda: ["192.168.0.235", "100.109.119.104"]
+    pc_end, phone_end = socket.socketpair()
+    try:
+        link = Link(pc_end, transport="network", address="100.125.194.90").start()
+        threading.Thread(target=made.handshake, args=(link, b""), daemon=True).start()
+        ticket, secret = open_ticket(made)
+        client = Client(sock=phone_end, transport="vpn").connect()
+        assert client.hello() is not None and client.pair_ticket(ticket, secret), client.reject
+        assert client.welcome["addresses"] == ["192.168.0.235", "100.109.119.104"]
+        assert wait_for(lambda: made.status()["connected"])
+        assert made.status()["connected"][0]["transport"] == "vpn"
+        assert made.status()["paired"][0]["last_transport"] == "vpn"
+    finally:
+        made.stop()
+        phone_end.close()
+
+
+def test_welcome_has_no_addresses_without_network_connections(hub):
+    made = hub()                                           # only 127.0.0.1 (adb reverse)
+    assert made.network_addresses() == []
+    ticket, secret = open_ticket(made)
+    client = Client(made.port)
+    assert client.login(ticket, secret) and "addresses" not in client.welcome
+    client.close()
+
+
+def test_listening_on_the_network_offers_the_vpn_address(tmp_path, monkeypatch):
+    made = AndroidHub(str(tmp_path / "state"), host_name="Test PC", usb=False)
+    monkeypatch.setattr(made, "addresses", lambda: [{"iface": "tailscale0", "address": "100.109.119.104",
+                                                     "kind": "vpn"}])
+    try:
+        assert made.listen(free_port_pair(), host="0.0.0.0"), made.error
+        assert made.network_addresses() == ["100.109.119.104"]
+    finally:
+        made.stop()
+
+
+def test_hello_keeps_the_vpn_transport():
+    body = {"proto": 1, "device_id": "d" * 36, "name": "Phone", "transport": "vpn", "nonce": bsdp.b64e(b"n" * 24),
+            "view": {"w": 1080, "h": 2400}, "screen": {"w": 1080, "h": 2400}}
+    assert bsdp.Hello.parse(body).transport == "vpn"
+    assert bsdp.Hello.parse(dict(body, transport="carrier-pigeon")).transport == "other"
+
+
+def test_service_lets_tailscale_in_and_keeps_the_internet_out():
+    unit = os.path.join(os.path.dirname(HERE), "usr/lib/systemd/system/big-screen-monitor-display.service")
+    with open(unit, encoding="utf-8") as handle:
+        lines = dict(line.split("=", 1) for line in handle.read().splitlines()
+                     if line.startswith(("IPAddressAllow=", "IPAddressDeny=")))
+    allowed = lines["IPAddressAllow"].split()
+    assert lines["IPAddressDeny"].strip() == "any"
+    assert "100.64.0.0/10" in allowed                      # Tailscale / Headscale / NetBird
+    import ipaddress
+    for network in allowed:
+        net = ipaddress.ip_network(network)
+        assert not net.is_global, network                  # nothing routable on the Internet
+
+
 def test_link_answers_pings_and_bounds_its_backlog():
     a, b = socket.socketpair()
     link = Link(a, transport="usb-accessory", address="usb").start()

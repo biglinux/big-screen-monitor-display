@@ -4,7 +4,7 @@ The package is intentionally free of GTK imports so that the system service,
 the configuration window and the test-suite can share it.
 """
 
-__version__ = "5.5.1"
+__version__ = "5.5.2"
 
 APP_ID = "big-screen-monitor-display"          # program name, X11 WM_CLASS, icon name
 # D-Bus/GApplication id of the configuration window. GTK publishes it as the

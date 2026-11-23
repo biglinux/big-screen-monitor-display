@@ -33,7 +33,8 @@ PAIR_SECONDS = 300
 # Always the newest app: android.yml publishes this fixed name on every v* release.
 APP_URL = "https://github.com/ruscher/big-screen-monitor-display/releases/latest/download/big-screen-monitor-display.apk"
 TRANSPORTS = {"wifi": N_("Wi-Fi"), "ethernet": N_("Ethernet"), "usb-accessory": N_("USB cable"),
-              "usb-tether": N_("USB (tethering)"), "usb-adb": N_("USB (debugging)"), "network": N_("Network"),
+              "usb-tether": N_("USB (tethering)"), "usb-adb": N_("USB (debugging)"), "vpn": N_("VPN"),
+              "network": N_("Network"),
               "other": N_("Network")}
 QUALITY = (("auto", N_("Automatic (lossless over USB)")), ("lossless", N_("Lossless (sharpest)")),
            ("balanced", N_("Balanced")), ("economy", N_("Economy (least traffic)")))
@@ -44,7 +45,8 @@ RESOLUTION = (("auto", N_("Automatic (by performance)")), ("native", N_("Native 
 
 def pairing_url(android_status, ticket, secret):
     """The text of the QR code. Names and addresses are public; the secret is single use."""
-    addresses = [entry["address"] for entry in (android_status.get("addresses") or [])][:4]
+    # Six: the home network first, then the VPN (Tailscale) address for use away from home.
+    addresses = [entry["address"] for entry in (android_status.get("addresses") or [])][:6]
     query = {"v": "1", "id": android_status.get("server_id") or "", "n": (android_status.get("name") or "")[:40],
              "fp": android_status.get("fingerprint") or "", "p": str(android_status.get("port") or 7717),
              "a": ",".join(addresses), "t": ticket, "s": secret}
@@ -189,7 +191,8 @@ class AndroidGroup:
         elif status.get("error"):
             self.state_row.set_subtitle(GLib.markup_escape_text(status["error"]))
         elif status.get("network"):
-            addresses = ", ".join(f"{a['address']}" for a in status.get("addresses") or []) or "—"
+            addresses = ", ".join(f"{a['address']} ({a['iface']})" if a.get("kind") == "vpn" else a["address"]
+                                  for a in status.get("addresses") or []) or "—"
             self.state_row.set_subtitle(_("Waiting for phones at {addresses} (port {port})").format(
                 addresses=addresses, port=status.get("port")))
         elif status.get("listening"):

@@ -1306,7 +1306,7 @@ LEGACY_PAGES = {"display": "displays", "theme_kojiro": "kojiro", "theme_big_medi
 
 
 class ConfigApp(Adw.Application):
-    def __init__(self, screenshot=None, page=None):
+    def __init__(self, screenshot=None, page=None, add_android=False):
         super().__init__(application_id=APPLICATION_ID,
                          flags=Gio.ApplicationFlags.NON_UNIQUE if screenshot else Gio.ApplicationFlags.DEFAULT_FLAGS)
         # Window identity (docs/windowmaker/icon-windowmaker.md): Wayland app_id = APPLICATION_ID
@@ -1317,6 +1317,7 @@ class ConfigApp(Adw.Application):
         Gtk.Window.set_default_icon_name(APP_ID)
         self.screenshot = screenshot
         self.page = page
+        self.add_android = add_android
 
     def do_activate(self):
         window = self.props.active_window
@@ -1335,6 +1336,11 @@ class ConfigApp(Adw.Application):
             if self.page:
                 window.show_section(LEGACY_PAGES.get(self.page, self.page))
         window.present()
+        if self.add_android:
+            # --add-android: opens on My Displays with the pairing QR code shown.
+            self.add_android = False
+            window.show_section("displays")
+            GLib.idle_add(lambda: window.displays_page.android.open_pairing() and False)
         # Tray apps switched on in Preferences run whenever the window opens (and are offered once).
         GLib.timeout_add(1500, tray_settings.ensure_running, window, load_gui_settings, save_gui_settings)
         if self.screenshot:
@@ -1379,7 +1385,10 @@ def main(argv):
         index = args.index("--page")
         page = args[index + 1]
         del args[index:index + 2]
-    return ConfigApp(screenshot, page).run([argv[0], *args])
+    add_android = "--add-android" in args
+    if add_android:
+        args.remove("--add-android")
+    return ConfigApp(screenshot, page, add_android).run([argv[0], *args])
 
 
 if __name__ == "__main__":
