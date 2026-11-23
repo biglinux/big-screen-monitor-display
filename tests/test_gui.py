@@ -228,6 +228,20 @@ def test_gui_preferences_are_per_user(config_gui, tmp_path, monkeypatch):
     assert preferences_page.load_gui_settings() == {}
 
 
+def test_pairing_code_carries_the_vpn_address(config_gui):
+    import urllib.parse
+    from gui.android_page import pairing_url
+    status = {"server_id": "a" * 32, "name": "PC", "fingerprint": "fp", "port": 7717,
+              "addresses": [{"iface": "enp7s0", "address": "192.168.0.235", "kind": "lan"},
+                            {"iface": "tailscale0", "address": "100.109.119.104", "kind": "vpn"},
+                            {"iface": "enp10s0u4", "address": "192.168.7.1", "kind": "lan"},
+                            {"iface": "zt0", "address": "172.29.133.40", "kind": "vpn"},
+                            {"iface": "zt1", "address": "192.168.193.137", "kind": "vpn"}]}
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(pairing_url(status, "t" * 16, "s")).query)
+    assert query["a"][0].split(",")[:2] == ["192.168.0.235", "100.109.119.104"]
+    assert len(query["a"][0].split(",")) == 5
+
+
 def test_theme_signature_follows_only_relevant_keys(config_gui):
     from bsmd import themes
     from gui.theme_gallery import theme_signature

@@ -642,8 +642,8 @@ msgstr "디스크"
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
 #: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
-#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "네트워크"
 
@@ -2023,7 +2023,7 @@ msgstr "절약"
 #: usr/share/big-screen-monitor-display/config_gui.py:74
 #: usr/share/big-screen-monitor-display/config_gui.py:573
 #: usr/share/big-screen-monitor-display/displays_page.py:47
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/media_player_page.py:198
 msgid "Balanced"
@@ -2816,7 +2816,7 @@ msgstr "각 디스플레이의 이름과 테마, Kojiro 레이아웃을 포함�
 
 #: usr/share/big-screen-monitor-display/config_gui.py:974
 #: usr/share/big-screen-monitor-display/displays_page.py:637
-#: usr/share/big-screen-monitor-display/gui/android_page.py:251
+#: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1205
 msgid "Cancel"
@@ -2896,7 +2896,7 @@ msgstr[0] "실행 중 · 디스플레이 {count}개"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:1138
 #: usr/share/big-screen-monitor-display/displays_page.py:62
-#: usr/share/big-screen-monitor-display/gui/android_page.py:185
+#: usr/share/big-screen-monitor-display/gui/android_page.py:188
 msgid "The service is not running."
 msgstr "서비스가 실행 중이 아닙니다."
 
@@ -3033,7 +3033,7 @@ msgid "Testing"
 msgstr "테스트"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:39
-#: usr/share/big-screen-monitor-display/gui/android_page.py:231
+#: usr/share/big-screen-monitor-display/gui/android_page.py:235
 #: usr/share/big-screen-monitor-display/screentray/states.py:42
 msgid "Connected"
 msgstr "연결됨"
@@ -3452,7 +3452,7 @@ msgid "Simulated"
 msgstr "시뮬레이션"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:52
-#: usr/share/big-screen-monitor-display/gui/android_page.py:224
+#: usr/share/big-screen-monitor-display/gui/android_page.py:228
 msgid "Android"
 msgstr "Android"
 
@@ -3821,7 +3821,7 @@ msgid "Model chosen. Press Apply to start using the display."
 msgstr "모델을 선택했습니다. 디스플레이를 사용하려면 적용을 누르십시오."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:652
-#: usr/share/big-screen-monitor-display/gui/android_page.py:407
+#: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "터치스크린"
 
@@ -3879,233 +3879,237 @@ msgstr "디스플레이로 보냈습니다."
 msgid "The display did not receive the command"
 msgstr "디스플레이가 명령을 받지 못했습니다"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Ethernet"
 msgstr "이더넷"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "USB cable"
 msgstr "USB 케이블"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (tethering)"
 msgstr "USB(테더링)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (debugging)"
 msgstr "USB(디버깅)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+msgid "VPN"
+msgstr "VPN"
+
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Automatic (lossless over USB)"
 msgstr "자동(USB에서는 무손실)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Lossless (sharpest)"
 msgstr "무손실(가장 선명함)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 msgid "Economy (least traffic)"
 msgstr "절약(트래픽 최소)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Automatic (by performance)"
 msgstr "자동(성능 기준)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Native resolution"
 msgstr "원래 해상도"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1920 px"
 msgstr "최대 1920 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1280 px"
 msgstr "최대 1280 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 960 px"
 msgstr "최대 960 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:41
+#: usr/share/big-screen-monitor-display/gui/android_page.py:43
 msgid "Up to 640 px"
 msgstr "최대 640 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:76
+#: usr/share/big-screen-monitor-display/gui/android_page.py:79
 msgid "just now"
 msgstr "방금 전"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:78
+#: usr/share/big-screen-monitor-display/gui/android_page.py:81
 #, python-brace-format
 msgid "{minutes} min ago"
 msgstr "{minutes}분 전"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:80
+#: usr/share/big-screen-monitor-display/gui/android_page.py:83
 #, python-brace-format
 msgid "{hours} h ago"
 msgstr "{hours}시간 전"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:82
+#: usr/share/big-screen-monitor-display/gui/android_page.py:85
 #, python-brace-format
 msgid "{days} day ago"
 msgid_plural "{days} days ago"
 msgstr[0] "{days}일 전"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:93
+#: usr/share/big-screen-monitor-display/gui/android_page.py:96
 msgid "Android phones and tablets"
 msgstr "Android 휴대폰 및 태블릿"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:94
+#: usr/share/big-screen-monitor-display/gui/android_page.py:97
 msgid "Install the Big Screen Monitor Display app on the phone and add it here: it becomes one more display, with its own theme and settings, and its touchscreen controls the theme."
 msgstr "휴대폰에 Big Screen Monitor Display 앱을 설치하고 여기에 추가하십시오. 자체 테마와 설정을 가진 디스플레이가 하나 더 생기며, 터치스크린으로 테마를 조작할 수 있습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:96
+#: usr/share/big-screen-monitor-display/gui/android_page.py:99
 msgid "Add Android…"
 msgstr "Android 추가…"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:101
+#: usr/share/big-screen-monitor-display/gui/android_page.py:104
 msgid "Connect over the network (Wi-Fi or Ethernet)"
 msgstr "네트워크로 연결(Wi-Fi 또는 이더넷)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:102
+#: usr/share/big-screen-monitor-display/gui/android_page.py:105
 msgid "The computer accepts paired phones on the local network (encrypted, port 7717). Off: nothing listens on the network."
 msgstr "컴퓨터가 로컬 네트워크에서 페어링된 휴대폰의 연결을 받습니다(암호화, 포트 7717). 끄면 네트워크에서 아무것도 수신 대기하지 않습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:104
+#: usr/share/big-screen-monitor-display/gui/android_page.py:107
 msgid "Connect over a USB cable"
 msgstr "USB 케이블로 연결"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:105
+#: usr/share/big-screen-monitor-display/gui/android_page.py:108
 msgid "Phones already paired open the app when plugged in (USB accessory, no debugging needed). USB tethering and USB debugging also work."
 msgstr "이미 페어링된 휴대폰은 연결하면 앱이 열립니다(USB 액세서리, 디버깅 불필요). USB 테더링과 USB 디버깅도 사용할 수 있습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:109
+#: usr/share/big-screen-monitor-display/gui/android_page.py:112
 msgid "Status"
 msgstr "상태"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:152
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 msgid "Phone"
 msgstr "휴대폰"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable · paired"
 msgstr "USB 케이블 연결 · 페어링됨"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable"
 msgstr "USB 케이블 연결"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:157
+#: usr/share/big-screen-monitor-display/gui/android_page.py:160
 msgid "Use as Display"
 msgstr "디스플레이로 사용"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:158
+#: usr/share/big-screen-monitor-display/gui/android_page.py:161
 msgid "Asks the phone to open the Big Screen Monitor Display app (USB accessory, no debugging)"
 msgstr "휴대폰에서 Big Screen Monitor Display 앱을 열도록 요청합니다(USB 액세서리, 디버깅 불필요)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:172
+#: usr/share/big-screen-monitor-display/gui/android_page.py:175
 msgid "Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a permanent display). The first time, allow the code shown here."
 msgstr "휴대폰에서 확인하십시오: Big Screen Monitor Display 열기(항상 사용하는 디스플레이로 만들려면 \"항상\"을 선택). 처음에는 여기에 표시되는 코드를 허용하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:175
+#: usr/share/big-screen-monitor-display/gui/android_page.py:178
 #, python-brace-format
 msgid "The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB and make sure the app is installed."
 msgstr "휴대폰이 전환되지 않았습니다: {error}. 휴대폰에서 USB 용도로 \"파일 전송\"을 선택하고 앱이 설치되어 있는지 확인하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:178
+#: usr/share/big-screen-monitor-display/gui/android_page.py:181
 #, python-brace-format
 msgid "No access to the phone ({error}). Choose \"File transfer\" for USB on the phone and try again."
 msgstr "휴대폰에 접근할 수 없습니다({error}). 휴대폰에서 USB 용도로 \"파일 전송\"을 선택하고 다시 시도하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:187
+#: usr/share/big-screen-monitor-display/gui/android_page.py:190
 msgid "This version of the service has no Android support yet; restart it."
 msgstr "이 버전의 서비스는 아직 Android를 지원하지 않습니다. 서비스를 다시 시작하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:192
+#: usr/share/big-screen-monitor-display/gui/android_page.py:196
 #, python-brace-format
 msgid "Waiting for phones at {addresses} (port {port})"
 msgstr "{addresses}에서 휴대폰 대기 중(포트 {port})"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:195
+#: usr/share/big-screen-monitor-display/gui/android_page.py:199
 msgid "Network off: only phones on a USB cable can connect."
 msgstr "네트워크 꺼짐: USB 케이블로 연결된 휴대폰만 연결할 수 있습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:197
+#: usr/share/big-screen-monitor-display/gui/android_page.py:201
 msgid "Off: no phone can connect."
 msgstr "꺼짐: 어떤 휴대폰도 연결할 수 없습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:205
+#: usr/share/big-screen-monitor-display/gui/android_page.py:209
 #, python-brace-format
 msgid "{name} wants to connect"
 msgstr "{name}에서 연결을 요청함"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:206
+#: usr/share/big-screen-monitor-display/gui/android_page.py:210
 #, python-brace-format
 msgid "Code {code} · {model} · {transport} {address}"
 msgstr "코드 {code} · {model} · {transport} {address}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:211
+#: usr/share/big-screen-monitor-display/gui/android_page.py:215
 msgid "Refuse"
 msgstr "거부"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:213
+#: usr/share/big-screen-monitor-display/gui/android_page.py:217
 msgid "Allow"
 msgstr "허용"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:215
+#: usr/share/big-screen-monitor-display/gui/android_page.py:219
 msgid "Only if the phone shows the same code"
 msgstr "휴대폰에 같은 코드가 표시될 때만 허용하십시오"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:223
+#: usr/share/big-screen-monitor-display/gui/android_page.py:227
 msgid "not connected"
 msgstr "연결되지 않음"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:227
+#: usr/share/big-screen-monitor-display/gui/android_page.py:231
 #, python-brace-format
 msgid "last seen {when}"
 msgstr "마지막 연결: {when}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:233
-#: usr/share/big-screen-monitor-display/gui/android_page.py:235
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:237
+#: usr/share/big-screen-monitor-display/gui/android_page.py:239
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "Remove pairing"
 msgstr "페어링 해제"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 #, python-brace-format
 msgid "Remove {name}?"
 msgstr "{name}을(를) 제거하시겠습니까?"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 msgid "this phone"
 msgstr "이 휴대폰"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:249
+#: usr/share/big-screen-monitor-display/gui/android_page.py:253
 msgid "The phone disconnects now and has to be added again to show the themes. Its settings on this computer are kept."
 msgstr "휴대폰의 연결이 바로 끊기며, 테마를 표시하려면 다시 추가해야 합니다. 이 컴퓨터에 있는 해당 휴대폰의 설정은 유지됩니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:252
+#: usr/share/big-screen-monitor-display/gui/android_page.py:256
 msgid "Remove"
 msgstr "제거"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:261
+#: usr/share/big-screen-monitor-display/gui/android_page.py:265
 msgid "The service is not running"
 msgstr "서비스가 실행 중이 아님"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:262
+#: usr/share/big-screen-monitor-display/gui/android_page.py:266
 msgid "Start the monitoring service, then add the phone."
 msgstr "모니터링 서비스를 시작한 뒤 휴대폰을 추가하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:278
+#: usr/share/big-screen-monitor-display/gui/android_page.py:282
 msgid "Add Android"
 msgstr "Android 추가"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:284
+#: usr/share/big-screen-monitor-display/gui/android_page.py:288
 #, python-brace-format
 msgid ""
 "1. Install the Big Screen Monitor Display app on the phone ({url}).\n"
@@ -4116,135 +4120,135 @@ msgstr ""
 "2. 휴대폰을 이 컴퓨터와 같은 네트워크에 연결하십시오.\n"
 "3. 휴대폰 카메라로 이 코드를 비추고 링크를 열거나, 앱을 열고 \"Scan the code\"를 탭하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:291
+#: usr/share/big-screen-monitor-display/gui/android_page.py:298
 msgid "Pairing QR code"
 msgstr "페어링 QR 코드"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:295
+#: usr/share/big-screen-monitor-display/gui/android_page.py:302
 msgid "Connections over the network are off."
 msgstr "네트워크 연결이 꺼져 있습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:296
+#: usr/share/big-screen-monitor-display/gui/android_page.py:303
 msgid "Switch on"
 msgstr "켜기"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:300
+#: usr/share/big-screen-monitor-display/gui/android_page.py:307
 msgid "Without the camera"
 msgstr "카메라 없이"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:301
+#: usr/share/big-screen-monitor-display/gui/android_page.py:308
 msgid "In the app, choose this computer in the list (or add it by address). This window then shows a code: allow it only if the phone shows the same code."
 msgstr "앱의 목록에서 이 컴퓨터를 선택하거나 주소로 추가하십시오. 그러면 이 창에 코드가 표시됩니다. 휴대폰에 같은 코드가 표시될 때만 허용하십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:303
+#: usr/share/big-screen-monitor-display/gui/android_page.py:310
 msgid "Address of this computer"
 msgstr "이 컴퓨터의 주소"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:306
+#: usr/share/big-screen-monitor-display/gui/android_page.py:313
 msgid "Certificate fingerprint"
 msgstr "인증서 지문"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 #, python-brace-format
 msgid "{name} added"
 msgstr "{name} 추가됨"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:341
+#: usr/share/big-screen-monitor-display/gui/android_page.py:348
 msgid "It now appears in My Displays. Another phone can use the new code."
 msgstr "이제 내 디스플레이에 표시됩니다. 다른 휴대폰은 새 코드를 사용할 수 있습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:350
+#: usr/share/big-screen-monitor-display/gui/android_page.py:357
 msgid "Not on a network (switch the network connection on)"
 msgstr "네트워크에 연결되지 않음(네트워크 연결을 켜십시오)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:361
+#: usr/share/big-screen-monitor-display/gui/android_page.py:368
 msgid "Install python-qrcode to see the QR code; the manual way below works without it."
 msgstr "QR 코드를 보려면 python-qrcode를 설치하십시오. 아래의 수동 방법은 이 패키지 없이도 작동합니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:373
+#: usr/share/big-screen-monitor-display/gui/android_page.py:380
 #, python-brace-format
 msgid "This code changes in {minutes}:{seconds:02d}"
 msgstr "이 코드는 {minutes}:{seconds:02d} 후에 바뀝니다"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:379
+#: usr/share/big-screen-monitor-display/gui/android_page.py:386
 msgid "Press Apply to let phones connect over the network."
 msgstr "휴대폰이 네트워크로 연결할 수 있게 하려면 적용을 누르십시오."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:391
+#: usr/share/big-screen-monitor-display/gui/android_page.py:398
 msgid "Picture quality"
 msgstr "화질"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:393
+#: usr/share/big-screen-monitor-display/gui/android_page.py:400
 msgid "Charts and text are always sent without loss; this affects photos and wallpapers."
 msgstr "차트와 텍스트는 항상 무손실로 전송됩니다. 이 설정은 사진과 배경 화면에 적용됩니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:394
+#: usr/share/big-screen-monitor-display/gui/android_page.py:401
 msgid "Drawing size"
 msgstr "렌더링 크기"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:398
+#: usr/share/big-screen-monitor-display/gui/android_page.py:405
 msgid "Themes are drawn at this size and scaled to the screen: smaller is lighter for the computer and the network."
 msgstr "테마를 이 크기로 그린 뒤 화면에 맞게 확대합니다. 작을수록 컴퓨터와 네트워크의 부담이 줄어듭니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:401
+#: usr/share/big-screen-monitor-display/gui/android_page.py:408
 msgid "Rotate with the phone"
 msgstr "휴대폰과 함께 회전"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:402
+#: usr/share/big-screen-monitor-display/gui/android_page.py:409
 msgid "Follow the phone's sensor instead of the orientation chosen above."
 msgstr "위에서 선택한 방향 대신 휴대폰의 센서를 따릅니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:403
+#: usr/share/big-screen-monitor-display/gui/android_page.py:410
 msgid "Keep the screen on"
 msgstr "화면 켜짐 유지"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:404
+#: usr/share/big-screen-monitor-display/gui/android_page.py:411
 msgid "While the theme is shown (permanent display)."
 msgstr "테마가 표시되는 동안(상시 디스플레이)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:405
+#: usr/share/big-screen-monitor-display/gui/android_page.py:412
 msgid "Burn-in protection"
 msgstr "번인 방지"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:406
+#: usr/share/big-screen-monitor-display/gui/android_page.py:413
 msgid "Moves the picture by a few pixels from time to time (OLED screens)."
 msgstr "때때로 그림을 몇 픽셀씩 이동합니다(OLED 화면)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:408
+#: usr/share/big-screen-monitor-display/gui/android_page.py:415
 msgid "Swipe to change theme, hold for the menu; nothing reaches the computer's mouse or keyboard."
 msgstr "스와이프하여 테마를 바꾸고, 길게 눌러 메뉴를 엽니다. 컴퓨터의 마우스나 키보드에는 아무것도 전달되지 않습니다."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:409
+#: usr/share/big-screen-monitor-display/gui/android_page.py:416
 msgid "Media controls on the touchscreen"
 msgstr "터치스크린 미디어 컨트롤"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:410
+#: usr/share/big-screen-monitor-display/gui/android_page.py:417
 msgid "Big Media Player: play, pause, next and volume on the phone (only what the player offers)."
 msgstr "Big Media Player: 휴대폰에서 재생, 일시 정지, 다음 곡, 볼륨 조작(플레이어가 제공하는 기능만)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "The phone has to be added again"
 msgstr "휴대폰을 다시 추가해야 함"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:428
+#: usr/share/big-screen-monitor-display/gui/android_page.py:435
 #, python-brace-format
 msgid "BSDP {version} · {security}"
 msgstr "BSDP {version} · {security}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "TLS, paired device"
 msgstr "TLS, 페어링된 장치"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "USB cable, paired device"
 msgstr "USB 케이블, 페어링된 장치"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:432
+#: usr/share/big-screen-monitor-display/gui/android_page.py:439
 #, python-brace-format
 msgid "Android {version} · app {app}"
 msgstr "Android {version} · 앱 {app}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:434
+#: usr/share/big-screen-monitor-display/gui/android_page.py:441
 #, python-brace-format
 msgid "Screen {screen} · {dpi} dpi"
 msgstr "화면 {screen} · {dpi} dpi"

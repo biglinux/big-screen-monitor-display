@@ -642,8 +642,8 @@ msgstr "Disc"
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
 #: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
-#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Rețea"
 
@@ -2033,7 +2033,7 @@ msgstr "Economic"
 #: usr/share/big-screen-monitor-display/config_gui.py:74
 #: usr/share/big-screen-monitor-display/config_gui.py:573
 #: usr/share/big-screen-monitor-display/displays_page.py:47
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/media_player_page.py:198
 msgid "Balanced"
@@ -2826,7 +2826,7 @@ msgstr "Fiecare opțiune de temă, afișaj și performanță revine la valoarea 
 
 #: usr/share/big-screen-monitor-display/config_gui.py:974
 #: usr/share/big-screen-monitor-display/displays_page.py:637
-#: usr/share/big-screen-monitor-display/gui/android_page.py:251
+#: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1205
 msgid "Cancel"
@@ -2908,7 +2908,7 @@ msgstr[2] "Rulează · {count} de afișaje"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:1138
 #: usr/share/big-screen-monitor-display/displays_page.py:62
-#: usr/share/big-screen-monitor-display/gui/android_page.py:185
+#: usr/share/big-screen-monitor-display/gui/android_page.py:188
 msgid "The service is not running."
 msgstr "Serviciul nu rulează."
 
@@ -3049,7 +3049,7 @@ msgid "Testing"
 msgstr "Testare"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:39
-#: usr/share/big-screen-monitor-display/gui/android_page.py:231
+#: usr/share/big-screen-monitor-display/gui/android_page.py:235
 #: usr/share/big-screen-monitor-display/screentray/states.py:42
 msgid "Connected"
 msgstr "Conectat"
@@ -3468,7 +3468,7 @@ msgid "Simulated"
 msgstr "Simulat"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:52
-#: usr/share/big-screen-monitor-display/gui/android_page.py:224
+#: usr/share/big-screen-monitor-display/gui/android_page.py:228
 msgid "Android"
 msgstr "Android"
 
@@ -3839,7 +3839,7 @@ msgid "Model chosen. Press Apply to start using the display."
 msgstr "Modelul a fost ales. Apăsați Aplică pentru a începe să folosiți afișajul."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:652
-#: usr/share/big-screen-monitor-display/gui/android_page.py:407
+#: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "Ecran tactil"
 
@@ -3897,77 +3897,81 @@ msgstr "Trimis la afișaj."
 msgid "The display did not receive the command"
 msgstr "Afișajul nu a primit comanda"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "USB cable"
 msgstr "Cablu USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (tethering)"
 msgstr "USB (partajare conexiune)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (debugging)"
 msgstr "USB (depanare)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+msgid "VPN"
+msgstr "VPN"
+
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Automatic (lossless over USB)"
 msgstr "Automat (fără pierderi prin USB)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Lossless (sharpest)"
 msgstr "Fără pierderi (cea mai clară)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 msgid "Economy (least traffic)"
 msgstr "Economic (trafic minim)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Automatic (by performance)"
 msgstr "Automat (după performanță)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Native resolution"
 msgstr "Rezoluție nativă"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1920 px"
 msgstr "Până la 1920 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1280 px"
 msgstr "Până la 1280 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 960 px"
 msgstr "Până la 960 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:41
+#: usr/share/big-screen-monitor-display/gui/android_page.py:43
 msgid "Up to 640 px"
 msgstr "Până la 640 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:76
+#: usr/share/big-screen-monitor-display/gui/android_page.py:79
 msgid "just now"
 msgstr "chiar acum"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:78
+#: usr/share/big-screen-monitor-display/gui/android_page.py:81
 #, python-brace-format
 msgid "{minutes} min ago"
 msgstr "acum {minutes} min"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:80
+#: usr/share/big-screen-monitor-display/gui/android_page.py:83
 #, python-brace-format
 msgid "{hours} h ago"
 msgstr "acum {hours} h"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:82
+#: usr/share/big-screen-monitor-display/gui/android_page.py:85
 #, python-brace-format
 msgid "{days} day ago"
 msgid_plural "{days} days ago"
@@ -3975,157 +3979,157 @@ msgstr[0] "acum {days} zi"
 msgstr[1] "acum {days} zile"
 msgstr[2] "acum {days} de zile"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:93
+#: usr/share/big-screen-monitor-display/gui/android_page.py:96
 msgid "Android phones and tablets"
 msgstr "Telefoane și tablete Android"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:94
+#: usr/share/big-screen-monitor-display/gui/android_page.py:97
 msgid "Install the Big Screen Monitor Display app on the phone and add it here: it becomes one more display, with its own theme and settings, and its touchscreen controls the theme."
 msgstr "Instalați aplicația Big Screen Monitor Display pe telefon și adăugați-l aici: devine încă un afișaj, cu propria temă și propriile setări, iar ecranul său tactil controlează tema."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:96
+#: usr/share/big-screen-monitor-display/gui/android_page.py:99
 msgid "Add Android…"
 msgstr "Adaugă Android…"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:101
+#: usr/share/big-screen-monitor-display/gui/android_page.py:104
 msgid "Connect over the network (Wi-Fi or Ethernet)"
 msgstr "Conectare prin rețea (Wi-Fi sau Ethernet)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:102
+#: usr/share/big-screen-monitor-display/gui/android_page.py:105
 msgid "The computer accepts paired phones on the local network (encrypted, port 7717). Off: nothing listens on the network."
 msgstr "Calculatorul acceptă telefoane asociate în rețeaua locală (criptat, portul 7717). Dezactivat: nimic nu ascultă în rețea."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:104
+#: usr/share/big-screen-monitor-display/gui/android_page.py:107
 msgid "Connect over a USB cable"
 msgstr "Conectare prin cablu USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:105
+#: usr/share/big-screen-monitor-display/gui/android_page.py:108
 msgid "Phones already paired open the app when plugged in (USB accessory, no debugging needed). USB tethering and USB debugging also work."
 msgstr "Telefoanele deja asociate deschid aplicația când sunt conectate (accesoriu USB, fără depanare). Funcționează și partajarea conexiunii prin USB și depanarea USB."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:109
+#: usr/share/big-screen-monitor-display/gui/android_page.py:112
 msgid "Status"
 msgstr "Stare"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:152
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 msgid "Phone"
 msgstr "Telefon"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable · paired"
 msgstr "Pe cablul USB · asociat"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable"
 msgstr "Pe cablul USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:157
+#: usr/share/big-screen-monitor-display/gui/android_page.py:160
 msgid "Use as Display"
 msgstr "Folosește ca afișaj"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:158
+#: usr/share/big-screen-monitor-display/gui/android_page.py:161
 msgid "Asks the phone to open the Big Screen Monitor Display app (USB accessory, no debugging)"
 msgstr "Cere telefonului să deschidă aplicația Big Screen Monitor Display (accesoriu USB, fără depanare)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:172
+#: usr/share/big-screen-monitor-display/gui/android_page.py:175
 msgid "Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a permanent display). The first time, allow the code shown here."
 msgstr "Confirmați pe telefon: deschideți Big Screen Monitor Display (bifați „Întotdeauna” pentru a-l face afișaj permanent). Prima dată, permiteți codul afișat aici."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:175
+#: usr/share/big-screen-monitor-display/gui/android_page.py:178
 #, python-brace-format
 msgid "The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB and make sure the app is installed."
 msgstr "Telefonul nu a comutat: {error}. Pe telefon, alegeți „Transfer de fișiere” pentru USB și asigurați-vă că aplicația este instalată."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:178
+#: usr/share/big-screen-monitor-display/gui/android_page.py:181
 #, python-brace-format
 msgid "No access to the phone ({error}). Choose \"File transfer\" for USB on the phone and try again."
 msgstr "Nu există acces la telefon ({error}). Alegeți „Transfer de fișiere” pentru USB pe telefon și încercați din nou."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:187
+#: usr/share/big-screen-monitor-display/gui/android_page.py:190
 msgid "This version of the service has no Android support yet; restart it."
 msgstr "Această versiune a serviciului nu are încă suport pentru Android; reporniți-l."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:192
+#: usr/share/big-screen-monitor-display/gui/android_page.py:196
 #, python-brace-format
 msgid "Waiting for phones at {addresses} (port {port})"
 msgstr "Se așteaptă telefoane la {addresses} (portul {port})"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:195
+#: usr/share/big-screen-monitor-display/gui/android_page.py:199
 msgid "Network off: only phones on a USB cable can connect."
 msgstr "Rețea dezactivată: se pot conecta doar telefoanele pe cablu USB."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:197
+#: usr/share/big-screen-monitor-display/gui/android_page.py:201
 msgid "Off: no phone can connect."
 msgstr "Dezactivat: niciun telefon nu se poate conecta."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:205
+#: usr/share/big-screen-monitor-display/gui/android_page.py:209
 #, python-brace-format
 msgid "{name} wants to connect"
 msgstr "{name} vrea să se conecteze"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:206
+#: usr/share/big-screen-monitor-display/gui/android_page.py:210
 #, python-brace-format
 msgid "Code {code} · {model} · {transport} {address}"
 msgstr "Cod {code} · {model} · {transport} {address}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:211
+#: usr/share/big-screen-monitor-display/gui/android_page.py:215
 msgid "Refuse"
 msgstr "Refuză"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:213
+#: usr/share/big-screen-monitor-display/gui/android_page.py:217
 msgid "Allow"
 msgstr "Permite"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:215
+#: usr/share/big-screen-monitor-display/gui/android_page.py:219
 msgid "Only if the phone shows the same code"
 msgstr "Doar dacă telefonul arată același cod"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:223
+#: usr/share/big-screen-monitor-display/gui/android_page.py:227
 msgid "not connected"
 msgstr "neconectat"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:227
+#: usr/share/big-screen-monitor-display/gui/android_page.py:231
 #, python-brace-format
 msgid "last seen {when}"
 msgstr "văzut ultima dată {when}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:233
-#: usr/share/big-screen-monitor-display/gui/android_page.py:235
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:237
+#: usr/share/big-screen-monitor-display/gui/android_page.py:239
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "Remove pairing"
 msgstr "Elimină asocierea"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 #, python-brace-format
 msgid "Remove {name}?"
 msgstr "Eliminați {name}?"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 msgid "this phone"
 msgstr "acest telefon"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:249
+#: usr/share/big-screen-monitor-display/gui/android_page.py:253
 msgid "The phone disconnects now and has to be added again to show the themes. Its settings on this computer are kept."
 msgstr "Telefonul se deconectează acum și trebuie adăugat din nou pentru a afișa temele. Setările sale de pe acest calculator se păstrează."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:252
+#: usr/share/big-screen-monitor-display/gui/android_page.py:256
 msgid "Remove"
 msgstr "Elimină"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:261
+#: usr/share/big-screen-monitor-display/gui/android_page.py:265
 msgid "The service is not running"
 msgstr "Serviciul nu rulează"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:262
+#: usr/share/big-screen-monitor-display/gui/android_page.py:266
 msgid "Start the monitoring service, then add the phone."
 msgstr "Porniți serviciul de monitorizare, apoi adăugați telefonul."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:278
+#: usr/share/big-screen-monitor-display/gui/android_page.py:282
 msgid "Add Android"
 msgstr "Adaugă Android"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:284
+#: usr/share/big-screen-monitor-display/gui/android_page.py:288
 #, python-brace-format
 msgid ""
 "1. Install the Big Screen Monitor Display app on the phone ({url}).\n"
@@ -4136,135 +4140,135 @@ msgstr ""
 "2. Conectați telefonul la aceeași rețea ca acest calculator.\n"
 "3. Îndreptați camera telefonului spre acest cod și deschideți linkul sau deschideți aplicația și atingeți „Scan the code”."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:291
+#: usr/share/big-screen-monitor-display/gui/android_page.py:298
 msgid "Pairing QR code"
 msgstr "Cod QR de asociere"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:295
+#: usr/share/big-screen-monitor-display/gui/android_page.py:302
 msgid "Connections over the network are off."
 msgstr "Conexiunile prin rețea sunt dezactivate."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:296
+#: usr/share/big-screen-monitor-display/gui/android_page.py:303
 msgid "Switch on"
 msgstr "Activează"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:300
+#: usr/share/big-screen-monitor-display/gui/android_page.py:307
 msgid "Without the camera"
 msgstr "Fără cameră"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:301
+#: usr/share/big-screen-monitor-display/gui/android_page.py:308
 msgid "In the app, choose this computer in the list (or add it by address). This window then shows a code: allow it only if the phone shows the same code."
 msgstr "În aplicație, alegeți acest calculator din listă (sau adăugați-l după adresă). Această fereastră afișează apoi un cod: permiteți-l doar dacă telefonul arată același cod."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:303
+#: usr/share/big-screen-monitor-display/gui/android_page.py:310
 msgid "Address of this computer"
 msgstr "Adresa acestui calculator"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:306
+#: usr/share/big-screen-monitor-display/gui/android_page.py:313
 msgid "Certificate fingerprint"
 msgstr "Amprenta certificatului"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 #, python-brace-format
 msgid "{name} added"
 msgstr "{name} a fost adăugat"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:341
+#: usr/share/big-screen-monitor-display/gui/android_page.py:348
 msgid "It now appears in My Displays. Another phone can use the new code."
 msgstr "Acum apare în Afișajele mele. Un alt telefon poate folosi noul cod."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:350
+#: usr/share/big-screen-monitor-display/gui/android_page.py:357
 msgid "Not on a network (switch the network connection on)"
 msgstr "Nu sunteți conectat la o rețea (activați conexiunea de rețea)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:361
+#: usr/share/big-screen-monitor-display/gui/android_page.py:368
 msgid "Install python-qrcode to see the QR code; the manual way below works without it."
 msgstr "Instalați python-qrcode pentru a vedea codul QR; metoda manuală de mai jos funcționează și fără el."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:373
+#: usr/share/big-screen-monitor-display/gui/android_page.py:380
 #, python-brace-format
 msgid "This code changes in {minutes}:{seconds:02d}"
 msgstr "Acest cod se schimbă în {minutes}:{seconds:02d}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:379
+#: usr/share/big-screen-monitor-display/gui/android_page.py:386
 msgid "Press Apply to let phones connect over the network."
 msgstr "Apăsați Aplică pentru a permite telefoanelor să se conecteze prin rețea."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:391
+#: usr/share/big-screen-monitor-display/gui/android_page.py:398
 msgid "Picture quality"
 msgstr "Calitatea imaginii"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:393
+#: usr/share/big-screen-monitor-display/gui/android_page.py:400
 msgid "Charts and text are always sent without loss; this affects photos and wallpapers."
 msgstr "Graficele și textul sunt trimise întotdeauna fără pierderi; aceasta afectează fotografiile și imaginile de fundal."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:394
+#: usr/share/big-screen-monitor-display/gui/android_page.py:401
 msgid "Drawing size"
 msgstr "Dimensiunea desenului"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:398
+#: usr/share/big-screen-monitor-display/gui/android_page.py:405
 msgid "Themes are drawn at this size and scaled to the screen: smaller is lighter for the computer and the network."
 msgstr "Temele sunt desenate la această dimensiune și scalate la ecran: o dimensiune mai mică solicită mai puțin calculatorul și rețeaua."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:401
+#: usr/share/big-screen-monitor-display/gui/android_page.py:408
 msgid "Rotate with the phone"
 msgstr "Rotește odată cu telefonul"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:402
+#: usr/share/big-screen-monitor-display/gui/android_page.py:409
 msgid "Follow the phone's sensor instead of the orientation chosen above."
 msgstr "Urmează senzorul telefonului în locul orientării alese mai sus."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:403
+#: usr/share/big-screen-monitor-display/gui/android_page.py:410
 msgid "Keep the screen on"
 msgstr "Menține ecranul pornit"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:404
+#: usr/share/big-screen-monitor-display/gui/android_page.py:411
 msgid "While the theme is shown (permanent display)."
 msgstr "Cât timp este afișată tema (afișaj permanent)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:405
+#: usr/share/big-screen-monitor-display/gui/android_page.py:412
 msgid "Burn-in protection"
 msgstr "Protecție împotriva arderii ecranului"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:406
+#: usr/share/big-screen-monitor-display/gui/android_page.py:413
 msgid "Moves the picture by a few pixels from time to time (OLED screens)."
 msgstr "Deplasează imaginea cu câțiva pixeli din când în când (ecrane OLED)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:408
+#: usr/share/big-screen-monitor-display/gui/android_page.py:415
 msgid "Swipe to change theme, hold for the menu; nothing reaches the computer's mouse or keyboard."
 msgstr "Glisați pentru a schimba tema, țineți apăsat pentru meniu; nimic nu ajunge la mouse-ul sau tastatura calculatorului."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:409
+#: usr/share/big-screen-monitor-display/gui/android_page.py:416
 msgid "Media controls on the touchscreen"
 msgstr "Comenzi media pe ecranul tactil"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:410
+#: usr/share/big-screen-monitor-display/gui/android_page.py:417
 msgid "Big Media Player: play, pause, next and volume on the phone (only what the player offers)."
 msgstr "Big Media Player: redare, pauză, piesa următoare și volum pe telefon (doar ce oferă playerul)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "The phone has to be added again"
 msgstr "Telefonul trebuie adăugat din nou"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:428
+#: usr/share/big-screen-monitor-display/gui/android_page.py:435
 #, python-brace-format
 msgid "BSDP {version} · {security}"
 msgstr "BSDP {version} · {security}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "TLS, paired device"
 msgstr "TLS, dispozitiv asociat"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "USB cable, paired device"
 msgstr "Cablu USB, dispozitiv asociat"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:432
+#: usr/share/big-screen-monitor-display/gui/android_page.py:439
 #, python-brace-format
 msgid "Android {version} · app {app}"
 msgstr "Android {version} · aplicație {app}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:434
+#: usr/share/big-screen-monitor-display/gui/android_page.py:441
 #, python-brace-format
 msgid "Screen {screen} · {dpi} dpi"
 msgstr "Ecran {screen} · {dpi} dpi"

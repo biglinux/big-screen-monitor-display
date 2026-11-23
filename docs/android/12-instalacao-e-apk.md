@@ -18,7 +18,7 @@ Baixar o APK da versão mais nova, direto pelo navegador do celular (Android 5.0
 **<https://github.com/ruscher/big-screen-monitor-display/releases/latest/download/big-screen-monitor-display.apk>**
 
 O endereço não muda entre versões: cada release do GitHub traz o arquivo com esse nome, uma cópia
-com a versão no nome (`big-screen-monitor-display-5.5.1.apk`) e o `SHA256SUMS`. A janela
+com a versão no nome (`big-screen-monitor-display-5.5.2.apk`) e o `SHA256SUMS`. A janela
 *Adicionar Android…* mostra o mesmo endereço. Fora de uma loja, o Android pede "Permitir fontes
 desconhecidas" para o aplicativo usado para abrir o arquivo.
 
@@ -55,7 +55,7 @@ senha foi criada nesta entrega.
 
 `.github/workflows/android.yml` roda JUnit, lint, `assembleDebug` e `assembleRelease` a cada mudança
 em `android/` ou nos vetores do protocolo, e publica os APKs e relatórios como artefato. Numa tag
-`v*` (por exemplo `v5.5.1`, igual ao `versionName`), o mesmo workflow cria a release e anexa
+`v*` (por exemplo `v5.5.2`, igual ao `versionName`), o mesmo workflow cria a release e anexa
 `big-screen-monitor-display.apk`, a cópia com versão e o `SHA256SUMS`: o APK assinado quando os
 segredos existem, senão o de depuração — nunca um APK sem assinatura. Para
 assinar no CI, cadastrar os segredos `BSMD_KEYSTORE_BASE64` (keystore em base64),

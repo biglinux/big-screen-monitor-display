@@ -642,8 +642,8 @@ msgstr "Dysk"
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
 #: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
-#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Sieć"
 
@@ -2033,7 +2033,7 @@ msgstr "Oszczędny"
 #: usr/share/big-screen-monitor-display/config_gui.py:74
 #: usr/share/big-screen-monitor-display/config_gui.py:573
 #: usr/share/big-screen-monitor-display/displays_page.py:47
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/media_player_page.py:198
 msgid "Balanced"
@@ -2826,7 +2826,7 @@ msgstr "Wszystkie opcje motywów, wyświetlaczy i wydajności wrócą do pierwot
 
 #: usr/share/big-screen-monitor-display/config_gui.py:974
 #: usr/share/big-screen-monitor-display/displays_page.py:637
-#: usr/share/big-screen-monitor-display/gui/android_page.py:251
+#: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1205
 msgid "Cancel"
@@ -2908,7 +2908,7 @@ msgstr[2] "Działa · {count} wyświetlaczy"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:1138
 #: usr/share/big-screen-monitor-display/displays_page.py:62
-#: usr/share/big-screen-monitor-display/gui/android_page.py:185
+#: usr/share/big-screen-monitor-display/gui/android_page.py:188
 msgid "The service is not running."
 msgstr "Usługa nie działa."
 
@@ -3049,7 +3049,7 @@ msgid "Testing"
 msgstr "Testowanie"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:39
-#: usr/share/big-screen-monitor-display/gui/android_page.py:231
+#: usr/share/big-screen-monitor-display/gui/android_page.py:235
 #: usr/share/big-screen-monitor-display/screentray/states.py:42
 msgid "Connected"
 msgstr "Połączono"
@@ -3468,7 +3468,7 @@ msgid "Simulated"
 msgstr "Symulowany"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:52
-#: usr/share/big-screen-monitor-display/gui/android_page.py:224
+#: usr/share/big-screen-monitor-display/gui/android_page.py:228
 msgid "Android"
 msgstr "Android"
 
@@ -3839,7 +3839,7 @@ msgid "Model chosen. Press Apply to start using the display."
 msgstr "Wybrano model. Naciśnij Zastosuj, aby zacząć używać wyświetlacza."
 
 #: usr/share/big-screen-monitor-display/displays_page.py:652
-#: usr/share/big-screen-monitor-display/gui/android_page.py:407
+#: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "Ekran dotykowy"
 
@@ -3897,77 +3897,81 @@ msgstr "Wysłano na wyświetlacz."
 msgid "The display did not receive the command"
 msgstr "Wyświetlacz nie odebrał polecenia"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:34
+#: usr/share/big-screen-monitor-display/gui/android_page.py:35
 msgid "USB cable"
 msgstr "Kabel USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (tethering)"
 msgstr "USB (tethering)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:35
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
 msgid "USB (debugging)"
 msgstr "USB (debugowanie)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:36
+msgid "VPN"
+msgstr "VPN"
+
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Automatic (lossless over USB)"
 msgstr "Automatyczna (bezstratna przez USB)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:37
+#: usr/share/big-screen-monitor-display/gui/android_page.py:39
 msgid "Lossless (sharpest)"
 msgstr "Bezstratna (najostrzejsza)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:38
+#: usr/share/big-screen-monitor-display/gui/android_page.py:40
 msgid "Economy (least traffic)"
 msgstr "Oszczędna (najmniejszy ruch)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Automatic (by performance)"
 msgstr "Automatyczny (wg wydajności)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:39
+#: usr/share/big-screen-monitor-display/gui/android_page.py:41
 msgid "Native resolution"
 msgstr "Rozdzielczość natywna"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1920 px"
 msgstr "Do 1920 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 1280 px"
 msgstr "Do 1280 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:40
+#: usr/share/big-screen-monitor-display/gui/android_page.py:42
 msgid "Up to 960 px"
 msgstr "Do 960 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:41
+#: usr/share/big-screen-monitor-display/gui/android_page.py:43
 msgid "Up to 640 px"
 msgstr "Do 640 px"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:76
+#: usr/share/big-screen-monitor-display/gui/android_page.py:79
 msgid "just now"
 msgstr "przed chwilą"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:78
+#: usr/share/big-screen-monitor-display/gui/android_page.py:81
 #, python-brace-format
 msgid "{minutes} min ago"
 msgstr "{minutes} min temu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:80
+#: usr/share/big-screen-monitor-display/gui/android_page.py:83
 #, python-brace-format
 msgid "{hours} h ago"
 msgstr "{hours} godz. temu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:82
+#: usr/share/big-screen-monitor-display/gui/android_page.py:85
 #, python-brace-format
 msgid "{days} day ago"
 msgid_plural "{days} days ago"
@@ -3975,157 +3979,157 @@ msgstr[0] "{days} dzień temu"
 msgstr[1] "{days} dni temu"
 msgstr[2] "{days} dni temu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:93
+#: usr/share/big-screen-monitor-display/gui/android_page.py:96
 msgid "Android phones and tablets"
 msgstr "Telefony i tablety z Androidem"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:94
+#: usr/share/big-screen-monitor-display/gui/android_page.py:97
 msgid "Install the Big Screen Monitor Display app on the phone and add it here: it becomes one more display, with its own theme and settings, and its touchscreen controls the theme."
 msgstr "Zainstaluj na telefonie aplikację Big Screen Monitor Display i dodaj go tutaj: stanie się kolejnym wyświetlaczem z własnym motywem i ustawieniami, a jego ekran dotykowy będzie sterował motywem."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:96
+#: usr/share/big-screen-monitor-display/gui/android_page.py:99
 msgid "Add Android…"
 msgstr "Dodaj Androida…"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:101
+#: usr/share/big-screen-monitor-display/gui/android_page.py:104
 msgid "Connect over the network (Wi-Fi or Ethernet)"
 msgstr "Łącz przez sieć (Wi-Fi lub Ethernet)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:102
+#: usr/share/big-screen-monitor-display/gui/android_page.py:105
 msgid "The computer accepts paired phones on the local network (encrypted, port 7717). Off: nothing listens on the network."
 msgstr "Komputer przyjmuje sparowane telefony w sieci lokalnej (szyfrowanie, port 7717). Wyłączone: nic nie nasłuchuje w sieci."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:104
+#: usr/share/big-screen-monitor-display/gui/android_page.py:107
 msgid "Connect over a USB cable"
 msgstr "Łącz przez kabel USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:105
+#: usr/share/big-screen-monitor-display/gui/android_page.py:108
 msgid "Phones already paired open the app when plugged in (USB accessory, no debugging needed). USB tethering and USB debugging also work."
 msgstr "Sparowane telefony po podłączeniu otwierają aplikację (akcesorium USB, debugowanie nie jest potrzebne). Działa też tethering USB i debugowanie USB."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:109
+#: usr/share/big-screen-monitor-display/gui/android_page.py:112
 msgid "Status"
 msgstr "Stan"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:152
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 msgid "Phone"
 msgstr "Telefon"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable · paired"
 msgstr "Podłączony kablem USB · sparowany"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:155
+#: usr/share/big-screen-monitor-display/gui/android_page.py:158
 msgid "On the USB cable"
 msgstr "Podłączony kablem USB"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:157
+#: usr/share/big-screen-monitor-display/gui/android_page.py:160
 msgid "Use as Display"
 msgstr "Użyj jako wyświetlacza"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:158
+#: usr/share/big-screen-monitor-display/gui/android_page.py:161
 msgid "Asks the phone to open the Big Screen Monitor Display app (USB accessory, no debugging)"
 msgstr "Prosi telefon o otwarcie aplikacji Big Screen Monitor Display (akcesorium USB, bez debugowania)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:172
+#: usr/share/big-screen-monitor-display/gui/android_page.py:175
 msgid "Confirm on the phone: open Big Screen Monitor Display (tick \"Always\" to make it a permanent display). The first time, allow the code shown here."
 msgstr "Potwierdź na telefonie: otwórz Big Screen Monitor Display (zaznacz „Zawsze”, aby był to stały wyświetlacz). Za pierwszym razem zezwól na kod pokazany tutaj."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:175
+#: usr/share/big-screen-monitor-display/gui/android_page.py:178
 #, python-brace-format
 msgid "The phone did not switch: {error}. On the phone, choose \"File transfer\" for USB and make sure the app is installed."
 msgstr "Telefon nie przełączył trybu: {error}. Na telefonie wybierz „Przesyłanie plików” dla USB i upewnij się, że aplikacja jest zainstalowana."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:178
+#: usr/share/big-screen-monitor-display/gui/android_page.py:181
 #, python-brace-format
 msgid "No access to the phone ({error}). Choose \"File transfer\" for USB on the phone and try again."
 msgstr "Brak dostępu do telefonu ({error}). Na telefonie wybierz „Przesyłanie plików” dla USB i spróbuj ponownie."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:187
+#: usr/share/big-screen-monitor-display/gui/android_page.py:190
 msgid "This version of the service has no Android support yet; restart it."
 msgstr "Ta wersja usługi nie obsługuje jeszcze Androida; uruchom ją ponownie."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:192
+#: usr/share/big-screen-monitor-display/gui/android_page.py:196
 #, python-brace-format
 msgid "Waiting for phones at {addresses} (port {port})"
 msgstr "Oczekiwanie na telefony pod adresem {addresses} (port {port})"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:195
+#: usr/share/big-screen-monitor-display/gui/android_page.py:199
 msgid "Network off: only phones on a USB cable can connect."
 msgstr "Sieć wyłączona: połączyć się mogą tylko telefony podłączone kablem USB."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:197
+#: usr/share/big-screen-monitor-display/gui/android_page.py:201
 msgid "Off: no phone can connect."
 msgstr "Wyłączone: żaden telefon nie może się połączyć."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:205
+#: usr/share/big-screen-monitor-display/gui/android_page.py:209
 #, python-brace-format
 msgid "{name} wants to connect"
 msgstr "{name} chce się połączyć"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:206
+#: usr/share/big-screen-monitor-display/gui/android_page.py:210
 #, python-brace-format
 msgid "Code {code} · {model} · {transport} {address}"
 msgstr "Kod {code} · {model} · {transport} {address}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:211
+#: usr/share/big-screen-monitor-display/gui/android_page.py:215
 msgid "Refuse"
 msgstr "Odrzuć"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:213
+#: usr/share/big-screen-monitor-display/gui/android_page.py:217
 msgid "Allow"
 msgstr "Zezwól"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:215
+#: usr/share/big-screen-monitor-display/gui/android_page.py:219
 msgid "Only if the phone shows the same code"
 msgstr "Tylko jeśli telefon pokazuje ten sam kod"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:223
+#: usr/share/big-screen-monitor-display/gui/android_page.py:227
 msgid "not connected"
 msgstr "niepodłączony"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:227
+#: usr/share/big-screen-monitor-display/gui/android_page.py:231
 #, python-brace-format
 msgid "last seen {when}"
 msgstr "ostatnio widziany: {when}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:233
-#: usr/share/big-screen-monitor-display/gui/android_page.py:235
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:237
+#: usr/share/big-screen-monitor-display/gui/android_page.py:239
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "Remove pairing"
 msgstr "Usuń parowanie"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 #, python-brace-format
 msgid "Remove {name}?"
 msgstr "Usunąć {name}?"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:248
+#: usr/share/big-screen-monitor-display/gui/android_page.py:252
 msgid "this phone"
 msgstr "ten telefon"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:249
+#: usr/share/big-screen-monitor-display/gui/android_page.py:253
 msgid "The phone disconnects now and has to be added again to show the themes. Its settings on this computer are kept."
 msgstr "Telefon zostanie teraz rozłączony i trzeba będzie dodać go ponownie, aby wyświetlał motywy. Jego ustawienia na tym komputerze zostaną zachowane."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:252
+#: usr/share/big-screen-monitor-display/gui/android_page.py:256
 msgid "Remove"
 msgstr "Usuń"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:261
+#: usr/share/big-screen-monitor-display/gui/android_page.py:265
 msgid "The service is not running"
 msgstr "Usługa nie działa"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:262
+#: usr/share/big-screen-monitor-display/gui/android_page.py:266
 msgid "Start the monitoring service, then add the phone."
 msgstr "Uruchom usługę monitorowania, a następnie dodaj telefon."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:278
+#: usr/share/big-screen-monitor-display/gui/android_page.py:282
 msgid "Add Android"
 msgstr "Dodaj Androida"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:284
+#: usr/share/big-screen-monitor-display/gui/android_page.py:288
 #, python-brace-format
 msgid ""
 "1. Install the Big Screen Monitor Display app on the phone ({url}).\n"
@@ -4136,135 +4140,135 @@ msgstr ""
 "2. Połącz telefon z tą samą siecią, z którą połączony jest ten komputer.\n"
 "3. Skieruj aparat telefonu na ten kod i otwórz odnośnik albo otwórz aplikację i stuknij „Scan the code”."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:291
+#: usr/share/big-screen-monitor-display/gui/android_page.py:298
 msgid "Pairing QR code"
 msgstr "Kod QR do parowania"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:295
+#: usr/share/big-screen-monitor-display/gui/android_page.py:302
 msgid "Connections over the network are off."
 msgstr "Połączenia przez sieć są wyłączone."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:296
+#: usr/share/big-screen-monitor-display/gui/android_page.py:303
 msgid "Switch on"
 msgstr "Włącz"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:300
+#: usr/share/big-screen-monitor-display/gui/android_page.py:307
 msgid "Without the camera"
 msgstr "Bez aparatu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:301
+#: usr/share/big-screen-monitor-display/gui/android_page.py:308
 msgid "In the app, choose this computer in the list (or add it by address). This window then shows a code: allow it only if the phone shows the same code."
 msgstr "W aplikacji wybierz ten komputer z listy (lub dodaj go według adresu). To okno pokaże wtedy kod: zezwól tylko wtedy, gdy telefon pokazuje ten sam kod."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:303
+#: usr/share/big-screen-monitor-display/gui/android_page.py:310
 msgid "Address of this computer"
 msgstr "Adres tego komputera"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:306
+#: usr/share/big-screen-monitor-display/gui/android_page.py:313
 msgid "Certificate fingerprint"
 msgstr "Odcisk palca certyfikatu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:340
+#: usr/share/big-screen-monitor-display/gui/android_page.py:347
 #, python-brace-format
 msgid "{name} added"
 msgstr "Dodano: {name}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:341
+#: usr/share/big-screen-monitor-display/gui/android_page.py:348
 msgid "It now appears in My Displays. Another phone can use the new code."
 msgstr "Jest teraz widoczny w sekcji Moje wyświetlacze. Inny telefon może użyć nowego kodu."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:350
+#: usr/share/big-screen-monitor-display/gui/android_page.py:357
 msgid "Not on a network (switch the network connection on)"
 msgstr "Brak sieci (włącz połączenie przez sieć)"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:361
+#: usr/share/big-screen-monitor-display/gui/android_page.py:368
 msgid "Install python-qrcode to see the QR code; the manual way below works without it."
 msgstr "Zainstaluj python-qrcode, aby zobaczyć kod QR; sposób ręczny poniżej działa bez niego."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:373
+#: usr/share/big-screen-monitor-display/gui/android_page.py:380
 #, python-brace-format
 msgid "This code changes in {minutes}:{seconds:02d}"
 msgstr "Ten kod zmieni się za {minutes}:{seconds:02d}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:379
+#: usr/share/big-screen-monitor-display/gui/android_page.py:386
 msgid "Press Apply to let phones connect over the network."
 msgstr "Naciśnij Zastosuj, aby pozwolić telefonom łączyć się przez sieć."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:391
+#: usr/share/big-screen-monitor-display/gui/android_page.py:398
 msgid "Picture quality"
 msgstr "Jakość obrazu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:393
+#: usr/share/big-screen-monitor-display/gui/android_page.py:400
 msgid "Charts and text are always sent without loss; this affects photos and wallpapers."
 msgstr "Wykresy i tekst są zawsze wysyłane bezstratnie; dotyczy to zdjęć i tapet."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:394
+#: usr/share/big-screen-monitor-display/gui/android_page.py:401
 msgid "Drawing size"
 msgstr "Rozmiar rysowania"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:398
+#: usr/share/big-screen-monitor-display/gui/android_page.py:405
 msgid "Themes are drawn at this size and scaled to the screen: smaller is lighter for the computer and the network."
 msgstr "Motywy są rysowane w tym rozmiarze i skalowane do ekranu: mniejszy rozmiar mniej obciąża komputer i sieć."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:401
+#: usr/share/big-screen-monitor-display/gui/android_page.py:408
 msgid "Rotate with the phone"
 msgstr "Obracaj razem z telefonem"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:402
+#: usr/share/big-screen-monitor-display/gui/android_page.py:409
 msgid "Follow the phone's sensor instead of the orientation chosen above."
 msgstr "Korzystaj z czujnika telefonu zamiast orientacji wybranej powyżej."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:403
+#: usr/share/big-screen-monitor-display/gui/android_page.py:410
 msgid "Keep the screen on"
 msgstr "Nie wygaszaj ekranu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:404
+#: usr/share/big-screen-monitor-display/gui/android_page.py:411
 msgid "While the theme is shown (permanent display)."
 msgstr "Gdy wyświetlany jest motyw (stały wyświetlacz)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:405
+#: usr/share/big-screen-monitor-display/gui/android_page.py:412
 msgid "Burn-in protection"
 msgstr "Ochrona przed wypaleniem ekranu"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:406
+#: usr/share/big-screen-monitor-display/gui/android_page.py:413
 msgid "Moves the picture by a few pixels from time to time (OLED screens)."
 msgstr "Co jakiś czas przesuwa obraz o kilka pikseli (ekrany OLED)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:408
+#: usr/share/big-screen-monitor-display/gui/android_page.py:415
 msgid "Swipe to change theme, hold for the menu; nothing reaches the computer's mouse or keyboard."
 msgstr "Przesuń palcem, aby zmienić motyw, przytrzymaj, aby otworzyć menu; nic nie trafia do myszy ani klawiatury komputera."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:409
+#: usr/share/big-screen-monitor-display/gui/android_page.py:416
 msgid "Media controls on the touchscreen"
 msgstr "Sterowanie multimediami na ekranie dotykowym"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:410
+#: usr/share/big-screen-monitor-display/gui/android_page.py:417
 msgid "Big Media Player: play, pause, next and volume on the phone (only what the player offers)."
 msgstr "Big Media Player: odtwarzanie, wstrzymanie, następny utwór i głośność na telefonie (tylko to, co oferuje odtwarzacz)."
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:415
+#: usr/share/big-screen-monitor-display/gui/android_page.py:422
 msgid "The phone has to be added again"
 msgstr "Telefon trzeba będzie dodać ponownie"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:428
+#: usr/share/big-screen-monitor-display/gui/android_page.py:435
 #, python-brace-format
 msgid "BSDP {version} · {security}"
 msgstr "BSDP {version} · {security}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "TLS, paired device"
 msgstr "TLS, sparowane urządzenie"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:429
+#: usr/share/big-screen-monitor-display/gui/android_page.py:436
 msgid "USB cable, paired device"
 msgstr "Kabel USB, sparowane urządzenie"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:432
+#: usr/share/big-screen-monitor-display/gui/android_page.py:439
 #, python-brace-format
 msgid "Android {version} · app {app}"
 msgstr "Android {version} · aplikacja {app}"
 
-#: usr/share/big-screen-monitor-display/gui/android_page.py:434
+#: usr/share/big-screen-monitor-display/gui/android_page.py:441
 #, python-brace-format
 msgid "Screen {screen} · {dpi} dpi"
 msgstr "Ekran {screen} · {dpi} dpi"

@@ -72,10 +72,12 @@ RestrictNamespaces=yes
 # phones over the network" is switched on (off by default); without it, only
 # 127.0.0.1 (adb reverse). Public addresses stay blocked either way: a phone
 # can only reach the service from loopback, private and link-local networks
-# (home Wi-Fi, Ethernet, USB tethering).
+# (home Wi-Fi, Ethernet, USB tethering) and from private VPNs: 100.64.0.0/10 is
+# the range of Tailscale, Headscale and NetBird (not routed on the Internet),
+# so a paired phone can use the display away from home through the VPN.
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET
 IPAddressDeny=any
-IPAddressAllow=127.0.0.0/8 ::1/128 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16
+IPAddressAllow=127.0.0.0/8 ::1/128 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 100.64.0.0/10
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
 SystemCallErrorNumber=EPERM

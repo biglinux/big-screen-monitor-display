@@ -199,11 +199,11 @@ class Hello:
     formats: tuple
     touch: bool
     brightness: bool
-    transport: str                # wifi, ethernet, usb-accessory, usb-tether, usb-adb, other
+    transport: str                # wifi, ethernet, vpn, usb-accessory, usb-tether, usb-adb, other
     nonce: bytes
     battery: bool
 
-    TRANSPORTS = ("wifi", "ethernet", "usb-accessory", "usb-tether", "usb-adb", "other")
+    TRANSPORTS = ("wifi", "ethernet", "vpn", "usb-accessory", "usb-tether", "usb-adb", "other")
 
     @classmethod
     def parse(cls, obj):

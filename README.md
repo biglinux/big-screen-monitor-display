@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.5.1-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.5.2-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -44,6 +44,14 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 ---
 
 <a id="novidades"></a>
+
+## ✨ Novidades da 5.5.2 — Display no celular de qualquer lugar, pelo Tailscale
+
+- **Acesso remoto pela VPN:** com o [Tailscale](https://tailscale.com) (ou Headscale/NetBird, faixa `100.64.0.0/10`) ligado no computador e no celular, o app conecta ao display longe de casa. Antes, o serviço descartava todo pacote da faixa do Tailscale e o celular só funcionava no mesmo Wi-Fi.
+- **Sem digitar endereço:** o computador informa ao app, a cada conexão, os endereços da rede de casa e da VPN; o QR Code também já leva o endereço do Tailscale. Pareou em casa, funciona na rua.
+- **Conexão rápida em qualquer lugar:** o app tenta todos os endereços conhecidos ao mesmo tempo (a rede local com uma pequena vantagem); antes tentava um por um, 4 s cada, e levava ~16 s para chegar ao Tailscale.
+- O app reconecta assim que a VPN sobe, e a janela e o diagnóstico mostram o transporte **VPN**.
+- Passo a passo em [docs/android/04-conexao-rede.md](docs/android/04-conexao-rede.md#acesso-remoto-tailscale).
 
 ## ✨ Novidades da 5.5.1 — App Android com download direto
 

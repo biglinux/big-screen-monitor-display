@@ -3,6 +3,9 @@
 Network (opt-in, ``android_network``): TCP ``android_port`` (7717) with TLS
 1.2+, and a UDP responder on the next port so apps find the computer on the
 local network without mDNS. Nothing is listened on while the option is off.
+Private VPNs count as local networks: Tailscale/Headscale (100.64.0.0/10),
+ZeroTier, WireGuard. Their addresses go into the QR code and into WELCOME, so
+a phone paired at home keeps reaching the computer through the VPN anywhere.
 
 USB: Android Open Accessory links (:mod:`.aoa`) are handed in by
 :meth:`AndroidHub.adopt` and go through the same handshake (no TLS: the
@@ -42,6 +45,62 @@ MAX_LINKS = 16
 FAILURES_BEFORE_BAN = 5
 BAN_SECONDS = 60.0
 DISCOVERY_PER_SECOND = 20
+MAX_ADDRESSES = 8
+# Tailscale, Headscale and NetBird hand out addresses of the shared (CGNAT)
+# range: neither "private" nor "global" for ipaddress, but just as local.
+CGNAT = ipaddress.ip_network("100.64.0.0/10")
+VPN_INTERFACES = ("tailscale", "wg", "zt", "tun", "tap", "nebula", "netbird", "wt0")
+SKIPPED_INTERFACES = ("lo", "docker", "veth", "virbr", "br-", "podman", "cni", "flannel", "lxcbr", "lxdbr",
+                      "vboxnet", "vmnet")
+
+
+def default_route_interfaces(path="/proc/net/route"):
+    """Interfaces holding an IPv4 default route (the way to the home network comes first)."""
+    try:
+        with open(path, encoding="ascii", errors="replace") as handle:
+            rows = [line.split() for line in handle.readlines()[1:]]
+    except OSError:
+        return set()
+    return {row[0] for row in rows if len(row) > 7 and row[1] == "00000000" and row[7] == "00000000"}
+
+
+def order_addresses(entries, default_ifaces=()):
+    """Reachable IPv4 addresses of this computer, best first, as ``{iface, address, kind}``.
+
+    ``entries`` are ``(interface, address)`` pairs. Loopback, public, multicast
+    and container/VM bridge addresses are dropped. ``kind`` is ``vpn`` for
+    Tailscale-like (100.64.0.0/10) addresses and VPN interfaces, ``lan`` for the
+    rest. Order: the default-route network, then Tailscale-like VPNs (the way
+    in from anywhere), then other networks, then other VPNs; so a short list
+    (the QR code) still carries the VPN address.
+    """
+    ranked = []
+    seen = set()
+    for index, (iface, text) in enumerate(entries):
+        if not iface or iface.startswith(SKIPPED_INTERFACES):
+            continue
+        try:
+            ip = ipaddress.ip_address(text)
+        except ValueError:
+            continue
+        if ip.version != 4 or ip.is_loopback or ip.is_multicast or ip.is_unspecified or text in seen:
+            continue
+        cgnat = ip in CGNAT
+        if not (ip.is_private or cgnat):
+            continue
+        seen.add(text)
+        vpn = cgnat or iface.startswith(VPN_INTERFACES)
+        if iface in default_ifaces and not vpn:
+            rank = 0
+        elif cgnat:
+            rank = 1
+        elif not vpn:
+            rank = 2
+        else:
+            rank = 3
+        ranked.append((rank, index, {"iface": iface, "address": text, "kind": "vpn" if vpn else "lan"}))
+    ranked.sort(key=lambda item: item[:2])
+    return [entry for _rank, _index, entry in ranked][:MAX_ADDRESSES]
 
 
 class AndroidHub:
@@ -391,7 +450,7 @@ class AndroidHub:
             # Tell the app why (it asks to update) instead of just closing.
             return self._reject(link, bsdp.R_VERSION, f"this computer speaks BSDP {bsdp.VERSION}")
         hello = bsdp.Hello.parse(body)
-        if link.transport == "network" and hello.transport in ("wifi", "ethernet", "usb-tether"):
+        if link.transport == "network" and hello.transport in ("wifi", "ethernet", "usb-tether", "vpn"):
             link.transport = hello.transport
         elif link.transport in ("network", "usb-adb") and hello.transport == "usb-adb":
             link.transport = "usb-adb"
@@ -459,6 +518,11 @@ class AndroidHub:
         link.device_id = hello.device_id
         welcome = {"display_id": bsdp.display_id(hello.device_id), "server_id": self.identity.server_id,
                    "name": self.identity.name}
+        addresses = self.network_addresses()
+        if addresses:
+            # The app remembers them: paired at home, it still finds the computer through
+            # Tailscale (or another VPN) away from home, without typing an address.
+            welcome["addresses"] = addresses
         if token is not None:
             welcome["token"] = bsdp.b64e(token)
             if cert_fp:
@@ -478,21 +542,20 @@ class AndroidHub:
 
     # ------------------------------------------------------------ status
     def addresses(self):
-        """Private IPv4 addresses of this computer (shown in the QR code and the window)."""
+        """Local and VPN IPv4 addresses of this computer (QR code, window, WELCOME); see order_addresses."""
         try:
             import psutil
-            result = []
-            for name, addrs in psutil.net_if_addrs().items():
-                if name == "lo" or name.startswith(("docker", "veth", "virbr", "br-")):
-                    continue
-                for addr in addrs:
-                    if addr.family == socket.AF_INET:
-                        ip = ipaddress.ip_address(addr.address)
-                        if ip.is_private and not ip.is_loopback:
-                            result.append({"iface": name, "address": addr.address})
-            return result[:8]
+            entries = [(name, addr.address) for name, addrs in psutil.net_if_addrs().items()
+                       for addr in addrs if addr.family == socket.AF_INET]
+            return order_addresses(entries, default_route_interfaces())
         except Exception:  # noqa: BLE001
             return []
+
+    def network_addresses(self):
+        """Addresses a phone can use over the network now (none while only adb on 127.0.0.1 listens)."""
+        if self.listener is None or self.host == "127.0.0.1":
+            return []
+        return [entry["address"] for entry in self.addresses()]
 
     def status(self):
         with self.lock:

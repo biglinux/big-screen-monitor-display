@@ -17,15 +17,18 @@ import java.net.NetworkInterface
 import java.net.Socket
 import java.security.MessageDigest
 import java.security.cert.X509Certificate
+import java.util.Collections
 import java.util.concurrent.LinkedBlockingDeque
+import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.X509TrustManager
 
 /** How to reach the computer. */
 sealed class Target {
-    /** Network (Wi-Fi, Ethernet, USB tethering, adb reverse on 127.0.0.1). */
+    /** Network (Wi-Fi, Ethernet, a VPN such as Tailscale, USB tethering, adb reverse on 127.0.0.1). */
     class Network(val addresses: List<String>, val port: Int, val serverId: String?, val fingerprint: String?) : Target()
 
     /** USB accessory (Android Open Accessory): the cable is the channel, no TLS. */
@@ -210,6 +213,11 @@ class Session(
     private class Rejected(val reason: String, val detail: String) : Exception(reason)
     private class CertificateChanged(message: String) : Exception(message)
 
+    companion object {
+        /** Long enough for a VPN's first packet (Tailscale may relay it before a direct path exists). */
+        const val CONNECT_TIMEOUT_MS = 8000
+    }
+
     private fun open(): Pair<InputStream, OutputStream> {
         val accessory = target as? Target.Accessory
         if (accessory != null) {
@@ -220,22 +228,85 @@ class Session(
             return Pair(FileInputStream(fd), BufferedOutputStream(FileOutputStream(fd), 65536))
         }
         val network = target as Target.Network
-        var last: IOException? = null
-        for (address in network.addresses) {
-            if (closed) throw IOException("closed")
-            try {
-                return connect(address, network)
-            } catch (error: IOException) {
-                last = error
-            }
-        }
-        throw last ?: IOException("no address")
+        val winner = race(network.addresses.distinct(), network.port)
+        return secure(winner.socket, winner.address, network)
     }
 
-    private fun connect(address: String, target: Target.Network): Pair<InputStream, OutputStream> {
-        val raw = Socket()
-        socket = raw
-        raw.connect(InetSocketAddress(address, target.port), 4000)
+    private class Winner(val socket: Socket, val address: String)
+
+    /**
+     * Connects to every known address of the computer at once and keeps the first that answers.
+     * One after the other, each address out of reach (the home network seen from the street) cost
+     * a whole timeout before the VPN address was even tried. Local addresses start first, so at
+     * home the direct network wins over Tailscale; away, the VPN answers while they hang.
+     */
+    private fun race(addresses: List<String>, port: Int): Winner {
+        if (closed) throw IOException("closed")
+        if (addresses.isEmpty()) throw IOException("no address")
+        val results = LinkedBlockingQueue<Any>()
+        val pending = Collections.synchronizedList(ArrayList<Socket>())
+        val decided = AtomicBoolean(false)
+        fun closeAll(except: Socket?) {
+            decided.set(true)
+            synchronized(pending) {
+                for (candidate in pending) {
+                    if (candidate !== except) {
+                        try { candidate.close() } catch (error: IOException) { }
+                    }
+                }
+            }
+        }
+        socket = Closeable { closeAll(null) }            // close() during the race stops every attempt
+        for (address in addresses) {
+            Thread({
+                val outcome: Any = try {
+                    Thread.sleep(Net.startDelay(address))
+                    val raw = Socket()
+                    pending.add(raw)
+                    if (decided.get()) {
+                        raw.close()
+                        IOException("not needed")
+                    } else {
+                        raw.connect(InetSocketAddress(address, port), CONNECT_TIMEOUT_MS)
+                        if (decided.compareAndSet(false, true)) Winner(raw, address)
+                        else {
+                            raw.close()
+                            IOException("not needed")
+                        }
+                    }
+                } catch (error: IOException) {
+                    IOException("$address: ${error.message ?: error.javaClass.simpleName}", error)
+                } catch (error: Exception) {
+                    IOException("$address: $error", error)
+                }
+                results.offer(outcome)
+            }, "bsmd-connect").start()
+        }
+        val deadline = SystemClock.elapsedRealtime() + CONNECT_TIMEOUT_MS + Net.VPN_HEAD_START_MS + 2000
+        var last: IOException? = null
+        var answers = 0
+        while (answers < addresses.size) {
+            answers++
+            val remaining = deadline - SystemClock.elapsedRealtime()
+            val outcome = if (remaining > 0) results.poll(remaining, TimeUnit.MILLISECONDS) else null
+            if (outcome is Winner) {
+                closeAll(outcome.socket)
+                socket = outcome.socket
+                if (closed) {
+                    try { outcome.socket.close() } catch (error: IOException) { }
+                    throw IOException("closed")
+                }
+                return outcome
+            }
+            if (outcome == null) break
+            last = outcome as? IOException ?: last
+            if (closed) break
+        }
+        closeAll(null)
+        throw if (closed) IOException("closed") else last ?: IOException("connection timed out")
+    }
+
+    private fun secure(raw: Socket, address: String, target: Target.Network): Pair<InputStream, OutputStream> {
         raw.tcpNoDelay = true
         raw.keepAlive = true
         val trust = PinningTrustManager()
@@ -255,19 +326,21 @@ class Session(
         }
         certFingerprint = fp
         stats.address = address
+        val local = localInterface(raw)
         stats.transport = when {
-            address == "127.0.0.1" -> "usb-adb"
-            isTetherInterface(raw) -> "usb-tether"
+            address == "127.0.0.1" || raw.inetAddress?.isLoopbackAddress == true -> "usb-adb"
+            local.startsWith("rndis") || local.startsWith("ncm") || local.startsWith("usb") -> "usb-tether"
+            Net.isCgnat(raw.inetAddress?.hostAddress ?: address) || Net.isVpnInterface(local) -> "vpn"
             else -> hello.optString("transport", "wifi")
         }
         return Pair(ssl.inputStream, BufferedOutputStream(ssl.outputStream, 65536))
     }
 
-    private fun isTetherInterface(raw: Socket): Boolean = try {
-        val name = NetworkInterface.getByInetAddress(raw.localAddress)?.name ?: ""
-        name.startsWith("rndis") || name.startsWith("ncm") || name.startsWith("usb")
+    /** Name of the phone's interface this connection leaves through (tun0 for Tailscale, rndis0 for tethering). */
+    private fun localInterface(raw: Socket): String = try {
+        NetworkInterface.getByInetAddress(raw.localAddress)?.name ?: ""
     } catch (error: Exception) {
-        false
+        ""
     }
 
     private fun write(out: OutputStream, data: ByteArray) {
@@ -317,13 +390,16 @@ class Session(
         val newToken = welcome.optString("token")
         if (newToken.isNotEmpty()) store.setToken(serverId, B64.decode(newToken))
         val known = store.computer(serverId)
-        val addresses = LinkedHashSet<String>()
-        if (stats.address.isNotEmpty() && stats.address != "USB") addresses.add(stats.address)
-        known?.addresses?.let { addresses.addAll(it) }
-        net?.addresses?.let { addresses.addAll(it) }
+        // The computer tells where else it can be reached (home network, Tailscale): remembered,
+        // so a phone paired at home finds it through the VPN anywhere without typing an address.
+        val announced = welcome.optJSONArray("addresses")?.let { list ->
+            (0 until minOf(list.length(), Net.MAX_ADDRESSES)).map { list.optString(it) }
+        } ?: emptyList()
+        val addresses = Net.merge(stats.address.ifEmpty { null }, announced, known?.addresses ?: emptyList(),
+            net?.addresses ?: emptyList())
         val computer = Computer(serverId, challenge.optString("name", "Linux").take(40),
             if (certFingerprint.isNotEmpty()) B64.encode(certFingerprint) else known?.fingerprint ?: "",
-            addresses.filter { it != "127.0.0.1" }.take(6), net?.port ?: known?.port ?: DEFAULT_PORT,
+            addresses, net?.port ?: known?.port ?: DEFAULT_PORT,
             System.currentTimeMillis(), stats.transport, welcome.optString("display_id"))
         store.save(computer)
         store.lastServer = serverId
