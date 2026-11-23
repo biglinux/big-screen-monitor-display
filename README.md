@@ -53,6 +53,7 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 - O app reconecta assim que a VPN sobe, e a janela e o diagnóstico mostram o transporte **VPN**.
 - **APK com assinatura oficial:** até a 5.5.1 cada versão saía com uma chave diferente e o Android recusava atualizar. Desta vez instale a 5.5.2 (aparece ao lado da antiga), pareie uma vez e desinstale a anterior; daqui em diante as atualizações instalam por cima.
 - Passo a passo em [docs/android/04-conexao-rede.md](docs/android/04-conexao-rede.md#acesso-remoto-tailscale).
+- **Pacote:** versões mínimas declaradas (`glib2>=2.80`, `libadwaita>=1.6`, `python>=3.10`) e `tailscale` como opcional. Corrigido: o Kojiro Studio usava `Adw.InlineViewSwitcher` (libadwaita 1.7) e não abria na 1.6, o mínimo declarado.
 
 ## ✨ Novidades da 5.5.1 — App Android com download direto
 
@@ -605,17 +606,18 @@ Requer Python 3.10 ou mais novo. Detalhes, garantias e testes sem root em [docs/
 1. Abra o link acima no navegador do celular (Android 5.0 ou mais novo) e toque no arquivo baixado. O Android pede para **permitir instalar apps de fontes desconhecidas** para o navegador — é normal fora de uma loja.
 2. No computador, abra **Big Screen Monitor Display › Meus Displays › Celulares e tablets Android**, ligue **Conectar pela rede** e aplique.
 3. Toque em **Adicionar Android…** e leia o QR Code com a câmera do celular (ou abra o app e toque em "Scan the code"). O celular vira mais um display. Também funciona pelo **cabo USB, sem depuração**.
+4. **Longe de casa:** com o [Tailscale](https://tailscale.com) ligado no computador e no celular (mesma conta), o app conecta de qualquer lugar — dados móveis, outro Wi-Fi. Pareie uma vez em casa; o app aprende o endereço `100.x.y.z` sozinho (ou use *Add by address* com ele). Detalhes e firewall em [docs/android/04-conexao-rede.md](docs/android/04-conexao-rede.md#acesso-remoto-tailscale).
 
-Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/ruscher/big-screen-monitor-display/releases). Enquanto o projeto não tiver chave de assinatura oficial, o APK publicado é a compilação de depuração (pacote `br.com.biglinux.bigscreen.debug`): instala e funciona normalmente, mas cada versão sai assinada com uma chave de depuração diferente, então **para atualizar é preciso desinstalar a versão anterior** (o pareamento é refeito em segundos). Com a chave oficial cadastrada nos segredos do repositório, as atualizações passam a ser diretas. O app pede só permissões de rede. Compilar o APK, firewall e detalhes: [docs/android](docs/android/12-instalacao-e-apk.md).
+Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/ruscher/big-screen-monitor-display/releases). Desde a 5.5.2 o APK é assinado com a **chave oficial** do projeto (pacote `br.com.biglinux.bigscreen`) e as atualizações instalam por cima, mantendo o pareamento. Quem tem a versão de depuração da 5.5.1 ou anterior (`br.com.biglinux.bigscreen.debug`) instala a nova ao lado, pareia uma vez e desinstala a antiga. O app pede só permissões de rede. Compilar o APK, firewall e detalhes: [docs/android](docs/android/12-instalacao-e-apk.md).
 
 ### Dependências
 
 | Tipo | Pacotes |
 | --- | --- |
 | Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit`, `openssl` (certificado para os displays Android) |
-| Janela | `python-gobject`, `python-cairo`, `glib2`, `gtk4`, `libadwaita` ≥ 1.6, `hicolor-icon-theme` |
+| Janela | `python-gobject`, `python-cairo`, `glib2` ≥ 2.80, `gtk4`, `libadwaita` ≥ 1.6 (1.7+ usa as abas compactas do Kojiro Studio), `hicolor-icon-theme` |
 | Bandejas | `python-pyqt6` (PyQt5 também serve) |
-| Opcionais | `openrgb` (cor dos LEDs dos coolers DeepCool), `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB), `python-qrcode` (QR Code para adicionar celulares Android), `noto-fonts-cjk` (chinês, japonês e coreano nos displays) |
+| Opcionais | `openrgb` (cor dos LEDs dos coolers DeepCool), `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB), `python-qrcode` (QR Code para adicionar celulares Android), `tailscale` (display Android longe de casa pela VPN), `noto-fonts-cjk` (chinês, japonês e coreano nos displays) |
 | Build | `gettext`, `git` |
 
 ---
@@ -648,7 +650,7 @@ Exemplo de `systemctl status`:
 ● big-screen-monitor-display.service - Big Screen Monitor Display - USB LCD hardware monitor
      Active: active (running)
      Status: "healthy: AX206 DPF 800x480, theme brother_away, 8.0 fps"
-     Memory: 72.6M (high: 192M, max: 320M)
+     Memory: 72.6M (high: 256M, max: 384M)
 ```
 
 ### Arquivos

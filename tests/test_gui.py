@@ -242,6 +242,30 @@ def test_pairing_code_carries_the_vpn_address(config_gui):
     assert len(query["a"][0].split(",")) == 5
 
 
+@pytest.mark.parametrize("libadwaita", ["1.6", "1.7+"])
+def test_kojiro_inspector_builds_on_every_supported_libadwaita(config_gui, monkeypatch, libadwaita):
+    """Adw.InlineViewSwitcher only exists from libadwaita 1.7; the package asks for 1.6."""
+    import kojiro_page
+    from gi.repository import Adw, Gtk
+    if not Gtk.init_check():
+        pytest.skip("no display for GTK")
+
+    class Adw16:
+        def __getattr__(self, name):
+            if name.startswith("InlineViewSwitcher"):
+                raise AttributeError(name)
+            return getattr(Adw, name)
+    if libadwaita == "1.6":
+        monkeypatch.setattr(kojiro_page, "Adw", Adw16())
+    page = kojiro_page.KojiroPage.__new__(kojiro_page.KojiroPage)
+    page._refresh_advanced = lambda: None
+    box = page._inspector()
+    switcher = box.get_first_child()
+    expected = "ViewSwitcher" if libadwaita == "1.6" else "InlineViewSwitcher"
+    assert type(switcher).__name__ == expected
+    assert page.inspector.get_pages().get_n_items() == 6
+
+
 def test_theme_signature_follows_only_relevant_keys(config_gui):
     from bsmd import themes
     from gui.theme_gallery import theme_signature

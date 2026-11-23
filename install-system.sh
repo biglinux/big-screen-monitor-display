@@ -94,10 +94,10 @@ deps_for() {
 # Optional features, never installed silently (named at the end).
 optional_for() {
     case "$1" in
-        arch) echo "lm_sensors openrgb playerctl libpulse alsa-utils python-qrcode" ;;
-        suse) echo "sensors OpenRGB playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
-        debian) echo "lm-sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
-        fedora) echo "lm_sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode" ;;
+        arch) echo "lm_sensors openrgb playerctl libpulse alsa-utils python-qrcode tailscale" ;;
+        suse) echo "sensors OpenRGB playerctl pulseaudio-utils alsa-utils python3-qrcode tailscale" ;;
+        debian) echo "lm-sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode tailscale" ;;
+        fedora) echo "lm_sensors openrgb playerctl pulseaudio-utils alsa-utils python3-qrcode tailscale" ;;
     esac
 }
 

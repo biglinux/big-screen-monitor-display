@@ -135,6 +135,7 @@ def test_dependency_lists(tmp_path, os_release, family, needles):
     assert f"family: {family}" in output
     for needle in needles:
         assert needle in output, needle
+    assert "tailscale" in output.split("optional:", 1)[1]          # remote access to Android displays
 
 
 def test_pkgbuild_declares_tray_dependencies():
@@ -142,6 +143,18 @@ def test_pkgbuild_declares_tray_dependencies():
         text = handle.read()
     assert "'python-pyqt6'" in text
     assert "screentray/main.py" in text and "deepcooltray/main.py" in text
+
+
+def test_pkgbuild_declares_minimum_versions_and_remote_access():
+    """GLibUnix needs GLib 2.80, Adw.Spinner libadwaita 1.6; Tailscale gives the Android display
+    remote access (100.64.0.0/10 is allowed by the service unit)."""
+    srcinfo = subprocess.run(["bash", "-c", 'source PKGBUILD; printf "%s\\n" "${depends[@]}" "${optdepends[@]}"'],
+                             cwd=os.path.join(ROOT, "pkgbuild"), capture_output=True, text=True, check=True).stdout
+    lines = srcinfo.splitlines()
+    for wanted in ("python>=3.10", "glib2>=2.80", "libadwaita>=1.6", "openssl", "python-gobject", "python-psutil"):
+        assert wanted in lines, wanted
+    assert any(line.startswith("tailscale: ") for line in lines)
+    assert any(line.startswith("python-qrcode: ") for line in lines)
 
 
 def test_upgrade_replaces_the_launcher_renamed_after_the_application_id(tmp_path):
