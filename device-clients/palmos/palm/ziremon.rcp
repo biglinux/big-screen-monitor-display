@@ -1,0 +1,34 @@
+#include "ziremon_res.h"
+
+APPLICATIONICONNAME 1000 "ZireMon"
+
+MENU ID MainMenu
+BEGIN
+    PULLDOWN "Connection"
+    BEGIN
+        MENUITEM "Listen (PC->Palm)" ID MenuListen     "L"
+        MENUITEM "Connect BT"        ID MenuConnect    "C"
+        MENUITEM "Pick Device"       ID MenuPick       "P"
+        MENUITEM SEPARATOR
+        MENUITEM "Disconnect"        ID MenuDisconnect "D"
+    END
+    PULLDOWN "Info"
+    BEGIN
+        MENUITEM "About ZireMon" ID MenuAbout    "A"
+    END
+END
+
+ALERT ID AboutAlert
+INFORMATION
+BEGIN
+    TITLE "ZireMon"
+    MESSAGE "Big Screen Monitor Display client for Palm Zire 72.\nBluetooth SPP Telemetry (320x320)."
+    BUTTONS "OK"
+END
+
+FORM ID MainForm AT (0 0 160 160)
+NOFRAME
+USABLE
+MENUID MainMenu
+BEGIN
+END
