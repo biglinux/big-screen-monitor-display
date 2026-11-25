@@ -8,14 +8,15 @@ import argparse
 import os
 import sys
 
-import dbus
-import dbus.mainloop.glib
-from gi.repository import GLib
-
-DEFAULT_MAC = "00:07:E0:47:3B:EC"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from palm_bt import resolve_palm  # noqa: E402
 
 
-def send_file(mac, filepath):
+def send_file(mac, filepath, timeout=120):
+    import dbus
+    import dbus.mainloop.glib
+    from gi.repository import GLib
+
     filepath = os.path.abspath(filepath)
     if not os.path.isfile(filepath):
         raise FileNotFoundError(f"Arquivo não encontrado: {filepath}")
@@ -35,14 +36,11 @@ def send_file(mac, filepath):
     )
 
     loop = GLib.MainLoop()
-    result = {"status": "unknown", "error": None}
-
-    transfer_path, props = opp.SendFile(filepath)
-    print(f"[OBEX] Enviando {os.path.basename(filepath)} ({props.get('Size', '?')} bytes)...")
-    print("[OBEX] Confirme 'Yes' na tela do Palm Zire 72 se aparecer o aviso de recebimento.")
+    result = {"status": "unknown"}
+    state = {"path": None}
 
     def on_props_changed(interface, changed, invalidated, path=None):
-        if path != transfer_path:
+        if state["path"] is None or path != state["path"]:
             return
         if "Status" in changed:
             st = str(changed["Status"])
@@ -58,27 +56,33 @@ def send_file(mac, filepath):
         path_keyword="path",
     )
 
-    GLib.timeout_add_seconds(60, loop.quit)
-    loop.run()
-
     try:
-        client.RemoveSession(session_path)
-    except Exception:
-        pass
+        transfer_path, props = opp.SendFile(filepath)
+        state["path"] = str(transfer_path)
+        print(f"[OBEX] Enviando {os.path.basename(filepath)} ({props.get('Size', '?')} bytes)...")
+        print("[OBEX] Confirme 'Yes' na tela do Palm se aparecer o aviso de recebimento.")
+        GLib.timeout_add_seconds(timeout, loop.quit)
+        loop.run()
+    finally:
+        try:
+            client.RemoveSession(session_path)
+        except Exception:
+            pass
 
     if result["status"] != "complete":
-        raise RuntimeError(f"Transferência OBEX não completou (status={result['status']})")
+        status = "tempo esgotado" if result["status"] == "unknown" else result["status"]
+        raise RuntimeError(f"Transferência OBEX não completou ({status})")
     print("[OBEX] Enviado com sucesso!")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Envia .prc/.pdb para o Palm Zire 72 via Bluetooth OBEX")
+    parser = argparse.ArgumentParser(description="Envia .prc/.pdb para o Palm via Bluetooth OBEX")
     parser.add_argument("file", help="Caminho do arquivo .prc ou .pdb")
-    parser.add_argument("--mac", default=DEFAULT_MAC, help=f"Endereço MAC Bluetooth do Palm (padrão: {DEFAULT_MAC})")
+    parser.add_argument("--mac", default="", help="Endereço MAC Bluetooth do Palm (padrão: detecta o Palm pareado)")
     args = parser.parse_args()
 
     try:
-        send_file(args.mac, args.file)
+        send_file(resolve_palm(args.mac), args.file)
     except Exception as exc:
         print(f"[OBEX] Erro: {exc}", file=sys.stderr)
         sys.exit(1)
