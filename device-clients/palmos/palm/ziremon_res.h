@@ -10,5 +10,7 @@
 #define MenuPick        1003
 #define MenuAbout       1004
 #define MenuListen      1005
+#define MenuNextTheme   1006
+#define MenuNextScreen  1007
 
 #endif

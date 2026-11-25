@@ -11,6 +11,7 @@ import re
 import signal
 import socket
 import struct
+import subprocess
 import sys
 import threading
 import time
@@ -161,6 +162,44 @@ def discover_spp_channel(mac, timeout=8.0):
     return m.group(1)[0] if m else None
 
 
+def _handle_palm_command(cmd):
+    cmd = cmd.strip()
+    if not cmd.startswith("CMD|"):
+        return
+    action = cmd[4:]
+    print(f"[CMD] Palm -> {action}")
+    try:
+        if action == "PLAY_PAUSE":
+            subprocess.Popen(["playerctl", "play-pause"])
+        elif action == "NEXT":
+            subprocess.Popen(["playerctl", "next"])
+        elif action == "PREV":
+            subprocess.Popen(["playerctl", "previous"])
+        elif action == "VOL_UP":
+            subprocess.Popen(["pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%"])
+        elif action == "VOL_DOWN":
+            subprocess.Popen(["pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%"])
+    except FileNotFoundError as exc:
+        print(f"[CMD] Ferramenta não encontrada: {exc}")
+
+
+def _rx_loop(sock, stop_ev):
+    buf = b""
+    while not stop_ev.is_set():
+        try:
+            chunk = sock.recv(128)
+            if not chunk:
+                break
+            buf += chunk
+            while b"\n" in buf:
+                line, buf = buf.split(b"\n", 1)
+                _handle_palm_command(line.decode("ascii", errors="ignore"))
+        except TimeoutError:
+            continue
+        except OSError:
+            break
+
+
 def run_rfcomm_client(mac, interval, stop_ev):
     """Conecta ativamente via RFCOMM no Palm (descobrindo canal via SDP 0x1101)."""
     while not stop_ev.is_set():
@@ -176,8 +215,9 @@ def run_rfcomm_client(mac, interval, stop_ev):
             sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
             sock.settimeout(10.0)
             sock.connect((mac, ch))
-            sock.settimeout(3.0)
+            sock.settimeout(1.5)
             print(f"[SPP] Conectado ao ZireMon ({mac} canal {ch})! Enviando telemetria...")
+            threading.Thread(target=_rx_loop, args=(sock, stop_ev), daemon=True).start()
             try:
                 while not stop_ev.is_set():
                     line = build_packet(telemetry.snapshot())

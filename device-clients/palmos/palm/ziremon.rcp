@@ -12,6 +12,11 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Disconnect"        ID MenuDisconnect "D"
     END
+    PULLDOWN "View"
+    BEGIN
+        MENUITEM "Next Theme"  ID MenuNextTheme  "T"
+        MENUITEM "Next Screen" ID MenuNextScreen "N"
+    END
     PULLDOWN "Info"
     BEGIN
         MENUITEM "About ZireMon" ID MenuAbout    "A"
