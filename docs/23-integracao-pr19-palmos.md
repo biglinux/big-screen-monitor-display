@@ -28,9 +28,14 @@ lê o `bsmd`. A suíte completa (1581 testes) passou antes e depois da integraç
 | 8 | host e mídia só tinham `|` trocado | `\t`/controles chegavam ao Palm | caracteres não imprimíveis viram espaço |
 | 9 | `send_prc` registrava o sinal de progresso depois do `SendFile` e só removia a sessão OBEX no caminho feliz | "complete" rápido perdido; sessões órfãs no `obexd` | sinal antes, `RemoveSession` em `finally`, timeout de 120 s com mensagem clara |
 | 10 | `Makefile`: alvo `ziremon.bin` nunca é gerado (o pilrc gera `tFRM*.bin` etc.) e toolchain fixo em `~/.local` | `pilrc` e `build-prc` refeitos a todo `make`; impossível usar outro caminho | carimbo `resources.stamp`, `TOOLCHAIN ?=`, `make send MAC=…`; `clean` não apaga o `.prc` versionado (`distclean` apaga) |
+| 14 | modo `listen` com `RequireAuthentication`/`RequireAuthorization` em `False` | qualquer aparelho por perto conectava e mandava comandos de mídia/volume | link autenticado (exige pareamento) e `NewConnection` recusa quem não está `Paired` |
+| 15 | `make send` dependia do `.prc` → recompilava num clone novo | instalar exigia o prc-tools | `send` só envia o `.prc` existente; README com `python3 pc/send_prc.py palm/ZireMon.prc` |
 | 11 | `dbus`/`gi` importados no topo da bridge | `--stdout` (modo teste) exigia D-Bus | importados só no modo `listen` |
 | 12 | `Popen` sem espera para playerctl/pactl | processos zumbis até o próximo `Popen` | `subprocess.run` com timeout de 3 s; volume com `pactl` ou `wpctl -l 1.0` |
 | 13 | artefatos de build fora do `.gitignore` | `*.o`, `*.bin` e `ziremon` iriam parar num commit | entradas no `.gitignore` |
+
+Os itens 14 e 15, e o diretório de trabalho errado nos exemplos do README, vieram
+da revisão do CodeRabbit no PR #20; os três procediam e foram corrigidos.
 
 ## O que ficou como está
 

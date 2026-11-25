@@ -321,14 +321,25 @@ def run_listen(sampler, stop_ev, channel):
         @dbus.service.method("org.bluez.Profile1", in_signature="oha{sv}", out_signature="")
         def NewConnection(self, device, fd, properties):
             raw_fd = fd.take()
-            print(f"[SPP] Conectado: {device}")
             sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM, fileno=raw_fd)
+            if not _is_paired(bus, device):     # só o Palm pareado manda comandos de mídia/volume
+                print(f"[SPP] Recusado (não pareado): {device}")
+                sock.close()
+                return
+            print(f"[SPP] Conectado: {device}")
             sock.settimeout(2.0)
             threading.Thread(target=serve_socket, args=(sock, sampler, stop_ev, str(device)), daemon=True).start()
 
         @dbus.service.method("org.bluez.Profile1", in_signature="o", out_signature="")
         def RequestDisconnection(self, device):
             print(f"[SPP] Desconexão solicitada: {device}")
+
+    def _is_paired(bus, device):
+        try:
+            props = dbus.Interface(bus.get_object("org.bluez", device), "org.freedesktop.DBus.Properties")
+            return bool(props.Get("org.bluez.Device1", "Paired"))
+        except dbus.DBusException:
+            return False
 
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     bus = dbus.SystemBus()
@@ -338,7 +349,9 @@ def run_listen(sampler, stop_ev, channel):
     opts = {
         "Name": "ZireMon Telemetry",
         "Role": "server",
-        "RequireAuthentication": False,
+        # link autenticado (exige pareamento); a autorização por conexão fica com o
+        # teste de Paired em NewConnection, que dispensa um agente BlueZ perguntando a cada vez
+        "RequireAuthentication": True,
         "RequireAuthorization": False,
     }
     if channel > 0:

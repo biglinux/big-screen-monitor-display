@@ -24,18 +24,21 @@ Pareie o Palm no Bluetooth do sistema. Com um único Palm pareado (nome com
 Palm, Zire, Tungsten, Treo…), os scripts o encontram sozinhos; senão, informe o MAC.
 
 ### 2. Instalar o app no Palm
+O `ZireMon.prc` já vem compilado. A partir de `device-clients/palmos`:
 ```bash
-cd palm
-make send                         # ou: make send MAC=AA:BB:CC:DD:EE:FF
+python3 pc/send_prc.py palm/ZireMon.prc           # ou: --mac AA:BB:CC:DD:EE:FF
 ```
-Aceite o recebimento na tela do Palm. Para recompilar (`make`) é preciso o
-prc-tools com o SDK 5r4; informe o local com `make TOOLCHAIN=/caminho`.
+(equivale a `make -C palm send`, que também não recompila). Aceite o
+recebimento na tela do Palm. Para recompilar (`make -C palm`) é preciso o
+prc-tools com o SDK 5r4; informe o local com `make -C palm TOOLCHAIN=/caminho`.
 
 ### 3. Iniciar a bridge
+Também a partir de `device-clients/palmos`:
 ```bash
 python3 pc/bsmd_palm_bridge.py                 # conecta no Palm (ZireMon escutando)
 python3 pc/bsmd_palm_bridge.py --target AA:BB:CC:DD:EE:FF
 python3 pc/bsmd_palm_bridge.py --target listen  # o Palm conecta: Menu -> Connection -> Connect BT
+                                                # (só aceita o Palm pareado)
 python3 pc/bsmd_palm_bridge.py --stdout         # só mostra os pacotes, sem Bluetooth
 ```
 Outras opções: `--interval 2` (segundos entre envios), `--gpu 1` (qual GPU
