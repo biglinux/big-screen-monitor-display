@@ -1,8 +1,9 @@
-TOOLCHAIN := $(HOME)/.local/share/palmos-toolchain
+# Sobrescreva com: make TOOLCHAIN=/caminho/do/prc-tools
+TOOLCHAIN ?= $(HOME)/.local/share/palmos-toolchain
 BIN := $(TOOLCHAIN)/usr/bin
 export GCC_EXEC_PREFIX := $(TOOLCHAIN)/usr/lib/gcc-lib/
 export PATH := $(BIN):$(TOOLCHAIN)/usr/m68k-palmos/bin:$(PATH)
-SDK := $(TOOLCHAIN)/palm-os-sdk/sdk-5r4
+SDK ?= $(TOOLCHAIN)/palm-os-sdk/sdk-5r4
 
 CC := $(BIN)/m68k-palmos-gcc
 BUILD_PRC := $(BIN)/build-prc
@@ -38,16 +39,27 @@ all: $(APP).prc
 ziremon: ziremon.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
-ziremon.bin: ziremon.rcp ziremon_res.h
+# o pilrc gera vários *.bin (um por recurso): um carimbo marca quando estão em dia
+resources.stamp: ziremon.rcp ziremon_res.h
+	rm -f *.bin
 	$(PILRC) -q ziremon.rcp .
+	touch $@
 
-$(APP).prc: ziremon ziremon.bin
+$(APP).prc: ziremon resources.stamp
 	$(BUILD_PRC) -o $(APP).prc -n "$(APP)" -c $(CREATOR) -t $(TYPE) ziremon *.bin
 
-send: $(APP).prc
-	python3 ../pc/send_prc.py $(APP).prc
+# make send            -> envia o ZireMon.prc (o versionado ou o recém-compilado)
+#                         para o Palm pareado; não recompila, dispensa o prc-tools
+# make send MAC=AA:..  -> envia para esse endereço
+send:
+	@test -f $(APP).prc || { echo "$(APP).prc não existe: rode make (precisa do prc-tools)"; exit 1; }
+	python3 ../pc/send_prc.py $(APP).prc $(if $(MAC),--mac $(MAC))
 
+# não apaga o ZireMon.prc versionado: use "make distclean" para isso
 clean:
-	rm -f *.o *.bin ziremon $(APP).prc
+	rm -f *.o *.bin ziremon resources.stamp
 
-.PHONY: all send clean
+distclean: clean
+	rm -f $(APP).prc
+
+.PHONY: all send clean distclean
