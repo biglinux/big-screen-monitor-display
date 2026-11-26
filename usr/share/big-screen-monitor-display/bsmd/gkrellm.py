@@ -19,7 +19,7 @@ from . import fonts
 from . import legacy_themes as legacy
 from .dashboard import MONTHS, WEEKDAYS, fit, format_uptime, text_height
 from .i18n import _, ngettext
-from .telemetry import (CPU_SYSTEM_HISTORY, CPU_USAGE_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, STATS_LOCK,
+from .telemetry import (gpu_percent_text, CPU_SYSTEM_HISTORY, CPU_USAGE_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, STATS_LOCK,
                         SYSTEM_STATS)
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts")
@@ -526,7 +526,7 @@ def _gpu_draw(cv, x, y, w, stats, s):
         y = cv.chart(x, y, w, history, 100, mem_history, gpu.get("percent", 0))
         temp = gpu.get("temp_value")
         mem = f"VRAM {gpu.get('mem_used_mb', 0) / 1024:.1f}G" if gpu.get("mem_total_mb") else ""
-        y = cv.pair(x, y, w, f"{gpu.get('percent', 0):.0f}% {mem}", f"{temp:.0f}°C" if temp else "--",
+        y = cv.pair(x, y, w, f"{gpu_percent_text(gpu)} {mem}".strip(), f"{temp:.0f}°C" if temp else "--",
                     cv.c["text"], cv.thermal(temp))
 
 

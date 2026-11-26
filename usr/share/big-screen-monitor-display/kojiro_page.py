@@ -1358,7 +1358,7 @@ class KojiroPage:
         for index, gpu in enumerate(stats.get("gpus") or []):
             if not gpu.get("path"):
                 continue
-            parts = [f"{gpu.get('percent', 0):.0f}%", kdata.temperature_text(gpu.get("temp_value"))]
+            parts = [telemetry.gpu_percent_text(gpu), kdata.temperature_text(gpu.get("temp_value"))]
             if gpu.get("mem_total_mb"):
                 parts.append(f"VRAM {kdata.size_text(gpu['mem_total_mb'])}")
             parts.append(_("video encode/decode: {v}").format(v=gpu.get("video_engine") or _("not reported")))

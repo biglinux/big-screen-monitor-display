@@ -53,7 +53,7 @@ def _metrics(stats):
     gpus = stats.get("gpus") or []
     items = [("CPU", stats.get("cpu_percent", 0.0), "cpu"), ("RAM", stats.get("ram_percent", 0.0), "ram")]
     if gpus and gpus[0].get("path"):
-        items.append(("GPU", gpus[0].get("percent") or 0.0, "gpu"))
+        items.append(("GPU", (gpus[0].get("percent") or 0.0) if gpus[0].get("usage_known") else None, "gpu"))
     items.append((_("DISK"), stats.get("disk_percent", 0.0), "disk"))
     return items
 
@@ -83,8 +83,9 @@ def render(width, height, settings, theme_id="standard", stats=None):
     label_font = ui_font(max(8, min(int(row_h * (0.42 if portrait else 0.62)), 22)), bold=True)
     for index, (label, value, key) in enumerate(metrics):
         y = top + index * row_h
+        text = "—" if value is None else None
         value = max(0.0, min(100.0, float(value or 0)))
-        text = f"{value:.0f}%"
+        text = text or f"{value:.0f}%"
         if key == "cpu" and temp is not None and not portrait:
             text = f"{value:.0f}% {temp:.0f}°"
         if portrait:

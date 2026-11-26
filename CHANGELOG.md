@@ -13,6 +13,12 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   `SECURITY.md`, este `CHANGELOG.md` e o README em inglês.
 - Janela: **Diagnóstico › Relatar um problema** copia o relatório e abre o
   formulário de issue; "Sobre" aponta para o repositório onde as issues ficam.
+- **GPU NVIDIA de verdade:** uso, temperatura, VRAM, frequência e consumo pela
+  NVML (a biblioteca do driver, lida em processo, sem `nvidia-smi`). Antes a
+  NVIDIA aparecia sempre com 0 % e sem temperatura.
+- **Intel:** frequência atual da GPU (i915 e xe).
+- **Sem número falso:** GPU cujo driver não informa o uso mostra "—" em todos os
+  temas, em vez de 0 %.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 
