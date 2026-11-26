@@ -168,7 +168,7 @@ def seven_segment(layer, xy, text, size, color, anchor="la"):
     x, y = _anchored(xy, (total, height), anchor)
     draw = ImageDraw.Draw(layer)
     dim = (*color[:3], 28)
-    for ch, step in zip(text, advance):
+    for ch, step in zip(text, advance, strict=False):
         if ch in ":.;":
             r = thick * 0.6
             cx = x + thick

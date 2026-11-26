@@ -142,7 +142,7 @@ def reflow_portrait(widgets, ref, ref_portrait):
         row_h = max(h for _w, h in sizes)
         total_w = sum(w for w, _h in sizes) + gap * (len(row) - 1)
         x = margin + (usable - total_w) / 2 if len(row) == 1 else margin
-        for index, (widget, (w, h)) in enumerate(zip(row, sizes)):
+        for index, (widget, (w, h)) in enumerate(zip(row, sizes, strict=False)):
             if len(row) > 1:
                 x = margin + index * (column + gap) + (column - w) / 2
             clone = copy.deepcopy(widget)

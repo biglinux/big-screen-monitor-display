@@ -1,0 +1,32 @@
+name: "Bug"
+description: "Algo não funciona como deveria. / Something does not work as it should."
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: "Versão / Version"
+      description: "`big-screen-monitor-display.sh --version` ou Sobre / About"
+      placeholder: "5.5.2"
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: "Distribuição e desktop / Distribution and desktop"
+      placeholder: "BigLinux (KDE Plasma 6), Fedora 43 (GNOME)…"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "O que você fez, o que esperava e o que aconteceu / What you did, expected and got"
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: "Relatório de diagnóstico / Diagnostic report"
+      description: "Diagnóstico › Relatar um problema copia tudo. Revise antes de publicar. / Diagnostics › Report a problem copies everything. Review it before posting."
+      render: text

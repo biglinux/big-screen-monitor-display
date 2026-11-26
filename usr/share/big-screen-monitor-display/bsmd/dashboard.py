@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw
 
 from . import legacy_themes as legacy
 from .i18n import N_, _, ngettext
-from .telemetry import (CPU_USAGE_HISTORY, CPU_SYSTEM_HISTORY, GPU_MEM_HISTORY, GPU_USAGE_HISTORY,
+from .telemetry import (gpu_percent_text, CPU_USAGE_HISTORY, CPU_SYSTEM_HISTORY, GPU_MEM_HISTORY, GPU_USAGE_HISTORY,
                         NET_RX_HISTORY, NET_TX_HISTORY, RAM_USAGE_HISTORY, STATS_LOCK, SYSTEM_STATS)
 from .themes import ui_font
 
@@ -121,7 +121,7 @@ def text_height(font):
 
 
 def mix(a, b, t):
-    return tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b))
+    return tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b, strict=False))
 
 
 def temperature(value, unit):
@@ -260,7 +260,8 @@ def metric_rows(s):
         if len(gpus) > 1:
             name = f"{name} ({gpus.index(gpu) + 1}/{len(gpus)})"
         rows.append({"key": "gpu", "icon": "gpu-symbolic.svg", "label": name,
-                     "value": f"{gpu.get('percent', 0):.0f}%", "percent": gpu.get("percent", 0.0),
+                     "value": gpu_percent_text(gpu),
+                     "percent": gpu.get("percent", 0.0) if gpu.get("usage_known") else None,
                      "chip": temperature(gpu.get("temp_value"), unit), "chip_value": gpu.get("temp_value"),
                      "history": list(gpu.get("usage_history") or gpu_history)})
         if s.get("std_gpu_details", True) and gpu.get("mem_total_mb"):
@@ -496,7 +497,7 @@ def draw_graphs(p, lay, box, s, stats):
                        f"↓{format_rate(stats.get('net_rx_mbps', 0))} ↑{format_rate(stats.get('net_tx_mbps', 0))}",
                        [(list(NET_RX_HISTORY), c["rx"]), (list(NET_TX_HISTORY), c["tx"])], 1.0))
         if any(g.get("path") for g in stats.get("gpus") or []):
-            charts.append(("GPU", f"{(stats.get('gpus') or [{}])[0].get('percent', 0):.0f}%",
+            charts.append(("GPU", gpu_percent_text((stats.get("gpus") or [{}])[0]),
                            [(list(GPU_USAGE_HISTORY), c["gpu"])], 100.0))
     gap = lay.gap
     height = (y1 - y0 - gap * (len(charts) - 1)) / len(charts)
@@ -538,7 +539,8 @@ def draw_footer(p, lay, box, s, stats):
     load = stats.get("load_avg") or (0, 0, 0)
     parts.append(_("load {a:.2f} {b:.2f} {c:.2f}").format(a=load[0], b=load[1], c=load[2]))
     if stats.get("proc_count"):
-        parts.append(ngettext("{count} process", "{count} processes", stats["proc_count"]).format(count=stats["proc_count"]))
+        count = stats["proc_count"]
+        parts.append(ngettext("{count} process", "{count} processes", count).format(count=count))
     if stats.get("power_profile"):
         parts.append(stats["power_profile"])
     separator = "  ·  "

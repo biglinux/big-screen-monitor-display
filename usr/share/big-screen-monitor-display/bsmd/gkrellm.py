@@ -20,7 +20,7 @@ from . import legacy_themes as legacy
 from .dashboard import MONTHS, WEEKDAYS, fit, format_uptime, text_height
 from .i18n import _, ngettext
 from .telemetry import (CPU_SYSTEM_HISTORY, CPU_USAGE_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, STATS_LOCK,
-                        SYSTEM_STATS)
+                        SYSTEM_STATS, gpu_percent_text)
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts")
 STYLES = {
@@ -31,7 +31,8 @@ STYLES = {
                 "bevel_hi": (85, 170, 85), "bevel_lo": (30, 70, 30), "chart_top": (0, 34, 0), "chart_bottom": (0, 6, 0),
                 "title_bg": (10, 26, 10), "led_off": (25, 50, 25), "hot": (255, 230, 120)},
     "cyber_red": {"text": (255, 190, 190), "accent": (255, 60, 60), "dim": (170, 110, 110),
-                  "bevel_hi": (120, 50, 50), "bevel_lo": (50, 20, 20), "chart_top": (46, 0, 6), "chart_bottom": (8, 0, 0),
+                  "bevel_hi": (120, 50, 50), "bevel_lo": (50, 20, 20), "chart_top": (46, 0, 6),
+                  "chart_bottom": (8, 0, 0),
                   "title_bg": (26, 10, 10), "led_off": (60, 25, 25), "hot": (255, 230, 120)},
 }
 TEXT_SCALE = {"small": 0.87, "normal": 1.0, "large": 1.15}
@@ -198,7 +199,7 @@ class Canvas:
         x0, x1 = x + self.pad, x + w - self.pad
         for row in range(h):
             t = row / max(1, h - 1)
-            color = tuple(int(a + (b - a) * t) for a, b in zip(c["chart_top"], c["chart_bottom"]))
+            color = tuple(int(a + (b - a) * t) for a, b in zip(c["chart_top"], c["chart_bottom"], strict=False))
             d.line((x0, y + row, x1, y + row), fill=color)
         values = list(values or [])
         peak = max([maximum] + values + list(values2 or []))
@@ -242,7 +243,7 @@ class Canvas:
     def thermal(self, value):
         """Accent -> hot colour between 30 and 90 °C."""
         t = max(0.0, min(1.0, ((value or 30) - 30) / 60))
-        return tuple(int(a + (b - a) * t) for a, b in zip(self.c["accent"], self.c["hot"]))
+        return tuple(int(a + (b - a) * t) for a, b in zip(self.c["accent"], self.c["hot"], strict=False))
 
 
 # ---------------------------------------------------------------- modules
@@ -337,7 +338,8 @@ def _cores_draw(cv, x, y, w, stats, s):
         top = y + h - h * min(1.0, value / 100)
         cv.d.rectangle((bx + 1, top, bx + width - 1, y + h), fill=cv.c["accent"])
     peak = max(cores) if cores else 0
-    cv.pair(x, y + h + 1, w, ngettext("{count} core", "{count} cores", len(cores)).format(count=len(cores)), _("max {value:.0f}%").format(value=peak),
+    cores_text = ngettext("{count} core", "{count} cores", len(cores)).format(count=len(cores))
+    cv.pair(x, y + h + 1, w, cores_text, _("max {value:.0f}%").format(value=peak),
             cv.c["dim"], cv.c["text"], cv.small)
 
 
@@ -526,7 +528,7 @@ def _gpu_draw(cv, x, y, w, stats, s):
         y = cv.chart(x, y, w, history, 100, mem_history, gpu.get("percent", 0))
         temp = gpu.get("temp_value")
         mem = f"VRAM {gpu.get('mem_used_mb', 0) / 1024:.1f}G" if gpu.get("mem_total_mb") else ""
-        y = cv.pair(x, y, w, f"{gpu.get('percent', 0):.0f}% {mem}", f"{temp:.0f}°C" if temp else "--",
+        y = cv.pair(x, y, w, f"{gpu_percent_text(gpu)} {mem}".strip(), f"{temp:.0f}°C" if temp else "--",
                     cv.c["text"], cv.thermal(temp))
 
 

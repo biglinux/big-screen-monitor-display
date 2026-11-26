@@ -37,6 +37,12 @@ DeviceAllow=char-ttyACM rw
 DeviceAllow=char-ttyUSB rw
 # DeepCool coolers and the SmartMonitor HID panel (hidraw nodes; udev limits them to the supported products)
 DeviceAllow=char-hidraw rw
+# NVIDIA usage, temperature and VRAM through NVML (bsmd/nvidia.py): the proprietary
+# driver exposes no sysfs usage or hwmon. /dev/nvidiactl and /dev/nvidiaN share
+# major 195, named "nvidia-frontend" (older drivers) or "nvidia" in /proc/devices;
+# groups that do not exist on a machine are ignored by systemd.
+DeviceAllow=char-nvidia-frontend rw
+DeviceAllow=char-nvidia rw
 
 # Stay out of the way of interactive work.
 Nice=10

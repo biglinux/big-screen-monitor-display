@@ -7,3 +7,5 @@ device-clients/palmos/palm/*.o
 device-clients/palmos/palm/*.bin
 device-clients/palmos/palm/ziremon
 device-clients/palmos/palm/resources.stamp
+.coverage
+.coverage*

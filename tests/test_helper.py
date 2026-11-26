@@ -148,7 +148,8 @@ def test_wallpaper_import_and_removal(helper, tmp_path):
 def test_wallpaper_import_rejects_non_png(helper, payload):
     code, reply = helper(["import-wallpaper"], payload)
     assert code == 2 and not reply["ok"]
-    assert not (helper.target.parent / "wallpapers").exists() or not list((helper.target.parent / "wallpapers").iterdir())
+    wallpapers = helper.target.parent / "wallpapers"
+    assert not wallpapers.exists() or not list(wallpapers.iterdir())
 
 
 @pytest.mark.parametrize("bad_id", ["../../etc/passwd", "x" * 32, ""])

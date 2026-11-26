@@ -615,7 +615,7 @@ def _match(base, other):
         for tag, a1, a2, b1, b2 in matcher.get_opcodes():
             a1, a2, b1, b2 = a1 + i1, a2 + i1, b1 + j1, b2 + j1
             if tag == "equal":
-                pairs.extend(zip(range(a1, a2), range(b1, b2)))
+                pairs.extend(zip(range(a1, a2), range(b1, b2), strict=False))
             elif tag == "replace" and depth < 3 and (a2 - a1, b2 - b1) != (i2 - i1, j2 - j1):
                 walk(a1, a2, b1, b2, depth + 1)
             else:
@@ -693,7 +693,7 @@ class Capture:
                     moved, kept = noise.get(key), self.scene.base.get(key)
                     if not moved or not kept:
                         continue
-                    pairs = zip(moved, kept) if isinstance(moved, list) else \
+                    pairs = zip(moved, kept, strict=False) if isinstance(moved, list) else \
                         ((moved[k], kept[k]) for k in moved if k in kept)
                     for new_item, old_item in pairs:
                         for name in names:
@@ -796,7 +796,7 @@ class Capture:
             other_tokens = list(NUMBER.finditer(other_text))
             if len(other_tokens) != len(tokens):
                 return "skip", []
-            for position, (token, token_b) in enumerate(zip(tokens, other_tokens)):
+            for token, token_b in zip(tokens, other_tokens, strict=False):
                 if token.group() == token_b.group():
                     continue
                 binding = self._bind_number(source, token.group(), token_b.group())
@@ -815,7 +815,7 @@ class Capture:
                 other_words = list(WORD.finditer(other_text))
                 if len(other_words) != len(words):
                     return "skip", []
-                for position, (word, word_b) in enumerate(zip(words, other_words)):
+                for position, (word, word_b) in enumerate(zip(words, other_words, strict=False)):
                     if word.group() != word_b.group():
                         binding = self._bind_word(word.group(), call.index, position)
                         if binding is None:
@@ -932,7 +932,7 @@ class Capture:
                     len(set(names)) != len(names):
                 continue
             words = [None] * len(dates)
-            for when, name in zip(dates, names):
+            for when, name in zip(dates, names, strict=False):
                 words[order(when)] = name
             return {"cand": cand, "scale": 1.0, "part": "word", "words": words}
         return None
@@ -1161,7 +1161,7 @@ class Capture:
                 if gauge is not None:
                     found.append(gauge)
                     continue
-                if w < 12 or reach[1] > 0.6 or any(b < a - 0.02 for a, b in zip(reach, reach[1:])):
+                if w < 12 or reach[1] > 0.6 or any(b < a - 0.02 for a, b in zip(reach, reach[1:], strict=False)):
                     continue                # too narrow, grows upwards, or does not grow left to right
                 # At 50 % the theme must look like "full up to the reach, empty after it".
                 cut = max(1, round(reach[2] * w))
@@ -1196,7 +1196,7 @@ class Capture:
         import numpy as np
         found = []
         base_shot = empty()
-        for name, (setter, count, cand) in fields.STATES.items():
+        for setter, count, cand in fields.STATES.values():
             shots = [np.asarray(self._render_planned(plan, changes=setter(self.scene.base, k), settings=calm),
                                 dtype=np.int16) for k in range(count)]
             lits = [np.abs(shot - base_shot).sum(axis=2) > 24 for shot in shots]
@@ -1214,7 +1214,7 @@ class Capture:
                 # colour's part of the icon in state k.
                 blank = bytes(w * h)
                 per_state = []
-                for state, (shot, lit) in enumerate(zip(shots, lits)):
+                for shot, lit in zip(shots, lits, strict=False):
                     region = lit[y0:y1, x0:x1]
                     if not region.any():
                         per_state.append([])
@@ -1275,7 +1275,7 @@ class Capture:
         # ...and gradually: something only pushed aside when a number gains a digit
         # (icons in a telemetry strip) changes in two or three steps, not ten.
         gradual = len({round(c / max(1, lit_counts[-1]), 2) for c in grows}) >= 6
-        if not colours or not gradual or any(b < a * 0.97 for a, b in zip(grows, grows[1:])) or \
+        if not colours or not gradual or any(b < a * 0.97 for a, b in zip(grows, grows[1:], strict=False)) or \
                 lit_counts[-1] < 20:
             return None
         colour = tuple(int(v) for v in np.median(np.concatenate(colours), axis=0))
@@ -1514,7 +1514,7 @@ def _boxes(mask, join=6):
         grown[:, :-shift] |= mask[:, shift:]
     seen = np.zeros_like(grown)
     boxes = []
-    for y, x in zip(*np.nonzero(grown)):
+    for y, x in zip(*np.nonzero(grown), strict=False):
         if seen[y, x]:
             continue
         stack, x0, y0, x1, y1 = [(y, x)], x, y, x, y
@@ -1673,7 +1673,7 @@ def _digit_atlas(path, size):
         width = max(widths[:10])
         widths = [width] * 10 + widths[10:]
         data = bytearray()
-        for glyph, cell_w in zip(imgdat.GLYPHS, widths):
+        for glyph, cell_w in zip(imgdat.GLYPHS, widths, strict=False):
             cell = Image.new("L", (cell_w, height), 0)
             offset = (cell_w - font.getlength(glyph)) / 2 if glyph.isdigit() else 0
             ImageDraw.Draw(cell).text((offset, 0), glyph, font=font, fill=255, anchor="la")

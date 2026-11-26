@@ -137,7 +137,7 @@ class TuringUSB(RasterDriver):
         try:
             return self._usb.core.find(custom_match=match)
         except Exception as error:  # noqa: BLE001
-            raise DisplayError(NOT_FOUND, "USB backend unavailable", error)
+            raise DisplayError(NOT_FOUND, "USB backend unavailable", error) from error
 
     def open(self):
         dev = self._find()
@@ -169,7 +169,7 @@ class TuringUSB(RasterDriver):
         except Exception as error:
             classified = self._classify(error, "open")
             self.close()
-            raise classified
+            raise classified from error
         width, height = self.native_portrait
         self.native_size = (height, width) if height > width else (width, height)
         self.capabilities.native_size = self.native_size
@@ -199,7 +199,7 @@ class TuringUSB(RasterDriver):
             response = bytes(self.ep_in.read(512, timeout_ms))
         except Exception as error:
             self._prev = None
-            raise self._classify(error, "transfer")
+            raise self._classify(error, "transfer") from error
         try:   # flush any extra status packets
             for _ in range(4):
                 self.ep_in.read(512, 50)

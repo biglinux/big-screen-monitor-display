@@ -86,7 +86,7 @@ def rle_encode(pixels):
             pos += count
         literal_start = None
 
-    for start, length in zip(starts.tolist(), lengths.tolist()):
+    for start, length in zip(starts.tolist(), lengths.tolist(), strict=False):
         if length >= 3:
             if literal_start is not None:
                 flush_literal(start)
@@ -170,7 +170,7 @@ class HelloAck:
         bright, level, touch, flags = payload[28:32]
         names = ("client", "platform", "oem", "port", "usb_previous")
         values = payload[32:].split(b"\0")
-        strings = {name: value.decode("utf-8", "replace") for name, value in zip(names, values)}
+        strings = {name: value.decode("utf-8", "replace") for name, value in zip(names, values, strict=False)}
         return cls(proto, width, height, bpp, (major, minor, build), total, free, bright, level, bool(touch),
                    bool(flags & 1), bool(flags & 2), strings)
 

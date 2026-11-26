@@ -32,9 +32,8 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from bsmd import (APP_ID, APPLICATION_ID, SERVICE_NAME, __version__, control, dashboard, diagnostics,  # noqa: E402
-                  runtime, settings,
-                  sound, telemetry, themes)
+from bsmd import (APP_ID, APPLICATION_ID, ISSUES_NEW_URL, PROJECT_URL, SERVICE_NAME, __version__,  # noqa: E402
+                  control, dashboard, diagnostics, runtime, settings, sound, telemetry, themes)
 from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
@@ -856,7 +855,10 @@ class ConfigWindow(Adw.ApplicationWindow):
                 (_("Restart the service"), _("Use if the display stays frozen."), "system-reboot-symbolic",
                  lambda *_: self._helper_action(["service", "restart"], _("Service restarted."))),
                 (_("Export diagnostics"), _("Saves a report to share when asking for help."),
-                 "document-save-symbolic", lambda *_: self._export())):
+                 "document-save-symbolic", lambda *_: self._export()),
+                (_("Report a problem"), _("Copies the diagnostic report and opens the issue form. "
+                                          "Review it before posting."),
+                 "dialog-question-symbolic", lambda *_: self._report_problem())):
             row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
             row.add_prefix(Gtk.Image.new_from_icon_name(icon))
             row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
@@ -1143,9 +1145,9 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:g})").format(
             fps=min(stats.get("fps", 0), stats.get("target_fps", 0) or 99), target=stats.get("target_fps", 0)))
         self.perf_rows["usb"].set_subtitle(f"{stats.get('transfer_ms', 0):.1f} ms")
-        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "
-                                            + ngettext("{frames} frame", "{frames} frames", stats.get("frames_sent", 0)).format(
-                                                frames=stats.get("frames_sent", 0)))
+        frames = stats.get("frames_sent", 0)
+        frames_text = ngettext("{frames} frame", "{frames} frames", frames).format(frames=frames)
+        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · " + frames_text)
         self.perf_rows["drop"].set_subtitle(str(stats.get("frames_dropped", 0)))
 
     def _refresh_diagnostics(self):
@@ -1247,6 +1249,34 @@ class ConfigWindow(Adw.ApplicationWindow):
                    ngettext("{count} item needs attention.", "{count} items need attention.", problems).format(
                        count=problems))
 
+    @staticmethod
+    def _report_text(journal_lines=300):
+        """Diagnostic report (checks, status.json and the service journal); runs off the GTK thread."""
+        report = diagnostics.run_checks()
+        parts = [f"Big Screen Monitor Display {__version__}", time.strftime("%Y-%m-%d %H:%M:%S"), "",
+                 diagnostics.format_report(report), "", "== status.json ==",
+                 json.dumps(report.get("status"), indent=2, ensure_ascii=False), "", "== journal =="]
+        try:
+            parts.append(subprocess.run(["journalctl", "-u", SERVICE_NAME, "-n", str(journal_lines), "--no-pager"],
+                                        capture_output=True, text=True, timeout=10, check=False).stdout
+                         or _("(journal not readable by this user)"))
+        except (OSError, subprocess.SubprocessError) as error:
+            parts.append(str(error))
+        return "\n".join(parts)
+
+    def _report_problem(self):
+        """Copy a report (shorter journal: it is pasted into a web form) and open the issue chooser."""
+        def worker():
+            text = self._report_text(journal_lines=80)
+            GLib.idle_add(finish, f"```text\n{text}\n```")
+
+        def finish(text):
+            self.get_clipboard().set(text)
+            Gtk.UriLauncher.new(ISSUES_NEW_URL).launch(self, None, None, None)
+            self.toast(_("Report copied. Paste it into the form."))
+            return False
+        threading.Thread(target=worker, daemon=True).start()
+
     def _export(self):
         dialog = Gtk.FileDialog(title=_("Export diagnostics"),
                                 initial_name=f"big-screen-monitor-{time.strftime('%Y%m%d-%H%M%S')}.txt")
@@ -1260,19 +1290,10 @@ class ConfigWindow(Adw.ApplicationWindow):
         path = target.get_path()
 
         def worker():
-            report = diagnostics.run_checks()
-            parts = [f"Big Screen Monitor Display {__version__}", time.strftime("%Y-%m-%d %H:%M:%S"), "",
-                     diagnostics.format_report(report), "", "== status.json ==",
-                     json.dumps(report.get("status"), indent=2, ensure_ascii=False), "", "== journal =="]
-            try:
-                parts.append(subprocess.run(["journalctl", "-u", SERVICE_NAME, "-n", "300", "--no-pager"],
-                                            capture_output=True, text=True, timeout=10, check=False).stdout
-                             or _("(journal not readable by this user)"))
-            except (OSError, subprocess.SubprocessError) as error:
-                parts.append(str(error))
+            text = self._report_text()
             try:
                 with open(path, "w", encoding="utf-8") as handle:
-                    handle.write("\n".join(parts))
+                    handle.write(text)
                 GLib.idle_add(self.toast, _("Report saved to {path}").format(path=path))
             except OSError as error:
                 GLib.idle_add(self._error, _("Could not save the report"), str(error))
@@ -1363,8 +1384,8 @@ class ConfigApp(Adw.Application):
         about = Adw.AboutDialog(
             application_name=_("Big Screen Monitor Display"), application_icon=APP_ID, version=__version__,
             developers=["Rafael Ruscher", "BigLinux Team"], copyright="© 2026 BigLinux Team",
-            license_type=Gtk.License.GPL_3_0, website="https://github.com/biglinux/big-screen-monitor-display",
-            issue_url="https://github.com/biglinux/big-screen-monitor-display/issues",
+            license_type=Gtk.License.GPL_3_0, website=PROJECT_URL,
+            issue_url=ISSUES_NEW_URL,
             comments=_("Free hardware monitor for small USB displays, with themes, the Brother Away island, "
                        "the Kojiro studio and the Big Media Player."))
         about.add_acknowledgement_section(_("Testing"), [

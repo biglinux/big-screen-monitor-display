@@ -85,7 +85,7 @@ def encrypt_cbc(key, iv, data):
     previous = iv
     output = bytearray()
     for offset in range(0, len(data), 8):
-        block = bytes(a ^ b for a, b in zip(data[offset:offset + 8], previous))
+        block = bytes(a ^ b for a, b in zip(data[offset:offset + 8], previous, strict=False))
         previous = encrypt_block(block, subkeys)
         output += previous
     return bytes(output)

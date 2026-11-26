@@ -195,8 +195,9 @@ def _gpu_metric(widget, opts, stats, now):
     if opts.get("show_name"):
         lines.append(("name", gpu.get("name", "GPU")))
     usage = gpu.get("percent") or 0.0
+    known = gpu.get("usage_known", True)
     return Metric(fraction=usage / 100, fraction2=None if temp is None else temp / crit,
-                  big=f"{usage:.{widget.get('decimals', 0)}f}%", lines=lines,
+                  big=f"{usage:.{widget.get('decimals', 0)}f}%" if known else "—", lines=lines,
                   alert_value=temp if temp is not None else usage, alert_kind="temp" if temp is not None else "usage",
                   warn=warn if temp is not None else 85, crit=crit if temp is not None else 97,
                   history=list(gpu.get("usage_history") or []), history_max=100.0,

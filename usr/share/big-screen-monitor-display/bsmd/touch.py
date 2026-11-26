@@ -804,7 +804,8 @@ class TouchUI:
         draw.line((0, top, width, top), fill=(255, 255, 255, 30))
         pad = max(6, bar // 9)
         theme = settings.get("theme")
-        layout = [("go-previous", "theme_prev", None, 1), ("label", None, None, 2.6), ("go-next", "theme_next", None, 1),
+        layout = [("go-previous", "theme_prev", None, 1), ("label", None, None, 2.6),
+                  ("go-next", "theme_next", None, 1),
                   ("bright-", "brightness", -BRIGHTNESS_STEP, 1), ("bright+", "brightness", BRIGHTNESS_STEP, 1),
                   ("view-app-grid", "page", "menu", 1), ("window-close", "close", None, 1)]
         if not getattr(self.host, "brightness_supported", lambda: True)():
@@ -898,7 +899,8 @@ class TouchUI:
                           _("Back to the GPS main menu"), "quit", None, DANGER))
         cols = self._cols(width, height, 3, 2)
         gap = max(8, (area[2] - area[0]) // 70)
-        for box, (icon, title, subtitle, action, arg, color) in zip(self._grid(area, len(tiles), cols, gap), tiles):
+        boxes = self._grid(area, len(tiles), cols, gap)
+        for box, (icon, title, subtitle, action, arg, color) in zip(boxes, tiles, strict=False):
             danger = action == "quit"
             card_color = (*DANGER, 255) if danger and armed else (mix(CARD, DANGER, 0.35) if danger else CARD)
             self._card(draw, box, action, arg, color=card_color)
@@ -949,9 +951,10 @@ class TouchUI:
         bucket = int(time.time() // THUMB_REFRESH)
         size = self._render_size()
         base = dict(settings)
-        for box, theme in zip(self._grid(area, len(ids), cols, gap), ids):
+        for box, theme in zip(self._grid(area, len(ids), cols, gap), ids, strict=False):
             tsize = self._thumb_size(box)
-            work = (lambda t=theme, s=tsize: render_thumbnail(t, base, size, s))
+            def work(t=theme, s=tsize):
+                return render_thumbnail(t, base, size, s)
             self._thumb_tile(layer, draw, box, "theme", theme, _(THEME_LABELS[theme]), theme == settings.get("theme"),
                              ("theme", theme, size, tsize, bucket), work, "view-grid")
 
@@ -971,7 +974,7 @@ class TouchUI:
         bucket = int(time.time() // THUMB_REFRESH)
         size = self._render_size()
         base = dict(settings)
-        for box, (value, label) in zip(self._grid(area, n, cols, gap), choices):
+        for box, (value, label) in zip(self._grid(area, n, cols, gap), choices, strict=False):
             tsize = self._thumb_size(box)
             if key == "story":
                 def work(v=value, s=tsize):
@@ -985,7 +988,8 @@ class TouchUI:
                     from .kojiro import presets
                     return render_thumbnail(theme, dict(base, kojiro=presets.build(v)), size, s)
             else:
-                work = (lambda v=value, s=tsize, k=key: render_thumbnail(theme, dict(base, **{k: v}), size, s))
+                def work(v=value, s=tsize, k=key):
+                    return render_thumbnail(theme, dict(base, **{k: v}), size, s)
             self._thumb_tile(layer, draw, box, "style", value, _(label), value == current,
                              ("style", theme, key, value, size, tsize, bucket), work,
                              "media-playback-start" if key == "story" else "color-select")
@@ -1001,7 +1005,7 @@ class TouchUI:
                 current = "auto"
         cols = self._cols(width, height, len(choices) if len(choices) <= 4 else 3, 2)
         gap = max(8, (area[2] - area[0]) // 60)
-        for box, (value, label, icon) in zip(self._grid(area, len(choices), cols, gap), choices):
+        for box, (value, label, icon) in zip(self._grid(area, len(choices), cols, gap), choices, strict=False):
             selected = value == current
             self._card(draw, box, "orientation", value, selected=selected)
             bw, bh = box[2] - box[0], box[3] - box[1]

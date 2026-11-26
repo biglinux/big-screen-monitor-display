@@ -35,7 +35,8 @@ def main():
     port = free_port_pair()
     hub.listen(port, host="127.0.0.1")
     config = os.path.join(tmp, "settings.json")
-    settings.save({"theme": "standard", "android_port": port, "performance_profile": os.environ.get("BENCH_PROFILE", "fluid")}, config)
+    settings.save({"theme": "standard", "android_port": port,
+                   "performance_profile": os.environ.get("BENCH_PROFILE", "fluid")}, config)
     app = runtime.Runtime(settings.SettingsStore(config), status_file=os.path.join(tmp, "run", "status.json"),
                           state_directory=os.path.join(tmp, "state"), scan=lambda: [], android=hub)
     threading.Thread(target=app.run, daemon=True).start()
@@ -53,7 +54,8 @@ def main():
     session = app.sessions[display]
     proc = psutil.Process()
     print(f"view {VIEW[0]}x{VIEW[1]} -> drawing {session.driver.native_size[0]}x{session.driver.native_size[1]}, "
-          f"quality {QUALITY}, profile {os.environ.get('BENCH_PROFILE', 'fluid')}, {SECONDS:.0f} s per theme (loopback, TLS)")
+          f"quality {QUALITY}, profile {os.environ.get('BENCH_PROFILE', 'fluid')}, "
+          f"{SECONDS:.0f} s per theme (loopback, TLS)")
     print(f"{'theme':18} {'frames':>6} {'fps':>5} {'kB/frame':>9} {'kB/s':>7} {'xfer ms':>8} {'cpu %':>6} "
           f"{'rss MB':>7} formats")
     for theme in THEMES:

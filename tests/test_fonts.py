@@ -71,7 +71,8 @@ def test_original_undoes_formatted_and_joined_messages(monkeypatch):
     monkeypatch.setattr(i18n, "_translation", Catalog())
     assert i18n.original("589 个进程") == "589 process"
     assert i18n.original("可用 3.5 GB") == "Free 3.5 GB"
-    assert i18n.original("运行 1d 19:40  ·  589 个进程  ·  performance") == "up 1d 19:40  ·  589 process  ·  performance"
+    expected = "up 1d 19:40  ·  589 process  ·  performance"
+    assert i18n.original("运行 1d 19:40  ·  589 个进程  ·  performance") == expected
     assert i18n.original("nothing") == "nothing"
 
 

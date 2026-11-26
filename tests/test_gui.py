@@ -142,6 +142,14 @@ def test_deepcool_cooler_pages(tmp_path):
 
 
 @needs_gui
+def test_first_use_without_displays(tmp_path):
+    checks = drive(tmp_path, "empty", [])
+    assert checks["empty_visible"] is True
+    assert checks["empty_actions"] == ["Look Again", "Use a Phone or Tablet", "My Model Is Not Listed"]
+    assert checks["pairing_dialog_opened"] is True
+
+
+@needs_gui
 def test_service_stopped_states(tmp_path):
     checks = drive(tmp_path, "stopped", None)
     assert checks["state_card_visible"] is True
@@ -262,6 +270,10 @@ def test_add_android_option_opens_the_pairing_code(config_gui, monkeypatch):
 @pytest.mark.parametrize("libadwaita", ["1.6", "1.7+"])
 def test_kojiro_inspector_builds_on_every_supported_libadwaita(config_gui, monkeypatch, libadwaita):
     """Adw.InlineViewSwitcher only exists from libadwaita 1.7; the package asks for 1.6."""
+    # Gtk.init_check() can report success without a display and the widgets then
+    # crash the whole run (segfault), so the environment is checked first.
+    if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
+        pytest.skip("no display for GTK")
     import kojiro_page
     from gi.repository import Adw, Gtk
     if not Gtk.init_check():
@@ -336,3 +348,27 @@ def test_android_in_my_displays(tmp_path):
     assert checks["android_pair_closed"] is True
     assert "releases/latest/download/big-screen-monitor-display.apk" in checks["android_steps"]
     assert 0 < checks["android_steps_width"] <= 560 - 48
+
+
+def test_report_text_has_version_checks_and_journal(config_gui, monkeypatch, tmp_path):
+    from bsmd import __version__
+    monkeypatch.setattr(config_gui.diagnostics, "run_checks",
+                        lambda: {"checks": [], "status": {"state": "healthy"}})
+    monkeypatch.setattr(config_gui.diagnostics, "format_report", lambda report: "CHECKS")
+    calls = []
+
+    def fake_run(argv, **kw):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0, stdout="journal line\n")
+    monkeypatch.setattr(config_gui.subprocess, "run", fake_run)
+    text = config_gui.ConfigWindow._report_text(journal_lines=80)
+    assert text.startswith(f"Big Screen Monitor Display {__version__}")
+    assert "CHECKS" in text and '"state": "healthy"' in text and "journal line" in text
+    assert calls[0][:5] == ["journalctl", "-u", config_gui.SERVICE_NAME, "-n", "80"]
+
+
+def test_issue_links_point_to_the_project():
+    from bsmd import ISSUES_NEW_URL, PROJECT_URL
+    assert ISSUES_NEW_URL == PROJECT_URL + "/issues/new/choose"
+    templates = os.path.join(HERE, "..", ".github", "ISSUE_TEMPLATE")
+    assert {"1-hardware.yml", "2-bug.yml", "3-feature.yml", "config.yml"} <= set(os.listdir(templates))

@@ -892,7 +892,7 @@ class BigMediaPlayerTheme:
         gpus = [g for g in stats.get("gpus") or [] if g.get("path")]
         if settings.get("bmp_tele_gpu", True) and gpus:
             gpu = gpus[stats.get("active_gpu_idx", 0) % len(gpus)]
-            value = f"{gpu.get('percent', 0):.0f}%"
+            value = telemetry.gpu_percent_text(gpu)
             temp = gpu.get("temp_value")
             if settings.get("bmp_tele_gpu_temp", True) and temp is not None:
                 value += f" {temp:.0f}°C"

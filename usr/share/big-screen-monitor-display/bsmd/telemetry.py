@@ -205,9 +205,22 @@ def _lspci_name(pci_slot):
 
 
 def _empty_gpu(path=None, name="GPU"):
-    return {"path": path, "name": name, "percent": 0.0, "mem_used_mb": 0, "mem_total_mb": 0,
-            "enc_percent": 0.0, "temp": "?°C", "temp_value": None,
+    # "percent" stays a number for the themes; "usage_known" says whether it was
+    # measured (amdgpu's gpu_busy_percent, NVML) or is just the 0 placeholder,
+    # so a theme shows "—" instead of a fake 0 % (Intel, NVIDIA without NVML).
+    return {"path": path, "name": name, "percent": 0.0, "usage_known": False, "mem_used_mb": 0, "mem_total_mb": 0,
+            "enc_percent": 0.0, "temp": "?°C", "temp_value": None, "vendor": "", "pci_slot": "",
             "usage_history": [0] * HISTORY_LEN, "mem_history": [0] * HISTORY_LEN}
+
+
+VENDORS = {"1002": "amd", "10de": "nvidia", "8086": "intel"}
+
+
+def gpu_percent_text(gpu, unknown="—"):
+    """"42%" for a measured GPU usage, ``unknown`` when the driver does not report one."""
+    if not gpu or not gpu.get("usage_known"):
+        return unknown
+    return f"{gpu.get('percent') or 0:.0f}%"
 
 
 def find_gpus(drm_glob="/sys/class/drm/card[0-9]"):
@@ -220,22 +233,18 @@ def find_gpus(drm_glob="/sys/class/drm/card[0-9]"):
             uevent = _read(uevent_path)
         except OSError:
             continue
-        pci_slot = ""
+        pci_slot = vendor = ""
         for line in uevent.splitlines():
             if line.startswith("PCI_SLOT_NAME="):
                 pci_slot = line.split("=", 1)[1].strip()
+            elif line.startswith("PCI_ID="):
+                vendor = VENDORS.get(line.split("=", 1)[1].strip().split(":")[0].lower(), "")
         name = _lspci_name(pci_slot) if pci_slot else ""
         if not name:
-            if "1002:7590" in uevent:
-                name = "RX 580"
-            elif "1002" in uevent:
-                name = "AMD Radeon"
-            elif "8086" in uevent:
-                name = "Intel"
-            elif "10de" in uevent:
-                name = "NVIDIA"
+            name = {"amd": "AMD Radeon", "intel": "Intel", "nvidia": "NVIDIA"}.get(vendor, "")
         if name:
             gpu = _empty_gpu(card, name[:28])
+            gpu["vendor"], gpu["pci_slot"] = vendor, pci_slot
             hwmon = glob.glob(os.path.join(card, "device", "hwmon", "hwmon*"))
             gpu["hwmon"] = hwmon[0] if hwmon else None
             gpus.append(gpu)
@@ -622,7 +631,7 @@ class Collector:
             history = SYSTEM_STATS["cpu_cores_history"]
             if len(history) != len(cores):
                 history[:] = [[] for _ in cores]
-            for core_history, value in zip(history, cores):
+            for core_history, value in zip(history, cores, strict=False):
                 core_history.append(value)
                 if len(core_history) > 40:
                     del core_history[0]
@@ -848,11 +857,53 @@ class Collector:
             if gpu["path"]:
                 self._guard(f"gpu{index}", lambda gpu=gpu, index=index: self._sample_gpu(gpu, index))
 
+    @staticmethod
+    def _sample_nvidia(gpu):
+        """Fill ``gpu`` from NVML; False when NVML has nothing for this card."""
+        from . import nvidia
+        data = nvidia.shared().read(gpu.get("pci_slot"))
+        if not data:
+            return False
+        if "percent" in data:
+            gpu["percent"] = data["percent"]
+            gpu["usage_known"] = True
+        if "temp_value" in data:
+            gpu["temp_value"] = data["temp_value"]
+            gpu["temp"] = gpu["edge"] = f"{data['temp_value']:.0f}°C"
+        for key in ("mem_used_mb", "mem_total_mb", "clock_mhz", "enc_percent"):
+            if key in data:
+                gpu[key] = data[key]
+        if "enc_percent" in data:
+            gpu["video_engine"] = "NVENC"
+        if "power_w" in data:
+            gpu["power_w"] = data["power_w"]
+            gpu["ppt"] = f"{data['power_w']:.1f}W"
+        return True
+
+    @staticmethod
+    def _sample_intel_clock(gpu):
+        """Current GPU clock: i915 (card/gt/gt0/rps_act_freq_mhz) or xe (device/tile0/gt0/freq0/act_freq).
+        Intel exposes no usage without perf counters (CAP_PERFMON), so usage stays unknown."""
+        for path in (os.path.join(gpu["path"], "gt", "gt0", "rps_act_freq_mhz"),
+                     os.path.join(gpu["path"], "gt_act_freq_mhz"),
+                     os.path.join(gpu["path"], "device", "tile0", "gt0", "freq0", "act_freq")):
+            if os.path.exists(path):
+                try:
+                    gpu["clock_mhz"] = int(_read(path))
+                except (OSError, ValueError):
+                    continue
+                return
+
     def _sample_gpu(self, gpu, index):
         device = os.path.join(gpu["path"], "device")
         busy = os.path.join(device, "gpu_busy_percent")
-        if os.path.exists(busy):
+        if gpu.get("vendor") == "nvidia" and self._sample_nvidia(gpu):
+            pass
+        elif os.path.exists(busy):
             gpu["percent"] = float(_read(busy))
+            gpu["usage_known"] = True
+        if gpu.get("vendor") == "intel":
+            self._sample_intel_clock(gpu)
         used = os.path.join(device, "mem_info_vram_used")
         if os.path.exists(used):
             gpu["mem_used_mb"] = int(_read(used)) // 1048576

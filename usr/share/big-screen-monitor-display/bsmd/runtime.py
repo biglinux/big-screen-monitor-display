@@ -633,13 +633,13 @@ class DisplaySession:
                 self.last_sensors = now
                 self._read_sensors()
             image = frames.to_native(frame, self.driver.native_size, self._orientation(self.settings()))
-            self._io("present", lambda: self.driver.present(image))
+            self._io("present", lambda: self.driver.present(image))  # noqa: B023 - _io calls it at once
         self._close_display()
 
     def _read_sensors(self):
         values = self._io("sensors", self.driver.read_sensors)
         if values:
-            self.sensors = {name: value for name, value in zip(self.driver.capabilities.sensors, values)
+            self.sensors = {name: value for name, value in zip(self.driver.capabilities.sensors, values, strict=False)
                             if value is not None}
 
     def _drain_commands(self):

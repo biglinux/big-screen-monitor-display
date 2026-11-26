@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidade de segurança / Security vulnerability
+    url: https://github.com/ruscher/big-screen-monitor-display/security/advisories/new
+    about: Relate em particular, nunca numa issue pública. / Report privately, never in a public issue.

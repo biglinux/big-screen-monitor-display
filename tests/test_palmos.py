@@ -24,8 +24,8 @@ LINE_BUF_SIZE = 256         # ziremon.c: buffer de linha do Palm (inclui o '\0')
 SNAP = {
     "cpu_percent": 12.6, "cpu_temp": "61°C", "cpu_temp_value": 61.4, "cpu_freq_mhz": 4120,
     "gpus": [
-        {"percent": 3.0, "temp": "41°C", "temp_value": 41, "mem_total_mb": 512},
-        {"percent": 77.0, "temp": "66°C", "temp_value": 66, "mem_total_mb": 16368},
+        {"percent": 3.0, "usage_known": True, "temp": "41°C", "temp_value": 41, "mem_total_mb": 512},
+        {"percent": 77.0, "usage_known": True, "temp": "66°C", "temp_value": 66, "mem_total_mb": 16368},
     ],
     "active_gpu_idx": 0,
     "ram_percent": 33.2, "ram_used_mb": 15872, "ram_total_mb": 47513,
@@ -52,14 +52,19 @@ def test_gpu_choice_is_stable_and_overridable():
     assert bridge.build_packet(dict(SNAP, active_gpu_idx=1)) == bridge.build_packet(SNAP)
     assert fields(bridge.build_packet(SNAP, gpu_index=0))[4:6] == ["3", "41"]
     assert fields(bridge.build_packet(SNAP, gpu_index=9))[4:6] == ["77", "66"]
-    assert fields(bridge.build_packet(dict(SNAP, gpus=[])))[4:6] == ["0", "0"]
+    assert fields(bridge.build_packet(dict(SNAP, gpus=[])))[4:6] == ["-", "-"]
 
 
 def test_gpu_temperature_falls_back_to_text():
-    snap = dict(SNAP, gpus=[{"percent": 10, "temp": "58°C", "temp_value": None}])
+    snap = dict(SNAP, gpus=[{"percent": 10, "usage_known": True, "temp": "58°C", "temp_value": None}])
     assert fields(bridge.build_packet(snap))[4:6] == ["10", "58"]
-    snap = dict(SNAP, gpus=[{"percent": 10, "temp": "?°C", "temp_value": None}])
-    assert fields(bridge.build_packet(snap))[5] == "0"
+    snap = dict(SNAP, gpus=[{"percent": 10, "usage_known": True, "temp": "?°C", "temp_value": None}])
+    assert fields(bridge.build_packet(snap))[5] == "-"
+
+
+def test_gpu_without_usage_reporting_is_a_dash_not_zero():
+    snap = dict(SNAP, gpus=[{"percent": 0.0, "usage_known": False, "temp_value": 50, "mem_total_mb": 8000}])
+    assert fields(bridge.build_packet(snap))[4:6] == ["-", "50"]
 
 
 def test_empty_snapshot_still_valid():
@@ -100,10 +105,10 @@ def test_media_commands(line, argv0):
 def test_volume_and_unknown_commands(monkeypatch):
     calls = []
     run = lambda argv, **kw: calls.append(argv)  # noqa: E731
-    monkeypatch.setattr(bridge.shutil, "which", lambda name: "/usr/bin/" + name if name == "wpctl" else None)
+    monkeypatch.setattr(bridge.lite.shutil, "which", lambda name: "/usr/bin/" + name if name == "wpctl" else None)
     assert bridge.handle_palm_command("CMD|VOL_UP", run=run) == "VOL_UP"
     assert calls[-1] == ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "5%+"]
-    monkeypatch.setattr(bridge.shutil, "which", lambda name: "/usr/bin/" + name)
+    monkeypatch.setattr(bridge.lite.shutil, "which", lambda name: "/usr/bin/" + name)
     bridge.handle_palm_command("CMD|VOL_DOWN", run=run)
     assert calls[-1] == ["pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%"]
     n = len(calls)
