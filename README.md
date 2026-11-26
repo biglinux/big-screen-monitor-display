@@ -115,6 +115,8 @@ Outros produtos DeepCool (gabinetes CH, LP, LQ, MORPHEUS, linha G2 NYX) são ide
 
 **A** = validado em hardware real · **B** = driver implementado e verificado contra o projeto de referência e mocks; aguardando teste físico (um mock nunca conta como aprovação). Pesquisados e ainda não suportados: NXElec BeadaPanel (**C**, protocolo publicado), ACEMAGIC S1 e Fuldho (**D**), GUITION e Waveshare USB-Monitor (**E**). Detalhes, IDs USB e níveis de confiança em [docs/11](docs/11-compatibilidade-hardware.md); como testar o seu painel em [docs/17](docs/17-testes-hardware.md).
 
+Todos os modelos, IDs USB e níveis numa só tabela: [docs/compatibilidade.md](docs/compatibilidade.md). Tem um aparelho nível **B**? [Conte se funciona](https://github.com/ruscher/big-screen-monitor-display/issues/new?template=1-hardware.yml).
+
 A detecção só lê o `sysfs` (VID, PID, número de série): displays reconhecidos iniciam sozinhos; um caso ambíguo ou um dispositivo serial desconhecido espera você escolher o modelo em **Meus Displays**.
 
 ---
@@ -407,6 +409,8 @@ A instalação:
 3. habilita e inicia o serviço.
 
 Atualizações preservam as configurações e **respeitam o serviço desativado**.
+
+Pelo AUR (qualquer Arch): `big-screen-monitor-display-git` — o PKGBUILD fica em [pkgbuild/aur](pkgbuild/aur/).
 
 ### openSUSE · Regata OS · Debian/Ubuntu · Fedora
 

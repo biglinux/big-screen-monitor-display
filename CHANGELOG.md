@@ -21,6 +21,8 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   temas, em vez de 0 %.
 - Qualidade: CI com Python 3.10, 3.12 e 3.14, `ruff` sem avisos, cobertura com
   piso e instalação testada em Debian, Ubuntu, Fedora, openSUSE e Arch.
+- Distribuição: pacote `big-screen-monitor-display-git` para o AUR, gerado do
+  PKGBUILD do BigLinux; `docs/compatibilidade.md` gerado do registro de drivers.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 

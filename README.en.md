@@ -42,6 +42,8 @@ That single report turns it into an A.**
 | XuanFang rev. B, Kipye rev. D, WeAct Studio FS V1 | 3.5" and 0.96" | B |
 | DeepCool Digital coolers | AK, AG, LS SE, AK PRO, LD, MYSTIQUE | B |
 
+Every model, USB id and level: [docs/compatibilidade.md](docs/compatibilidade.md).
+
 Experimental clients for vintage devices live in [`device-clients/`](device-clients/)
 (Windows CE, Palm OS 5).
 

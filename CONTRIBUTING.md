@@ -45,6 +45,23 @@ painel com o código local.
 - **Commits** curtos, em português ou inglês, no formato `área: o que mudou`
   (`palmos: …`, `janela: …`, `pacote: …`).
 
+## Arquivos grandes
+
+`runtime.py`, `legacy_themes.py`, `config_gui.py`, `kojiro_page.py` e
+`smartmonitor/capture.py` passam de 1.400 linhas. **Divida um deles só quando já
+for mexer nele por outro motivo**, num PR só de movimentação (sem mudar
+comportamento), com os testes verdes antes e depois. Nunca reescreva tudo de uma
+vez: o ganho não aparece para o usuário e o risco de regressão é alto.
+
+## Arquivos gerados
+
+- `docs/compatibilidade.md` sai de `bsmd/displays/registry.py`: rode
+  `tools/make_compat.py` ao adicionar ou promover um driver.
+- `pkgbuild/aur/` sai de `pkgbuild/PKGBUILD`: rode `tools/make_aur.py` ao mudar o
+  PKGBUILD. Para publicar no AUR, siga o cabeçalho de `tools/make_aur.py`.
+
+Os testes falham quando um deles fica desatualizado.
+
 ## Como os PRs são integrados
 
 Os commits do PR entram como estão (autoria preservada). Se a revisão achar
