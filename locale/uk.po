@@ -84,7 +84,7 @@ msgid "No media playing"
 msgstr "Нічого не відтворюється"
 
 #: usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py:1021
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Time"
 msgstr "Час"
 
@@ -497,8 +497,8 @@ msgid "Authorization was cancelled or denied."
 msgstr "Уповноваження скасовано або відхилено."
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
-#: usr/share/big-screen-monitor-display/config_gui.py:1082
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1007
+#: usr/share/big-screen-monitor-display/config_gui.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Невідома помилка"
@@ -633,8 +633,8 @@ msgstr "гру"
 
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:251
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:45
-#: usr/share/big-screen-monitor-display/config_gui.py:661
-#: usr/share/big-screen-monitor-display/config_gui.py:785
+#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:784
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "Disk"
 msgstr "Диск"
@@ -1004,8 +1004,8 @@ msgid "CPU temperature"
 msgstr "Температура CPU"
 
 #: usr/share/big-screen-monitor-display/bsmd/displays/deepcool/models.py:19
-#: usr/share/big-screen-monitor-display/config_gui.py:676
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:675
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:168
 msgid "CPU usage"
 msgstr "Використання CPU"
@@ -1019,7 +1019,7 @@ msgid "CPU frequency"
 msgstr "Частота CPU"
 
 #: usr/share/big-screen-monitor-display/bsmd/displays/deepcool/models.py:20
-#: usr/share/big-screen-monitor-display/config_gui.py:676
+#: usr/share/big-screen-monitor-display/config_gui.py:675
 msgid "Memory usage"
 msgstr "Використання пам'яті"
 
@@ -1267,7 +1267,7 @@ msgid "no sensors"
 msgstr "немає датчиків"
 
 #: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
-#: usr/share/big-screen-monitor-display/config_gui.py:701
+#: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "В/В диска"
 
@@ -1362,13 +1362,13 @@ msgstr "від батареї"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:35
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 #: usr/share/big-screen-monitor-display/kojiro_page.py:60
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "GPU"
@@ -1405,24 +1405,24 @@ msgid "Upload"
 msgstr "Надсилання"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:50
-#: usr/share/big-screen-monitor-display/config_gui.py:784
+#: usr/share/big-screen-monitor-display/config_gui.py:783
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "Clock"
 msgstr "Годинник"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:652
+#: usr/share/big-screen-monitor-display/config_gui.py:651
 #: usr/share/big-screen-monitor-display/media_player_page.py:226
 msgid "Distribution logo"
 msgstr "Логотип дистрибутива"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:52
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 msgid "CPU cores"
 msgstr "Ядра CPU"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:53
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 msgid "Uptime"
 msgstr "Час роботи"
 
@@ -1439,7 +1439,7 @@ msgid "Local IP"
 msgstr "Локальна IP-адреса"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:57
-#: usr/share/big-screen-monitor-display/config_gui.py:704
+#: usr/share/big-screen-monitor-display/config_gui.py:703
 msgid "Battery"
 msgstr "Батарея"
 
@@ -1448,7 +1448,7 @@ msgid "Power profile"
 msgstr "Профіль живлення"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:59
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Top processes"
 msgstr "Найактивніші процеси"
 
@@ -1540,7 +1540,7 @@ msgstr "Градієнти"
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:891
-#: usr/share/big-screen-monitor-display/config_gui.py:567
+#: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
 #: usr/share/big-screen-monitor-display/screentray/app.py:602
@@ -1646,7 +1646,7 @@ msgid "any (responsive: micro, portrait, landscape, ultrawide)"
 msgstr "будь-яка (адаптивна: мікро, книжкова, альбомна, надширока)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:93
-#: usr/share/big-screen-monitor-display/config_gui.py:56
+#: usr/share/big-screen-monitor-display/config_gui.py:55
 #: usr/share/big-screen-monitor-display/gui/brother_away_page.py:73
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:78
 msgid "Brother Away"
@@ -1658,7 +1658,7 @@ msgid "Kojiro"
 msgstr "Kojiro"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:94
-#: usr/share/big-screen-monitor-display/config_gui.py:55
+#: usr/share/big-screen-monitor-display/config_gui.py:54
 #: usr/share/big-screen-monitor-display/media_player_page.py:166
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:83
 msgid "Big Media Player"
@@ -1762,30 +1762,30 @@ msgstr "На риболовлі"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:134
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:637
-#: usr/share/big-screen-monitor-display/config_gui.py:731
+#: usr/share/big-screen-monitor-display/config_gui.py:636
+#: usr/share/big-screen-monitor-display/config_gui.py:730
 #: usr/share/big-screen-monitor-display/screentray/app.py:294
 msgid "Colour scheme"
 msgstr "Схема кольорів"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:136
-#: usr/share/big-screen-monitor-display/config_gui.py:684
+#: usr/share/big-screen-monitor-display/config_gui.py:683
 msgid "Visual style"
 msgstr "Візуальний стиль"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:137
-#: usr/share/big-screen-monitor-display/config_gui.py:685
+#: usr/share/big-screen-monitor-display/config_gui.py:684
 msgid "Classic (green phosphor)"
 msgstr "Класичний (зелений люмінофор)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:714
+#: usr/share/big-screen-monitor-display/config_gui.py:713
 #: usr/share/big-screen-monitor-display/screentray/app.py:294
 msgid "Accent colour"
 msgstr "Колір акценту"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:48
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
@@ -1793,7 +1793,7 @@ msgid "Blue"
 msgstr "Синій"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:47
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
@@ -1802,8 +1802,8 @@ msgstr "Зелений"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:141
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:145
-#: usr/share/big-screen-monitor-display/config_gui.py:715
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:714
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/kojiro_page.py:53
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
@@ -1811,13 +1811,13 @@ msgid "Amber"
 msgstr "Бурштиновий"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:141
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
 msgid "Violet"
 msgstr "Фіолетовий"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:142
-#: usr/share/big-screen-monitor-display/config_gui.py:716
+#: usr/share/big-screen-monitor-display/config_gui.py:715
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:47
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:67
@@ -1825,19 +1825,19 @@ msgid "Red"
 msgstr "Червоний"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
 msgid "Classic grey"
 msgstr "Класичний сірий"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
 msgid "Slate (dark)"
 msgstr "Сланцевий (темний)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:145
-#: usr/share/big-screen-monitor-display/config_gui.py:733
+#: usr/share/big-screen-monitor-display/config_gui.py:732
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:69
 msgid "Plum"
 msgstr "Сливовий"
@@ -1849,13 +1849,13 @@ msgstr "Оболонка"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:888
-#: usr/share/big-screen-monitor-display/config_gui.py:636
-#: usr/share/big-screen-monitor-display/config_gui.py:683
-#: usr/share/big-screen-monitor-display/config_gui.py:713
-#: usr/share/big-screen-monitor-display/config_gui.py:730
+#: usr/share/big-screen-monitor-display/config_gui.py:635
+#: usr/share/big-screen-monitor-display/config_gui.py:682
+#: usr/share/big-screen-monitor-display/config_gui.py:712
+#: usr/share/big-screen-monitor-display/config_gui.py:729
 #: usr/share/big-screen-monitor-display/displays_page.py:379
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:69
-#: usr/share/big-screen-monitor-display/kojiro_page.py:510
+#: usr/share/big-screen-monitor-display/kojiro_page.py:514
 #: usr/share/big-screen-monitor-display/media_player_page.py:190
 msgid "Appearance"
 msgstr "Вигляд"
@@ -1874,8 +1874,8 @@ msgstr "Немає медіапрогравача"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:884
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:999
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:688
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
@@ -1944,99 +1944,99 @@ msgstr "Ця тема не має тут параметрів."
 msgid "Touch test - hold to leave"
 msgstr "Перевірка дотиків — утримуйте, щоб вийти"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:50
 #: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:52
 msgid "Overview"
 msgstr "Огляд"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:275
+#: usr/share/big-screen-monitor-display/config_gui.py:50
+#: usr/share/big-screen-monitor-display/config_gui.py:274
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:126
 msgid "Home"
 msgstr "Головна"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:52
+#: usr/share/big-screen-monitor-display/config_gui.py:51
 #: usr/share/big-screen-monitor-display/displays_page.py:146
 msgid "My Displays"
 msgstr "Мої дисплеї"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:52
 #: usr/share/big-screen-monitor-display/config_gui.py:53
 #: usr/share/big-screen-monitor-display/config_gui.py:54
 #: usr/share/big-screen-monitor-display/config_gui.py:55
-#: usr/share/big-screen-monitor-display/config_gui.py:56
-#: usr/share/big-screen-monitor-display/config_gui.py:1009
+#: usr/share/big-screen-monitor-display/config_gui.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:162
 msgid "Customise"
 msgstr "Персоналізація"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:53
+#: usr/share/big-screen-monitor-display/config_gui.py:52
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:82
 msgid "Theme Gallery"
 msgstr "Галерея тем"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:54
-#: usr/share/big-screen-monitor-display/config_gui.py:419
+#: usr/share/big-screen-monitor-display/config_gui.py:53
+#: usr/share/big-screen-monitor-display/config_gui.py:418
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:115
 msgid "Kojiro Design Studio"
 msgstr "Студія дизайну Kojiro"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:56
 #: usr/share/big-screen-monitor-display/config_gui.py:57
 #: usr/share/big-screen-monitor-display/config_gui.py:58
-#: usr/share/big-screen-monitor-display/config_gui.py:59
 msgid "System"
 msgstr "Система"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:57
-#: usr/share/big-screen-monitor-display/config_gui.py:571
-#: usr/share/big-screen-monitor-display/config_gui.py:837
+#: usr/share/big-screen-monitor-display/config_gui.py:56
+#: usr/share/big-screen-monitor-display/config_gui.py:570
+#: usr/share/big-screen-monitor-display/config_gui.py:836
 #: usr/share/big-screen-monitor-display/displays_page.py:411
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:94
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:275
 msgid "Performance"
 msgstr "Продуктивність"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:58
-#: usr/share/big-screen-monitor-display/config_gui.py:880
+#: usr/share/big-screen-monitor-display/config_gui.py:57
+#: usr/share/big-screen-monitor-display/config_gui.py:882
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:307
 #: usr/share/big-screen-monitor-display/media_player_page.py:516
 msgid "Diagnostics"
 msgstr "Діагностика"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:59
-#: usr/share/big-screen-monitor-display/config_gui.py:330
+#: usr/share/big-screen-monitor-display/config_gui.py:58
+#: usr/share/big-screen-monitor-display/config_gui.py:329
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:122
 msgid "Preferences"
 msgstr "Налаштування"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:65
+#: usr/share/big-screen-monitor-display/config_gui.py:64
 #, python-brace-format
 msgid "Up to {fps:g} frames per second in animated themes, less on slow serial panels, on battery or when the computer is busy. Hardware data every {telemetry:g} s."
 msgstr "До {fps:g} кадрів за секунду в анімованих темах, менше на повільних послідовних панелях, при живленні від батареї або коли комп'ютер завантажений. Дані обладнання кожні {telemetry:g} с."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:67
+#: usr/share/big-screen-monitor-display/config_gui.py:66
 #, python-brace-format
 msgid "Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every {telemetry:g} s. Lowest CPU use."
 msgstr "До {fps:g} кадрів за секунду; інформаційні панелі перемальовуються кожні {period:g} с; дані обладнання кожні {telemetry:g} с. Найменше використання CPU."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:69
+#: usr/share/big-screen-monitor-display/config_gui.py:68
 #, python-brace-format
 msgid "Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every {telemetry:g} s."
 msgstr "До {fps:g} кадрів за секунду; інформаційні панелі перемальовуються кожні {period:g} с; дані обладнання кожні {telemetry:g} с."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:71
+#: usr/share/big-screen-monitor-display/config_gui.py:70
 #, python-brace-format
 msgid "Up to {fps:g} frames per second for smoother animation; dashboards every {period:g} s; hardware data every {telemetry:g} s. Uses more CPU."
 msgstr "До {fps:g} кадрів за секунду для плавнішої анімації; інформаційні панелі кожні {period:g} с; дані обладнання кожні {telemetry:g} с. Більше навантажує CPU."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:572
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:571
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 msgid "Economy"
 msgstr "Ощадливий"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:573
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:572
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/gui/android_page.py:40
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
@@ -2044,43 +2044,43 @@ msgstr "Ощадливий"
 msgid "Balanced"
 msgstr "Збалансований"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:573
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:572
 #: usr/share/big-screen-monitor-display/displays_page.py:48
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/media_player_page.py:198
 msgid "Fluid"
 msgstr "Плавний"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:239
-#: usr/share/big-screen-monitor-display/config_gui.py:1316
-#: usr/share/big-screen-monitor-display/config_gui.py:1358
+#: usr/share/big-screen-monitor-display/config_gui.py:238
+#: usr/share/big-screen-monitor-display/config_gui.py:1337
+#: usr/share/big-screen-monitor-display/config_gui.py:1385
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:64
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:113
 msgid "Big Screen Monitor Display"
 msgstr "Big Screen Monitor Display"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:262
+#: usr/share/big-screen-monitor-display/config_gui.py:261
 msgid "Start with the computer"
 msgstr "Запускати разом із комп'ютером"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:263
+#: usr/share/big-screen-monitor-display/config_gui.py:262
 msgid "Runs the monitor service at boot"
 msgstr "Запускає службу моніторингу під час завантаження системи"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:307
+#: usr/share/big-screen-monitor-display/config_gui.py:306
 msgid "Sections"
 msgstr "Розділи"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:329
+#: usr/share/big-screen-monitor-display/config_gui.py:328
 msgid "Restore Defaults…"
 msgstr "Відновити типові…"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:333
+#: usr/share/big-screen-monitor-display/config_gui.py:332
 msgid "About Big Screen Monitor Display"
 msgstr "Про Big Screen Monitor Display"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:334
+#: usr/share/big-screen-monitor-display/config_gui.py:333
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
@@ -2088,141 +2088,141 @@ msgstr "Про Big Screen Monitor Display"
 msgid "Quit"
 msgstr "Вийти"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:337
-#: usr/share/big-screen-monitor-display/config_gui.py:357
+#: usr/share/big-screen-monitor-display/config_gui.py:336
+#: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
 #: usr/share/big-screen-monitor-display/screentray/app.py:541
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:339
+#: usr/share/big-screen-monitor-display/config_gui.py:338
 msgid "Main Menu"
 msgstr "Головне меню"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:349
+#: usr/share/big-screen-monitor-display/config_gui.py:348
 msgid "Open the diagnostics"
 msgstr "Відкрити діагностику"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:436
+#: usr/share/big-screen-monitor-display/config_gui.py:435
 msgid "This theme is not in use on any display."
 msgstr "Ця тема не використовується на жодному дисплеї."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:436
+#: usr/share/big-screen-monitor-display/config_gui.py:435
 msgid "Use It"
 msgstr "Використати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:438
+#: usr/share/big-screen-monitor-display/config_gui.py:437
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:193
 msgid "Theme selected. Press Apply to send it to the display."
 msgstr "Тему вибрано. Натисніть «Застосувати», щоб надіслати її на дисплей."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:565
+#: usr/share/big-screen-monitor-display/config_gui.py:564
 msgid "Defaults for all displays"
 msgstr "Типові для всіх дисплеїв"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:566
+#: usr/share/big-screen-monitor-display/config_gui.py:565
 msgid "Used by every display that does not set its own value."
 msgstr "Використовуються кожним дисплеєм, для якого не задано власного значення."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:568
+#: usr/share/big-screen-monitor-display/config_gui.py:567
 #: usr/share/big-screen-monitor-display/displays_page.py:44
 msgid "Horizontal (landscape)"
 msgstr "Горизонтально (альбомна)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:568
+#: usr/share/big-screen-monitor-display/config_gui.py:567
 #: usr/share/big-screen-monitor-display/displays_page.py:44
 msgid "Vertical (portrait)"
 msgstr "Вертикально (книжкова)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:569
+#: usr/share/big-screen-monitor-display/config_gui.py:568
 #: usr/share/big-screen-monitor-display/displays_page.py:45
 msgid "Horizontal, upside down"
 msgstr "Горизонтально, перевернуто"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:569
+#: usr/share/big-screen-monitor-display/config_gui.py:568
 #: usr/share/big-screen-monitor-display/displays_page.py:46
 msgid "Vertical, upside down"
 msgstr "Вертикально, перевернуто"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:570
+#: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:897
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
 #: usr/share/big-screen-monitor-display/screentray/app.py:590
 msgid "Brightness"
 msgstr "Яскравість"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:572
+#: usr/share/big-screen-monitor-display/config_gui.py:571
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/media_player_page.py:239
 msgid "Automatic (recommended)"
 msgstr "Автоматично (рекомендовано)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:574
+#: usr/share/big-screen-monitor-display/config_gui.py:573
 msgid "Automatic detection"
 msgstr "Автоматичне виявлення"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:575
+#: usr/share/big-screen-monitor-display/config_gui.py:574
 msgid "All supported models"
 msgstr "Усі підтримувані моделі"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:575
+#: usr/share/big-screen-monitor-display/config_gui.py:574
 msgid "Only AX206 (USB photo frame)"
 msgstr "Лише AX206 (USB-фоторамка)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:576
+#: usr/share/big-screen-monitor-display/config_gui.py:575
 msgid "Only Turing Smart Screen 3.5\" (USB serial)"
 msgstr "Лише Turing Smart Screen 3.5\" (послідовний USB)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:577
+#: usr/share/big-screen-monitor-display/config_gui.py:576
 msgid "Limits which detected displays start automatically."
 msgstr "Обмежує, які з виявлених дисплеїв запускаються автоматично."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:578
+#: usr/share/big-screen-monitor-display/config_gui.py:577
 msgid "Preview size"
 msgstr "Розмір попереднього перегляду"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:580
+#: usr/share/big-screen-monitor-display/config_gui.py:579
 msgid "Used for the previews while no display is connected."
 msgstr "Використовується для попереднього перегляду, доки не під'єднано жодного дисплея."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:591
+#: usr/share/big-screen-monitor-display/config_gui.py:590
 msgid "Discard"
 msgstr "Відкинути"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:591
+#: usr/share/big-screen-monitor-display/config_gui.py:590
 msgid "Discard unsaved changes"
 msgstr "Відкинути незбережені зміни"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:594
+#: usr/share/big-screen-monitor-display/config_gui.py:593
 msgid "Apply"
 msgstr "Застосувати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:594
+#: usr/share/big-screen-monitor-display/config_gui.py:593
 msgid "Save and send to the displays (Ctrl+S)"
 msgstr "Зберегти й надіслати на дисплеї (Ctrl+S)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:639
-#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:638
+#: usr/share/big-screen-monitor-display/config_gui.py:688
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
 msgid "Text size"
 msgstr "Розмір тексту"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
 #: usr/share/big-screen-monitor-display/media_player_page.py:202
 msgid "Small"
 msgstr "Малий"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:34
 #: usr/share/big-screen-monitor-display/kojiro_page.py:48
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
@@ -2231,570 +2231,578 @@ msgstr "Малий"
 msgid "Normal"
 msgstr "Звичайний"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
 #: usr/share/big-screen-monitor-display/media_player_page.py:201
 #: usr/share/big-screen-monitor-display/media_player_page.py:203
 msgid "Large"
 msgstr "Великий"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:641
+#: usr/share/big-screen-monitor-display/config_gui.py:640
 msgid "Bar style"
 msgstr "Стиль смужок"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 #: usr/share/big-screen-monitor-display/media_player_page.py:205
 msgid "Rounded"
 msgstr "Заокруглені"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 msgid "Flat"
 msgstr "Пласкі"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 msgid "Segmented"
 msgstr "Сегментовані"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:643
+#: usr/share/big-screen-monitor-display/config_gui.py:642
 msgid "Coloured labels"
 msgstr "Кольорові підписи"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:644
+#: usr/share/big-screen-monitor-display/config_gui.py:643
 msgid "Alert colours"
 msgstr "Кольори попереджень"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:645
+#: usr/share/big-screen-monitor-display/config_gui.py:644
 msgid "Bars turn orange above 75% and red above 90%."
 msgstr "Смужки стають помаранчевими понад 75% і червоними понад 90%."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:646
+#: usr/share/big-screen-monitor-display/config_gui.py:645
 msgid "History in the background"
 msgstr "Історія на тлі"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:647
+#: usr/share/big-screen-monitor-display/config_gui.py:646
 msgid "A faint graph of the last 30 seconds behind each item."
 msgstr "Блідий графік за останні 30 секунд позаду кожного елемента."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:650
+#: usr/share/big-screen-monitor-display/config_gui.py:649
 msgid "Header"
 msgstr "Заголовок"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:651
+#: usr/share/big-screen-monitor-display/config_gui.py:650
 msgid "Show header"
 msgstr "Показувати заголовок"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:653
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:652
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Host name and kernel"
 msgstr "Назва вузла та ядро"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:654
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:653
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Date"
 msgstr "Дата"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:655
+#: usr/share/big-screen-monitor-display/config_gui.py:654
 #: usr/share/big-screen-monitor-display/kojiro_page.py:65
 msgid "24-hour clock"
 msgstr "24-годинний формат"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:656
-#: usr/share/big-screen-monitor-display/config_gui.py:717
-#: usr/share/big-screen-monitor-display/config_gui.py:736
+#: usr/share/big-screen-monitor-display/config_gui.py:655
+#: usr/share/big-screen-monitor-display/config_gui.py:716
+#: usr/share/big-screen-monitor-display/config_gui.py:735
 #: usr/share/big-screen-monitor-display/kojiro_page.py:66
 msgid "Show seconds"
 msgstr "Показувати секунди"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:659
+#: usr/share/big-screen-monitor-display/config_gui.py:658
 msgid "Information"
 msgstr "Інформація"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:659
 msgid "CPU usage and temperature"
 msgstr "Використання й температура CPU"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:660
-#: usr/share/big-screen-monitor-display/config_gui.py:702
+#: usr/share/big-screen-monitor-display/config_gui.py:659
+#: usr/share/big-screen-monitor-display/config_gui.py:701
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
 msgid "Memory"
 msgstr "Пам'ять"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:661
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "Swap"
 msgstr "Своп"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:662
+#: usr/share/big-screen-monitor-display/config_gui.py:661
 msgid "GPU usage and temperature"
 msgstr "Використання й температура GPU"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:663
+#: usr/share/big-screen-monitor-display/config_gui.py:662
 msgid "Video memory (VRAM)"
 msgstr "Відеопам'ять (VRAM)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:663
+#: usr/share/big-screen-monitor-display/config_gui.py:662
 msgid "Network traffic"
 msgstr "Мережевий трафік"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:665
+#: usr/share/big-screen-monitor-display/config_gui.py:664
 msgid "Show values as"
 msgstr "Показувати значення як"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:666
+#: usr/share/big-screen-monitor-display/config_gui.py:665
 msgid "Used / total"
 msgstr "Використано / усього"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:666
+#: usr/share/big-screen-monitor-display/config_gui.py:665
 msgid "Percentage"
 msgstr "Відсоток"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:667
+#: usr/share/big-screen-monitor-display/config_gui.py:666
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:195
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:591
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:244
 msgid "Temperature unit"
 msgstr "Одиниця температури"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:670
+#: usr/share/big-screen-monitor-display/config_gui.py:669
 msgid "Side panel"
 msgstr "Бічна панель"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:670
+#: usr/share/big-screen-monitor-display/config_gui.py:669
 msgid "Below the information in portrait orientation."
 msgstr "Під інформацією в книжковій орієнтації."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:671
+#: usr/share/big-screen-monitor-display/config_gui.py:670
 msgid "Content"
 msgstr "Вміст"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Graphs"
 msgstr "Графіки"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Nothing"
 msgstr "Нічого"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:673
+#: usr/share/big-screen-monitor-display/config_gui.py:672
 msgid "Processes listed"
 msgstr "Кількість процесів у списку"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:675
+#: usr/share/big-screen-monitor-display/config_gui.py:674
 msgid "Order processes by"
 msgstr "Упорядкувати процеси за"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:677
+#: usr/share/big-screen-monitor-display/config_gui.py:676
 msgid "Footer"
 msgstr "Нижній рядок"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:677
+#: usr/share/big-screen-monitor-display/config_gui.py:676
 msgid "Uptime, load, process count and power profile."
 msgstr "Час роботи, навантаження, кількість процесів і профіль живлення."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:687
+#: usr/share/big-screen-monitor-display/config_gui.py:686
 msgid "Columns"
 msgstr "Стовпчики"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:691
+#: usr/share/big-screen-monitor-display/config_gui.py:690
 msgid "Chart height"
 msgstr "Висота графіка"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:693
+#: usr/share/big-screen-monitor-display/config_gui.py:692
 msgid "Partitions listed"
 msgstr "Кількість розділів у списку"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:696
+#: usr/share/big-screen-monitor-display/config_gui.py:695
 msgid "Modules"
 msgstr "Модулі"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:696
+#: usr/share/big-screen-monitor-display/config_gui.py:695
 msgid "Modules that do not fit on the display are skipped."
 msgstr "Модулі, що не вміщаються на дисплеї, пропускаються."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:700
+#: usr/share/big-screen-monitor-display/config_gui.py:699
 msgid "Processes and load"
 msgstr "Процеси та навантаження"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:700
+#: usr/share/big-screen-monitor-display/config_gui.py:699
 msgid "Temperatures"
 msgstr "Температури"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:701
+#: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Main network interface"
 msgstr "Основний мережевий інтерфейс"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:702
+#: usr/share/big-screen-monitor-display/config_gui.py:701
 msgid "Other network interfaces"
 msgstr "Інші мережеві інтерфейси"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 msgid "Partitions"
 msgstr "Розділи"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:704
+#: usr/share/big-screen-monitor-display/config_gui.py:703
 msgid "Fans and power"
 msgstr "Вентилятори та живлення"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:705
+#: usr/share/big-screen-monitor-display/config_gui.py:704
 msgid "Docker containers"
 msgstr "Контейнери Docker"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:705
+#: usr/share/big-screen-monitor-display/config_gui.py:704
 msgid "Removable media"
 msgstr "Портативні носії"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:706
+#: usr/share/big-screen-monitor-display/config_gui.py:705
 msgid "Media player"
 msgstr "Медіапрогравач"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:719
+#: usr/share/big-screen-monitor-display/config_gui.py:718
 msgid "Globe"
 msgstr "Глобус"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:720
+#: usr/share/big-screen-monitor-display/config_gui.py:719
 msgid "Night side"
 msgstr "Нічний бік"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:720
+#: usr/share/big-screen-monitor-display/config_gui.py:719
 msgid "Shade the half of the Earth without sunlight."
 msgstr "Затінювати половину Землі, не освітлену Сонцем."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:721
+#: usr/share/big-screen-monitor-display/config_gui.py:720
 msgid "City lights"
 msgstr "Вогні міст"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:722
+#: usr/share/big-screen-monitor-display/config_gui.py:721
 msgid "Sun and Moon tracks"
 msgstr "Траєкторії Сонця й Місяця"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:723
+#: usr/share/big-screen-monitor-display/config_gui.py:722
 msgid "Where they were and will be over 24 hours."
 msgstr "Де вони були й будуть протягом 24 годин."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:724
+#: usr/share/big-screen-monitor-display/config_gui.py:723
 msgid "Moon"
 msgstr "Місяць"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:734
+#: usr/share/big-screen-monitor-display/config_gui.py:733
 msgid "Title bar"
 msgstr "Смужка заголовка"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:735
+#: usr/share/big-screen-monitor-display/config_gui.py:734
 msgid "Status bar"
 msgstr "Смужка стану"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:738
+#: usr/share/big-screen-monitor-display/config_gui.py:737
 msgid "Cards"
 msgstr "Картки"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:738
+#: usr/share/big-screen-monitor-display/config_gui.py:737
 msgid "CPU and memory are always shown."
 msgstr "CPU і пам'ять показуються завжди."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:739
+#: usr/share/big-screen-monitor-display/config_gui.py:738
 msgid "GPU and video memory"
 msgstr "GPU і відеопам'ять"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:740
+#: usr/share/big-screen-monitor-display/config_gui.py:739
 msgid "Disk and swap"
 msgstr "Диск і своп"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:746
+#: usr/share/big-screen-monitor-display/config_gui.py:745
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:149
 msgid "Animation"
 msgstr "Анімація"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:747
+#: usr/share/big-screen-monitor-display/config_gui.py:746
 msgid "Animate"
 msgstr "Анімувати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:748
+#: usr/share/big-screen-monitor-display/config_gui.py:747
 msgid "When off, a still island is shown and only the data updates."
 msgstr "Якщо вимкнено, показується нерухомий острів і оновлюються лише дані."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:748
 msgid "Events"
 msgstr "Події"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 msgid "Rare"
 msgstr "Рідко"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 msgid "Frequent"
 msgstr "Часто"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:751
+#: usr/share/big-screen-monitor-display/config_gui.py:750
 msgid "Day and night cycle"
 msgstr "Зміна дня й ночі"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:751
+#: usr/share/big-screen-monitor-display/config_gui.py:750
 msgid "Follows the computer clock."
 msgstr "За годинником комп'ютера."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:752
+#: usr/share/big-screen-monitor-display/config_gui.py:751
 msgid "Weather"
 msgstr "Погода"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:752
+#: usr/share/big-screen-monitor-display/config_gui.py:751
 msgid "Wind, rain, storms, fog and rainbows (simulated)."
 msgstr "Вітер, дощ, бурі, туман і веселки (імітація)."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:753
+#: usr/share/big-screen-monitor-display/config_gui.py:752
 msgid "Story continuity"
 msgstr "Безперервність історії"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:754
+#: usr/share/big-screen-monitor-display/config_gui.py:753
 msgid "The raft and the souvenirs are kept between sessions."
 msgstr "Пліт і сувеніри зберігаються між сеансами."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:755
+#: usr/share/big-screen-monitor-display/config_gui.py:754
 msgid "React to the computer"
 msgstr "Реагувати на комп'ютер"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:756
+#: usr/share/big-screen-monitor-display/config_gui.py:755
 msgid "Heat, busy memory, full disk and a busy GPU change the island."
 msgstr "Спека, зайнята пам'ять, заповнений диск і завантажений GPU змінюють острів."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:759
+#: usr/share/big-screen-monitor-display/config_gui.py:758
 msgid "Humour and speech"
 msgstr "Гумор і репліки"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:760
+#: usr/share/big-screen-monitor-display/config_gui.py:759
 msgid "Humour"
 msgstr "Гумор"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 msgid "Family"
 msgstr "Сімейний"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 #: usr/share/big-screen-monitor-display/media_player_page.py:47
 #: usr/share/big-screen-monitor-display/media_player_page.py:485
 msgid "Classic"
 msgstr "Класичний"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 msgid "Sarcastic"
 msgstr "Саркастичний"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:762
+#: usr/share/big-screen-monitor-display/config_gui.py:761
 msgid "Classic catchphrases"
 msgstr "Класичні фрази"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:763
+#: usr/share/big-screen-monitor-display/config_gui.py:762
 msgid "Tributes such as \"AWAAAAAY!\" and \"morô?\"."
 msgstr "Відсилання на кшталт «AWAAAAAY!» і «шариш?»."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:764
+#: usr/share/big-screen-monitor-display/config_gui.py:763
 msgid "Speech balloons"
 msgstr "Хмаринки з репліками"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:767
+#: usr/share/big-screen-monitor-display/config_gui.py:766
 msgid "Sound"
 msgstr "Звук"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:767
+#: usr/share/big-screen-monitor-display/config_gui.py:766
 msgid "Played by this computer: the display has no speaker. Off by default."
 msgstr "Відтворюється цим комп'ютером: дисплей не має динаміка. Типово вимкнено."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:768
+#: usr/share/big-screen-monitor-display/config_gui.py:767
 msgid "Retro sound effects"
 msgstr "Звукові ефекти в стилі ретро"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:769
+#: usr/share/big-screen-monitor-display/config_gui.py:768
 #: usr/share/big-screen-monitor-display/media_player_page.py:254
 msgid "Volume"
 msgstr "Гучність"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:770
+#: usr/share/big-screen-monitor-display/config_gui.py:769
 msgid "Speech sounds"
 msgstr "Звуки реплік"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:774
+#: usr/share/big-screen-monitor-display/config_gui.py:773
 msgid "Telemetry overlay"
 msgstr "Накладка телеметрії"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:774
+#: usr/share/big-screen-monitor-display/config_gui.py:773
 msgid "Clock, CPU, RAM, disk and GPU over the scene."
 msgstr "Годинник, CPU, RAM, диск і GPU поверх сцени."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:775
+#: usr/share/big-screen-monitor-display/config_gui.py:774
 msgid "Show overlay"
 msgstr "Показувати накладку"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 msgid "Size"
 msgstr "Розмір"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 msgid "Expanded"
 msgstr "Розгорнута"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 #: usr/share/big-screen-monitor-display/media_player_page.py:192
 msgid "Compact"
 msgstr "Компактна"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:777
+#: usr/share/big-screen-monitor-display/config_gui.py:776
 #: usr/share/big-screen-monitor-display/media_player_page.py:277
 #: usr/share/big-screen-monitor-display/media_player_page.py:374
 msgid "Position"
 msgstr "Розташування"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:778
+#: usr/share/big-screen-monitor-display/config_gui.py:777
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
 msgid "Top left"
 msgstr "Угорі ліворуч"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:778
+#: usr/share/big-screen-monitor-display/config_gui.py:777
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 msgid "Top right"
 msgstr "Угорі праворуч"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:779
+#: usr/share/big-screen-monitor-display/config_gui.py:778
 #: usr/share/big-screen-monitor-display/kojiro_page.py:46
 msgid "Bottom left"
 msgstr "Унизу ліворуч"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:779
+#: usr/share/big-screen-monitor-display/config_gui.py:778
 #: usr/share/big-screen-monitor-display/kojiro_page.py:47
 msgid "Bottom right"
 msgstr "Унизу праворуч"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:780
+#: usr/share/big-screen-monitor-display/config_gui.py:779
 msgid "Background opacity"
 msgstr "Непрозорість тла"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:781
+#: usr/share/big-screen-monitor-display/config_gui.py:780
 msgid "Shrink during stories"
 msgstr "Зменшувати під час історій"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:782
+#: usr/share/big-screen-monitor-display/config_gui.py:781
 msgid "The overlay becomes compact while something important happens."
 msgstr "Накладка стає компактною, коли відбувається щось важливе."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:783
+#: usr/share/big-screen-monitor-display/config_gui.py:782
 msgid "Visible information"
 msgstr "Видима інформація"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:823
+#: usr/share/big-screen-monitor-display/config_gui.py:822
 msgid "Profile for all displays"
 msgstr "Профіль для всіх дисплеїв"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:824
+#: usr/share/big-screen-monitor-display/config_gui.py:823
 msgid "How often the displays are redrawn and the hardware is read. These are limits set by the profile, not measurements; what the service measures is shown below. A display can use its own profile in My Displays."
 msgstr "Як часто перемальовуються дисплеї та зчитуються дані обладнання. Це межі, задані профілем, а не виміри; те, що вимірює служба, показано нижче. Дисплей може використовувати власний профіль у розділі «Мої дисплеї»."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:827
+#: usr/share/big-screen-monitor-display/config_gui.py:826
 msgid "Measured now"
 msgstr "Виміряно зараз"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:827
+#: usr/share/big-screen-monitor-display/config_gui.py:826
 msgid "Reported by the running service."
 msgstr "За даними запущеної служби."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Service CPU"
 msgstr "CPU служби"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Service memory"
 msgstr "Пам'ять служби"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Frames per second"
 msgstr "Кадрів за секунду"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Transfer time"
 msgstr "Час передавання"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Data sent"
 msgstr "Надіслано даних"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Frames skipped"
 msgstr "Пропущено кадрів"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:842
+#: usr/share/big-screen-monitor-display/config_gui.py:841
 msgid "Current state"
 msgstr "Поточний стан"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:844
+#: usr/share/big-screen-monitor-display/config_gui.py:843
 msgid "Service"
 msgstr "Служба"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:844
+#: usr/share/big-screen-monitor-display/config_gui.py:843
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:85
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:216
 msgid "Display"
 msgstr "Дисплей"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:845
+#: usr/share/big-screen-monitor-display/config_gui.py:844
 msgid "Last confirmed transfer"
 msgstr "Останнє підтверджене передавання"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:845
+#: usr/share/big-screen-monitor-display/config_gui.py:844
 msgid "Automatic recoveries"
 msgstr "Автоматичні відновлення"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:846
+#: usr/share/big-screen-monitor-display/config_gui.py:845
 msgid "Pipeline"
 msgstr "Конвеєр"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:852
+#: usr/share/big-screen-monitor-display/config_gui.py:851
 msgid "Tools"
 msgstr "Інструменти"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:854
+#: usr/share/big-screen-monitor-display/config_gui.py:853
 msgid "Recover the display now"
 msgstr "Відновити дисплей зараз"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:854
+#: usr/share/big-screen-monitor-display/config_gui.py:853
 msgid "Reconnects and redraws without restarting the service."
 msgstr "Повторно з'єднує та перемальовує без перезапуску служби."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:855
+#: usr/share/big-screen-monitor-display/config_gui.py:854
 msgid "Recovery requested."
 msgstr "Відновлення запитано."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:856
+#: usr/share/big-screen-monitor-display/config_gui.py:855
 msgid "Restart the service"
 msgstr "Перезапустити службу"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:856
+#: usr/share/big-screen-monitor-display/config_gui.py:855
 msgid "Use if the display stays frozen."
 msgstr "Скористайтеся, якщо дисплей лишається завислим."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:857
+#: usr/share/big-screen-monitor-display/config_gui.py:856
 msgid "Service restarted."
 msgstr "Службу перезапущено."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:858
-#: usr/share/big-screen-monitor-display/config_gui.py:1251
+#: usr/share/big-screen-monitor-display/config_gui.py:857
+#: usr/share/big-screen-monitor-display/config_gui.py:1281
 msgid "Export diagnostics"
 msgstr "Експортувати діагностику"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:858
+#: usr/share/big-screen-monitor-display/config_gui.py:857
 msgid "Saves a report to share when asking for help."
 msgstr "Зберігає звіт, яким можна поділитися, коли просите про допомогу."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:866
+#: usr/share/big-screen-monitor-display/config_gui.py:859
+msgid "Report a problem"
+msgstr "Повідомити про проблему"
+
+#: usr/share/big-screen-monitor-display/config_gui.py:859
+msgid "Copies the diagnostic report and opens the issue form. Review it before posting."
+msgstr "Копіює діагностичний звіт і відкриває форму звіту про помилку. Перегляньте його перед надсиланням."
+
+#: usr/share/big-screen-monitor-display/config_gui.py:868
 msgid "Diagnosis"
 msgstr "Діагностика"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:872
+#: usr/share/big-screen-monitor-display/config_gui.py:874
 msgid "Recent events"
 msgstr "Нещодавні події"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:874
-#: usr/share/big-screen-monitor-display/config_gui.py:1170
+#: usr/share/big-screen-monitor-display/config_gui.py:876
+#: usr/share/big-screen-monitor-display/config_gui.py:1172
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:117
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:231
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:245
@@ -2804,93 +2812,93 @@ msgstr "Нещодавні події"
 msgid "Diagnose"
 msgstr "Діагностувати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:874
+#: usr/share/big-screen-monitor-display/config_gui.py:876
 msgid "Check service, permissions, displays and settings"
 msgstr "Перевірити службу, права доступу, дисплеї та параметри"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:932
+#: usr/share/big-screen-monitor-display/config_gui.py:934
 #, python-brace-format
 msgid "Unsaved changes ({count})"
 msgstr "Незбережені зміни ({count})"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:933
+#: usr/share/big-screen-monitor-display/config_gui.py:935
 msgid "Applying…"
 msgstr "Застосування…"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:967
+#: usr/share/big-screen-monitor-display/config_gui.py:969
 msgid "Changes discarded."
 msgstr "Зміни відкинуто."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:970
+#: usr/share/big-screen-monitor-display/config_gui.py:972
 msgid "Restore defaults?"
 msgstr "Відновити типові значення?"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:971
+#: usr/share/big-screen-monitor-display/config_gui.py:973
 msgid "Every theme, display and performance option goes back to its original value, including the names and themes of each display and the Kojiro layout. Nothing changes on the displays until you press Apply."
 msgstr "Усі параметри тем, дисплеїв і продуктивності повернуться до початкових значень, зокрема назви й теми кожного дисплея та компонування Kojiro. На дисплеях нічого не зміниться, доки ви не натиснете «Застосувати»."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:974
+#: usr/share/big-screen-monitor-display/config_gui.py:976
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1205
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:975
+#: usr/share/big-screen-monitor-display/config_gui.py:977
 msgid "Restore"
 msgstr "Відновити"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:984
+#: usr/share/big-screen-monitor-display/config_gui.py:986
 msgid "Defaults loaded. Press Apply to use them."
 msgstr "Типові значення завантажено. Натисніть «Застосувати», щоб їх використати."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1006
+#: usr/share/big-screen-monitor-display/config_gui.py:1008
 msgid "Settings applied. The display updates in a moment."
 msgstr "Параметри застосовано. Дисплей оновиться за мить."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1013
+#: usr/share/big-screen-monitor-display/config_gui.py:1015
 #, python-brace-format
 msgid "Some values were corrected: {details}"
 msgstr "Деякі значення виправлено: {details}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1018
+#: usr/share/big-screen-monitor-display/config_gui.py:1020
 msgid "Could not apply the settings"
 msgstr "Не вдалося застосувати параметри"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1030
+#: usr/share/big-screen-monitor-display/config_gui.py:1032
 #, python-brace-format
 msgid "Could not configure the sound agent: {error}"
 msgstr "Не вдалося налаштувати звуковий агент: {error}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1042
+#: usr/share/big-screen-monitor-display/config_gui.py:1044
 #: usr/share/big-screen-monitor-display/media_player_page.py:640
 #, python-brace-format
 msgid "Could not start the media agent: {error}"
 msgstr "Не вдалося запустити медіаагент: {error}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1047
+#: usr/share/big-screen-monitor-display/config_gui.py:1049
 msgid "Operation failed"
 msgstr "Не вдалося виконати дію"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1068
+#: usr/share/big-screen-monitor-display/config_gui.py:1070
 msgid "The service will start with the computer."
 msgstr "Служба запускатиметься разом із комп'ютером."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1069
+#: usr/share/big-screen-monitor-display/config_gui.py:1071
 msgid "The service will no longer start with the computer."
 msgstr "Служба більше не запускатиметься разом із комп'ютером."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1074
+#: usr/share/big-screen-monitor-display/config_gui.py:1076
 msgid "Could not change the startup setting"
 msgstr "Не вдалося змінити параметр запуску"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1083
+#: usr/share/big-screen-monitor-display/config_gui.py:1085
 #: usr/share/big-screen-monitor-display/traykit/launch.py:28
 msgid "Close"
 msgstr "Закрити"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1117
+#: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
 #: usr/share/big-screen-monitor-display/screentray/app.py:564
@@ -2899,11 +2907,11 @@ msgstr "Закрити"
 msgid "Service stopped"
 msgstr "Службу зупинено"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1119
+#: usr/share/big-screen-monitor-display/config_gui.py:1121
 msgid "Waiting for a display"
 msgstr "Очікування на дисплей"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1121
+#: usr/share/big-screen-monitor-display/config_gui.py:1123
 #, python-brace-format
 msgid "Running · {count} display"
 msgid_plural "Running · {count} displays"
@@ -2912,18 +2920,18 @@ msgstr[1] "Працює · {count} дисплеї"
 msgstr[2] "Працює · {count} дисплеїв"
 msgstr[3] "Працює · {count} дисплей"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1138
+#: usr/share/big-screen-monitor-display/config_gui.py:1140
 #: usr/share/big-screen-monitor-display/displays_page.py:62
 #: usr/share/big-screen-monitor-display/gui/android_page.py:188
 msgid "The service is not running."
 msgstr "Служба не працює."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1143
+#: usr/share/big-screen-monitor-display/config_gui.py:1145
 #, python-brace-format
 msgid "{fps:.1f} (target {target:g})"
 msgstr "{fps:.1f} (ціль {target:g})"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1147
+#: usr/share/big-screen-monitor-display/config_gui.py:1149
 #, python-brace-format
 msgid "{frames} frame"
 msgid_plural "{frames} frames"
@@ -2932,16 +2940,16 @@ msgstr[1] "{frames} кадри"
 msgstr[2] "{frames} кадрів"
 msgstr[3] "{frames} кадр"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1154
+#: usr/share/big-screen-monitor-display/config_gui.py:1156
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:226
 msgid "The monitor service is not running"
 msgstr "Служба моніторингу не працює"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1155
+#: usr/share/big-screen-monitor-display/config_gui.py:1157
 msgid "Run the diagnosis to find out why, or start the service."
 msgstr "Запустіть діагностику, щоб з'ясувати причину, або запустіть службу."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1156
+#: usr/share/big-screen-monitor-display/config_gui.py:1158
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
@@ -2950,83 +2958,83 @@ msgstr "Запустіть діагностику, щоб з'ясувати пр
 msgid "Start Service"
 msgstr "Запустити службу"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1157
+#: usr/share/big-screen-monitor-display/config_gui.py:1159
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:230
 msgid "Service started."
 msgstr "Службу запущено."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1167
+#: usr/share/big-screen-monitor-display/config_gui.py:1169
 msgid "Everything is working"
 msgstr "Усе працює"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1169
+#: usr/share/big-screen-monitor-display/config_gui.py:1171
 msgid "Attention needed"
 msgstr "Потрібна увага"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1173
+#: usr/share/big-screen-monitor-display/config_gui.py:1175
 #, python-brace-format
 msgid "Running for {time}"
 msgstr "Працює вже {time}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1178
+#: usr/share/big-screen-monitor-display/config_gui.py:1180
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:421
 #, python-brace-format
 msgid "{seconds:.0f} s ago"
 msgstr "{seconds:.0f} с тому"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1179
+#: usr/share/big-screen-monitor-display/config_gui.py:1181
 msgid "Nothing sent yet"
 msgstr "Ще нічого не надіслано"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1181
+#: usr/share/big-screen-monitor-display/config_gui.py:1183
 msgid "A thread stopped making progress."
 msgstr "Потік перестав виконувати роботу."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1182
+#: usr/share/big-screen-monitor-display/config_gui.py:1184
 msgid "Telemetry, rendering and transfer are progressing."
 msgstr "Телеметрія, обробка зображення та передавання працюють."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1205
+#: usr/share/big-screen-monitor-display/config_gui.py:1207
 msgid "No events recorded."
 msgstr "Подій не зареєстровано."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1219
+#: usr/share/big-screen-monitor-display/config_gui.py:1221
 msgid "The diagnosis failed"
 msgstr "Помилка діагностики"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1231
+#: usr/share/big-screen-monitor-display/config_gui.py:1233
 msgid "OK"
 msgstr "Гаразд"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1231
+#: usr/share/big-screen-monitor-display/config_gui.py:1233
 msgid "Problem"
 msgstr "Проблема"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Restart service"
 msgstr "Перезапустити службу"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Recover"
 msgstr "Відновити"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Enable"
 msgstr "Увімкнути"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1236
+#: usr/share/big-screen-monitor-display/config_gui.py:1238
 msgid "Import"
 msgstr "Імпортувати"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1240
+#: usr/share/big-screen-monitor-display/config_gui.py:1242
 msgid "Done."
 msgstr "Готово."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1246
+#: usr/share/big-screen-monitor-display/config_gui.py:1248
 msgid "No problems found."
 msgstr "Проблем не виявлено."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1247
+#: usr/share/big-screen-monitor-display/config_gui.py:1249
 #, python-brace-format
 msgid "{count} item needs attention."
 msgid_plural "{count} items need attention."
@@ -3035,24 +3043,28 @@ msgstr[1] "{count} елементи потребують уваги."
 msgstr[2] "{count} елементів потребують уваги."
 msgstr[3] "{count} елемент потребує уваги."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1270
+#: usr/share/big-screen-monitor-display/config_gui.py:1262
 msgid "(journal not readable by this user)"
 msgstr "(цей користувач не може читати журнал)"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:1276
+msgid "Report copied. Paste it into the form."
+msgstr "Звіт скопійовано. Вставте його у форму."
+
+#: usr/share/big-screen-monitor-display/config_gui.py:1297
 #, python-brace-format
 msgid "Report saved to {path}"
 msgstr "Звіт збережено до {path}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1278
+#: usr/share/big-screen-monitor-display/config_gui.py:1299
 msgid "Could not save the report"
 msgstr "Не вдалося зберегти звіт"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1362
+#: usr/share/big-screen-monitor-display/config_gui.py:1389
 msgid "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
 msgstr "Вільний монітор обладнання для невеликих USB-дисплеїв із темами, островом Brother Away, студією Kojiro та Big Media Player."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1364
+#: usr/share/big-screen-monitor-display/config_gui.py:1391
 msgid "Testing"
 msgstr "Тестування"
 
@@ -4581,7 +4593,7 @@ msgstr "Для цього кулера не знайдено вузла HID."
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:133
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:616
-#: usr/share/big-screen-monitor-display/kojiro_page.py:828
+#: usr/share/big-screen-monitor-display/kojiro_page.py:832
 msgid "group"
 msgstr "група"
 
@@ -4688,9 +4700,9 @@ msgid "Current values"
 msgstr "Поточні значення"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
-#: usr/share/big-screen-monitor-display/kojiro_page.py:738
-#: usr/share/big-screen-monitor-display/kojiro_page.py:741
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:742
+#: usr/share/big-screen-monitor-display/kojiro_page.py:745
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Alerts"
 msgstr "Попередження"
 
@@ -4723,7 +4735,7 @@ msgid "Updates"
 msgstr "Оновлення"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:283
-#: usr/share/big-screen-monitor-display/kojiro_page.py:513
+#: usr/share/big-screen-monitor-display/kojiro_page.py:517
 msgid "Advanced"
 msgstr "Додатково"
 
@@ -4837,7 +4849,7 @@ msgstr "Надсилається як 0, бо кулер не має порож�
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -4887,7 +4899,7 @@ msgid "Only this window. The display themes have their own colours."
 msgstr "Лише це вікно. Теми дисплеїв мають власні кольори."
 
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:71
-#: usr/share/big-screen-monitor-display/kojiro_page.py:655
+#: usr/share/big-screen-monitor-display/kojiro_page.py:659
 #: usr/share/big-screen-monitor-display/media_player_page.py:300
 msgid "Style"
 msgstr "Стиль"
@@ -5089,27 +5101,27 @@ msgid "Kojiro editor: click a widget to select it, drag to move, use the arrow k
 msgstr "Редактор Kojiro: клацніть віджет, щоб вибрати його, перетягніть, щоб пересунути, клавіші зі стрілками — для точного зсуву"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
-#: usr/share/big-screen-monitor-display/kojiro_page.py:658
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:662
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Duplicate"
 msgstr "Дублювати"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
-#: usr/share/big-screen-monitor-display/kojiro_page.py:660
-#: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1191
+#: usr/share/big-screen-monitor-display/kojiro_page.py:664
+#: usr/share/big-screen-monitor-display/kojiro_page.py:666
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
 msgid "Delete"
 msgstr "Вилучити"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:839
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:845
+#: usr/share/big-screen-monitor-display/kojiro_page.py:849
 msgid "Bring to front"
 msgstr "Перенести на передній план"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:847
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send to back"
 msgstr "Перенести на задній план"
 
@@ -5118,8 +5130,8 @@ msgid "Unlock"
 msgstr "Розблокувати"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:844
-#: usr/share/big-screen-monitor-display/kojiro_page.py:652
-#: usr/share/big-screen-monitor-display/kojiro_page.py:838
+#: usr/share/big-screen-monitor-display/kojiro_page.py:656
+#: usr/share/big-screen-monitor-display/kojiro_page.py:842
 msgid "Lock position"
 msgstr "Заблокувати розташування"
 
@@ -5201,7 +5213,7 @@ msgstr "Мініграфік"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:38
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
-#: usr/share/big-screen-monitor-display/kojiro_page.py:697
+#: usr/share/big-screen-monitor-display/kojiro_page.py:701
 msgid "Text"
 msgstr "Текст"
 
@@ -5246,7 +5258,7 @@ msgid "Bars"
 msgstr "Смужки"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1081
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Grid"
 msgstr "Сітка"
 
@@ -5264,7 +5276,7 @@ msgid "Light line"
 msgstr "Світна лінія"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1081
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Dots"
 msgstr "Крапки"
 
@@ -5285,8 +5297,8 @@ msgid "Middle left"
 msgstr "Посередині ліворуч"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Centre"
 msgstr "По центру"
 
@@ -5536,12 +5548,12 @@ msgid "Distribute vertically"
 msgstr "Розподілити вертикально"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:845
+#: usr/share/big-screen-monitor-display/kojiro_page.py:849
 msgid "Bring forward"
 msgstr "Пересунути вперед"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:846
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Send backward"
 msgstr "Пересунути назад"
 
@@ -5632,45 +5644,45 @@ msgstr "Цей дисплей використовує спільне компо
 msgid "Create own layout"
 msgstr "Створити власне компонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:506
+#: usr/share/big-screen-monitor-display/kojiro_page.py:510
 msgid "Element"
 msgstr "Елемент"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:507
-#: usr/share/big-screen-monitor-display/kojiro_page.py:822
+#: usr/share/big-screen-monitor-display/kojiro_page.py:511
+#: usr/share/big-screen-monitor-display/kojiro_page.py:826
 msgid "Layers"
 msgstr "Шари"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:508
+#: usr/share/big-screen-monitor-display/kojiro_page.py:512
 msgid "Background"
 msgstr "Тло"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:512
+#: usr/share/big-screen-monitor-display/kojiro_page.py:516
 msgid "General"
 msgstr "Загальне"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:596
-#: usr/share/big-screen-monitor-display/kojiro_page.py:612
+#: usr/share/big-screen-monitor-display/kojiro_page.py:600
+#: usr/share/big-screen-monitor-display/kojiro_page.py:616
 msgid "Default"
 msgstr "Типовий"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:605
+#: usr/share/big-screen-monitor-display/kojiro_page.py:609
 msgid "This font name cannot be used; choose another font."
 msgstr "Цю назву шрифту використати неможливо; виберіть інший шрифт."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:611
+#: usr/share/big-screen-monitor-display/kojiro_page.py:615
 msgid "Use the default font"
 msgstr "Використовувати типовий шрифт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:631
+#: usr/share/big-screen-monitor-display/kojiro_page.py:635
 msgid "No widget selected"
 msgstr "Не вибрано жодного віджета"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:632
+#: usr/share/big-screen-monitor-display/kojiro_page.py:636
 msgid "Click a widget in the editor, or add one below. Drag to move, use the handles to resize. Shift-click selects several."
 msgstr "Клацніть віджет у редакторі або додайте новий нижче. Перетягуйте, щоб пересунути, використовуйте маркери, щоб змінити розмір. Клацання з Shift вибирає кілька."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:648
+#: usr/share/big-screen-monitor-display/kojiro_page.py:652
 #, python-brace-format
 msgid " (+{n} selected)"
 msgid_plural " (+{n} selected)"
@@ -5679,694 +5691,694 @@ msgstr[1] " (+{n} вибрані)"
 msgstr[2] " (+{n} вибраних)"
 msgstr[3] " (+{n} вибраний)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:651
-#: usr/share/big-screen-monitor-display/kojiro_page.py:834
+#: usr/share/big-screen-monitor-display/kojiro_page.py:655
+#: usr/share/big-screen-monitor-display/kojiro_page.py:838
 msgid "Visible"
 msgstr "Видимий"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:659
+#: usr/share/big-screen-monitor-display/kojiro_page.py:663
 msgid "Reset style"
 msgstr "Скинути стиль"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:668
+#: usr/share/big-screen-monitor-display/kojiro_page.py:672
 msgid "Position and size"
 msgstr "Розташування й розмір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:669
+#: usr/share/big-screen-monitor-display/kojiro_page.py:673
 msgid "In pixels of the preview resolution."
 msgstr "У пікселях роздільності попереднього перегляду."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "X"
 msgstr "X"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "Y"
 msgstr "Y"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "Width"
 msgstr "Ширина"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:674
+#: usr/share/big-screen-monitor-display/kojiro_page.py:678
 msgid "Height"
 msgstr "Висота"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:678
+#: usr/share/big-screen-monitor-display/kojiro_page.py:682
 msgid "Anchor"
 msgstr "Прив'язка"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:680
+#: usr/share/big-screen-monitor-display/kojiro_page.py:684
 msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Кут або край, до якого віджет залишається прив'язаним на екранах інших розмірів."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:681
-#: usr/share/big-screen-monitor-display/kojiro_page.py:892
+#: usr/share/big-screen-monitor-display/kojiro_page.py:685
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Rotation"
 msgstr "Обертання"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:683
+#: usr/share/big-screen-monitor-display/kojiro_page.py:687
 msgid "Centre H"
 msgstr "Центр по горизонталі"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:683
+#: usr/share/big-screen-monitor-display/kojiro_page.py:687
 msgid "Centre V"
 msgstr "Центр по вертикалі"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:689
+#: usr/share/big-screen-monitor-display/kojiro_page.py:693
 msgid "Colours and effects"
 msgstr "Кольори й ефекти"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:690
+#: usr/share/big-screen-monitor-display/kojiro_page.py:694
 msgid "Main colour"
 msgstr "Основний колір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:691
+#: usr/share/big-screen-monitor-display/kojiro_page.py:695
 msgid "Secondary colour"
 msgstr "Додатковий колір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:692
+#: usr/share/big-screen-monitor-display/kojiro_page.py:696
 msgid "Text colour"
 msgstr "Колір тексту"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:693
+#: usr/share/big-screen-monitor-display/kojiro_page.py:697
 msgid "Glow"
 msgstr "Світіння"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:694
+#: usr/share/big-screen-monitor-display/kojiro_page.py:698
 msgid "Opacity"
 msgstr "Непрозорість"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:695
+#: usr/share/big-screen-monitor-display/kojiro_page.py:699
 msgid "Shadow"
 msgstr "Тінь"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:698
+#: usr/share/big-screen-monitor-display/kojiro_page.py:702
 msgid "Font"
 msgstr "Шрифт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:699
+#: usr/share/big-screen-monitor-display/kojiro_page.py:703
 msgid "Bold"
 msgstr "Жирний"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:700
+#: usr/share/big-screen-monitor-display/kojiro_page.py:704
 msgid "Text size (%)"
 msgstr "Розмір тексту (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:701
+#: usr/share/big-screen-monitor-display/kojiro_page.py:705
 msgid "Text style"
 msgstr "Стиль тексту"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
 msgid "Alignment"
 msgstr "Вирівнювання"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Left"
 msgstr "Ліворуч"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Right"
 msgstr "Праворуч"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:705
+#: usr/share/big-screen-monitor-display/kojiro_page.py:709
 msgid "Label (empty = automatic)"
 msgstr "Підпис (порожньо = автоматично)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:706
+#: usr/share/big-screen-monitor-display/kojiro_page.py:710
 msgid "Show label"
 msgstr "Показувати підпис"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:711
 msgid "Show icon"
 msgstr "Показувати піктограму"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:709
+#: usr/share/big-screen-monitor-display/kojiro_page.py:713
 msgid "Decimals"
 msgstr "Десяткові знаки"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Automatic (KB/s, MB/s)"
 msgstr "Автоматично (KB/s, MB/s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Celsius"
 msgstr "Цельсій"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Fahrenheit"
 msgstr "Фаренгейт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:713
+#: usr/share/big-screen-monitor-display/kojiro_page.py:717
 msgid "Unit"
 msgstr "Одиниця"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:716
+#: usr/share/big-screen-monitor-display/kojiro_page.py:720
 msgid "Background panel"
 msgstr "Панель тла"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:717
+#: usr/share/big-screen-monitor-display/kojiro_page.py:721
 msgid "Panel colour"
 msgstr "Колір панелі"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:718
+#: usr/share/big-screen-monitor-display/kojiro_page.py:722
 msgid "Panel opacity"
 msgstr "Непрозорість панелі"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:719
+#: usr/share/big-screen-monitor-display/kojiro_page.py:723
 msgid "Frosted glass (blur behind)"
 msgstr "Матове скло (розмиття позаду)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:720
+#: usr/share/big-screen-monitor-display/kojiro_page.py:724
 msgid "Border"
 msgstr "Рамка"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:721
+#: usr/share/big-screen-monitor-display/kojiro_page.py:725
 msgid "Border colour"
 msgstr "Колір рамки"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:722
+#: usr/share/big-screen-monitor-display/kojiro_page.py:726
 msgid "Corner radius (%)"
 msgstr "Радіус кутів (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:726
+#: usr/share/big-screen-monitor-display/kojiro_page.py:730
 msgid "Data"
 msgstr "Дані"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:730
+#: usr/share/big-screen-monitor-display/kojiro_page.py:734
 msgid "Update interval (s)"
 msgstr "Інтервал оновлення (с)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:732
+#: usr/share/big-screen-monitor-display/kojiro_page.py:736
 #, python-brace-format
 msgid "0 = automatic ({s} s)"
 msgstr "0 = автоматично ({s} с)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:734
+#: usr/share/big-screen-monitor-display/kojiro_page.py:738
 msgid "Hide when unavailable"
 msgstr "Приховувати, якщо недоступно"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:736
+#: usr/share/big-screen-monitor-display/kojiro_page.py:740
 msgid "Smooth transitions"
 msgstr "Плавні переходи"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:739
+#: usr/share/big-screen-monitor-display/kojiro_page.py:743
 msgid "Colour changes gradually towards yellow and red. 0 = automatic: the hardware limit when the chip reports one."
 msgstr "Колір поступово змінюється до жовтого й червоного. 0 = автоматично: апаратна межа, якщо мікросхема її повідомляє."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:743
+#: usr/share/big-screen-monitor-display/kojiro_page.py:747
 #, python-brace-format
 msgid "Warning from ({u})"
 msgstr "Попередження від ({u})"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:745
+#: usr/share/big-screen-monitor-display/kojiro_page.py:749
 #, python-brace-format
 msgid "Critical from ({u})"
 msgstr "Критично від ({u})"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:747
+#: usr/share/big-screen-monitor-display/kojiro_page.py:751
 msgid "Blink when critical"
 msgstr "Блимати при критичному значенні"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:755
+#: usr/share/big-screen-monitor-display/kojiro_page.py:759
 msgid "Automatic (dedicated card)"
 msgstr "Автоматично (дискретна карта)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:768
+#: usr/share/big-screen-monitor-display/kojiro_page.py:772
 msgid "All interfaces"
 msgstr "Усі інтерфейси"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:772
+#: usr/share/big-screen-monitor-display/kojiro_page.py:776
 msgid "First spinning fan"
 msgstr "Перший вентилятор, що обертається"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:777
+#: usr/share/big-screen-monitor-display/kojiro_page.py:781
 msgid "Automatic (CPU package)"
 msgstr "Автоматично (корпус CPU)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:823
+#: usr/share/big-screen-monitor-display/kojiro_page.py:827
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Верхній у списку малюється згори. Клацніть, щоб вибрати."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:860
+#: usr/share/big-screen-monitor-display/kojiro_page.py:864
 msgid "Wallpaper"
 msgstr "Шпалери"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:861
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Вбудовані малюнки, власні зображення, колір або градієнт."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:868
+#: usr/share/big-screen-monitor-display/kojiro_page.py:872
 msgid "Imported"
 msgstr "Імпортовані"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:876
 msgid "Import image…"
 msgstr "Імпортувати зображення…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:880
 msgid "Colour or gradient"
 msgstr "Колір або градієнт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
 msgid "Use"
 msgstr "Використовувати"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "The image above"
 msgstr "Зображення вище"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Solid colour"
 msgstr "Суцільний колір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:878
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Gradient"
 msgstr "Градієнт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:885
 msgid "Colour"
 msgstr "Колір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Second colour"
 msgstr "Другий колір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:883
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Gradient angle"
 msgstr "Кут градієнта"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:884
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Fit and position"
 msgstr "Припасування й розташування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit"
 msgstr "Припасування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fill the screen (crop)"
 msgstr "Заповнити екран (з обрізанням)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit whole image"
 msgstr "Вмістити все зображення"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Stretch"
 msgstr "Розтягнути"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Tile"
 msgstr "Мозаїка"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Original size"
 msgstr "Початковий розмір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Zoom (%)"
 msgstr "Масштаб (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:894
 msgid "Horizontal offset"
 msgstr "Горизонтальний зсув"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Vertical offset"
 msgstr "Вертикальний зсув"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Mirror"
 msgstr "Віддзеркалити"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:899
 msgid "Flip vertically"
 msgstr "Перевернути вертикально"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Adjustments"
 msgstr "Коригування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:897
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Contrast"
 msgstr "Контрастність"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Saturation"
 msgstr "Насиченість"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Gamma"
 msgstr "Гама"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Blur"
 msgstr "Розмиття"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Darken"
 msgstr "Затемнення"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Vignette"
 msgstr "Віньєтка"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Tint colour"
 msgstr "Колір тонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:907
 msgid "Tint strength"
 msgstr "Сила тонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Text protection gradient"
 msgstr "Захисний градієнт під текстом"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Gradient side"
 msgstr "Бік градієнта"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "Знизу"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Згори"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Top and bottom"
 msgstr "Згори й знизу"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Reset adjustments"
 msgstr "Скинути коригування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:937
+#: usr/share/big-screen-monitor-display/kojiro_page.py:941
 msgid "Remove this wallpaper"
 msgstr "Вилучити ці шпалери"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:976
+#: usr/share/big-screen-monitor-display/kojiro_page.py:980
 msgid "Choose a wallpaper"
 msgstr "Виберіть шпалери"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:977
+#: usr/share/big-screen-monitor-display/kojiro_page.py:981
 msgid "Images"
 msgstr "Зображення"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:990
+#: usr/share/big-screen-monitor-display/kojiro_page.py:994
 msgid "Importing the image…"
 msgstr "Імпортування зображення…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1007
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Не вдалося імпортувати зображення"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1012
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Шпалери імпортовано. Ваш початковий файл не змінено."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1028
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
 msgid "The wallpaper could not be removed"
 msgstr "Не вдалося вилучити шпалери"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1045
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
 msgid "Presets"
 msgstr "Шаблони"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1046
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Замінює віджети готовою композицією (Ctrl+Z скасовує це). Імпортовані шпалери зберігаються."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1069
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
 msgid "Colour palette"
 msgstr "Палітра кольорів"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1070
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
 msgid "Recolours every widget with a palette."
 msgstr "Перефарбовує всі віджети за палітрою."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1078
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
 msgid "Text and background effect"
 msgstr "Ефект тексту й тла"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1079
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
 msgid "Font for all widgets"
 msgstr "Шрифт для всіх віджетів"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Background effect"
 msgstr "Ефект тла"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Scanlines"
 msgstr "Рядки розгортки"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Effect strength"
 msgstr "Сила ефекту"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect colour"
 msgstr "Колір ефекту"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
 msgid "Readability panels"
 msgstr "Панелі для читабельності"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
 msgid "Automatic (bright or busy areas)"
 msgstr "Автоматично (яскраві або строкаті ділянки)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Завжди"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Ніколи"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Додає темну напівпрозору панель позаду віджетів, які було б важко прочитати."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
 msgid "Animations and alerts"
 msgstr "Анімації й попередження"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Анімації"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Fan spin, smooth values and pulses."
 msgstr "Обертання вентилятора, плавні значення та пульсації."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 msgid "Reduce motion"
 msgstr "Зменшити рух"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Animation speed (%)"
 msgstr "Швидкість анімації (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Pulse on critical values"
 msgstr "Пульсація на критичних значеннях"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Turns every visual alert off when disabled."
 msgstr "Якщо вимкнено, вимикає всі візуальні попередження."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Hysteresis"
 msgstr "Гістерезис"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "How far a value must drop before an alert ends."
 msgstr "Наскільки має знизитися значення, щоб попередження зникло."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Cooldown (s)"
 msgstr "Затримка (с)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "Minimum time before an alert can calm down."
 msgstr "Мінімальний час, перш ніж попередження може згаснути."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1109
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Шаблон застосовано. Ctrl+Z відновлює попереднє компонування."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1138
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
 msgid "My presets"
 msgstr "Мої шаблони"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1139
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
 msgid "Saved on this computer for your user."
 msgstr "Зберігаються на цьому комп'ютері для вашого користувача."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
 msgid "Delete preset"
 msgstr "Вилучити шаблон"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1150
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
 msgid "Save current layout as preset…"
 msgstr "Зберегти поточне компонування як шаблон…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1153
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
 msgid "Import and export"
 msgstr "Імпорт і експорт"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Діліться компонуваннями як файлом .json або як пакунком, який може містити шпалери."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1155
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Export layout (.json)…"
 msgstr "Експортувати компонування (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Export package (.kojiro.zip)…"
 msgstr "Експортувати пакунок (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Import layout or package…"
 msgstr "Імпортувати компонування або пакунок…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
 msgid "Restore the default layout"
 msgstr "Відновити типове компонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Компонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1167
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Розташування зберігаються відносно еталонної роздільності; прив'язки утримують віджети на місці на інших екранах."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
 msgid "Reference resolution"
 msgstr "Еталонна роздільність"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
 msgid "Use the preview resolution as reference"
 msgstr "Використати роздільність попереднього перегляду як еталонну"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Keeps every widget where it is now"
 msgstr "Залишає кожен віджет там, де він є зараз"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
 msgid "Portrait layout"
 msgstr "Книжкове компонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Автоматично (переставлено з альбомного компонування)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Customised"
 msgstr "Налаштоване"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Back to automatic"
 msgstr "Повернутися до автоматичного"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
 msgid "Grid size (px)"
 msgstr "Розмір сітки (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Safe margin (px)"
 msgstr "Безпечне поле (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Show overlaps of the selection"
 msgstr "Показувати перекриття вибраного"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Keyboard"
 msgstr "Клавіатура"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1191
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Пересунути на 1 px (Shift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Undo / redo"
 msgstr "Скасувати / повторити"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1193
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Select all"
 msgstr "Вибрати все"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1193
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Group (Shift: ungroup)"
 msgstr "Згрупувати (Shift: розгрупувати)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Copy / paste style"
 msgstr "Копіювати / вставити стиль"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Порядок шарів (Ctrl: на передній/задній план)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Apply to the display"
 msgstr "Застосувати до дисплея"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Clear selection"
 msgstr "Зняти вибір"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
 msgid "Save preset"
 msgstr "Зберегти шаблон"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
 msgid "Name of the preset:"
 msgstr "Назва шаблону:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1203
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
 msgid "My layout"
 msgstr "Моє компонування"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
 msgid "Save"
 msgstr "Зберегти"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1215
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
 msgid "Preset saved."
 msgstr "Шаблон збережено."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1217
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Could not save the preset"
 msgstr "Не вдалося зберегти шаблон"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1226
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
 msgid "Could not load the preset"
 msgstr "Не вдалося завантажити шаблон"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1235
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
 msgid "Could not delete the preset"
 msgstr "Не вдалося вилучити шаблон"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1243
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
@@ -6375,122 +6387,122 @@ msgstr[1] "Завантажено; {n} некоректні значення з�
 msgstr[2] "Завантажено; {n} некоректних значень замінено типовими."
 msgstr[3] "Завантажено; {n} некоректне значення замінено типовим."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
 msgid "Layout loaded."
 msgstr "Компонування завантажено."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1250
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
 msgid "Export Kojiro layout"
 msgstr "Експорт компонування Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1262
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
 msgid "Layout exported."
 msgstr "Компонування експортовано."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1279
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
 msgid "Package exported."
 msgstr "Пакунок експортовано."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1281
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Could not export"
 msgstr "Не вдалося експортувати"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1286
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
 msgid "Include your wallpaper?"
 msgstr "Включити ваші шпалери?"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Компонування використовує імпортоване вами зображення. Включайте його, лише якщо маєте право ним ділитися; інакше пакунок використає вбудовані шпалери."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1289
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "Do not include"
 msgstr "Не включати"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
 msgid "Include the image"
 msgstr "Включити зображення"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
 msgid "Import Kojiro layout"
 msgstr "Імпорт компонування Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
 msgid "Kojiro layouts"
 msgstr "Компонування Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1333
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
 msgid "Could not import"
 msgstr "Не вдалося імпортувати"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1346
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
 msgid "Sensors on this computer"
 msgstr "Датчики на цьому комп'ютері"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1347
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Що можуть показувати віджети. Необов'язкові датчики зчитуються лише тоді, коли їх використовує видимий віджет."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 msgid "limit"
 msgstr "межа"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 msgid "no hardware limit reported"
 msgstr "апаратну межу не повідомлено"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "кодування/декодування відео: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
 msgid "not reported"
 msgstr "не повідомляється"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1363
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "Fans"
 msgstr "Вентилятори"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1363
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "none reported"
 msgstr "не повідомлено жодного"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Диск {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 msgid "no temperature sensor"
 msgstr "немає датчика температури"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
 msgid "Rendering"
 msgstr "Рендеринг"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1372
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
 msgid "Last preview frame"
 msgstr "Останній кадр попереднього перегляду"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1373
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "Cached widget layers"
 msgstr "Кешовані шари віджетів"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
 msgid "Optional collectors used"
 msgstr "Використані необов'язкові збирачі даних"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "немає"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
 msgid "Settings size"
 msgstr "Розмір параметрів"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
 msgid "Refresh"
 msgstr "Оновити"
 

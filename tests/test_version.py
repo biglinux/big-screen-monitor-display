@@ -32,3 +32,7 @@ def test_android_matches():
 
 def test_readme_badge_matches():
     assert f"vers%C3%A3o-{__version__}-" in read("README.md")
+
+
+def test_changelog_has_current_version():
+    assert f"## [{__version__}]" in read("CHANGELOG.md")

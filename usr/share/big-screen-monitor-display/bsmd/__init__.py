@@ -13,3 +13,6 @@ APP_ID = "big-screen-monitor-display"          # program name, X11 WM_CLASS, ico
 APPLICATION_ID = "br.com.biglinux.BigScreenMonitorDisplay"
 DESKTOP_FILE = APPLICATION_ID + ".desktop"
 SERVICE_NAME = "big-screen-monitor-display.service"
+# Where development, releases and issues live (the APK link and "Report a problem").
+PROJECT_URL = "https://github.com/ruscher/big-screen-monitor-display"
+ISSUES_NEW_URL = PROJECT_URL + "/issues/new/choose"

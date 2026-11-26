@@ -1,0 +1,16 @@
+name: "Ideia / Feature request"
+description: "Um tema, um recurso ou uma melhoria. / A theme, a feature or an improvement."
+title: "[ideia] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Que problema isso resolve? / What problem does it solve?"
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: "Como você imagina? / How do you picture it?"
+      description: "Esboços e imagens ajudam. / Sketches and images help."

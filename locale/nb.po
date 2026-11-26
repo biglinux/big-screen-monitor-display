@@ -84,7 +84,7 @@ msgid "No media playing"
 msgstr "Ingen medier spilles"
 
 #: usr/share/big-screen-monitor-display/bsmd/bigmedia/__init__.py:1021
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Time"
 msgstr "Tid"
 
@@ -497,8 +497,8 @@ msgid "Authorization was cancelled or denied."
 msgstr "Autorisasjonen ble avbrutt eller avslått."
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
-#: usr/share/big-screen-monitor-display/config_gui.py:1082
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1007
+#: usr/share/big-screen-monitor-display/config_gui.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Ukjent feil"
@@ -633,8 +633,8 @@ msgstr "des"
 
 #: usr/share/big-screen-monitor-display/bsmd/dashboard.py:251
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:45
-#: usr/share/big-screen-monitor-display/config_gui.py:661
-#: usr/share/big-screen-monitor-display/config_gui.py:785
+#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:784
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "Disk"
 msgstr "Disk"
@@ -1000,8 +1000,8 @@ msgid "CPU temperature"
 msgstr "CPU-temperatur"
 
 #: usr/share/big-screen-monitor-display/bsmd/displays/deepcool/models.py:19
-#: usr/share/big-screen-monitor-display/config_gui.py:676
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:675
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:168
 msgid "CPU usage"
 msgstr "CPU-bruk"
@@ -1015,7 +1015,7 @@ msgid "CPU frequency"
 msgstr "CPU-frekvens"
 
 #: usr/share/big-screen-monitor-display/bsmd/displays/deepcool/models.py:20
-#: usr/share/big-screen-monitor-display/config_gui.py:676
+#: usr/share/big-screen-monitor-display/config_gui.py:675
 msgid "Memory usage"
 msgstr "Minnebruk"
 
@@ -1259,7 +1259,7 @@ msgid "no sensors"
 msgstr "ingen sensorer"
 
 #: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
-#: usr/share/big-screen-monitor-display/config_gui.py:701
+#: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "Disk-I/U"
 
@@ -1352,13 +1352,13 @@ msgstr "på batteri"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:35
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 #: usr/share/big-screen-monitor-display/kojiro_page.py:60
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "GPU"
@@ -1395,24 +1395,24 @@ msgid "Upload"
 msgstr "Opplasting"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:50
-#: usr/share/big-screen-monitor-display/config_gui.py:784
+#: usr/share/big-screen-monitor-display/config_gui.py:783
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "Clock"
 msgstr "Klokke"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:652
+#: usr/share/big-screen-monitor-display/config_gui.py:651
 #: usr/share/big-screen-monitor-display/media_player_page.py:226
 msgid "Distribution logo"
 msgstr "Distribusjonslogo"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:52
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 msgid "CPU cores"
 msgstr "CPU-kjerner"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:53
-#: usr/share/big-screen-monitor-display/config_gui.py:699
+#: usr/share/big-screen-monitor-display/config_gui.py:698
 msgid "Uptime"
 msgstr "Oppetid"
 
@@ -1429,7 +1429,7 @@ msgid "Local IP"
 msgstr "Lokal IP"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:57
-#: usr/share/big-screen-monitor-display/config_gui.py:704
+#: usr/share/big-screen-monitor-display/config_gui.py:703
 msgid "Battery"
 msgstr "Batteri"
 
@@ -1438,7 +1438,7 @@ msgid "Power profile"
 msgstr "Strømprofil"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:59
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Top processes"
 msgstr "Mest krevende prosesser"
 
@@ -1530,7 +1530,7 @@ msgstr "Fargeoverganger"
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:891
-#: usr/share/big-screen-monitor-display/config_gui.py:567
+#: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
 #: usr/share/big-screen-monitor-display/screentray/app.py:602
@@ -1636,7 +1636,7 @@ msgid "any (responsive: micro, portrait, landscape, ultrawide)"
 msgstr "alle (responsivt: mikro, stående, liggende, ultrabred)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:93
-#: usr/share/big-screen-monitor-display/config_gui.py:56
+#: usr/share/big-screen-monitor-display/config_gui.py:55
 #: usr/share/big-screen-monitor-display/gui/brother_away_page.py:73
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:78
 msgid "Brother Away"
@@ -1648,7 +1648,7 @@ msgid "Kojiro"
 msgstr "Kojiro"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:94
-#: usr/share/big-screen-monitor-display/config_gui.py:55
+#: usr/share/big-screen-monitor-display/config_gui.py:54
 #: usr/share/big-screen-monitor-display/media_player_page.py:166
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:83
 msgid "Big Media Player"
@@ -1752,30 +1752,30 @@ msgstr "På fisketur"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:134
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:637
-#: usr/share/big-screen-monitor-display/config_gui.py:731
+#: usr/share/big-screen-monitor-display/config_gui.py:636
+#: usr/share/big-screen-monitor-display/config_gui.py:730
 #: usr/share/big-screen-monitor-display/screentray/app.py:294
 msgid "Colour scheme"
 msgstr "Fargeoppsett"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:136
-#: usr/share/big-screen-monitor-display/config_gui.py:684
+#: usr/share/big-screen-monitor-display/config_gui.py:683
 msgid "Visual style"
 msgstr "Visuell stil"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:137
-#: usr/share/big-screen-monitor-display/config_gui.py:685
+#: usr/share/big-screen-monitor-display/config_gui.py:684
 msgid "Classic (green phosphor)"
 msgstr "Klassisk (grønt fosfor)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:714
+#: usr/share/big-screen-monitor-display/config_gui.py:713
 #: usr/share/big-screen-monitor-display/screentray/app.py:294
 msgid "Accent colour"
 msgstr "Aksentfarge"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:48
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
@@ -1783,7 +1783,7 @@ msgid "Blue"
 msgstr "Blå"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:140
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:47
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
@@ -1792,8 +1792,8 @@ msgstr "Grønn"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:141
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:145
-#: usr/share/big-screen-monitor-display/config_gui.py:715
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:714
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/kojiro_page.py:53
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
@@ -1801,13 +1801,13 @@ msgid "Amber"
 msgstr "Ravgul"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:141
-#: usr/share/big-screen-monitor-display/config_gui.py:715
+#: usr/share/big-screen-monitor-display/config_gui.py:714
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:66
 msgid "Violet"
 msgstr "Fiolett"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:142
-#: usr/share/big-screen-monitor-display/config_gui.py:716
+#: usr/share/big-screen-monitor-display/config_gui.py:715
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:47
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:67
@@ -1815,19 +1815,19 @@ msgid "Red"
 msgstr "Rød"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
 msgid "Classic grey"
 msgstr "Klassisk grå"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:144
-#: usr/share/big-screen-monitor-display/config_gui.py:732
+#: usr/share/big-screen-monitor-display/config_gui.py:731
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:68
 msgid "Slate (dark)"
 msgstr "Skifer (mørk)"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:145
-#: usr/share/big-screen-monitor-display/config_gui.py:733
+#: usr/share/big-screen-monitor-display/config_gui.py:732
 #: usr/share/big-screen-monitor-display/screentray/catalog.py:69
 msgid "Plum"
 msgstr "Plomme"
@@ -1839,13 +1839,13 @@ msgstr "Drakt"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:888
-#: usr/share/big-screen-monitor-display/config_gui.py:636
-#: usr/share/big-screen-monitor-display/config_gui.py:683
-#: usr/share/big-screen-monitor-display/config_gui.py:713
-#: usr/share/big-screen-monitor-display/config_gui.py:730
+#: usr/share/big-screen-monitor-display/config_gui.py:635
+#: usr/share/big-screen-monitor-display/config_gui.py:682
+#: usr/share/big-screen-monitor-display/config_gui.py:712
+#: usr/share/big-screen-monitor-display/config_gui.py:729
 #: usr/share/big-screen-monitor-display/displays_page.py:379
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:69
-#: usr/share/big-screen-monitor-display/kojiro_page.py:510
+#: usr/share/big-screen-monitor-display/kojiro_page.py:514
 #: usr/share/big-screen-monitor-display/media_player_page.py:190
 msgid "Appearance"
 msgstr "Utseende"
@@ -1864,8 +1864,8 @@ msgstr "Ingen mediespiller"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:884
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:999
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:688
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
@@ -1934,99 +1934,99 @@ msgstr "Dette temaet har ingen alternativer her."
 msgid "Touch test - hold to leave"
 msgstr "Berøringstest – hold for å avslutte"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:50
 #: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:52
 msgid "Overview"
 msgstr "Oversikt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/config_gui.py:275
+#: usr/share/big-screen-monitor-display/config_gui.py:50
+#: usr/share/big-screen-monitor-display/config_gui.py:274
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:126
 msgid "Home"
 msgstr "Hjem"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:52
+#: usr/share/big-screen-monitor-display/config_gui.py:51
 #: usr/share/big-screen-monitor-display/displays_page.py:146
 msgid "My Displays"
 msgstr "Mine skjermer"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:52
 #: usr/share/big-screen-monitor-display/config_gui.py:53
 #: usr/share/big-screen-monitor-display/config_gui.py:54
 #: usr/share/big-screen-monitor-display/config_gui.py:55
-#: usr/share/big-screen-monitor-display/config_gui.py:56
-#: usr/share/big-screen-monitor-display/config_gui.py:1009
+#: usr/share/big-screen-monitor-display/config_gui.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:162
 msgid "Customise"
 msgstr "Tilpass"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:53
+#: usr/share/big-screen-monitor-display/config_gui.py:52
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:82
 msgid "Theme Gallery"
 msgstr "Temagalleri"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:54
-#: usr/share/big-screen-monitor-display/config_gui.py:419
+#: usr/share/big-screen-monitor-display/config_gui.py:53
+#: usr/share/big-screen-monitor-display/config_gui.py:418
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:115
 msgid "Kojiro Design Studio"
 msgstr "Kojiro Design Studio"
 
+#: usr/share/big-screen-monitor-display/config_gui.py:56
 #: usr/share/big-screen-monitor-display/config_gui.py:57
 #: usr/share/big-screen-monitor-display/config_gui.py:58
-#: usr/share/big-screen-monitor-display/config_gui.py:59
 msgid "System"
 msgstr "System"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:57
-#: usr/share/big-screen-monitor-display/config_gui.py:571
-#: usr/share/big-screen-monitor-display/config_gui.py:837
+#: usr/share/big-screen-monitor-display/config_gui.py:56
+#: usr/share/big-screen-monitor-display/config_gui.py:570
+#: usr/share/big-screen-monitor-display/config_gui.py:836
 #: usr/share/big-screen-monitor-display/displays_page.py:411
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:94
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:275
 msgid "Performance"
 msgstr "Ytelse"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:58
-#: usr/share/big-screen-monitor-display/config_gui.py:880
+#: usr/share/big-screen-monitor-display/config_gui.py:57
+#: usr/share/big-screen-monitor-display/config_gui.py:882
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:307
 #: usr/share/big-screen-monitor-display/media_player_page.py:516
 msgid "Diagnostics"
 msgstr "Diagnostikk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:59
-#: usr/share/big-screen-monitor-display/config_gui.py:330
+#: usr/share/big-screen-monitor-display/config_gui.py:58
+#: usr/share/big-screen-monitor-display/config_gui.py:329
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:122
 msgid "Preferences"
 msgstr "Innstillinger"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:65
+#: usr/share/big-screen-monitor-display/config_gui.py:64
 #, python-brace-format
 msgid "Up to {fps:g} frames per second in animated themes, less on slow serial panels, on battery or when the computer is busy. Hardware data every {telemetry:g} s."
 msgstr "Opptil {fps:g} bilder per sekund i animerte temaer, færre på trege serielle paneler, på batteri eller når datamaskinen er sterkt belastet. Maskinvaredata leses med {telemetry:g} s mellomrom."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:67
+#: usr/share/big-screen-monitor-display/config_gui.py:66
 #, python-brace-format
 msgid "Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every {telemetry:g} s. Lowest CPU use."
 msgstr "Opptil {fps:g} bilder per sekund; dashbord tegnes på nytt med {period:g} s mellomrom; maskinvaredata leses med {telemetry:g} s mellomrom. Lavest CPU-bruk."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:69
+#: usr/share/big-screen-monitor-display/config_gui.py:68
 #, python-brace-format
 msgid "Up to {fps:g} frames per second; dashboards redrawn every {period:g} s; hardware data every {telemetry:g} s."
 msgstr "Opptil {fps:g} bilder per sekund; dashbord tegnes på nytt med {period:g} s mellomrom; maskinvaredata leses med {telemetry:g} s mellomrom."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:71
+#: usr/share/big-screen-monitor-display/config_gui.py:70
 #, python-brace-format
 msgid "Up to {fps:g} frames per second for smoother animation; dashboards every {period:g} s; hardware data every {telemetry:g} s. Uses more CPU."
 msgstr "Opptil {fps:g} bilder per sekund for jevnere animasjon; dashbord med {period:g} s mellomrom; maskinvaredata med {telemetry:g} s mellomrom. Bruker mer CPU."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:572
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:571
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 msgid "Economy"
 msgstr "Sparsom"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:573
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:572
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/gui/android_page.py:40
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
@@ -2034,43 +2034,43 @@ msgstr "Sparsom"
 msgid "Balanced"
 msgstr "Balansert"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:74
-#: usr/share/big-screen-monitor-display/config_gui.py:573
+#: usr/share/big-screen-monitor-display/config_gui.py:73
+#: usr/share/big-screen-monitor-display/config_gui.py:572
 #: usr/share/big-screen-monitor-display/displays_page.py:48
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/media_player_page.py:198
 msgid "Fluid"
 msgstr "Flytende"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:239
-#: usr/share/big-screen-monitor-display/config_gui.py:1316
-#: usr/share/big-screen-monitor-display/config_gui.py:1358
+#: usr/share/big-screen-monitor-display/config_gui.py:238
+#: usr/share/big-screen-monitor-display/config_gui.py:1337
+#: usr/share/big-screen-monitor-display/config_gui.py:1385
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:64
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:113
 msgid "Big Screen Monitor Display"
 msgstr "Big Screen Monitor Display"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:262
+#: usr/share/big-screen-monitor-display/config_gui.py:261
 msgid "Start with the computer"
 msgstr "Start sammen med datamaskinen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:263
+#: usr/share/big-screen-monitor-display/config_gui.py:262
 msgid "Runs the monitor service at boot"
 msgstr "Kjører overvåkingstjenesten ved oppstart"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:307
+#: usr/share/big-screen-monitor-display/config_gui.py:306
 msgid "Sections"
 msgstr "Seksjoner"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:329
+#: usr/share/big-screen-monitor-display/config_gui.py:328
 msgid "Restore Defaults…"
 msgstr "Gjenopprett standardverdier…"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:333
+#: usr/share/big-screen-monitor-display/config_gui.py:332
 msgid "About Big Screen Monitor Display"
 msgstr "Om Big Screen Monitor Display"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:334
+#: usr/share/big-screen-monitor-display/config_gui.py:333
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
@@ -2078,141 +2078,141 @@ msgstr "Om Big Screen Monitor Display"
 msgid "Quit"
 msgstr "Avslutt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:337
-#: usr/share/big-screen-monitor-display/config_gui.py:357
+#: usr/share/big-screen-monitor-display/config_gui.py:336
+#: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
 #: usr/share/big-screen-monitor-display/screentray/app.py:541
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:339
+#: usr/share/big-screen-monitor-display/config_gui.py:338
 msgid "Main Menu"
 msgstr "Hovedmeny"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:349
+#: usr/share/big-screen-monitor-display/config_gui.py:348
 msgid "Open the diagnostics"
 msgstr "Åpne diagnostikken"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:436
+#: usr/share/big-screen-monitor-display/config_gui.py:435
 msgid "This theme is not in use on any display."
 msgstr "Dette temaet er ikke i bruk på noen skjerm."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:436
+#: usr/share/big-screen-monitor-display/config_gui.py:435
 msgid "Use It"
 msgstr "Bruk det"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:438
+#: usr/share/big-screen-monitor-display/config_gui.py:437
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:193
 msgid "Theme selected. Press Apply to send it to the display."
 msgstr "Tema valgt. Trykk på Bruk for å sende det til skjermen."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:565
+#: usr/share/big-screen-monitor-display/config_gui.py:564
 msgid "Defaults for all displays"
 msgstr "Standardverdier for alle skjermer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:566
+#: usr/share/big-screen-monitor-display/config_gui.py:565
 msgid "Used by every display that does not set its own value."
 msgstr "Brukes av alle skjermer som ikke har en egen verdi."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:568
+#: usr/share/big-screen-monitor-display/config_gui.py:567
 #: usr/share/big-screen-monitor-display/displays_page.py:44
 msgid "Horizontal (landscape)"
 msgstr "Vannrett (liggende)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:568
+#: usr/share/big-screen-monitor-display/config_gui.py:567
 #: usr/share/big-screen-monitor-display/displays_page.py:44
 msgid "Vertical (portrait)"
 msgstr "Loddrett (stående)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:569
+#: usr/share/big-screen-monitor-display/config_gui.py:568
 #: usr/share/big-screen-monitor-display/displays_page.py:45
 msgid "Horizontal, upside down"
 msgstr "Vannrett, opp ned"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:569
+#: usr/share/big-screen-monitor-display/config_gui.py:568
 #: usr/share/big-screen-monitor-display/displays_page.py:46
 msgid "Vertical, upside down"
 msgstr "Loddrett, opp ned"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:570
+#: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:897
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
 #: usr/share/big-screen-monitor-display/screentray/app.py:590
 msgid "Brightness"
 msgstr "Lysstyrke"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:572
+#: usr/share/big-screen-monitor-display/config_gui.py:571
 #: usr/share/big-screen-monitor-display/displays_page.py:47
 #: usr/share/big-screen-monitor-display/media_player_page.py:239
 msgid "Automatic (recommended)"
 msgstr "Automatisk (anbefalt)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:574
+#: usr/share/big-screen-monitor-display/config_gui.py:573
 msgid "Automatic detection"
 msgstr "Automatisk gjenkjenning"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:575
+#: usr/share/big-screen-monitor-display/config_gui.py:574
 msgid "All supported models"
 msgstr "Alle støttede modeller"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:575
+#: usr/share/big-screen-monitor-display/config_gui.py:574
 msgid "Only AX206 (USB photo frame)"
 msgstr "Bare AX206 (USB-fotoramme)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:576
+#: usr/share/big-screen-monitor-display/config_gui.py:575
 msgid "Only Turing Smart Screen 3.5\" (USB serial)"
 msgstr "Bare Turing Smart Screen 3.5\" (USB-seriell)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:577
+#: usr/share/big-screen-monitor-display/config_gui.py:576
 msgid "Limits which detected displays start automatically."
 msgstr "Begrenser hvilke gjenkjente skjermer som starter automatisk."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:578
+#: usr/share/big-screen-monitor-display/config_gui.py:577
 msgid "Preview size"
 msgstr "Størrelse på forhåndsvisning"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:580
+#: usr/share/big-screen-monitor-display/config_gui.py:579
 msgid "Used for the previews while no display is connected."
 msgstr "Brukes til forhåndsvisningene mens ingen skjerm er tilkoblet."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:591
+#: usr/share/big-screen-monitor-display/config_gui.py:590
 msgid "Discard"
 msgstr "Forkast"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:591
+#: usr/share/big-screen-monitor-display/config_gui.py:590
 msgid "Discard unsaved changes"
 msgstr "Forkast endringer som ikke er lagret"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:594
+#: usr/share/big-screen-monitor-display/config_gui.py:593
 msgid "Apply"
 msgstr "Bruk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:594
+#: usr/share/big-screen-monitor-display/config_gui.py:593
 msgid "Save and send to the displays (Ctrl+S)"
 msgstr "Lagre og send til skjermene (Ctrl+S)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:639
-#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:638
+#: usr/share/big-screen-monitor-display/config_gui.py:688
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
 msgid "Text size"
 msgstr "Tekststørrelse"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
 #: usr/share/big-screen-monitor-display/media_player_page.py:202
 msgid "Small"
 msgstr "Liten"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:34
 #: usr/share/big-screen-monitor-display/kojiro_page.py:48
 #: usr/share/big-screen-monitor-display/media_player_page.py:200
@@ -2221,570 +2221,578 @@ msgstr "Liten"
 msgid "Normal"
 msgstr "Normal"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:640
-#: usr/share/big-screen-monitor-display/config_gui.py:690
-#: usr/share/big-screen-monitor-display/config_gui.py:692
+#: usr/share/big-screen-monitor-display/config_gui.py:639
+#: usr/share/big-screen-monitor-display/config_gui.py:689
+#: usr/share/big-screen-monitor-display/config_gui.py:691
 #: usr/share/big-screen-monitor-display/media_player_page.py:201
 #: usr/share/big-screen-monitor-display/media_player_page.py:203
 msgid "Large"
 msgstr "Stor"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:641
+#: usr/share/big-screen-monitor-display/config_gui.py:640
 msgid "Bar style"
 msgstr "Søylestil"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 #: usr/share/big-screen-monitor-display/media_player_page.py:205
 msgid "Rounded"
 msgstr "Avrundet"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 msgid "Flat"
 msgstr "Flat"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:642
+#: usr/share/big-screen-monitor-display/config_gui.py:641
 msgid "Segmented"
 msgstr "Segmentert"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:643
+#: usr/share/big-screen-monitor-display/config_gui.py:642
 msgid "Coloured labels"
 msgstr "Fargede etiketter"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:644
+#: usr/share/big-screen-monitor-display/config_gui.py:643
 msgid "Alert colours"
 msgstr "Varselfarger"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:645
+#: usr/share/big-screen-monitor-display/config_gui.py:644
 msgid "Bars turn orange above 75% and red above 90%."
 msgstr "Søylene blir oransje over 75 % og røde over 90 %."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:646
+#: usr/share/big-screen-monitor-display/config_gui.py:645
 msgid "History in the background"
 msgstr "Historikk i bakgrunnen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:647
+#: usr/share/big-screen-monitor-display/config_gui.py:646
 msgid "A faint graph of the last 30 seconds behind each item."
 msgstr "En svak graf over de siste 30 sekundene bak hvert element."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:650
+#: usr/share/big-screen-monitor-display/config_gui.py:649
 msgid "Header"
 msgstr "Topptekst"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:651
+#: usr/share/big-screen-monitor-display/config_gui.py:650
 msgid "Show header"
 msgstr "Vis topptekst"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:653
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:652
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Host name and kernel"
 msgstr "Vertsnavn og kjerne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:654
-#: usr/share/big-screen-monitor-display/config_gui.py:698
+#: usr/share/big-screen-monitor-display/config_gui.py:653
+#: usr/share/big-screen-monitor-display/config_gui.py:697
 msgid "Date"
 msgstr "Dato"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:655
+#: usr/share/big-screen-monitor-display/config_gui.py:654
 #: usr/share/big-screen-monitor-display/kojiro_page.py:65
 msgid "24-hour clock"
 msgstr "24-timersklokke"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:656
-#: usr/share/big-screen-monitor-display/config_gui.py:717
-#: usr/share/big-screen-monitor-display/config_gui.py:736
+#: usr/share/big-screen-monitor-display/config_gui.py:655
+#: usr/share/big-screen-monitor-display/config_gui.py:716
+#: usr/share/big-screen-monitor-display/config_gui.py:735
 #: usr/share/big-screen-monitor-display/kojiro_page.py:66
 msgid "Show seconds"
 msgstr "Vis sekunder"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:659
+#: usr/share/big-screen-monitor-display/config_gui.py:658
 msgid "Information"
 msgstr "Informasjon"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:659
 msgid "CPU usage and temperature"
 msgstr "CPU-bruk og -temperatur"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:660
-#: usr/share/big-screen-monitor-display/config_gui.py:702
+#: usr/share/big-screen-monitor-display/config_gui.py:659
+#: usr/share/big-screen-monitor-display/config_gui.py:701
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
 msgid "Memory"
 msgstr "Minne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:661
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:660
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 #: usr/share/big-screen-monitor-display/media_player_page.py:286
 msgid "Swap"
 msgstr "Veksleminne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:662
+#: usr/share/big-screen-monitor-display/config_gui.py:661
 msgid "GPU usage and temperature"
 msgstr "GPU-bruk og -temperatur"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:663
+#: usr/share/big-screen-monitor-display/config_gui.py:662
 msgid "Video memory (VRAM)"
 msgstr "Videominne (VRAM)"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:663
+#: usr/share/big-screen-monitor-display/config_gui.py:662
 msgid "Network traffic"
 msgstr "Nettverkstrafikk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:665
+#: usr/share/big-screen-monitor-display/config_gui.py:664
 msgid "Show values as"
 msgstr "Vis verdier som"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:666
+#: usr/share/big-screen-monitor-display/config_gui.py:665
 msgid "Used / total"
 msgstr "Brukt / totalt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:666
+#: usr/share/big-screen-monitor-display/config_gui.py:665
 msgid "Percentage"
 msgstr "Prosent"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:667
+#: usr/share/big-screen-monitor-display/config_gui.py:666
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:195
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:591
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:244
 msgid "Temperature unit"
 msgstr "Temperaturenhet"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:670
+#: usr/share/big-screen-monitor-display/config_gui.py:669
 msgid "Side panel"
 msgstr "Sidepanel"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:670
+#: usr/share/big-screen-monitor-display/config_gui.py:669
 msgid "Below the information in portrait orientation."
 msgstr "Under informasjonen i stående retning."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:671
+#: usr/share/big-screen-monitor-display/config_gui.py:670
 msgid "Content"
 msgstr "Innhold"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Graphs"
 msgstr "Grafer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:672
+#: usr/share/big-screen-monitor-display/config_gui.py:671
 msgid "Nothing"
 msgstr "Ingenting"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:673
+#: usr/share/big-screen-monitor-display/config_gui.py:672
 msgid "Processes listed"
 msgstr "Prosesser i listen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:675
+#: usr/share/big-screen-monitor-display/config_gui.py:674
 msgid "Order processes by"
 msgstr "Sorter prosesser etter"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:677
+#: usr/share/big-screen-monitor-display/config_gui.py:676
 msgid "Footer"
 msgstr "Bunntekst"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:677
+#: usr/share/big-screen-monitor-display/config_gui.py:676
 msgid "Uptime, load, process count and power profile."
 msgstr "Oppetid, belastning, antall prosesser og strømprofil."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:687
+#: usr/share/big-screen-monitor-display/config_gui.py:686
 msgid "Columns"
 msgstr "Kolonner"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:691
+#: usr/share/big-screen-monitor-display/config_gui.py:690
 msgid "Chart height"
 msgstr "Diagramhøyde"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:693
+#: usr/share/big-screen-monitor-display/config_gui.py:692
 msgid "Partitions listed"
 msgstr "Partisjoner i listen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:696
+#: usr/share/big-screen-monitor-display/config_gui.py:695
 msgid "Modules"
 msgstr "Moduler"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:696
+#: usr/share/big-screen-monitor-display/config_gui.py:695
 msgid "Modules that do not fit on the display are skipped."
 msgstr "Moduler som ikke får plass på skjermen, hoppes over."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:700
+#: usr/share/big-screen-monitor-display/config_gui.py:699
 msgid "Processes and load"
 msgstr "Prosesser og belastning"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:700
+#: usr/share/big-screen-monitor-display/config_gui.py:699
 msgid "Temperatures"
 msgstr "Temperaturer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:701
+#: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Main network interface"
 msgstr "Hovednettverksgrensesnitt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:702
+#: usr/share/big-screen-monitor-display/config_gui.py:701
 msgid "Other network interfaces"
 msgstr "Andre nettverksgrensesnitt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:703
+#: usr/share/big-screen-monitor-display/config_gui.py:702
 msgid "Partitions"
 msgstr "Partisjoner"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:704
+#: usr/share/big-screen-monitor-display/config_gui.py:703
 msgid "Fans and power"
 msgstr "Vifter og effekt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:705
+#: usr/share/big-screen-monitor-display/config_gui.py:704
 msgid "Docker containers"
 msgstr "Docker-containere"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:705
+#: usr/share/big-screen-monitor-display/config_gui.py:704
 msgid "Removable media"
 msgstr "Flyttbare medier"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:706
+#: usr/share/big-screen-monitor-display/config_gui.py:705
 msgid "Media player"
 msgstr "Mediespiller"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:719
+#: usr/share/big-screen-monitor-display/config_gui.py:718
 msgid "Globe"
 msgstr "Klode"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:720
+#: usr/share/big-screen-monitor-display/config_gui.py:719
 msgid "Night side"
 msgstr "Nattsiden"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:720
+#: usr/share/big-screen-monitor-display/config_gui.py:719
 msgid "Shade the half of the Earth without sunlight."
 msgstr "Skygg den halvdelen av jorda som ikke har sollys."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:721
+#: usr/share/big-screen-monitor-display/config_gui.py:720
 msgid "City lights"
 msgstr "Bylys"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:722
+#: usr/share/big-screen-monitor-display/config_gui.py:721
 msgid "Sun and Moon tracks"
 msgstr "Banene til sola og månen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:723
+#: usr/share/big-screen-monitor-display/config_gui.py:722
 msgid "Where they were and will be over 24 hours."
 msgstr "Hvor de har vært og vil være i løpet av 24 timer."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:724
+#: usr/share/big-screen-monitor-display/config_gui.py:723
 msgid "Moon"
 msgstr "Månen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:734
+#: usr/share/big-screen-monitor-display/config_gui.py:733
 msgid "Title bar"
 msgstr "Tittellinje"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:735
+#: usr/share/big-screen-monitor-display/config_gui.py:734
 msgid "Status bar"
 msgstr "Statuslinje"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:738
+#: usr/share/big-screen-monitor-display/config_gui.py:737
 msgid "Cards"
 msgstr "Kort"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:738
+#: usr/share/big-screen-monitor-display/config_gui.py:737
 msgid "CPU and memory are always shown."
 msgstr "CPU og minne vises alltid."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:739
+#: usr/share/big-screen-monitor-display/config_gui.py:738
 msgid "GPU and video memory"
 msgstr "GPU og videominne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:740
+#: usr/share/big-screen-monitor-display/config_gui.py:739
 msgid "Disk and swap"
 msgstr "Disk og veksleminne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:746
+#: usr/share/big-screen-monitor-display/config_gui.py:745
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:149
 msgid "Animation"
 msgstr "Animasjon"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:747
+#: usr/share/big-screen-monitor-display/config_gui.py:746
 msgid "Animate"
 msgstr "Animer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:748
+#: usr/share/big-screen-monitor-display/config_gui.py:747
 msgid "When off, a still island is shown and only the data updates."
 msgstr "Når dette er slått av, vises en stillestående øy, og bare dataene oppdateres."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:748
 msgid "Events"
 msgstr "Hendelser"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 msgid "Rare"
 msgstr "Sjeldne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:750
-#: usr/share/big-screen-monitor-display/config_gui.py:771
+#: usr/share/big-screen-monitor-display/config_gui.py:749
+#: usr/share/big-screen-monitor-display/config_gui.py:770
 msgid "Frequent"
 msgstr "Hyppige"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:751
+#: usr/share/big-screen-monitor-display/config_gui.py:750
 msgid "Day and night cycle"
 msgstr "Døgnsyklus"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:751
+#: usr/share/big-screen-monitor-display/config_gui.py:750
 msgid "Follows the computer clock."
 msgstr "Følger klokka på datamaskinen."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:752
+#: usr/share/big-screen-monitor-display/config_gui.py:751
 msgid "Weather"
 msgstr "Vær"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:752
+#: usr/share/big-screen-monitor-display/config_gui.py:751
 msgid "Wind, rain, storms, fog and rainbows (simulated)."
 msgstr "Vind, regn, stormer, tåke og regnbuer (simulert)."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:753
+#: usr/share/big-screen-monitor-display/config_gui.py:752
 msgid "Story continuity"
 msgstr "Sammenheng i historiene"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:754
+#: usr/share/big-screen-monitor-display/config_gui.py:753
 msgid "The raft and the souvenirs are kept between sessions."
 msgstr "Flåten og suvenirene beholdes mellom øktene."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:755
+#: usr/share/big-screen-monitor-display/config_gui.py:754
 msgid "React to the computer"
 msgstr "Reager på datamaskinen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:756
+#: usr/share/big-screen-monitor-display/config_gui.py:755
 msgid "Heat, busy memory, full disk and a busy GPU change the island."
 msgstr "Varme, fullt minne, full disk og en hardt belastet GPU endrer øya."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:759
+#: usr/share/big-screen-monitor-display/config_gui.py:758
 msgid "Humour and speech"
 msgstr "Humor og replikker"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:760
+#: usr/share/big-screen-monitor-display/config_gui.py:759
 msgid "Humour"
 msgstr "Humor"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 msgid "Family"
 msgstr "Familievennlig"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 #: usr/share/big-screen-monitor-display/media_player_page.py:47
 #: usr/share/big-screen-monitor-display/media_player_page.py:485
 msgid "Classic"
 msgstr "Klassisk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:761
+#: usr/share/big-screen-monitor-display/config_gui.py:760
 msgid "Sarcastic"
 msgstr "Sarkastisk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:762
+#: usr/share/big-screen-monitor-display/config_gui.py:761
 msgid "Classic catchphrases"
 msgstr "Klassiske slagord"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:763
+#: usr/share/big-screen-monitor-display/config_gui.py:762
 msgid "Tributes such as \"AWAAAAAY!\" and \"morô?\"."
 msgstr "Hyllester som «AWAAAAAY!» og «skjønner'u?»."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:764
+#: usr/share/big-screen-monitor-display/config_gui.py:763
 msgid "Speech balloons"
 msgstr "Snakkebobler"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:767
+#: usr/share/big-screen-monitor-display/config_gui.py:766
 msgid "Sound"
 msgstr "Lyd"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:767
+#: usr/share/big-screen-monitor-display/config_gui.py:766
 msgid "Played by this computer: the display has no speaker. Off by default."
 msgstr "Spilles av denne datamaskinen: skjermen har ingen høyttaler. Av som standard."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:768
+#: usr/share/big-screen-monitor-display/config_gui.py:767
 msgid "Retro sound effects"
 msgstr "Retro lydeffekter"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:769
+#: usr/share/big-screen-monitor-display/config_gui.py:768
 #: usr/share/big-screen-monitor-display/media_player_page.py:254
 msgid "Volume"
 msgstr "Volum"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:770
+#: usr/share/big-screen-monitor-display/config_gui.py:769
 msgid "Speech sounds"
 msgstr "Lyder til replikkene"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:774
+#: usr/share/big-screen-monitor-display/config_gui.py:773
 msgid "Telemetry overlay"
 msgstr "Telemetrilag"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:774
+#: usr/share/big-screen-monitor-display/config_gui.py:773
 msgid "Clock, CPU, RAM, disk and GPU over the scene."
 msgstr "Klokke, CPU, RAM, disk og GPU over scenen."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:775
+#: usr/share/big-screen-monitor-display/config_gui.py:774
 msgid "Show overlay"
 msgstr "Vis lag"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 msgid "Size"
 msgstr "Størrelse"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 msgid "Expanded"
 msgstr "Utvidet"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:776
+#: usr/share/big-screen-monitor-display/config_gui.py:775
 #: usr/share/big-screen-monitor-display/media_player_page.py:192
 msgid "Compact"
 msgstr "Kompakt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:777
+#: usr/share/big-screen-monitor-display/config_gui.py:776
 #: usr/share/big-screen-monitor-display/media_player_page.py:277
 #: usr/share/big-screen-monitor-display/media_player_page.py:374
 msgid "Position"
 msgstr "Plassering"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:778
+#: usr/share/big-screen-monitor-display/config_gui.py:777
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
 msgid "Top left"
 msgstr "Øverst til venstre"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:778
+#: usr/share/big-screen-monitor-display/config_gui.py:777
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 msgid "Top right"
 msgstr "Øverst til høyre"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:779
+#: usr/share/big-screen-monitor-display/config_gui.py:778
 #: usr/share/big-screen-monitor-display/kojiro_page.py:46
 msgid "Bottom left"
 msgstr "Nederst til venstre"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:779
+#: usr/share/big-screen-monitor-display/config_gui.py:778
 #: usr/share/big-screen-monitor-display/kojiro_page.py:47
 msgid "Bottom right"
 msgstr "Nederst til høyre"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:780
+#: usr/share/big-screen-monitor-display/config_gui.py:779
 msgid "Background opacity"
 msgstr "Bakgrunnens dekkevne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:781
+#: usr/share/big-screen-monitor-display/config_gui.py:780
 msgid "Shrink during stories"
 msgstr "Krymp under historiene"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:782
+#: usr/share/big-screen-monitor-display/config_gui.py:781
 msgid "The overlay becomes compact while something important happens."
 msgstr "Laget blir kompakt mens noe viktig skjer."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:783
+#: usr/share/big-screen-monitor-display/config_gui.py:782
 msgid "Visible information"
 msgstr "Synlig informasjon"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:823
+#: usr/share/big-screen-monitor-display/config_gui.py:822
 msgid "Profile for all displays"
 msgstr "Profil for alle skjermer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:824
+#: usr/share/big-screen-monitor-display/config_gui.py:823
 msgid "How often the displays are redrawn and the hardware is read. These are limits set by the profile, not measurements; what the service measures is shown below. A display can use its own profile in My Displays."
 msgstr "Hvor ofte skjermene tegnes på nytt og maskinvaren leses. Dette er grenser satt av profilen, ikke målinger; det tjenesten måler, vises nedenfor. En skjerm kan bruke sin egen profil i Mine skjermer."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:827
+#: usr/share/big-screen-monitor-display/config_gui.py:826
 msgid "Measured now"
 msgstr "Målt nå"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:827
+#: usr/share/big-screen-monitor-display/config_gui.py:826
 msgid "Reported by the running service."
 msgstr "Rapportert av tjenesten som kjører."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Service CPU"
 msgstr "Tjenestens CPU"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Service memory"
 msgstr "Tjenestens minne"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:829
+#: usr/share/big-screen-monitor-display/config_gui.py:828
 msgid "Frames per second"
 msgstr "Bilder per sekund"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Transfer time"
 msgstr "Overføringstid"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Data sent"
 msgstr "Data sendt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:830
+#: usr/share/big-screen-monitor-display/config_gui.py:829
 msgid "Frames skipped"
 msgstr "Bilder hoppet over"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:842
+#: usr/share/big-screen-monitor-display/config_gui.py:841
 msgid "Current state"
 msgstr "Nåværende tilstand"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:844
+#: usr/share/big-screen-monitor-display/config_gui.py:843
 msgid "Service"
 msgstr "Tjeneste"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:844
+#: usr/share/big-screen-monitor-display/config_gui.py:843
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:85
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:216
 msgid "Display"
 msgstr "Skjerm"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:845
+#: usr/share/big-screen-monitor-display/config_gui.py:844
 msgid "Last confirmed transfer"
 msgstr "Siste bekreftede overføring"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:845
+#: usr/share/big-screen-monitor-display/config_gui.py:844
 msgid "Automatic recoveries"
 msgstr "Automatiske gjenopprettinger"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:846
+#: usr/share/big-screen-monitor-display/config_gui.py:845
 msgid "Pipeline"
 msgstr "Rendringskjede"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:852
+#: usr/share/big-screen-monitor-display/config_gui.py:851
 msgid "Tools"
 msgstr "Verktøy"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:854
+#: usr/share/big-screen-monitor-display/config_gui.py:853
 msgid "Recover the display now"
 msgstr "Gjenopprett skjermen nå"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:854
+#: usr/share/big-screen-monitor-display/config_gui.py:853
 msgid "Reconnects and redraws without restarting the service."
 msgstr "Kobler til og tegner på nytt uten å starte tjenesten på nytt."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:855
+#: usr/share/big-screen-monitor-display/config_gui.py:854
 msgid "Recovery requested."
 msgstr "Gjenoppretting forespurt."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:856
+#: usr/share/big-screen-monitor-display/config_gui.py:855
 msgid "Restart the service"
 msgstr "Start tjenesten på nytt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:856
+#: usr/share/big-screen-monitor-display/config_gui.py:855
 msgid "Use if the display stays frozen."
 msgstr "Bruk dette hvis skjermen forblir frosset."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:857
+#: usr/share/big-screen-monitor-display/config_gui.py:856
 msgid "Service restarted."
 msgstr "Tjenesten er startet på nytt."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:858
-#: usr/share/big-screen-monitor-display/config_gui.py:1251
+#: usr/share/big-screen-monitor-display/config_gui.py:857
+#: usr/share/big-screen-monitor-display/config_gui.py:1281
 msgid "Export diagnostics"
 msgstr "Eksporter diagnostikk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:858
+#: usr/share/big-screen-monitor-display/config_gui.py:857
 msgid "Saves a report to share when asking for help."
 msgstr "Lagrer en rapport du kan dele når du ber om hjelp."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:866
+#: usr/share/big-screen-monitor-display/config_gui.py:859
+msgid "Report a problem"
+msgstr "Rapporter et problem"
+
+#: usr/share/big-screen-monitor-display/config_gui.py:859
+msgid "Copies the diagnostic report and opens the issue form. Review it before posting."
+msgstr "Kopierer diagnoserapporten og åpner skjemaet for feilrapporter. Se gjennom den før du sender."
+
+#: usr/share/big-screen-monitor-display/config_gui.py:868
 msgid "Diagnosis"
 msgstr "Diagnose"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:872
+#: usr/share/big-screen-monitor-display/config_gui.py:874
 msgid "Recent events"
 msgstr "Nylige hendelser"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:874
-#: usr/share/big-screen-monitor-display/config_gui.py:1170
+#: usr/share/big-screen-monitor-display/config_gui.py:876
+#: usr/share/big-screen-monitor-display/config_gui.py:1172
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:117
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:231
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:245
@@ -2794,93 +2802,93 @@ msgstr "Nylige hendelser"
 msgid "Diagnose"
 msgstr "Diagnostiser"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:874
+#: usr/share/big-screen-monitor-display/config_gui.py:876
 msgid "Check service, permissions, displays and settings"
 msgstr "Kontroller tjeneste, tillatelser, skjermer og innstillinger"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:932
+#: usr/share/big-screen-monitor-display/config_gui.py:934
 #, python-brace-format
 msgid "Unsaved changes ({count})"
 msgstr "Ulagrede endringer ({count})"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:933
+#: usr/share/big-screen-monitor-display/config_gui.py:935
 msgid "Applying…"
 msgstr "Tar i bruk…"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:967
+#: usr/share/big-screen-monitor-display/config_gui.py:969
 msgid "Changes discarded."
 msgstr "Endringene er forkastet."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:970
+#: usr/share/big-screen-monitor-display/config_gui.py:972
 msgid "Restore defaults?"
 msgstr "Gjenopprette standardverdier?"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:971
+#: usr/share/big-screen-monitor-display/config_gui.py:973
 msgid "Every theme, display and performance option goes back to its original value, including the names and themes of each display and the Kojiro layout. Nothing changes on the displays until you press Apply."
 msgstr "Alle tema-, skjerm- og ytelsesvalg går tilbake til opprinnelig verdi, også navnene og temaene for hver skjerm og Kojiro-oppsettet. Ingenting endres på skjermene før du trykker på Bruk."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:974
+#: usr/share/big-screen-monitor-display/config_gui.py:976
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1205
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:975
+#: usr/share/big-screen-monitor-display/config_gui.py:977
 msgid "Restore"
 msgstr "Gjenopprett"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:984
+#: usr/share/big-screen-monitor-display/config_gui.py:986
 msgid "Defaults loaded. Press Apply to use them."
 msgstr "Standardverdier lastet inn. Trykk på Bruk for å ta dem i bruk."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1006
+#: usr/share/big-screen-monitor-display/config_gui.py:1008
 msgid "Settings applied. The display updates in a moment."
 msgstr "Innstillingene er tatt i bruk. Skjermen oppdateres om et øyeblikk."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1013
+#: usr/share/big-screen-monitor-display/config_gui.py:1015
 #, python-brace-format
 msgid "Some values were corrected: {details}"
 msgstr "Noen verdier ble korrigert: {details}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1018
+#: usr/share/big-screen-monitor-display/config_gui.py:1020
 msgid "Could not apply the settings"
 msgstr "Klarte ikke å ta i bruk innstillingene"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1030
+#: usr/share/big-screen-monitor-display/config_gui.py:1032
 #, python-brace-format
 msgid "Could not configure the sound agent: {error}"
 msgstr "Klarte ikke å sette opp lydagenten: {error}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1042
+#: usr/share/big-screen-monitor-display/config_gui.py:1044
 #: usr/share/big-screen-monitor-display/media_player_page.py:640
 #, python-brace-format
 msgid "Could not start the media agent: {error}"
 msgstr "Klarte ikke å starte medieagenten: {error}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1047
+#: usr/share/big-screen-monitor-display/config_gui.py:1049
 msgid "Operation failed"
 msgstr "Operasjonen mislyktes"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1068
+#: usr/share/big-screen-monitor-display/config_gui.py:1070
 msgid "The service will start with the computer."
 msgstr "Tjenesten vil starte sammen med datamaskinen."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1069
+#: usr/share/big-screen-monitor-display/config_gui.py:1071
 msgid "The service will no longer start with the computer."
 msgstr "Tjenesten vil ikke lenger starte sammen med datamaskinen."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1074
+#: usr/share/big-screen-monitor-display/config_gui.py:1076
 msgid "Could not change the startup setting"
 msgstr "Klarte ikke å endre oppstartsinnstillingen"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1083
+#: usr/share/big-screen-monitor-display/config_gui.py:1085
 #: usr/share/big-screen-monitor-display/traykit/launch.py:28
 msgid "Close"
 msgstr "Lukk"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1117
+#: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
 #: usr/share/big-screen-monitor-display/screentray/app.py:564
@@ -2889,45 +2897,45 @@ msgstr "Lukk"
 msgid "Service stopped"
 msgstr "Tjenesten er stoppet"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1119
+#: usr/share/big-screen-monitor-display/config_gui.py:1121
 msgid "Waiting for a display"
 msgstr "Venter på en skjerm"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1121
+#: usr/share/big-screen-monitor-display/config_gui.py:1123
 #, python-brace-format
 msgid "Running · {count} display"
 msgid_plural "Running · {count} displays"
 msgstr[0] "Kjører · {count} skjerm"
 msgstr[1] "Kjører · {count} skjermer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1138
+#: usr/share/big-screen-monitor-display/config_gui.py:1140
 #: usr/share/big-screen-monitor-display/displays_page.py:62
 #: usr/share/big-screen-monitor-display/gui/android_page.py:188
 msgid "The service is not running."
 msgstr "Tjenesten kjører ikke."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1143
+#: usr/share/big-screen-monitor-display/config_gui.py:1145
 #, python-brace-format
 msgid "{fps:.1f} (target {target:g})"
 msgstr "{fps:.1f} (mål {target:g})"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1147
+#: usr/share/big-screen-monitor-display/config_gui.py:1149
 #, python-brace-format
 msgid "{frames} frame"
 msgid_plural "{frames} frames"
 msgstr[0] "{frames} bilde"
 msgstr[1] "{frames} bilder"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1154
+#: usr/share/big-screen-monitor-display/config_gui.py:1156
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:226
 msgid "The monitor service is not running"
 msgstr "Overvåkingstjenesten kjører ikke"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1155
+#: usr/share/big-screen-monitor-display/config_gui.py:1157
 msgid "Run the diagnosis to find out why, or start the service."
 msgstr "Kjør diagnosen for å finne ut hvorfor, eller start tjenesten."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1156
+#: usr/share/big-screen-monitor-display/config_gui.py:1158
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
@@ -2936,107 +2944,111 @@ msgstr "Kjør diagnosen for å finne ut hvorfor, eller start tjenesten."
 msgid "Start Service"
 msgstr "Start tjenesten"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1157
+#: usr/share/big-screen-monitor-display/config_gui.py:1159
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:230
 msgid "Service started."
 msgstr "Tjenesten er startet."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1167
+#: usr/share/big-screen-monitor-display/config_gui.py:1169
 msgid "Everything is working"
 msgstr "Alt fungerer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1169
+#: usr/share/big-screen-monitor-display/config_gui.py:1171
 msgid "Attention needed"
 msgstr "Trenger oppmerksomhet"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1173
+#: usr/share/big-screen-monitor-display/config_gui.py:1175
 #, python-brace-format
 msgid "Running for {time}"
 msgstr "Har kjørt i {time}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1178
+#: usr/share/big-screen-monitor-display/config_gui.py:1180
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:421
 #, python-brace-format
 msgid "{seconds:.0f} s ago"
 msgstr "for {seconds:.0f} s siden"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1179
+#: usr/share/big-screen-monitor-display/config_gui.py:1181
 msgid "Nothing sent yet"
 msgstr "Ingenting sendt ennå"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1181
+#: usr/share/big-screen-monitor-display/config_gui.py:1183
 msgid "A thread stopped making progress."
 msgstr "En tråd sluttet å gjøre framskritt."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1182
+#: usr/share/big-screen-monitor-display/config_gui.py:1184
 msgid "Telemetry, rendering and transfer are progressing."
 msgstr "Telemetri, rendring og overføring gjør framskritt."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1205
+#: usr/share/big-screen-monitor-display/config_gui.py:1207
 msgid "No events recorded."
 msgstr "Ingen hendelser registrert."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1219
+#: usr/share/big-screen-monitor-display/config_gui.py:1221
 msgid "The diagnosis failed"
 msgstr "Diagnosen mislyktes"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1231
+#: usr/share/big-screen-monitor-display/config_gui.py:1233
 msgid "OK"
 msgstr "OK"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1231
+#: usr/share/big-screen-monitor-display/config_gui.py:1233
 msgid "Problem"
 msgstr "Problem"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Restart service"
 msgstr "Start tjenesten på nytt"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Recover"
 msgstr "Gjenopprett"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1235
+#: usr/share/big-screen-monitor-display/config_gui.py:1237
 msgid "Enable"
 msgstr "Slå på"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1236
+#: usr/share/big-screen-monitor-display/config_gui.py:1238
 msgid "Import"
 msgstr "Importer"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1240
+#: usr/share/big-screen-monitor-display/config_gui.py:1242
 msgid "Done."
 msgstr "Ferdig."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1246
+#: usr/share/big-screen-monitor-display/config_gui.py:1248
 msgid "No problems found."
 msgstr "Fant ingen problemer."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1247
+#: usr/share/big-screen-monitor-display/config_gui.py:1249
 #, python-brace-format
 msgid "{count} item needs attention."
 msgid_plural "{count} items need attention."
 msgstr[0] "{count} element trenger oppmerksomhet."
 msgstr[1] "{count} elementer trenger oppmerksomhet."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1270
+#: usr/share/big-screen-monitor-display/config_gui.py:1262
 msgid "(journal not readable by this user)"
 msgstr "(journalen kan ikke leses av denne brukeren)"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:1276
+msgid "Report copied. Paste it into the form."
+msgstr "Rapporten er kopiert. Lim den inn i skjemaet."
+
+#: usr/share/big-screen-monitor-display/config_gui.py:1297
 #, python-brace-format
 msgid "Report saved to {path}"
 msgstr "Rapporten er lagret i {path}"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1278
+#: usr/share/big-screen-monitor-display/config_gui.py:1299
 msgid "Could not save the report"
 msgstr "Klarte ikke å lagre rapporten"
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1362
+#: usr/share/big-screen-monitor-display/config_gui.py:1389
 msgid "Free hardware monitor for small USB displays, with themes, the Brother Away island, the Kojiro studio and the Big Media Player."
 msgstr "Fri maskinvaremonitor for små USB-skjermer, med temaer, Brother Away-øya, Kojiro-studioet og Big Media Player."
 
-#: usr/share/big-screen-monitor-display/config_gui.py:1364
+#: usr/share/big-screen-monitor-display/config_gui.py:1391
 msgid "Testing"
 msgstr "Testing"
 
@@ -4559,7 +4571,7 @@ msgstr "Fant ingen HID-node for denne kjøleren."
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:133
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:616
-#: usr/share/big-screen-monitor-display/kojiro_page.py:828
+#: usr/share/big-screen-monitor-display/kojiro_page.py:832
 msgid "group"
 msgstr "gruppe"
 
@@ -4666,9 +4678,9 @@ msgid "Current values"
 msgstr "Nåværende verdier"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
-#: usr/share/big-screen-monitor-display/kojiro_page.py:738
-#: usr/share/big-screen-monitor-display/kojiro_page.py:741
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:742
+#: usr/share/big-screen-monitor-display/kojiro_page.py:745
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Alerts"
 msgstr "Varsler"
 
@@ -4701,7 +4713,7 @@ msgid "Updates"
 msgstr "Oppdateringer"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:283
-#: usr/share/big-screen-monitor-display/kojiro_page.py:513
+#: usr/share/big-screen-monitor-display/kojiro_page.py:517
 msgid "Advanced"
 msgstr "Avansert"
 
@@ -4815,7 +4827,7 @@ msgstr "Sendt som 0 fordi kjøleren ikke har noen tom verdi: {fields}"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -4865,7 +4877,7 @@ msgid "Only this window. The display themes have their own colours."
 msgstr "Bare dette vinduet. Skjermtemaene har sine egne farger."
 
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:71
-#: usr/share/big-screen-monitor-display/kojiro_page.py:655
+#: usr/share/big-screen-monitor-display/kojiro_page.py:659
 #: usr/share/big-screen-monitor-display/media_player_page.py:300
 msgid "Style"
 msgstr "Stil"
@@ -5067,27 +5079,27 @@ msgid "Kojiro editor: click a widget to select it, drag to move, use the arrow k
 msgstr "Kojiro-redigering: klikk på et element for å velge det, dra for å flytte, bruk piltastene for å finjustere"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
-#: usr/share/big-screen-monitor-display/kojiro_page.py:658
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:662
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Duplicate"
 msgstr "Dupliser"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
-#: usr/share/big-screen-monitor-display/kojiro_page.py:660
-#: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1191
+#: usr/share/big-screen-monitor-display/kojiro_page.py:664
+#: usr/share/big-screen-monitor-display/kojiro_page.py:666
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
 msgid "Delete"
 msgstr "Slett"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:839
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:845
+#: usr/share/big-screen-monitor-display/kojiro_page.py:849
 msgid "Bring to front"
 msgstr "Flytt fremst"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:847
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send to back"
 msgstr "Flytt bakerst"
 
@@ -5096,8 +5108,8 @@ msgid "Unlock"
 msgstr "Lås opp"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:844
-#: usr/share/big-screen-monitor-display/kojiro_page.py:652
-#: usr/share/big-screen-monitor-display/kojiro_page.py:838
+#: usr/share/big-screen-monitor-display/kojiro_page.py:656
+#: usr/share/big-screen-monitor-display/kojiro_page.py:842
 msgid "Lock position"
 msgstr "Lås posisjon"
 
@@ -5179,7 +5191,7 @@ msgstr "Minigraf"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:38
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
-#: usr/share/big-screen-monitor-display/kojiro_page.py:697
+#: usr/share/big-screen-monitor-display/kojiro_page.py:701
 msgid "Text"
 msgstr "Tekst"
 
@@ -5224,7 +5236,7 @@ msgid "Bars"
 msgstr "Søyler"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1081
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Grid"
 msgstr "Rutenett"
 
@@ -5242,7 +5254,7 @@ msgid "Light line"
 msgstr "Lyslinje"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1081
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Dots"
 msgstr "Prikker"
 
@@ -5263,8 +5275,8 @@ msgid "Middle left"
 msgstr "Midt til venstre"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Centre"
 msgstr "Midten"
 
@@ -5514,12 +5526,12 @@ msgid "Distribute vertically"
 msgstr "Fordel loddrett"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:845
+#: usr/share/big-screen-monitor-display/kojiro_page.py:849
 msgid "Bring forward"
 msgstr "Flytt framover"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:846
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Send backward"
 msgstr "Flytt bakover"
 
@@ -5610,861 +5622,861 @@ msgstr "Denne skjermen bruker det felles Kojiro-oppsettet. Det lages en kopi som
 msgid "Create own layout"
 msgstr "Opprett eget oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:506
+#: usr/share/big-screen-monitor-display/kojiro_page.py:510
 msgid "Element"
 msgstr "Element"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:507
-#: usr/share/big-screen-monitor-display/kojiro_page.py:822
+#: usr/share/big-screen-monitor-display/kojiro_page.py:511
+#: usr/share/big-screen-monitor-display/kojiro_page.py:826
 msgid "Layers"
 msgstr "Lag"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:508
+#: usr/share/big-screen-monitor-display/kojiro_page.py:512
 msgid "Background"
 msgstr "Bakgrunn"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:512
+#: usr/share/big-screen-monitor-display/kojiro_page.py:516
 msgid "General"
 msgstr "Generelt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:596
-#: usr/share/big-screen-monitor-display/kojiro_page.py:612
+#: usr/share/big-screen-monitor-display/kojiro_page.py:600
+#: usr/share/big-screen-monitor-display/kojiro_page.py:616
 msgid "Default"
 msgstr "Standard"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:605
+#: usr/share/big-screen-monitor-display/kojiro_page.py:609
 msgid "This font name cannot be used; choose another font."
 msgstr "Dette skriftnavnet kan ikke brukes; velg en annen skrift."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:611
+#: usr/share/big-screen-monitor-display/kojiro_page.py:615
 msgid "Use the default font"
 msgstr "Bruk standardskriften"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:631
+#: usr/share/big-screen-monitor-display/kojiro_page.py:635
 msgid "No widget selected"
 msgstr "Ingen element valgt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:632
+#: usr/share/big-screen-monitor-display/kojiro_page.py:636
 msgid "Click a widget in the editor, or add one below. Drag to move, use the handles to resize. Shift-click selects several."
 msgstr "Klikk på et element i redigeringen, eller legg til et nedenfor. Dra for å flytte, bruk håndtakene for å endre størrelse. Shift-klikk velger flere."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:648
+#: usr/share/big-screen-monitor-display/kojiro_page.py:652
 #, python-brace-format
 msgid " (+{n} selected)"
 msgid_plural " (+{n} selected)"
 msgstr[0] " (+{n} valgt)"
 msgstr[1] " (+{n} valgt)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:651
-#: usr/share/big-screen-monitor-display/kojiro_page.py:834
+#: usr/share/big-screen-monitor-display/kojiro_page.py:655
+#: usr/share/big-screen-monitor-display/kojiro_page.py:838
 msgid "Visible"
 msgstr "Synlig"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:659
+#: usr/share/big-screen-monitor-display/kojiro_page.py:663
 msgid "Reset style"
 msgstr "Tilbakestill stil"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:668
+#: usr/share/big-screen-monitor-display/kojiro_page.py:672
 msgid "Position and size"
 msgstr "Posisjon og størrelse"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:669
+#: usr/share/big-screen-monitor-display/kojiro_page.py:673
 msgid "In pixels of the preview resolution."
 msgstr "I piksler i oppløsningen for forhåndsvisning."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "X"
 msgstr "X"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "Y"
 msgstr "Y"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:673
+#: usr/share/big-screen-monitor-display/kojiro_page.py:677
 msgid "Width"
 msgstr "Bredde"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:674
+#: usr/share/big-screen-monitor-display/kojiro_page.py:678
 msgid "Height"
 msgstr "Høyde"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:678
+#: usr/share/big-screen-monitor-display/kojiro_page.py:682
 msgid "Anchor"
 msgstr "Anker"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:680
+#: usr/share/big-screen-monitor-display/kojiro_page.py:684
 msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Hjørnet eller kanten elementet holder seg festet til på andre skjermstørrelser."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:681
-#: usr/share/big-screen-monitor-display/kojiro_page.py:892
+#: usr/share/big-screen-monitor-display/kojiro_page.py:685
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Rotation"
 msgstr "Rotering"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:683
+#: usr/share/big-screen-monitor-display/kojiro_page.py:687
 msgid "Centre H"
 msgstr "Midtstill V"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:683
+#: usr/share/big-screen-monitor-display/kojiro_page.py:687
 msgid "Centre V"
 msgstr "Midtstill L"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:689
+#: usr/share/big-screen-monitor-display/kojiro_page.py:693
 msgid "Colours and effects"
 msgstr "Farger og effekter"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:690
+#: usr/share/big-screen-monitor-display/kojiro_page.py:694
 msgid "Main colour"
 msgstr "Hovedfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:691
+#: usr/share/big-screen-monitor-display/kojiro_page.py:695
 msgid "Secondary colour"
 msgstr "Sekundærfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:692
+#: usr/share/big-screen-monitor-display/kojiro_page.py:696
 msgid "Text colour"
 msgstr "Tekstfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:693
+#: usr/share/big-screen-monitor-display/kojiro_page.py:697
 msgid "Glow"
 msgstr "Glød"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:694
+#: usr/share/big-screen-monitor-display/kojiro_page.py:698
 msgid "Opacity"
 msgstr "Dekkevne"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:695
+#: usr/share/big-screen-monitor-display/kojiro_page.py:699
 msgid "Shadow"
 msgstr "Skygge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:698
+#: usr/share/big-screen-monitor-display/kojiro_page.py:702
 msgid "Font"
 msgstr "Skrift"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:699
+#: usr/share/big-screen-monitor-display/kojiro_page.py:703
 msgid "Bold"
 msgstr "Halvfet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:700
+#: usr/share/big-screen-monitor-display/kojiro_page.py:704
 msgid "Text size (%)"
 msgstr "Tekststørrelse (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:701
+#: usr/share/big-screen-monitor-display/kojiro_page.py:705
 msgid "Text style"
 msgstr "Tekststil"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
 msgid "Alignment"
 msgstr "Justering"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Left"
 msgstr "Venstre"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:703
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Right"
 msgstr "Høyre"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:705
+#: usr/share/big-screen-monitor-display/kojiro_page.py:709
 msgid "Label (empty = automatic)"
 msgstr "Etikett (tom = automatisk)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:706
+#: usr/share/big-screen-monitor-display/kojiro_page.py:710
 msgid "Show label"
 msgstr "Vis etikett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:707
+#: usr/share/big-screen-monitor-display/kojiro_page.py:711
 msgid "Show icon"
 msgstr "Vis ikon"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:709
+#: usr/share/big-screen-monitor-display/kojiro_page.py:713
 msgid "Decimals"
 msgstr "Desimaler"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Automatic (KB/s, MB/s)"
 msgstr "Automatisk (KB/s, MB/s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Celsius"
 msgstr "Celsius"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:712
+#: usr/share/big-screen-monitor-display/kojiro_page.py:716
 msgid "Fahrenheit"
 msgstr "Fahrenheit"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:713
+#: usr/share/big-screen-monitor-display/kojiro_page.py:717
 msgid "Unit"
 msgstr "Enhet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:716
+#: usr/share/big-screen-monitor-display/kojiro_page.py:720
 msgid "Background panel"
 msgstr "Bakgrunnspanel"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:717
+#: usr/share/big-screen-monitor-display/kojiro_page.py:721
 msgid "Panel colour"
 msgstr "Panelfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:718
+#: usr/share/big-screen-monitor-display/kojiro_page.py:722
 msgid "Panel opacity"
 msgstr "Panelets dekkevne"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:719
+#: usr/share/big-screen-monitor-display/kojiro_page.py:723
 msgid "Frosted glass (blur behind)"
 msgstr "Matt glass (uskarpt bak)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:720
+#: usr/share/big-screen-monitor-display/kojiro_page.py:724
 msgid "Border"
 msgstr "Kantlinje"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:721
+#: usr/share/big-screen-monitor-display/kojiro_page.py:725
 msgid "Border colour"
 msgstr "Kantfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:722
+#: usr/share/big-screen-monitor-display/kojiro_page.py:726
 msgid "Corner radius (%)"
 msgstr "Hjørneradius (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:726
+#: usr/share/big-screen-monitor-display/kojiro_page.py:730
 msgid "Data"
 msgstr "Data"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:730
+#: usr/share/big-screen-monitor-display/kojiro_page.py:734
 msgid "Update interval (s)"
 msgstr "Oppdateringsintervall (s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:732
+#: usr/share/big-screen-monitor-display/kojiro_page.py:736
 #, python-brace-format
 msgid "0 = automatic ({s} s)"
 msgstr "0 = automatisk ({s} s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:734
+#: usr/share/big-screen-monitor-display/kojiro_page.py:738
 msgid "Hide when unavailable"
 msgstr "Skjul når utilgjengelig"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:736
+#: usr/share/big-screen-monitor-display/kojiro_page.py:740
 msgid "Smooth transitions"
 msgstr "Myke overganger"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:739
+#: usr/share/big-screen-monitor-display/kojiro_page.py:743
 msgid "Colour changes gradually towards yellow and red. 0 = automatic: the hardware limit when the chip reports one."
 msgstr "Fargen endres gradvis mot gult og rødt. 0 = automatisk: maskinvaregrensen når brikken rapporterer en."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:743
+#: usr/share/big-screen-monitor-display/kojiro_page.py:747
 #, python-brace-format
 msgid "Warning from ({u})"
 msgstr "Advarsel fra ({u})"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:745
+#: usr/share/big-screen-monitor-display/kojiro_page.py:749
 #, python-brace-format
 msgid "Critical from ({u})"
 msgstr "Kritisk fra ({u})"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:747
+#: usr/share/big-screen-monitor-display/kojiro_page.py:751
 msgid "Blink when critical"
 msgstr "Blink ved kritisk verdi"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:755
+#: usr/share/big-screen-monitor-display/kojiro_page.py:759
 msgid "Automatic (dedicated card)"
 msgstr "Automatisk (dedikert kort)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:768
+#: usr/share/big-screen-monitor-display/kojiro_page.py:772
 msgid "All interfaces"
 msgstr "Alle grensesnitt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:772
+#: usr/share/big-screen-monitor-display/kojiro_page.py:776
 msgid "First spinning fan"
 msgstr "Første vifte som går"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:777
+#: usr/share/big-screen-monitor-display/kojiro_page.py:781
 msgid "Automatic (CPU package)"
 msgstr "Automatisk (CPU-pakke)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:823
+#: usr/share/big-screen-monitor-display/kojiro_page.py:827
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Øverst i listen tegnes øverst. Klikk for å velge."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:860
+#: usr/share/big-screen-monitor-display/kojiro_page.py:864
 msgid "Wallpaper"
 msgstr "Bakgrunnsbilde"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:861
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Innebygd kunst, dine egne bilder, en farge eller en fargeovergang."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:868
+#: usr/share/big-screen-monitor-display/kojiro_page.py:872
 msgid "Imported"
 msgstr "Importert"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:876
 msgid "Import image…"
 msgstr "Importer bilde…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:880
 msgid "Colour or gradient"
 msgstr "Farge eller fargeovergang"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
 msgid "Use"
 msgstr "Bruk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "The image above"
 msgstr "Bildet ovenfor"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:877
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Solid colour"
 msgstr "Ensfarget"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:878
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Gradient"
 msgstr "Fargeovergang"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:885
 msgid "Colour"
 msgstr "Farge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Second colour"
 msgstr "Andre farge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:883
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Gradient angle"
 msgstr "Vinkel på fargeovergang"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:884
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Fit and position"
 msgstr "Tilpasning og posisjon"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit"
 msgstr "Tilpasning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fill the screen (crop)"
 msgstr "Fyll skjermen (beskjær)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit whole image"
 msgstr "Tilpass hele bildet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Stretch"
 msgstr "Strekk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Tile"
 msgstr "Flislegg"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Original size"
 msgstr "Opprinnelig størrelse"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Zoom (%)"
 msgstr "Zoom (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:894
 msgid "Horizontal offset"
 msgstr "Vannrett forskyvning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Vertical offset"
 msgstr "Loddrett forskyvning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Mirror"
 msgstr "Speilvend"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:899
 msgid "Flip vertically"
 msgstr "Vend loddrett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Adjustments"
 msgstr "Justeringer"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:897
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Saturation"
 msgstr "Metning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Gamma"
 msgstr "Gamma"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Blur"
 msgstr "Uskarphet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Darken"
 msgstr "Gjør mørkere"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Vignette"
 msgstr "Vignett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Tint colour"
 msgstr "Tonefarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:907
 msgid "Tint strength"
 msgstr "Tonestyrke"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Text protection gradient"
 msgstr "Fargeovergang som beskytter teksten"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Gradient side"
 msgstr "Side for fargeovergang"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "Nederst"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:905
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Øverst"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Top and bottom"
 msgstr "Øverst og nederst"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Reset adjustments"
 msgstr "Tilbakestill justeringer"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:937
+#: usr/share/big-screen-monitor-display/kojiro_page.py:941
 msgid "Remove this wallpaper"
 msgstr "Fjern dette bakgrunnsbildet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:976
+#: usr/share/big-screen-monitor-display/kojiro_page.py:980
 msgid "Choose a wallpaper"
 msgstr "Velg et bakgrunnsbilde"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:977
+#: usr/share/big-screen-monitor-display/kojiro_page.py:981
 msgid "Images"
 msgstr "Bilder"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:990
+#: usr/share/big-screen-monitor-display/kojiro_page.py:994
 msgid "Importing the image…"
 msgstr "Importerer bildet…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1007
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Klarte ikke å importere bildet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1012
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Bakgrunnsbildet er importert. Originalfilen din ble ikke endret."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1028
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
 msgid "The wallpaper could not be removed"
 msgstr "Klarte ikke å fjerne bakgrunnsbildet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1045
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
 msgid "Presets"
 msgstr "Forhåndsinnstillinger"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1046
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Erstatter elementene med en ferdig komposisjon (Ctrl+Z angrer). Et importert bakgrunnsbilde beholdes."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1069
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
 msgid "Colour palette"
 msgstr "Fargepalett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1070
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
 msgid "Recolours every widget with a palette."
 msgstr "Gir alle elementer nye farger fra en palett."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1078
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
 msgid "Text and background effect"
 msgstr "Tekst og bakgrunnseffekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1079
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
 msgid "Font for all widgets"
 msgstr "Skrift for alle elementer"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Background effect"
 msgstr "Bakgrunnseffekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1080
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Scanlines"
 msgstr "Skannelinjer"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Effect strength"
 msgstr "Effektstyrke"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect colour"
 msgstr "Effektfarge"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
 msgid "Readability panels"
 msgstr "Lesbarhetspaneler"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
 msgid "Automatic (bright or busy areas)"
 msgstr "Automatisk (lyse eller urolige områder)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Alltid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Aldri"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Legger til et mørkt, gjennomskinnelig panel bak elementer som ellers ville vært vanskelige å lese."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
 msgid "Animations and alerts"
 msgstr "Animasjoner og varsler"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Animasjoner"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Fan spin, smooth values and pulses."
 msgstr "Viftespinn, myke verdier og pulser."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 msgid "Reduce motion"
 msgstr "Reduser bevegelse"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Animation speed (%)"
 msgstr "Animasjonshastighet (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Pulse on critical values"
 msgstr "Puls ved kritiske verdier"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Turns every visual alert off when disabled."
 msgstr "Slår av alle visuelle varsler når dette er slått av."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Hysteresis"
 msgstr "Hysterese"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "How far a value must drop before an alert ends."
 msgstr "Hvor langt en verdi må falle før et varsel avsluttes."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Cooldown (s)"
 msgstr "Ventetid (s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "Minimum time before an alert can calm down."
 msgstr "Minste tid før et varsel kan roe seg."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1109
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Forhåndsinnstilling tatt i bruk. Ctrl+Z gjenoppretter det forrige oppsettet."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1138
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
 msgid "My presets"
 msgstr "Mine forhåndsinnstillinger"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1139
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
 msgid "Saved on this computer for your user."
 msgstr "Lagret på denne datamaskinen for brukeren din."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
 msgid "Delete preset"
 msgstr "Slett forhåndsinnstilling"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1150
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
 msgid "Save current layout as preset…"
 msgstr "Lagre nåværende oppsett som forhåndsinnstilling…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1153
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
 msgid "Import and export"
 msgstr "Import og eksport"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Del oppsett som en .json-fil, eller som en pakke som kan inneholde bakgrunnsbildet."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1155
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Export layout (.json)…"
 msgstr "Eksporter oppsett (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Export package (.kojiro.zip)…"
 msgstr "Eksporter pakke (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Import layout or package…"
 msgstr "Importer oppsett eller pakke…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
 msgid "Restore the default layout"
 msgstr "Gjenopprett standardoppsettet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1167
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Posisjonene lagres i forhold til en referanseoppløsning; ankre holder elementene på plass på andre skjermer."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
 msgid "Reference resolution"
 msgstr "Referanseoppløsning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
 msgid "Use the preview resolution as reference"
 msgstr "Bruk oppløsningen for forhåndsvisning som referanse"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Keeps every widget where it is now"
 msgstr "Beholder hvert element der det er nå"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
 msgid "Portrait layout"
 msgstr "Stående oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Automatisk (omorganisert fra det liggende oppsettet)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Customised"
 msgstr "Tilpasset"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Back to automatic"
 msgstr "Tilbake til automatisk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
 msgid "Grid size (px)"
 msgstr "Rutenettstørrelse (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Safe margin (px)"
 msgstr "Sikker marg (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Show overlaps of the selection"
 msgstr "Vis overlappinger i utvalget"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Keyboard"
 msgstr "Tastatur"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1191
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Flytt 1 px (Shift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Undo / redo"
 msgstr "Angre / gjør om"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1193
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Select all"
 msgstr "Velg alle"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1193
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Group (Shift: ungroup)"
 msgstr "Grupper (Shift: del opp gruppe)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Copy / paste style"
 msgstr "Kopier / lim inn stil"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Lagrekkefølge (Ctrl: fremst/bakerst)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Apply to the display"
 msgstr "Bruk på skjermen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Clear selection"
 msgstr "Fjern utvalg"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
 msgid "Save preset"
 msgstr "Lagre forhåndsinnstilling"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
 msgid "Name of the preset:"
 msgstr "Navn på forhåndsinnstillingen:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1203
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
 msgid "My layout"
 msgstr "Mitt oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
 msgid "Save"
 msgstr "Lagre"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1215
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
 msgid "Preset saved."
 msgstr "Forhåndsinnstillingen er lagret."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1217
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Could not save the preset"
 msgstr "Klarte ikke å lagre forhåndsinnstillingen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1226
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
 msgid "Could not load the preset"
 msgstr "Klarte ikke å laste inn forhåndsinnstillingen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1235
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
 msgid "Could not delete the preset"
 msgstr "Klarte ikke å slette forhåndsinnstillingen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1243
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
 msgstr[0] "Lastet inn; {n} ugyldig verdi ble erstattet med standardverdien."
 msgstr[1] "Lastet inn; {n} ugyldige verdier ble erstattet med standardverdier."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
 msgid "Layout loaded."
 msgstr "Oppsettet er lastet inn."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1250
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
 msgid "Export Kojiro layout"
 msgstr "Eksporter Kojiro-oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1262
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
 msgid "Layout exported."
 msgstr "Oppsettet er eksportert."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1279
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
 msgid "Package exported."
 msgstr "Pakken er eksportert."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1281
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Could not export"
 msgstr "Klarte ikke å eksportere"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1286
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
 msgid "Include your wallpaper?"
 msgstr "Ta med bakgrunnsbildet ditt?"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Oppsettet bruker et bilde du har importert. Ta det bare med hvis du har rett til å dele det; ellers bruker pakken et innebygd bakgrunnsbilde."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1289
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "Do not include"
 msgstr "Ikke ta med"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
 msgid "Include the image"
 msgstr "Ta med bildet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
 msgid "Import Kojiro layout"
 msgstr "Importer Kojiro-oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
 msgid "Kojiro layouts"
 msgstr "Kojiro-oppsett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1333
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
 msgid "Could not import"
 msgstr "Klarte ikke å importere"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1346
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
 msgid "Sensors on this computer"
 msgstr "Sensorer på denne datamaskinen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1347
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Hva elementene kan vise. Valgfrie sensorer leses bare mens et synlig element bruker dem."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 msgid "limit"
 msgstr "grense"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 msgid "no hardware limit reported"
 msgstr "ingen maskinvaregrense rapportert"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "videokoding/-dekoding: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
 msgid "not reported"
 msgstr "ikke rapportert"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1363
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "Fans"
 msgstr "Vifter"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1363
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "none reported"
 msgstr "ingen rapportert"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Disk {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 msgid "no temperature sensor"
 msgstr "ingen temperatursensor"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
 msgid "Rendering"
 msgstr "Rendring"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1372
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
 msgid "Last preview frame"
 msgstr "Siste bilde i forhåndsvisningen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1373
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "Cached widget layers"
 msgstr "Hurtiglagrede elementlag"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
 msgid "Optional collectors used"
 msgstr "Valgfrie innsamlere i bruk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "ingen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
 msgid "Settings size"
 msgstr "Størrelse på innstillingene"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
 msgid "Refresh"
 msgstr "Oppdater"
 

@@ -336,3 +336,27 @@ def test_android_in_my_displays(tmp_path):
     assert checks["android_pair_closed"] is True
     assert "releases/latest/download/big-screen-monitor-display.apk" in checks["android_steps"]
     assert 0 < checks["android_steps_width"] <= 560 - 48
+
+
+def test_report_text_has_version_checks_and_journal(config_gui, monkeypatch, tmp_path):
+    from bsmd import __version__
+    monkeypatch.setattr(config_gui.diagnostics, "run_checks",
+                        lambda: {"checks": [], "status": {"state": "healthy"}})
+    monkeypatch.setattr(config_gui.diagnostics, "format_report", lambda report: "CHECKS")
+    calls = []
+
+    def fake_run(argv, **kw):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0, stdout="journal line\n")
+    monkeypatch.setattr(config_gui.subprocess, "run", fake_run)
+    text = config_gui.ConfigWindow._report_text(journal_lines=80)
+    assert text.startswith(f"Big Screen Monitor Display {__version__}")
+    assert "CHECKS" in text and '"state": "healthy"' in text and "journal line" in text
+    assert calls[0][:5] == ["journalctl", "-u", config_gui.SERVICE_NAME, "-n", "80"]
+
+
+def test_issue_links_point_to_the_project():
+    from bsmd import ISSUES_NEW_URL, PROJECT_URL
+    assert ISSUES_NEW_URL == PROJECT_URL + "/issues/new/choose"
+    templates = os.path.join(HERE, "..", ".github", "ISSUE_TEMPLATE")
+    assert {"1-hardware.yml", "2-bug.yml", "3-feature.yml", "config.yml"} <= set(os.listdir(templates))
