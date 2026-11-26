@@ -100,7 +100,7 @@ def lerp(a, b, t):
 
 def mix(c1, c2, t):
     t = max(0.0, min(1.0, t))
-    return tuple(int(round(lerp(x, y, t))) for x, y in zip(c1, c2))
+    return tuple(int(round(lerp(x, y, t))) for x, y in zip(c1, c2, strict=False))
 
 
 def shade(color, factor):
@@ -109,10 +109,10 @@ def shade(color, factor):
 
 def sky_at(hour):
     """Interpolated (zenith, horizon, sea_top, sea_bottom, light) for ``hour``."""
-    for (h0, *a), (h1, *b) in zip(SKY_KEYS, SKY_KEYS[1:]):
+    for (h0, *a), (h1, *b) in zip(SKY_KEYS, SKY_KEYS[1:], strict=False):
         if h0 <= hour <= h1:
             t = (hour - h0) / (h1 - h0) if h1 > h0 else 0
-            return tuple(mix(x, y, t) for x, y in zip(a[:4], b[:4])) + (lerp(a[4], b[4], t),)
+            return tuple(mix(x, y, t) for x, y in zip(a[:4], b[:4], strict=False)) + (lerp(a[4], b[4], t),)
     return tuple(SKY_KEYS[0][1:5]) + (SKY_KEYS[0][5],)
 
 

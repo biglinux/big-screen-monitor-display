@@ -14,7 +14,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from bsmd import settings, themes  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 
 from . import components as ui  # noqa: E402
 
@@ -205,7 +205,8 @@ class Dashboard:
             return
         count = sum(1 for d in status.get("displays") or [] if d.get("connected"))
         if count:
-            text = _("Service running · {count} display(s)").format(count=count)
+            text = ngettext("Service running · {count} display", "Service running · {count} displays",
+                            count).format(count=count)
             ui.set_pill(self.service_pill, text, "success" if status.get("state") == "healthy" else "warning")
         else:
             ui.set_pill(self.service_pill, _("Service running · waiting for a display"), "warning")
@@ -242,6 +243,13 @@ class Dashboard:
                       _("Connect the panel over USB. If it is already connected, try another cable or port and "
                         "look again."),
                       [(_("Look Again"), self._scan), (_("Diagnose"), window.diagnose)])
+            return
+        if current and current.get("attention") == "replug":
+            card.show("error", "dialog-warning-symbolic", _("Unplug the display and plug it in again"),
+                      _("The display stopped taking data (after the computer restarted, or a theme upload was "
+                        "interrupted). Its firmware only recovers when it loses power: unplug its USB cable, wait "
+                        "5 seconds and plug it in again. The service continues on its own."),
+                      [(_("Diagnose"), window.diagnose)])
             return
         if current and current.get("state") in ("failed", "disconnected", "retrying"):
             card.show("error", "dialog-warning-symbolic", _("The display is not responding"),

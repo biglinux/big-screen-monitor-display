@@ -36,10 +36,13 @@ TIMEOUT = "timeout"
 IO = "io"
 PROTOCOL = "protocol"
 BUSY = "busy"            # another program holds the device
+# The device answers on USB but its firmware stopped taking data, and only
+# removing its power brings it back (unplug and plug the cable again).
+NEEDS_REPLUG = "needs_replug"
 
-FATAL_KINDS = {NOT_FOUND, PERMISSION, DISCONNECTED, BUSY}
+FATAL_KINDS = {NOT_FOUND, PERMISSION, DISCONNECTED, BUSY, NEEDS_REPLUG}
 # Conditions a process restart cannot fix: retry slowly, never escalate to FAILED.
-EXTERNAL_KINDS = {PERMISSION, BUSY}
+EXTERNAL_KINDS = {PERMISSION, BUSY, NEEDS_REPLUG}
 
 
 class DisplayError(Exception):
@@ -77,6 +80,10 @@ class Capabilities:
     output: str = "raster"               # raster (framebuffer) or telemetry (structured CPU values)
     metrics: tuple = ()                  # telemetry: metrics the firmware shows, physical order
     display: str = "lcd"                 # lcd or segment (numeric)
+    touch: str = ""                      # "" none, "single" single-point touchscreen (events via on_input)
+    # "panel": the runtime rotates frames for the mounting; "device": the device
+    # rotates itself (Android) and frames are drawn at its current aspect.
+    orientation: str = "panel"
 
     def as_dict(self):
         return {key: (list(value) if isinstance(value, tuple) else value)

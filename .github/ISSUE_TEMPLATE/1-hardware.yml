@@ -1,0 +1,47 @@
+name: "Hardware: meu display / My display"
+description: "Um painel, cooler ou aparelho não é reconhecido, ou você testou um driver nível B. / A panel, cooler or device is not recognized, or you tested a level B driver."
+title: "[hardware] "
+labels: ["hardware"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado! Cada relato de hardware vira um teste e uma linha na tabela de compatibilidade.
+        Drivers **B** (implementados, aguardando teste físico) passam a **A** com um relato como este.
+        Thanks! Every hardware report becomes a test and a row in the compatibility table.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: "O que aconteceu / What happened"
+      options:
+        - "Funciona! (confirmo um driver B) / It works! (confirming a B driver)"
+        - "Não é reconhecido / Not recognized"
+        - "Reconhecido, mas a imagem/o toque falha / Recognized, but picture or touch fails"
+        - "Quero suporte a um modelo novo / Requesting a new model"
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: "Modelo e onde comprou / Model and where you bought it"
+      placeholder: "Turing 3.5\" (AliExpress), DeepCool AK620 DIGITAL…"
+    validations:
+      required: true
+  - type: textarea
+    id: lsusb
+    attributes:
+      label: "Saída de lsusb / lsusb output"
+      description: "Rode `lsusb` com o aparelho conectado. / Run `lsusb` with the device plugged in."
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: "Relatório de diagnóstico / Diagnostic report"
+      description: "Na janela: Diagnóstico › Relatar um problema (já copia tudo). Ou rode `python3 /usr/share/big-screen-monitor-display/main.py --diagnose`. / In the window: Diagnostics › Report a problem."
+      render: text
+  - type: textarea
+    id: notes
+    attributes:
+      label: "Fotos, vídeo ou observações / Photos, video or notes"

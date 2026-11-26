@@ -1,0 +1,221 @@
+#!/usr/bin/python3 -IB
+"""Keep SmartMonitor HID panels working across sleep (run by systemd, as root).
+
+Measured on hardware (0483:0065, firmware of 2022): once the host has configured
+the panel, any USB reset (the kernel on resume, a ``usbreset``, the BIOS on a
+restart) leaves its firmware unable to take data until its power is removed. A
+panel that has just restarted and was *not* configured again goes through a
+reset fine. So before sleeping:
+
+    park      end an (empty) upload session: the panel restarts on its own in
+              ~1 s, keeping its theme; the bus is told not to configure new
+              devices (``authorized_default=0``) while it comes back, and the
+              previous value is restored right after.
+    unpark    authorize the parked panels again (they are then configured as
+              after being plugged in).
+
+A PC restart cannot be covered this way: the BIOS configures the panel during
+POST before the kernel resets it (measured on an ASRock A520M-HVS). There the
+service asks for the cable to be plugged in again.
+
+Verbs (no other input is accepted):
+
+    bsm-usb-guard sleep      before sleep: stop the service, park
+    bsm-usb-guard wake       after sleep: unpark, start the service again
+    bsm-usb-guard park       park now (for tests)
+    bsm-usb-guard unpark     unpark now
+"""
+
+import datetime
+import errno
+import fcntl
+import glob
+import os
+import select
+import subprocess
+import sys
+import time
+
+APP_DIR = "/usr/share/big-screen-monitor-display"
+SYSFS = "/sys/bus/usb/devices"
+SERVICE = "big-screen-monitor-display.service"
+SYSTEMCTL = "/usr/bin/systemctl"
+RESTART_MARK = "/run/bsm-usb-guard.restart"
+PANELS = {("0483", "0065")}
+ACK, ACK_MORE = 0x06, 0x43
+
+
+def log(message):
+    print(f"bsm-usb-guard: {message}", file=sys.stderr, flush=True)
+
+
+def read(path, default=""):
+    try:
+        with open(path, encoding="ascii") as handle:
+            return handle.read().strip()
+    except OSError:
+        return default
+
+
+def write(path, value):
+    with open(path, "w", encoding="ascii") as handle:
+        handle.write(value)
+
+
+def panels():
+    """USB paths ("1-2") of the SmartMonitor panels plugged in."""
+    found = []
+    for path in sorted(glob.glob(os.path.join(SYSFS, "*"))):
+        name = os.path.basename(path)
+        if ":" in name or name.startswith("usb"):
+            continue
+        if (read(os.path.join(path, "idVendor")), read(os.path.join(path, "idProduct"))) in PANELS:
+            found.append(name)
+    return found
+
+
+def hidraw(usb_path):
+    nodes = sorted(glob.glob(os.path.join(SYSFS, usb_path, f"{usb_path}:*", "*", "hidraw", "hidraw*")))
+    return "/dev/" + os.path.basename(nodes[0]) if nodes else ""
+
+
+def acks(fd, timeout):
+    """Input reports arriving within ``timeout`` (first two bytes), or ["gone"]."""
+    found, deadline = [], time.monotonic() + timeout
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return found
+        ready, _, _ = select.select([fd], [], [], remaining)
+        if not ready:
+            return found
+        try:
+            data = os.read(fd, 65)
+        except OSError:
+            return found + ["gone"]
+        found.append(data[:2])
+        if data[:1] == bytes([ACK]):
+            return found
+
+
+def park(usb_path, protocol):
+    """Restart one panel and keep it unconfigured. True when parked."""
+    base = os.path.join(SYSFS, usb_path)
+    if read(os.path.join(base, "authorized")) == "0":
+        return True
+    node = hidraw(usb_path)
+    if not node:
+        log(f"{usb_path}: no hidraw node, left alone")
+        return False
+    try:
+        fd = os.open(node, os.O_RDWR | os.O_NONBLOCK | os.O_CLOEXEC)
+    except OSError as error:
+        log(f"{usb_path}: cannot open {node}: {error}")
+        return False
+    hub = os.path.join(SYSFS, f"usb{read(os.path.join(base, 'busnum'))}", "authorized_default")
+    previous = None
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            log(f"{usb_path}: in use by another program, left alone")
+            return False
+        try:
+            os.write(fd, protocol.datetime_report(datetime.datetime.now(), 100))
+        except OSError as error:
+            if error.errno == errno.ETIMEDOUT:
+                log(f"{usb_path}: already stuck (it needs to be unplugged), nothing to do")
+            else:
+                log(f"{usb_path}: not answering ({error}), left alone")
+            return False
+        acks(fd, 0.1)
+        os.write(fd, protocol.report(protocol.RESET))
+        time.sleep(0.2)
+        os.write(fd, protocol.report(protocol.YMODEM))
+        if bytes([ACK, ACK_MORE]) not in acks(fd, 3.0):
+            log(f"{usb_path}: did not enter the upload mode, left alone")
+            return False
+        os.write(fd, protocol.report(bytes([protocol.EOT])))
+        acks(fd, 1.5)
+        address = read(os.path.join(base, "devnum"))
+        previous = read(hub, None) if os.path.exists(hub) else None
+        if previous is not None:
+            write(hub, "0")
+        for packet in protocol.metadata_block("", 0):
+            try:
+                os.write(fd, packet)
+            except OSError:
+                break           # already restarting
+        deadline = time.monotonic() + 10.0
+        while time.monotonic() < deadline:
+            if read(os.path.join(base, "devnum")) not in ("", address) and \
+                    read(os.path.join(base, "authorized")) in ("0", "1"):
+                break
+            time.sleep(0.1)
+        parked = read(os.path.join(base, "authorized")) == "0"
+        log(f"{usb_path}: {'parked (restarted, not configured)' if parked else 'did not restart in time'}")
+        return parked
+    except OSError as error:
+        log(f"{usb_path}: {error}")
+        return False
+    finally:
+        os.close(fd)
+        if previous is not None:
+            try:
+                write(hub, previous)
+            except OSError as error:
+                log(f"could not restore {hub}: {error}")
+
+
+def unpark():
+    for usb_path in panels():
+        path = os.path.join(SYSFS, usb_path, "authorized")
+        if read(path) == "0":
+            try:
+                write(path, "1")
+                log(f"{usb_path}: authorized again")
+            except OSError as error:
+                log(f"{usb_path}: could not authorize: {error}")
+
+
+def park_all():
+    sys.path.insert(0, APP_DIR)
+    from bsmd.displays.smartmonitor import protocol
+    return [park(usb_path, protocol) for usb_path in panels()]
+
+
+def service_active():
+    return subprocess.run([SYSTEMCTL, "is-active", "--quiet", SERVICE], timeout=10, check=False).returncode == 0
+
+
+def main(argv):
+    if os.geteuid() != 0:
+        log("must run as root")
+        return 2
+    verb = argv[0] if len(argv) == 1 else ""
+    if verb == "unpark":
+        unpark()
+        return 0
+    if verb == "park":
+        park_all()
+        return 0
+    if verb == "sleep":
+        if not any(read(os.path.join(SYSFS, p, "authorized")) == "1" for p in panels()):
+            return 0
+        if service_active():
+            write(RESTART_MARK, "1")
+            subprocess.run([SYSTEMCTL, "stop", SERVICE], timeout=30, check=False)
+        park_all()
+        return 0
+    if verb == "wake":
+        unpark()
+        if os.path.exists(RESTART_MARK):
+            os.unlink(RESTART_MARK)
+            subprocess.run([SYSTEMCTL, "start", "--no-block", SERVICE], timeout=30, check=False)
+        return 0
+    log("usage: bsm-usb-guard sleep|wake|park|unpark")
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

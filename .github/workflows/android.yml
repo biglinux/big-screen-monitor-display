@@ -1,0 +1,109 @@
+name: Android app
+
+on:
+  push:
+    # Branches run only when these paths change; tags v* always run (path
+    # filters are not evaluated for tags) and publish the APK as a release.
+    # Listing tags alone would stop the branch pushes, so both are listed.
+    branches: ["**"]
+    tags: ["v*"]
+    paths:
+      - "android/**"
+      - "tests/data/bsdp-vectors.json"
+      - ".github/workflows/android.yml"
+  pull_request:
+    paths:
+      - "android/**"
+      - "tests/data/bsdp-vectors.json"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write          # only used by the release step, on v* tags
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      # The runner's Android SDK (licences accepted) is used as it is; AGP fetches platform 36.
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: "9.7.1"
+      - name: Unit tests (protocol vectors shared with the computer's tests)
+        run: gradle -p android --no-daemon --stacktrace testDebugUnitTest
+      - name: Lint
+        run: gradle -p android --no-daemon lintDebug
+      - name: Debug APK
+        run: gradle -p android --no-daemon assembleDebug
+      - name: Release APK
+        # Signed only when the repository has the signing secrets; otherwise an
+        # unsigned release APK is built (never published as a signed release).
+        env:
+          BSMD_KEYSTORE_BASE64: ${{ secrets.BSMD_KEYSTORE_BASE64 }}
+          BSMD_KEYSTORE_PASSWORD: ${{ secrets.BSMD_KEYSTORE_PASSWORD }}
+          BSMD_KEY_ALIAS: ${{ secrets.BSMD_KEY_ALIAS }}
+          BSMD_KEY_PASSWORD: ${{ secrets.BSMD_KEY_PASSWORD }}
+        run: |
+          if [ -n "$BSMD_KEYSTORE_BASE64" ]; then
+            echo "$BSMD_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            export BSMD_KEYSTORE="$RUNNER_TEMP/release.jks"
+          fi
+          gradle -p android --no-daemon assembleRelease
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: big-screen-monitor-display-android
+          path: |
+            android/app/build/outputs/apk/**/*.apk
+            android/app/build/reports/lint-results-*.html
+            android/app/build/reports/tests/
+          if-no-files-found: warn
+      - name: Publish the APK on the release of this tag
+        # README links to releases/latest/download/big-screen-monitor-display.apk,
+        # so every release carries that fixed name (and a versioned copy).
+        # The signed release APK is used when the signing secrets exist;
+        # otherwise the debug APK, which Android installs (it is signed with
+        # the Gradle debug key). An unsigned APK is never published.
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          SIGNED: ${{ secrets.BSMD_KEYSTORE_BASE64 != '' }}
+        run: |
+          version=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' android/app/build.gradle.kts)
+          if [ "v$version" != "$TAG" ]; then
+            echo "::error::tag $TAG does not match versionName $version"; exit 1
+          fi
+          if [ "$SIGNED" = "true" ]; then
+            apk=android/app/build/outputs/apk/release/app-release.apk
+          else
+            apk=android/app/build/outputs/apk/debug/app-debug.apk
+          fi
+          test -s "$apk"
+          mkdir -p dist
+          cp "$apk" dist/big-screen-monitor-display.apk
+          cp "$apk" "dist/big-screen-monitor-display-$version.apk"
+          (cd dist && sha256sum -- *.apk > SHA256SUMS)
+          # A new release is created as a draft and published only after the
+          # upload, so releases/latest never points at a release without the APK.
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            # Title and notes from the CHANGELOG section "## [x.y.z] — title";
+            # a generic line when the section is missing.
+            heading=$(grep -m1 "^## \[$version\]" CHANGELOG.md || true)
+            title="$TAG"
+            if [ -n "$heading" ]; then
+              subtitle=$(printf '%s' "$heading" | sed -E 's/^## \[[^]]*\]( — )?//')
+              [ -n "$subtitle" ] && title="$TAG — $subtitle"
+              awk -v h="$heading" '$0 == h {f=1; next} /^## \[/ {f=0} f' CHANGELOG.md > release-notes.md
+            else
+              printf 'Big Screen Monitor Display %s.\n' "$version" > release-notes.md
+            fi
+            printf '\n**App Android:** `big-screen-monitor-display.apk` abaixo.\n' >> release-notes.md
+            gh release create "$TAG" --verify-tag --draft --title "$title" --notes-file release-notes.md
+          fi
+          gh release upload "$TAG" dist/* --clobber
+          gh release edit "$TAG" --draft=false

@@ -4,6 +4,7 @@ that answers YMODEM like the firmware."""
 
 import datetime
 import json
+import os
 import time
 
 import pytest
@@ -522,7 +523,8 @@ def test_cover_and_title_of_every_song_is_on_by_default():
     assert settings.defaults()["sm_bmp_track_refresh"] is True
 
 
-def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver, stats):
+def test_new_pictures_are_captured_while_the_current_one_stays_live(make_driver, stats, monkeypatch):
+    monkeypatch.setattr(sm_driver, "FLASH_SETTLE", 0.0)
     drv = make_driver(FakePanel())
     drv.background_capture = True
     base = dict(settings.defaults(), brightness=40)
@@ -563,3 +565,386 @@ def test_media_hub_starts_once_when_sessions_ask_together(tmp_path, monkeypatch)
     for thread in threads:
         thread.join()
     assert len(created) == 1 and app.media_hub is created[0]
+
+
+def test_a_new_picture_waits_until_the_settings_stop_changing(make_driver, stats, monkeypatch):
+    clock = [1000.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    drv = make_driver(FakePanel())
+    drv.background_capture = True
+    drv.precapture = False
+    base = dict(settings.defaults(), brightness=40)
+    drv.present(drv.build_frame(base, stats))
+    clock[0] += 60.0
+    picked = drv.build_frame(dict(base, theme="big_media_player"), stats)
+    drv.present(picked)                              # another theme picked: captured at once
+    assert drv._job is not None and drv._job["key"] == picked.key
+    drv._job["done"].wait(30)
+    drv.present(picked)
+    flashed = drv.flashed
+    for skin in ("a", "b", "c"):                     # then edited: a new picture every second
+        clock[0] += 1.0
+        editing = drv.build_frame(dict(base, theme="big_media_player", bmp_skin=skin), stats)
+        drv.present(editing)
+        assert drv._job is None and drv.flashed == flashed
+    clock[0] += sm_driver.FLASH_SETTLE + 0.1          # quiet: now it is captured
+    drv.present(editing)
+    assert drv._job is not None and drv._job["key"] == editing.key
+    drv._job["done"].wait(30)
+
+
+def test_other_themes_are_adapted_ahead_when_quiet(make_driver, stats, monkeypatch):
+    clock = [1000.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    drv = make_driver(FakePanel())
+    drv._started = clock[0]
+    adapted = []
+    monkeypatch.setattr(layout, "is_cached", lambda spec: spec["theme"] == "planet")
+    original = layout.compiled
+    monkeypatch.setattr(layout, "compiled", lambda spec, s, st, progress=None:
+                        adapted.append(spec["theme"]) or original(spec, s, st, progress))
+    base = dict(settings.defaults(), brightness=40)
+    frame = drv.build_frame(base, stats)
+    drv.present(frame)
+    assert drv._pre is None                          # just flashed: not yet
+    adapted.clear()
+    clock[0] += sm_driver.PRECAPTURE_IDLE + 1
+    drv.present(drv.build_frame(base, stats))
+    drv._pre.join(60)
+    from bsmd.displays.smartmonitor import capture
+    expected = set(capture.THEME_OPTIONS) - {base["theme"], "planet"}
+    if sm_driver._lacks_data(dict(base, theme="kojiro"), stats):
+        expected.discard("kojiro")                   # its fans are not sampled yet
+    assert set(adapted) == expected
+    adapted.clear()
+    clock[0] += 1
+    drv.present(drv.build_frame(base, stats))        # same settings: done once
+    assert drv._pre.is_alive() is False and adapted == []
+
+
+class SilentPanel(FakePanel):
+    """A panel whose upload was cut after its theme was erased: takes reports, answers nothing."""
+
+    def _handle(self, payload):
+        return
+
+
+def test_a_panel_silent_after_an_interrupted_upload_asks_to_be_replugged(make_driver, stats, monkeypatch):
+    from bsmd.displays.base import NEEDS_REPLUG
+    monkeypatch.setattr(sm_driver, "ACK_TIMEOUT", 0.05)
+    monkeypatch.setattr(sm_driver, "REENUMERATE_WAIT", 0.05)
+    monkeypatch.setattr(sm_driver, "usb_address", lambda _path, sysfs=None: "3:4")
+    monkeypatch.setattr(sm_driver, "_STUCK", {})
+    monkeypatch.setattr(sm_driver.SmartMonitorHid, "_ask_ymodem", lambda self, timeout: False)
+    drv = make_driver(SilentPanel())
+    with pytest.raises(DisplayError) as caught:
+        drv.present(drv.build_frame(dict(settings.defaults()), stats))
+    assert caught.value.kind == NEEDS_REPLUG
+    drv.hid = FakePanel()
+    with pytest.raises(DisplayError) as caught:      # no more tries until it is plugged in again
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG
+
+
+class ResetStuckPanel(FakePanel):
+    """A panel after a USB reset: every write times out in the kernel."""
+
+    def write(self, data):
+        import errno
+        raise DisplayError("io", "write: timed out", OSError(errno.ETIMEDOUT, "Connection timed out"))
+
+
+def test_a_panel_stuck_after_a_usb_reset_asks_to_be_replugged(tmp_path, monkeypatch):
+    from bsmd.displays.base import NEEDS_REPLUG
+    address = ["1:5"]
+    monkeypatch.setattr(sm_driver, "usb_address", lambda _path, sysfs=None: address[0])
+    monkeypatch.setattr(sm_driver, "_STUCK", {})
+    drv = sm_driver.SmartMonitorHid("/dev/hidraw-fake", "1-1", state_path=str(tmp_path / "state.json"))
+    drv.hid = panel = ResetStuckPanel()
+    with pytest.raises(DisplayError) as caught:
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG and panel.fd is None
+    opens = panel.opens
+    with pytest.raises(DisplayError) as caught:      # same USB address: no 5 s write again
+        drv.open()
+    assert caught.value.kind == NEEDS_REPLUG and panel.opens == opens
+    address[0] = "1:6"                               # replugged: a new address, tried again
+    drv.hid = FakePanel()
+    drv.open()
+    assert "1-1" not in sm_driver._STUCK
+
+
+def test_fans_are_live_values_found_by_id():
+    from bsmd.displays.smartmonitor import fields
+    fans = [{"id": "amdgpu/fan1", "label": "fan1", "chip": "amdgpu", "rpm": 1450, "percent": 28.0},
+            {"id": "nct6793/fan1", "label": "fan1", "chip": "nct6793", "rpm": 0, "percent": 30.0},
+            {"id": "nct6793/fan2", "label": "fan2", "chip": "nct6793", "rpm": 1378, "percent": 62.7}]
+    try:
+        base = fields.base_stats({"fans": fans})
+        names = fields.FIELDS["fan"][2]
+        assert "fan_rpm:nct6793/fan2" in names and "fan_pct:amdgpu/fan1" in names
+        variant = dict(base, **fields.FIELDS["fan"][1][1](base))
+        values = {n: (fields.candidate_value(n, base), fields.candidate_value(n, variant)) for n in names}
+        rpm_pairs = [v for n, v in values.items() if n.startswith(fields.FAN_RPM) and v[0]]
+        assert len(set(rpm_pairs)) == len(rpm_pairs) == 2           # each spinning fan is told apart
+        assert values["fan_rpm:nct6793/fan1"] == (0.0, 0.0)          # a stopped fan stays stopped
+        assert fields.PERCENT["fan"][1] == "fan_pct:nct6793/fan2"    # "auto": the motherboard fan
+        assert "fans" not in fields.noise(base)
+        live = {"fans": [dict(f, rpm=f["rpm"] + 5) for f in fans]}
+        binding = {"cand": "fan_rpm:nct6793/fan2", "part": "whole"}
+        assert fields.binding_value(binding, live) == 1383
+        assert fields.binding_value({"cand": "fan_rpm:gone/fan9", "part": "whole"}, live) == 0
+    finally:
+        fields.set_fans([])
+    assert "fan" not in fields.FIELDS
+
+
+def test_kojiro_auto_fan_prefers_the_computer_fan():
+    from bsmd.kojiro import data
+    fans = [{"id": "amdgpu/fan1", "label": "fan1", "chip": "amdgpu", "rpm": 1450},
+            {"id": "nct6793/fan2", "label": "fan2", "chip": "nct6793", "rpm": 1378}]
+    assert data._fan({"fans": fans}, "auto")["id"] == "nct6793/fan2"
+    labelled = fans + [{"id": "it87/CPU Fan", "label": "CPU Fan", "chip": "it87", "rpm": 900}]
+    assert data._fan({"fans": labelled}, "auto")["id"] == "it87/CPU Fan"
+    assert data._fan({"fans": fans[:1]}, "auto")["id"] == "amdgpu/fan1"   # only the GPU's: still shown
+
+
+def test_telemetry_displays_ask_the_collector_for_what_kojiro_shows():
+    config = settings.kojiro_defaults()
+    widgets = config["layouts"]["landscape"]
+    if not any(w["type"] == "fan" for w in widgets):
+        widgets.append(dict(widgets[0], id="fan-9", type="fan", opts={"fan": "auto"}, visible=True))
+    needs = runtime._telemetry_needs({"theme": "kojiro", "kojiro": config, "orientation": "horizontal"})
+    assert needs["fans"] is True
+    assert runtime._telemetry_needs({"theme": "standard"}) is None
+
+
+def test_live_values_go_out_fast_while_a_song_plays_every_value_every_time(make_driver, stats, monkeypatch):
+    clock = [500.0]
+    monkeypatch.setattr(sm_driver.time, "monotonic", lambda: clock[0])
+    panel = FakePanel()
+    drv = make_driver(panel)
+    base = dict(settings.defaults(), brightness=40)
+    drv.present(drv.build_frame(base, stats))
+    assert drv.frame_interval(dict(base, theme="big_media_player")) == sm_driver.IDLE_INTERVAL
+    panel.writes.clear()
+    clock[0] += 0.2
+    frame = drv.build_frame(base, stats)
+    drv.present(frame)                                   # nothing changed: every value anyway
+    sent = sum(w[1] for w in panel.writes if w[0] == protocol.SENSOR)
+    assert sent == len(frame.values) and not any(w[0] == protocol.DATETIME for w in panel.writes)
+    panel.writes.clear()
+    clock[0] += 1.0
+    drv.present(frame)                                   # a second later: the clock too
+    assert panel.writes[0][0] == protocol.DATETIME
+    playing = dict(stats, media={"present": True, "status": "Playing"})
+    drv.present(drv.build_frame(dict(base, theme="standard"), playing))
+    for profile, interval in sm_driver.MEDIA_INTERVAL.items():
+        assert drv.frame_interval({"theme": "big_media_player", "performance_profile": profile}) == interval
+    assert drv.frame_interval({"theme": "standard"}) == sm_driver.IDLE_INTERVAL
+
+
+def test_resource_caches_survive_a_capture_render():
+    from bsmd.displays.smartmonitor import capture
+    from bsmd.kojiro import draw
+    from bsmd import legacy_themes
+    draw.font_file("default", False)
+    legacy_themes.ICON_CACHE["probe"] = "kept"
+    legacy_themes._TEXT_PROBE_CACHE = {"x": 1}
+    try:
+        capture._clear_theme_caches()
+        assert draw.font_file.cache_info().currsize >= 1
+        assert legacy_themes.ICON_CACHE.get("probe") == "kept"
+        assert legacy_themes._TEXT_PROBE_CACHE == {}       # drawing caches are still emptied
+    finally:
+        legacy_themes.ICON_CACHE.pop("probe", None)
+        del legacy_themes._TEXT_PROBE_CACHE
+
+
+def test_kojiro_is_not_adapted_ahead_without_its_fans():
+    config = settings.kojiro_defaults()
+    widgets = config["layouts"]["landscape"]
+    if not any(w["type"] == "fan" for w in widgets):
+        widgets.append(dict(widgets[0], id="fan-9", type="fan", opts={"fan": "auto"}, visible=True))
+    wanted = {"theme": "kojiro", "kojiro": config, "orientation": "horizontal"}
+    assert sm_driver._lacks_data(wanted, {"fans": []}) is True
+    assert sm_driver._lacks_data(wanted, {"fans": [{"id": "nct6793/fan2", "rpm": 1300}]}) is False
+    assert sm_driver._lacks_data({"theme": "standard"}, {}) is False
+
+
+def test_standard_process_list_is_a_snapshot_renewed_every_n_minutes(stats):
+    base = dict(settings.defaults(), theme="standard")
+    assert settings.defaults()["sm_std_processes"] == "0"
+    off = layout.spec(base, stats, datetime.datetime(2026, 11, 20, 12, 0))
+    assert "procs" not in off
+    on = dict(base, sm_std_processes="30")
+    first = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 1))
+    same = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 29))
+    later = layout.spec(on, stats, datetime.datetime(2026, 11, 20, 12, 31))
+    assert layout.key(first) == layout.key(same) != layout.key(later)
+    from bsmd.displays.smartmonitor import capture
+    assert capture._standard_settings(on)["std_side_panel"] == "processes"
+    assert capture._standard_settings(dict(base, std_side_panel="graphs"))["std_side_panel"] == "graphs"
+    assert capture._standard_settings(dict(base, std_side_panel="processes"))["std_side_panel"] == "none"
+    needs = runtime._telemetry_needs(on)
+    assert needs["processes"] is True and runtime._telemetry_needs(base) is None
+    assert sm_driver._lacks_data(on, {"procs": []}) is True
+    assert sm_driver._lacks_data(on, {"procs": [{"name": "x"}]}) is False
+
+
+def test_history_graphs_are_never_frozen_in_the_picture():
+    from bsmd.displays.smartmonitor import capture, fields
+    assert {"standard", "gkrellm"} <= capture.HISTORY_THEMES and "old_computer" not in capture.HISTORY_THEMES
+    stats = {"gpus": [{"path": "g", "percent": 30, "usage_history": [5, 60, 40], "mem_history": [10, 20, 30]}]}
+    noise = fields.noise(fields.base_stats(stats))
+    assert noise[fields.HISTORY_LEVEL] != 0                          # moved: whatever follows it is left out
+    assert noise["gpus"][0]["usage_history"] != [5, 60, 40]
+
+
+def test_standard_graphs_side_panel_keeps_its_values_live(stats, tmp_path, monkeypatch):
+    monkeypatch.setenv("STATE_DIRECTORY", str(tmp_path))
+    layout._MEMORY.clear()
+    plain = dict(settings.defaults(), theme="standard", std_side_panel="none")
+    graphs = dict(plain, std_side_panel="graphs")
+    without = layout.compiled(layout.spec(plain, stats), plain, stats)
+    with_graphs = layout.compiled(layout.spec(graphs, stats), graphs, stats)
+    assert with_graphs.bindings and with_graphs.data != without.data
+    numbers = [r for r in imgdat.parse(with_graphs.data) if r["type"] == imgdat.NUMBER]
+    assert len(numbers) > len([r for r in imgdat.parse(without.data) if r["type"] == imgdat.NUMBER])
+
+
+def test_planet_globe_turns_every_n_minutes_at_the_real_time(stats):
+    base = dict(settings.defaults(), theme="planet")
+    assert settings.defaults()["sm_planet_minutes"] == "180"
+    when = datetime.datetime(2026, 11, 20, 14, 10, tzinfo=datetime.timezone.utc)
+    half = dict(base, sm_planet_minutes="30")
+    a = layout.spec(half, stats, when)
+    b = layout.spec(half, stats, when + datetime.timedelta(minutes=15))
+    c = layout.spec(half, stats, when + datetime.timedelta(minutes=25))
+    assert a["astronomy"] == b["astronomy"] != c["astronomy"]
+    assert datetime.datetime.fromisoformat(a["astronomy"]) == datetime.datetime(2026, 11, 20, 14, 15,
+                                                                                tzinfo=datetime.timezone.utc)
+    slow = layout.spec(base, stats, when)
+    assert datetime.datetime.fromisoformat(slow["astronomy"]).hour == 13    # 12:00-15:00, middle 13:30
+
+
+def test_active_gpu_clock_power_and_encoder_are_live_not_noise():
+    from bsmd.displays.smartmonitor import fields
+    stats = {"active_gpu_idx": 0, "gpus": [{"path": "a", "clock_mhz": 200, "power_w": 8, "enc_percent": 0},
+                                           {"path": "b", "clock_mhz": 300}]}
+    noise = fields.noise(stats)
+    assert noise["gpus"][0]["clock_mhz"] == 200 and noise["gpus"][0]["power_w"] == 8
+    assert noise["gpus"][1]["clock_mhz"] != 300                        # another GPU's: left out
+
+
+def test_planet_reads_the_cpu_frequency_from_the_collector(monkeypatch):
+    from bsmd import legacy_themes, telemetry
+    monkeypatch.setitem(telemetry.SYSTEM_STATS, "cpu_freq_mhz", 3814.0)
+    monkeypatch.setattr(legacy_themes.psutil, "cpu_freq", lambda: pytest.fail("the collector's value is used"))
+    legacy_themes.render_dashboard_planet(480, 320, dict(settings.defaults(), theme="planet"))
+
+
+def test_values_not_on_screen_beat_repeats_and_large_decimals():
+    from bsmd.displays.smartmonitor import capture
+    sel = capture.Capture.__new__(capture.Capture)
+    sel.scene = type("S", (), {"base": {"gpus": [{"path": "g", "clock_mhz": 1768.0}], "cpu_percent": 7.0,
+                                         "net_rx_mbps": 0.3}})()
+
+    def number(cand, part="whole"):
+        return imgdat.Number(0, (0, 0, 10, 9), (255, 255, 255), imgdat.Atlas((1,) * 12, 1, bytes(12)))
+    items = []
+    for _ in range(capture.MAX_NUMBERS - 4):                         # a screen almost full of clocks
+        items.append((0, number("hour"), {"cand": "hour", "part": "whole"}, 0))
+    items += [(0, number("hour"), {"cand": "hour", "part": "whole"}, 1),          # a repeat
+              (46, number("gpu_clock"), {"cand": "gpu_clock", "part": "int"}, 2),
+              (46, number("gpu_clock"), {"cand": "gpu_clock", "part": "frac", "decimals": 1}, 2),
+              (34, number("net"), {"cand": "net_rx_mbps", "part": "int"}, 3),
+              (34, number("net"), {"cand": "net_rx_mbps", "part": "frac", "decimals": 1}, 3),
+              (20, number("gpu"), {"cand": "cpu_percent", "part": "whole"}, 4)]
+    kept, _bindings, dropped = sel._select_once(items)
+    kept_parts = {(k[2]["cand"], k[2]["part"], k[3]) for k in kept}
+    assert ("net_rx_mbps", "frac", 3) in kept_parts                  # 0.3 keeps its decimal
+    assert ("gpu_clock", "int", 2) in kept_parts and ("cpu_percent", "whole", 4) in kept_parts
+    assert ("gpu_clock", "frac", 2) not in kept_parts and ("hour", "whole", 1) not in kept_parts
+
+
+def test_two_decimals_keep_their_leading_zero():
+    from bsmd.displays.smartmonitor import fields
+    binding = {"cand": "ram_used_pct", "decimals": 2, "part": "frac_digit"}
+    stats = {"ram_used_mb": 6409.0, "ram_total_mb": 10000.0}                 # 64.09 %
+    assert [fields.binding_value(dict(binding, digit=d), stats) for d in (0, 1)] == [0, 9]
+    assert fields.binding_value({"cand": "ram_used_pct", "decimals": 2, "part": "int"}, stats) == 64
+
+
+def test_capture_date_is_drawn_and_renewed_daily(stats):
+    base = dict(settings.defaults(), theme="standard")
+    today = layout.spec(base, stats, datetime.datetime(2026, 11, 20, 23, 59))
+    tomorrow = layout.spec(base, stats, datetime.datetime(2026, 11, 21, 0, 0))
+    assert today["date"] == "2026-11-20" and layout.key(today) != layout.key(tomorrow)
+    from bsmd.displays.smartmonitor import fields
+    saved = fields.T0, fields.T1
+    try:
+        fields.set_date(datetime.date(2026, 11, 20))
+        assert fields.T0.date() == fields.T1.date() == datetime.date(2026, 11, 20)
+        assert fields.T0.time() != fields.T1.time()
+    finally:
+        fields.T0, fields.T1 = saved
+
+
+def test_gkrellm_cpu_split_and_interfaces_are_live_fields():
+    from bsmd.displays.smartmonitor import fields
+    stats = {"net_ifaces": {"enp6s0": {"rx": 0.2, "tx": 2.9, "rx_history": [1, 2]}, "lo": {"rx": 0, "tx": 0}}}
+    try:
+        base = fields.base_stats(stats)
+        names = fields.FIELDS["iface"][2]
+        assert "iface_rx:enp6s0" in names and "iface_tx:lo" in names
+        variant = dict(base, **fields.FIELDS["iface"][1][1](base))
+        assert fields.candidate_value("iface_rx:enp6s0", base) != fields.candidate_value("iface_rx:enp6s0", variant)
+        assert fields.candidate_value("iface_rx:enp6s0", base) >= 1                  # "2.9M": the M unit
+        assert "cpu_user" in fields.FIELDS["cpu_split"][2]
+        assert fields.noise(base)["net_ifaces"]["enp6s0"]["rx_history"] == [70, 70]   # graphs: never frozen
+    finally:
+        fields.set_ifaces({})
+
+
+def _panel_overflows(translate):
+    """Dashboard captions that would not fit the 480x320 panel with ``translate``."""
+    font = lambda size: layout._font(layout.SANS_BOLD, size)  # noqa: E731
+    caption, title = font(11), font(15)
+    card_w = (layout.SIZE[0] - 8 * 2 - 8) // 2
+    mid = layout.digit_atlas(17).widths[0]
+    unit = layout.word_atlas(layout.UNITS, 12).widths[0]
+    label = translate
+    column = card_w // 2 - 6 - 12                     # one of the two captions of a card
+    problems = []
+    for msgid in ("USAGE %", "TEMP °C", "TEMP °F", "USED GB", "UPTIME h", "LOAD %"):
+        if caption.getlength(label(msgid)) > column:
+            problems.append(msgid)
+    for msgid in ("DOWN", "UP"):
+        if caption.getlength(label(msgid)) + 5 + unit > column:
+            problems.append(msgid)
+    for head, corner, digits in (("SYSTEM", "DISK MB/s", 4), ("MEMORY", "SWAP %", 3), ("NETWORK", "DISK %", 3)):
+        title_end = 12 + title.getlength(label(head)) + 4      # 4 px between title and corner
+        corner_start = card_w - 12 - mid * digits - 6 - caption.getlength(label(corner))
+        if title_end > corner_start:
+            problems.append(f"{head} + {corner}")
+    return problems
+
+
+def test_dashboard_captions_fit_the_panel_in_every_catalog(tmp_path):
+    import gettext
+    import subprocess
+    locale_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "locale")
+    assert not _panel_overflows(lambda message: message)
+    failures = {}
+    for name in sorted(os.listdir(locale_dir)):
+        if not name.endswith(".po"):
+            continue
+        mo = tmp_path / (name[:-3] + ".mo")
+        subprocess.run(["msgfmt", "-o", str(mo), os.path.join(locale_dir, name)], check=True)
+        with open(mo, "rb") as handle:
+            catalog = gettext.GNUTranslations(handle)
+        problems = _panel_overflows(catalog.gettext)
+        if problems:
+            failures[name] = problems
+    assert not failures

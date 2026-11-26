@@ -9,14 +9,23 @@ on:
         required: false
         default: false
 
-  push:
-    branches: [ "*" ]
+  # Only after the Tests workflow passed on a push to main: a branch push, or a
+  # main push with a failing test, never asks BigLinux for a package.
+  workflow_run:
+    workflows: ["Tests"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   build:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     runs-on: ubuntu-latest
+    env:
+      BRANCH: ${{ github.event.workflow_run.head_branch || github.ref_name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: If Template exit
         shell: bash
         run: |
@@ -31,57 +40,28 @@ jobs:
             cancel
           fi
       
-      - name: Install Translator Dependencies
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-          git \
-          gettext \
-          npm
-          # Install attranslator
-          sudo npm install --location=global attranslate
-
       ## Tmate ##
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
-      # A translation API failure (e.g. OpenAI 429) must not block the
-      # package build: the hooks below still run with the catalogs we have.
-      - name: Translate Package
-        continue-on-error: true
-        shell: bash #-O extglob {0}
-        env:
-          AZURE_KEY: ${{ secrets.AZURE_KEY }}
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
-        run: |
-          cd ..
-          git clone https://github.com/biglinux/big-auto-translator.git
-          mv big-auto-translator/gettext_po_generator_github.sh .
-          sudo cp -f big-auto-translator/openai-translate.js /usr/local/lib/node_modules/attranslate/dist/services/openai-translate.js
-          gitfolder=$(echo ${{ github.repository }} | rev | cut -d "/" -f1 | rev)
-          # export OriginalLang=pt-BR
-          bash gettext_po_generator_github.sh $gitfolder
-
-      - name: Update github
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add --all
-          if [ -n "$(git commit -m "translate $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then exit 0; fi
-
-      - name: Push changes
-        continue-on-error: true
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
+      # Translations are made in the repository (locale/*.po, docs/i18n.md) and
+      # checked by the Tests workflow; this job only asks BigLinux to build
+      # the package. (The automatic translator needed an OpenAI key and slept
+      # forever without one.)
       - name: Send Hooks BigLinux Build Package
         shell: bash
+        env:
+          TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
         run: |
+          # Only biglinux/big-screen-monitor-display has the token. Forks (the
+          # development repository included) stop here with a notice instead of
+          # failing; a token that exists but is refused still fails (curl -f).
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::No WEBHOOK_TOKEN in ${{ github.repository }}: packages are requested by biglinux/big-screen-monitor-display."
+            exit 0
+          fi
           if [ -z "$(grep biglinux-package-template pkgbuild/PKGBUILD)" ];then
-            curl -X POST -H "Accept: application/json" -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "${{ github.ref_name }}", "url": "https://github.com/${{ github.repository }}"}}' https://api.github.com/repos/BigLinux-Package-Build/build-package/dispatches
-            curl -X POST -H "Accept: application/json" -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "${{ github.ref_name }}", "url": "https://github.com/${{ github.repository }}"}}' https://api.github.com/repos/BigLinux-Package-Build/build-package-ARM/dispatches
+            curl -fsS -X POST -H "Accept: application/json" -H "Authorization: token $TOKEN" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "'"$BRANCH"'", "url": "https://github.com/${{ github.repository }}"}}' https://api.github.com/repos/BigLinux-Package-Build/build-package/dispatches
+            curl -fsS -X POST -H "Accept: application/json" -H "Authorization: token $TOKEN" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "'"$BRANCH"'", "url": "https://github.com/${{ github.repository }}"}}' https://api.github.com/repos/BigLinux-Package-Build/build-package-ARM/dispatches
           fi

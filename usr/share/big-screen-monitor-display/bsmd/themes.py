@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 
 from PIL import Image, ImageFont
 
+from . import fonts
 from .i18n import N_
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,7 +65,7 @@ def static_interval(settings, ctx, base=0.5):
 def ui_font(size, bold=False):
     name = "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"
     try:
-        return ImageFont.truetype(os.path.join(FONT_DIR, name), int(size))
+        return fonts.truetype(os.path.join(FONT_DIR, name), int(size))
     except OSError:
         return ImageFont.load_default()
 
@@ -134,8 +135,8 @@ KOJIRO = ThemeInfo(
 
 BIG_MEDIA_PLAYER = ThemeInfo(
     "big_media_player", N_("Big Media Player — Retro Music Experience"),
-    N_("Seven retro media player skins that follow the music and videos playing on the computer (MPRIS), "
-       "with album art, progress, system volume and optional telemetry."),
+    N_("Fifteen media player skins, seven retro and eight modern, that follow the music and videos playing on "
+       "the computer (MPRIS), with album art, progress, system volume and optional telemetry."),
     animated=True, resolutions=N_("any (responsive: micro, portrait, landscape, ultrawide)"),
     features=("mpris", "volume", "skins", "telemetry", "visualizer"), preferences=("bmp_*",))
 

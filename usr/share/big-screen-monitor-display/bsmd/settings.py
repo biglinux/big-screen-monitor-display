@@ -16,6 +16,8 @@ import re
 import tempfile
 import threading
 
+from .i18n import LANGUAGES
+
 SYSTEM_CONFIG = "/etc/big-screen-monitor-display/settings.json"
 LEGACY_RELATIVE = os.path.join(".config", "big-screen-monitor", "settings.json")
 MAX_FILE_SIZE = 512 * 1024      # Kojiro layouts (and per-display copies) need more than the 4.0 limit
@@ -64,7 +66,7 @@ ORIENTATIONS = ("horizontal", "vertical", "horizontal_flipped", "vertical_flippe
 # Display families (bsmd.displays.registry; kept here so the root helper
 # does not import the drivers). A test checks both lists agree.
 PROFILE_IDS = ("ax206", "turing_rev_a", "xuanfang_rev_b", "turing_rev_c", "kipye_rev_d", "weact_a",
-               "weact_b", "turing_usb", "smartmonitor_hid",
+               "weact_b", "turing_usb", "smartmonitor_hid", "foston_fs707dc", "foston_bigfoston",
                "deepcool_ak", "deepcool_ag", "deepcool_ls", "deepcool_ak_pro", "deepcool_ak400_pro", "deepcool_ld",
                "deepcool_mystique")
 LED_COLORS = ("off", "white", "red", "green", "blue", "cyan", "magenta", "yellow", "orange", "purple")
@@ -79,8 +81,15 @@ SCHEMA = {
     # Application
     "theme": (*_choice(*THEME_IDS, *LEGACY_STANDARD), "standard"),
     "network_iface": (*_choice("auto", "eth", "wifi"), "auto"),
-    "language": (*_choice("auto", "pt", "en"), "auto"),
+    "language": (*_choice("auto", *(code for code, _name in LANGUAGES)), "auto"),
     "performance_profile": (*_choice("auto", "economy", "balanced", "fluid"), "auto"),
+    # Android phones and tablets as displays (bsmd/displays/android). The service
+    # only listens on the local network when this is switched on.
+    "android_network": (*BOOL, False),
+    "android_port": (*_int(1024, 65535), 7717),
+    # USB cable without debugging: Android Open Accessory, only for phones
+    # already paired (or plugged while "Add Android" is open).
+    "android_usb": (*BOOL, True),
     "gk_theme_color": (*_choice("urlicht", "classic", "cyber_red"), "urlicht"),
     # Standard dashboard ("Padrão")
     "std_scheme": (*_choice(*STD_SCHEMES), "dark"),
@@ -202,6 +211,13 @@ SCHEMA = {
     # SmartMonitor HID panel: Brother Away tells its stories as scenes flashed one
     # after another every N minutes ("0": a single scene per time of day).
     "sm_ba_scene_minutes": (*_choice("0", "15", "30", "60"), "30"),
+    # SmartMonitor HID panel: the Standard theme's process list, a snapshot flashed
+    # with the theme and renewed every N minutes ("0": off; the panel restarts ~17 s
+    # each time and its flash wears).
+    "sm_std_processes": (*_choice("0", "15", "30", "60"), "0"),
+    # SmartMonitor HID panel: the Planet theme's globe is drawn at the real time and
+    # flashed again every N minutes (the panel restarts ~17 s each time).
+    "sm_planet_minutes": (*_choice("30", "60", "180"), "180"),
     "bmp_tele_alert_cpu": (*_int(50, 100), 90),
     "bmp_tele_alert_temp": (*_int(50, 110), 85),
     "bmp_tele_clock": (*BOOL, True),
@@ -272,13 +288,25 @@ DISPLAY_SCHEMA = {
     "profile": (*_choice("auto", *PROFILE_IDS), "auto"),
     "rev_c_size": (*_choice("auto", "2.1", "2.8", "5", "8.8"), "auto"),
     "led_color": (*_choice(*LED_COLORS), "off"),
+    "touch_enabled": (*BOOL, True),       # touch panels (FOSTON): interact on the panel itself
+    "touch_media": (*BOOL, True),         # Big Media Player controls on a touch panel
+    # Android displays: picture quality, render size (long side), rotation and screen.
+    "android_quality": (*_choice("auto", "lossless", "balanced", "economy"), "auto"),
+    "android_resolution": (*_choice("auto", "native", "1920", "1280", "960", "640"), "auto"),
+    "android_auto_rotate": (*BOOL, False),
+    "android_keep_screen_on": (*BOOL, True),
+    "android_burn_in": (*BOOL, True),
 }
-GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback"}
+GLOBAL_ONLY = {"model", "size", "language", "sound_enabled", "sound_volume", "ui_sound_feedback", "android_network",
+               "android_port", "android_usb"}
 MAX_DISPLAYS = 16
 # Per-display commands accepted from the configuration window (command spool).
-SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern")
+SPOOL_ACTIONS = ("reconnect", "pattern", "identify", "clear_pattern", "calibrate", "touch_test", "quit_client",
+                 "android_pair_open", "android_pair_close", "android_approve", "android_deny", "android_revoke")
 PATTERN_NAMES = ("identify", "bars", "grid", "gradient", "orientation", "white", "black")
-DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?)$")
+DISPLAY_ID = re.compile(r"^(usb-[0-9][0-9.-]{0,30}|simulated(-[0-9]{1,2})?|android-[0-9a-f]{12})$")
+ANDROID_SECRET = re.compile(r"^[A-Za-z0-9_-]{22,64}$")      # base64url, >= 128 bits
+ANDROID_REQUEST = re.compile(r"^[0-9a-f]{16}$")
 
 
 def defaults():
@@ -345,6 +373,24 @@ def validate_command(command):
         seconds = command.get("seconds", 10)
         clean["pattern"] = command["pattern"]
         clean["seconds"] = max(2, min(60, int(seconds))) if isinstance(seconds, (int, float)) else 10
+    elif action == "android_pair_open":
+        # The window generates the pairing secret and shows it as a QR code; it
+        # reaches the service only through this root-owned spool, never the
+        # world-readable status file.
+        secret, ticket = command.get("secret"), command.get("ticket")
+        if not (isinstance(secret, str) and ANDROID_SECRET.match(secret)
+                and isinstance(ticket, str) and ANDROID_REQUEST.match(ticket)):
+            return None
+        seconds = command.get("seconds", 300)
+        clean.update(secret=secret, ticket=ticket,
+                     seconds=max(30, min(900, int(seconds))) if isinstance(seconds, (int, float)) else 300)
+    elif action in ("android_approve", "android_deny"):
+        request = command.get("request")
+        if not (isinstance(request, str) and ANDROID_REQUEST.match(request)):
+            return None
+        clean["request"] = request
+    elif action == "android_revoke" and not display.startswith("android-"):
+        return None
     return clean
 
 

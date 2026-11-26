@@ -10,6 +10,7 @@ from datetime import datetime
 
 from PIL import Image, ImageDraw
 
+from ..telemetry import gpu_percent_text
 from ..themes import ui_font
 
 LABEL_COLORS = {
@@ -53,7 +54,7 @@ def _rows(stats, settings):
         gpu = gpus[stats.get("active_gpu_idx", 0) % len(gpus)] if gpus else None
         if gpu and gpu.get("path"):
             temp = gpu.get("temp_value")
-            rows.append(("GPU", f"{gpu.get('percent', 0):.0f}%", f"{temp:.0f}°C" if temp else "--°C",
+            rows.append(("GPU", gpu_percent_text(gpu), f"{temp:.0f}°C" if temp else "--°C",
                          _temp_color(temp)))
         else:
             rows.append(("GPU", "--", "", UNIT))

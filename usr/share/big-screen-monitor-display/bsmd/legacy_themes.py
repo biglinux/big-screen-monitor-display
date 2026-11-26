@@ -27,7 +27,8 @@ import numpy as np
 import psutil
 from PIL import Image, ImageDraw, ImageFont
 
-from .telemetry import (CPU_SYSTEM_HISTORY, CPU_TEMP_HISTORY, CPU_USAGE_HISTORY,  # noqa: F401
+from . import fonts
+from .telemetry import (gpu_percent_text, CPU_SYSTEM_HISTORY, CPU_TEMP_HISTORY, CPU_USAGE_HISTORY,  # noqa: F401
                         CPU_USER_HISTORY, DISK_IO_HISTORY, GPU_MEM_HISTORY, GPU_USAGE_HISTORY,
                         NET_RX_HISTORY, NET_TX_HISTORY, RAM_USAGE_HISTORY, SYSTEM_STATS)
 
@@ -39,7 +40,7 @@ def _cached_truetype(path, size):
     return _ORIGINAL_TRUETYPE(path, size)
 
 
-_ORIGINAL_TRUETYPE = ImageFont.truetype
+_ORIGINAL_TRUETYPE = fonts.truetype
 
 
 class _FontCache:
@@ -154,7 +155,7 @@ def get_theme_colors(theme_name):
         theme["icon_color"] = (255, 255, 255) if theme_name != "light" else (40, 40, 45)
     return theme
 
-# Cache Global de Icones SVG 
+# Cache Global de Icones SVG
 ICON_CACHE = {}
 
 _LOGO_CACHE = {}
@@ -200,29 +201,29 @@ def get_svg_icon(name, size, color=None):
     cache_key = f"{name}_{size}_{color}"
     if cache_key in ICON_CACHE:
         return ICON_CACHE[cache_key]
-        
+
     path = os.path.join(BASE_DIR, "img", name)
     if os.path.exists(path):
         try:
             if color:
                 with open(path, 'r') as f:
                     svg_data = f.read()
-                
+
                 # Converte tupla (R, G, B) para Hex
                 c_hex = '#{:02x}{:02x}{:02x}'.format(*color) if isinstance(color, tuple) else color
-                
+
                 # Recolour white strokes/fills in one pass. (The former second
                 # pass also matched the colour just inserted - "#ffff00" became
                 # "#ffff0000" - and icons in yellowish colours disappeared.)
                 svg_data = re.sub(r'#(?:[fF]{6}|[fF]{3})(?![0-9a-fA-F])', c_hex, svg_data)
-                
-                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size)], 
+
+                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size)],
                                    input=svg_data.encode('utf-8'),
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2)
             else:
-                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size), path], 
+                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size), path],
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2)
-            
+
             if p.returncode == 0:
                 img = Image.open(io.BytesIO(p.stdout)).convert("RGBA")
                 ICON_CACHE[cache_key] = img
@@ -288,6 +289,10 @@ def _planet_cpu_model():
 
 
 _PLANET_LAST_GLOBE = []
+# The moment the planet is drawn at (UTC) when it differs from the clock: the
+# SmartMonitor capture freezes the clock at fixed values to find the clock's
+# digits, while the globe shows the real time of its picture.
+ASTRONOMY_TIME = None
 
 
 def _planet_paths(settings, sun_path, moon_path):
@@ -618,7 +623,7 @@ def render_dashboard_planet_portrait(width, height, settings):
 
     now_local = datetime.now()
     now_utc = datetime.now(timezone.utc)
-    astronomy_utc = now_utc.replace(second=0, microsecond=0)
+    astronomy_utc = (ASTRONOMY_TIME or now_utc).replace(second=0, microsecond=0)
     julian_day = _planet_julian_day(astronomy_utc)
     sun_position = _planet_sun_position(astronomy_utc)
     moon_position = _planet_moon_position(astronomy_utc)
@@ -636,7 +641,8 @@ def render_dashboard_planet_portrait(width, height, settings):
     panel(margin, margin, width - margin * 2, height - margin * 2, (2, 8, 22))
     text(inner_x, int(10 * scale), "PLANET", font_title, colors["text_label"])
     text(inner_x, int(27 * scale), "SYSTEM ORBIT // PORTRAIT", font_mono, colors["text_muted"])
-    text(inner_x, int(39 * scale), now_local.strftime("%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"), font_time, colors["time"])
+    clock_format = "%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"
+    text(inner_x, int(39 * scale), now_local.strftime(clock_format), font_time, colors["time"])
     text(inner_x, int(65 * scale), now_local.strftime("%a, %Y-%m-%d"), font_small, colors["text_main"])
     text(inner_x, int(77 * scale), clipped(_planet_status_line(), 34), font_mono, colors["text_muted"])
 
@@ -714,11 +720,14 @@ def render_dashboard_planet_portrait(width, height, settings):
     gpu_list = SYSTEM_STATS.get("gpus", [])
     gpu_idx = min(SYSTEM_STATS.get("active_gpu_idx", 0), max(0, len(gpu_list) - 1))
     active_gpu = gpu_list[gpu_idx] if gpu_list else {}
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}M" if cpu_freq else "--"
     cpu_name = clipped(_planet_cpu_model(), 16)
     gpu_name = clipped(active_gpu.get("name", "GPU"), 16)
@@ -738,7 +747,8 @@ def render_dashboard_planet_portrait(width, height, settings):
             colors["warn"] if (numeric is not None and numeric >= 60) else colors["good"])
         label_x = inner_x + max(4, int(6 * scale))
         temp_x = inner_x + inner_w - temp_w - max(4, int(6 * scale))
-        load_text = f"{load:.0f}%"
+        load_text = "—" if load is None else f"{load:.0f}%"
+        load = load or 0
         load_w = get_text_width(d, load_text, font_mono_bold)
         load_x = temp_x - load_w - max(8, int(10 * scale))
         model_x = label_x + max(25, int(28 * scale))
@@ -759,7 +769,7 @@ def render_dashboard_planet_portrait(width, height, settings):
     draw_hardware_row(card_y, "CPU", cpu_name, SYSTEM_STATS.get("cpu_temp"),
                       SYSTEM_STATS.get("cpu_percent", 0), colors["good"])
     draw_hardware_row(card_y + card_h + max(3, int(3 * scale)), "GPU", gpu_name,
-                      active_gpu.get("temp"), gpu_usage, colors["warn"])
+                      active_gpu.get("temp"), gpu_usage if active_gpu.get("usage_known") else None, colors["warn"])
 
     # Wider portrait panels (for example 480x800) have more vertical room.
     # Give that room to the telemetry graphs instead of leaving an empty
@@ -791,9 +801,10 @@ def render_dashboard_planet_portrait(width, height, settings):
                    width=max(2, line_width + 1))
 
     metric_specs = [
-        ("CPU", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY, colors["good"]),
+        ("CPU", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY,
+         colors["good"]),
         ("FREQ", cpu_freq_text, min(100.0, (cpu_freq or 0) / 40.0), [], colors["text_label"]),
-        ("GPU", f"{gpu_usage:.0f}%", gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
+        ("GPU", gpu_percent_text(active_gpu), gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
         ("CLOCK", _planet_gpu_clock(active_gpu), min(100.0, (active_gpu.get("clock_mhz") or 0) / 30.0), [],
          colors["vram"]),
         ("VRAM", f"{gpu_mem:.0f}M" if gpu_mem else "--", gpu_mem_percent, GPU_MEM_HISTORY, colors["vram"]),
@@ -908,7 +919,7 @@ def render_dashboard_planet(width, height, settings):
 
     now_local = datetime.now()
     now_utc = datetime.now(timezone.utc)
-    astronomy_utc = now_utc.replace(second=0, microsecond=0)
+    astronomy_utc = (ASTRONOMY_TIME or now_utc).replace(second=0, microsecond=0)
     julian_day = _planet_julian_day(astronomy_utc)
     sun_position = _planet_sun_position(astronomy_utc)
     moon_position = _planet_moon_position(astronomy_utc)
@@ -1003,7 +1014,8 @@ def render_dashboard_planet(width, height, settings):
     time_y = max(30, int(50 * scale))
     date_y = max(52, int(87 * scale))
     weather_y = max(66, int(105 * scale))
-    text(left_x, time_y, now_local.strftime("%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"), font_time, colors["time"])
+    clock_format = "%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"
+    text(left_x, time_y, now_local.strftime(clock_format), font_time, colors["time"])
     text(left_x, date_y, now_local.strftime("%a, %Y-%m-%d"), font_small, colors["text_main"])
     text(left_x, weather_y, clipped(_planet_status_line(), 34), font_mono, colors["text_muted"])
 
@@ -1083,11 +1095,14 @@ def render_dashboard_planet(width, height, settings):
     gpu_list = SYSTEM_STATS.get("gpus", [])
     gpu_idx = min(SYSTEM_STATS.get("active_gpu_idx", 0), max(0, len(gpu_list) - 1))
     active_gpu = gpu_list[gpu_idx] if gpu_list else {}
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}M" if cpu_freq else "--"
     gpu_name = clipped(active_gpu.get("name", "GPU"), 20)
     cpu_name = clipped(_planet_cpu_model(), 20)
@@ -1118,7 +1133,8 @@ def render_dashboard_planet(width, height, settings):
         text(x + 7, y + max(23, int(27 * scale)), clipped(model, model_limit),
              font_mono_bold, colors["text_main"])
         text(x + 7, y + card_h - max(17, int(20 * scale)),
-             f"LOAD {load:.0f}%  ·  V  --  ·  P  --", font_mono, colors["text_muted"])
+             f"LOAD {'—' if load is None else f'{load:.0f}%'}  ·  V  --  ·  P  --", font_mono, colors["text_muted"])
+        load = load or 0
         track_y = y + card_h - max(5, int(7 * scale))
         d.line((x + 7, track_y, x + card_w - 7, track_y), fill=colors["bar_bg"], width=line_width)
         fill_w = int((card_w - 14) * max(0.0, min(100.0, load)) / 100.0)
@@ -1129,7 +1145,8 @@ def render_dashboard_planet(width, height, settings):
     draw_hardware_card(hardware_x, cpu_card_y, "CPU", cpu_name,
                        SYSTEM_STATS.get("cpu_temp"), SYSTEM_STATS.get("cpu_percent", 0), colors["good"])
     draw_hardware_card(gpu_card_x, cpu_card_y, "GPU", gpu_name,
-                       active_gpu.get("temp"), gpu_usage, colors["warn"])
+                       active_gpu.get("temp"), gpu_usage if active_gpu.get("usage_known") else None,
+                       colors["warn"])
 
     metric_gap = max(3, int(6 * scale))
     metric_cols = 2
@@ -1137,9 +1154,10 @@ def render_dashboard_planet(width, height, settings):
     metric_y = cpu_card_y + card_h + max(6, int(8 * scale))
     metric_h = max(34, int(66 * scale))
     metric_specs = [
-        ("CPU USAGE", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY, colors["good"]),
+        ("CPU USAGE", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0),
+         CPU_USAGE_HISTORY, colors["good"]),
         ("CPU FREQ", cpu_freq_text, min(100.0, (cpu_freq or 0) / 40.0), [], colors["text_label"]),
-        ("GPU USAGE", f"{gpu_usage:.0f}%", gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
+        ("GPU USAGE", gpu_percent_text(active_gpu), gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
         ("GPU CLOCK", _planet_gpu_clock(active_gpu), min(100.0, (active_gpu.get("clock_mhz") or 0) / 30.0), [],
          colors["vram"]),
         ("MEM USED", f"{gpu_mem:.0f}M" if gpu_mem else "--", gpu_mem_percent, GPU_MEM_HISTORY, colors["vram"]),
@@ -1390,7 +1408,8 @@ def render_dashboard_old_computer(width, height, settings):
 
     def format_uptime():
         try:
-            elapsed = max(0, int(time.time() - psutil.boot_time()))
+            boot = SYSTEM_STATS.get("boot_time") or psutil.boot_time()    # the collector's, like other themes
+            elapsed = max(0, int(time.time() - boot))
             days, remainder = divmod(elapsed, 86400)
             hours, minutes = divmod(remainder, 3600)
             minutes //= 60
@@ -1407,11 +1426,14 @@ def render_dashboard_old_computer(width, height, settings):
     gpu_mem = float(gpu.get("mem_used_mb", 0.0) or 0.0)
     gpu_mem_total = float(gpu.get("mem_total_mb", 0.0) or 0.0)
     gpu_mem_percent = (gpu_mem / gpu_mem_total * 100.0) if gpu_mem_total else 0.0
-    cpu_freq = None
-    try:
-        cpu_freq = psutil.cpu_freq().current
-    except Exception:
-        pass
+    # The collector's value (the fastest core), like every other theme; psutil only
+    # when the collector has none.
+    cpu_freq = SYSTEM_STATS.get("cpu_freq_mhz")
+    if not cpu_freq:
+        try:
+            cpu_freq = psutil.cpu_freq().current
+        except Exception:
+            pass
     cpu_freq_text = f"{cpu_freq:.0f}MHz" if cpu_freq else "--MHz"
     cpu_model = _planet_cpu_model()
     gpu_model = str(gpu.get("name", "GPU"))
@@ -1483,15 +1505,17 @@ def render_dashboard_old_computer(width, height, settings):
     d.line((content_pad, separator_y, width - content_pad, separator_y), fill=navy, width=max(1, int(scale)))
 
     graph_data = [
-        ("CPU", cpu_usage, cpu_model, CPU_USAGE_HISTORY, f"CLOCK {cpu_freq_text}  |  AVG {cpu_avg:.0f}%  PEAK {cpu_peak:.0f}%", "cpu"),
+        ("CPU", cpu_usage, cpu_model, CPU_USAGE_HISTORY,
+         f"CLOCK {cpu_freq_text}  |  AVG {cpu_avg:.0f}%  PEAK {cpu_peak:.0f}%", "cpu"),
         ("RAM", ram_usage, f"{ram_total_gb:.1f}GB DDR  MEMORY", RAM_USAGE_HISTORY,
          f"{ram_used_gb:.1f}/{ram_total_gb:.1f}GB  |  AVG {ram_avg:.0f}%  PEAK {ram_peak:.0f}%", "ram"),
     ]
     if settings.get("oc_show_gpu", True) and gpu.get("path"):
         gpu_clock = f"{gpu['clock_mhz']}MHz" if gpu.get("clock_mhz") else "--MHz"
         graph_data += [
-            ("GPU", gpu_usage, gpu_model, GPU_USAGE_HISTORY,
-             f"CLOCK {gpu_clock}  |  TEMP {safe_temperature(gpu.get('temp'))}  |  AVG {gpu_avg:.0f}%  PEAK {gpu_peak:.0f}%",
+            ("GPU", gpu_usage if gpu.get("usage_known") else None, gpu_model, GPU_USAGE_HISTORY,
+             f"CLOCK {gpu_clock}  |  TEMP {safe_temperature(gpu.get('temp'))}  |  "
+             f"AVG {gpu_avg:.0f}%  PEAK {gpu_peak:.0f}%",
              "gpu"),
             ("VRAM", gpu_mem_percent, gpu_model, GPU_MEM_HISTORY,
              f"{vram_used_gb:.1f}/{vram_total_gb:.1f}GB  |  AVG {vram_avg:.0f}%  PEAK {vram_peak:.0f}%", "vram"),
@@ -1523,7 +1547,8 @@ def render_dashboard_old_computer(width, height, settings):
         draw_icon(icon_kind, icon_x, icon_y, icon_size)
         title_x = icon_x + icon_size + max(8, int(12 * scale))
         text(title_x, y + max(4, int(7 * scale)), label, title_font, navy)
-        percent_text = f"{percent:.0f}%"
+        percent_text = "—" if percent is None else f"{percent:.0f}%"
+        percent = percent or 0
         percent_w = get_text_width(d, percent_text, percent_font)
         text(x + w - percent_w - max(9, int(12 * scale)), y + max(4, int(6 * scale)), percent_text, percent_font, navy)
         graph_y = y + head_h
@@ -1557,10 +1582,12 @@ def render_dashboard_old_computer(width, height, settings):
         draw_card(content_pad + col * (card_w + card_gap),
                   card_top + row * (card_h + card_gap), card_w, card_h, *card)
 
-    try:
-        process_count = len(psutil.pids())
-    except Exception:
-        process_count = len(SYSTEM_STATS.get("procs", []))
+    process_count = SYSTEM_STATS.get("proc_count")      # the collector's, like other themes
+    if not process_count:
+        try:
+            process_count = len(psutil.pids())
+        except Exception:
+            process_count = len(SYSTEM_STATS.get("procs", []))
     sensor_ok = _planet_temperature(SYSTEM_STATS.get("cpu_temp")) is not None
     sensor_status = "OK" if sensor_ok else "CHECK"
     status = (f"GRAPH  |  POLL 1.0S  |  HISTORY 30S  |  SENSORS {sensor_status}  |  "

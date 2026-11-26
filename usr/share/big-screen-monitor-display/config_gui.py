@@ -32,15 +32,16 @@ gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
-from bsmd import (APP_ID, SERVICE_NAME, __version__, dashboard, diagnostics, runtime, settings, sound,  # noqa: E402
-                  telemetry, themes)
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd import (APP_ID, APPLICATION_ID, ISSUES_NEW_URL, PROJECT_URL, SERVICE_NAME, __version__,  # noqa: E402
+                  control, dashboard, diagnostics, runtime, settings, sound, telemetry, themes)
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from displays_page import DisplaysPage  # noqa: E402
 from gui import components as ui  # noqa: E402
 from gui import deepcool_page, smartmonitor_view  # noqa: E402
 from gui.brother_away_page import BrotherAwayPage  # noqa: E402
 from gui.dashboard import Dashboard  # noqa: E402
-from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings  # noqa: E402
+from gui import tray_settings  # noqa: E402
+from gui.preferences_page import PreferencesPage, apply_style, load_gui_settings, save_gui_settings  # noqa: E402
 from gui.theme_gallery import ThemeGallery  # noqa: E402
 
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
@@ -78,42 +79,12 @@ PROFILE_ICON = {"auto": "emblem-system-symbolic", "economy": "power-profile-powe
 
 def run_helper(args, payload=None, timeout=120):
     """Run the privileged helper via pkexec. Returns (ok, message)."""
-    if not os.path.exists(HELPER):
-        return False, _("The administrative helper is not installed ({path}).").format(path=HELPER)
-    binary = isinstance(payload, bytes)
-    try:
-        result = subprocess.run(["pkexec", HELPER, *args], input=payload, capture_output=True,
-                                text=not binary, timeout=timeout, check=False)
-    except (OSError, subprocess.SubprocessError) as error:
-        return False, str(error)
-    if binary:
-        result.stdout = result.stdout.decode("utf-8", "replace")
-        result.stderr = result.stderr.decode("utf-8", "replace")
-    if result.returncode in (126, 127):
-        return False, _("Authorization was cancelled or denied.")
-    try:
-        reply = json.loads(result.stdout.strip().splitlines()[-1])
-    except (ValueError, IndexError):
-        reply = {"ok": result.returncode == 0, "error": result.stderr.strip()}
-    if reply.get("ok"):
-        if "id" in reply:
-            return True, reply["id"]
-        problems = reply.get("problems") or []
-        return True, "; ".join(problems)
-    return False, reply.get("error") or result.stderr.strip() or _("Unknown error")
+    return control.run_helper(args, payload, timeout, helper=HELPER)
 
 
 def save_settings(values):
     """Persist settings: directly when writable (development), else via helper."""
-    path = settings.config_path()
-    directory = os.path.dirname(path)
-    if os.environ.get("BSM_CONFIG") or (os.path.isdir(directory) and os.access(directory, os.W_OK)):
-        try:
-            _clean, problems = settings.save(values, path)
-            return True, "; ".join(problems)
-        except OSError as error:
-            return False, str(error)
-    return run_helper(["apply-settings"], json.dumps(values))
+    return control.save_settings(values, helper=HELPER)
 
 
 def play_success_sound():
@@ -420,6 +391,8 @@ class ConfigWindow(Adw.ApplicationWindow):
             self.media_page.set_active(key == "big_media_player")
         if key == "home":
             self.dashboard.update()
+        elif key == "preferences" and hasattr(self, "preferences_page"):
+            self.preferences_page.trays.refresh()       # a tray menu may have changed it
         elif key == "diagnostics":
             self._refresh_diagnostics()
         elif key == "performance":
@@ -882,7 +855,10 @@ class ConfigWindow(Adw.ApplicationWindow):
                 (_("Restart the service"), _("Use if the display stays frozen."), "system-reboot-symbolic",
                  lambda *_: self._helper_action(["service", "restart"], _("Service restarted."))),
                 (_("Export diagnostics"), _("Saves a report to share when asking for help."),
-                 "document-save-symbolic", lambda *_: self._export())):
+                 "document-save-symbolic", lambda *_: self._export()),
+                (_("Report a problem"), _("Copies the diagnostic report and opens the issue form. "
+                                          "Review it before posting."),
+                 "dialog-question-symbolic", lambda *_: self._report_problem())):
             row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
             row.add_prefix(Gtk.Image.new_from_icon_name(icon))
             row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
@@ -1124,6 +1100,7 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.service_fresh = self._status_fresh()
         self.displays_page.refresh()
         self._update_sidebar_status()
+        tray_settings.status_changed(self, load_gui_settings, save_gui_settings)
         if self.current_section == "home" and hasattr(self, "dashboard"):
             self.dashboard.update()
         if hasattr(self, "diag_rows") and self.current_section == "diagnostics":
@@ -1143,7 +1120,8 @@ class ConfigWindow(Adw.ApplicationWindow):
         elif not connected:
             kind, text = "warning", _("Waiting for a display")
         elif status.get("state") == "healthy":
-            kind, text = "success", _("Running · {count} display(s)").format(count=len(connected))
+            kind, text = "success", ngettext("Running · {count} display", "Running · {count} displays",
+                                                len(connected)).format(count=len(connected))
         else:
             kind, text = "warning", diagnostics.describe_state(status)
         self.status_dot.add_css_class(kind)
@@ -1167,8 +1145,9 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:g})").format(
             fps=min(stats.get("fps", 0), stats.get("target_fps", 0) or 99), target=stats.get("target_fps", 0)))
         self.perf_rows["usb"].set_subtitle(f"{stats.get('transfer_ms', 0):.1f} ms")
-        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "
-                                            + _("{frames} frames").format(frames=stats.get("frames_sent", 0)))
+        frames = stats.get("frames_sent", 0)
+        frames_text = ngettext("{frames} frame", "{frames} frames", frames).format(frames=frames)
+        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · " + frames_text)
         self.perf_rows["drop"].set_subtitle(str(stats.get("frames_dropped", 0)))
 
     def _refresh_diagnostics(self):
@@ -1267,7 +1246,36 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.results_group.set_visible(True)
         problems = sum(1 for c in report["checks"] if not c["ok"])
         self.toast(_("No problems found.") if not problems else
-                   _("{count} item(s) need attention.").format(count=problems))
+                   ngettext("{count} item needs attention.", "{count} items need attention.", problems).format(
+                       count=problems))
+
+    @staticmethod
+    def _report_text(journal_lines=300):
+        """Diagnostic report (checks, status.json and the service journal); runs off the GTK thread."""
+        report = diagnostics.run_checks()
+        parts = [f"Big Screen Monitor Display {__version__}", time.strftime("%Y-%m-%d %H:%M:%S"), "",
+                 diagnostics.format_report(report), "", "== status.json ==",
+                 json.dumps(report.get("status"), indent=2, ensure_ascii=False), "", "== journal =="]
+        try:
+            parts.append(subprocess.run(["journalctl", "-u", SERVICE_NAME, "-n", str(journal_lines), "--no-pager"],
+                                        capture_output=True, text=True, timeout=10, check=False).stdout
+                         or _("(journal not readable by this user)"))
+        except (OSError, subprocess.SubprocessError) as error:
+            parts.append(str(error))
+        return "\n".join(parts)
+
+    def _report_problem(self):
+        """Copy a report (shorter journal: it is pasted into a web form) and open the issue chooser."""
+        def worker():
+            text = self._report_text(journal_lines=80)
+            GLib.idle_add(finish, f"```text\n{text}\n```")
+
+        def finish(text):
+            self.get_clipboard().set(text)
+            Gtk.UriLauncher.new(ISSUES_NEW_URL).launch(self, None, None, None)
+            self.toast(_("Report copied. Paste it into the form."))
+            return False
+        threading.Thread(target=worker, daemon=True).start()
 
     def _export(self):
         dialog = Gtk.FileDialog(title=_("Export diagnostics"),
@@ -1282,19 +1290,10 @@ class ConfigWindow(Adw.ApplicationWindow):
         path = target.get_path()
 
         def worker():
-            report = diagnostics.run_checks()
-            parts = [f"Big Screen Monitor Display {__version__}", time.strftime("%Y-%m-%d %H:%M:%S"), "",
-                     diagnostics.format_report(report), "", "== status.json ==",
-                     json.dumps(report.get("status"), indent=2, ensure_ascii=False), "", "== journal =="]
-            try:
-                parts.append(subprocess.run(["journalctl", "-u", SERVICE_NAME, "-n", "300", "--no-pager"],
-                                            capture_output=True, text=True, timeout=10, check=False).stdout
-                             or _("(journal not readable by this user)"))
-            except (OSError, subprocess.SubprocessError) as error:
-                parts.append(str(error))
+            text = self._report_text()
             try:
                 with open(path, "w", encoding="utf-8") as handle:
-                    handle.write("\n".join(parts))
+                    handle.write(text)
                 GLib.idle_add(self.toast, _("Report saved to {path}").format(path=path))
             except OSError as error:
                 GLib.idle_add(self._error, _("Could not save the report"), str(error))
@@ -1328,13 +1327,18 @@ LEGACY_PAGES = {"display": "displays", "theme_kojiro": "kojiro", "theme_big_medi
 
 
 class ConfigApp(Adw.Application):
-    def __init__(self, screenshot=None, page=None):
-        super().__init__(application_id="br.com.biglinux.BigScreenMonitorDisplay",
+    def __init__(self, screenshot=None, page=None, add_android=False):
+        super().__init__(application_id=APPLICATION_ID,
                          flags=Gio.ApplicationFlags.NON_UNIQUE if screenshot else Gio.ApplicationFlags.DEFAULT_FLAGS)
+        # Window identity (docs/windowmaker/icon-windowmaker.md): Wayland app_id = APPLICATION_ID
+        # = name of the .desktop file; X11 WM_CLASS = prgname = StartupWMClass; and the icon by
+        # name for every window (GTK publishes it as _NET_WM_ICON on X11, which Window Maker uses).
         GLib.set_prgname(APP_ID)
         GLib.set_application_name(_("Big Screen Monitor Display"))
+        Gtk.Window.set_default_icon_name(APP_ID)
         self.screenshot = screenshot
         self.page = page
+        self.add_android = add_android
 
     def do_activate(self):
         window = self.props.active_window
@@ -1353,6 +1357,13 @@ class ConfigApp(Adw.Application):
             if self.page:
                 window.show_section(LEGACY_PAGES.get(self.page, self.page))
         window.present()
+        if self.add_android:
+            # --add-android: opens on My Displays with the pairing QR code shown.
+            self.add_android = False
+            window.show_section("displays")
+            GLib.idle_add(lambda: window.displays_page.android.open_pairing() and False)
+        # Tray apps switched on in Preferences run whenever the window opens (and are offered once).
+        GLib.timeout_add(1500, tray_settings.ensure_running, window, load_gui_settings, save_gui_settings)
         if self.screenshot:
             GLib.timeout_add(2500, self._save_screenshot, window)
 
@@ -1373,8 +1384,8 @@ class ConfigApp(Adw.Application):
         about = Adw.AboutDialog(
             application_name=_("Big Screen Monitor Display"), application_icon=APP_ID, version=__version__,
             developers=["Rafael Ruscher", "BigLinux Team"], copyright="© 2026 BigLinux Team",
-            license_type=Gtk.License.GPL_3_0, website="https://github.com/biglinux/big-screen-monitor-display",
-            issue_url="https://github.com/biglinux/big-screen-monitor-display/issues",
+            license_type=Gtk.License.GPL_3_0, website=PROJECT_URL,
+            issue_url=ISSUES_NEW_URL,
             comments=_("Free hardware monitor for small USB displays, with themes, the Brother Away island, "
                        "the Kojiro studio and the Big Media Player."))
         about.add_acknowledgement_section(_("Testing"), [
@@ -1395,7 +1406,10 @@ def main(argv):
         index = args.index("--page")
         page = args[index + 1]
         del args[index:index + 2]
-    return ConfigApp(screenshot, page).run([argv[0], *args])
+    add_android = "--add-android" in args
+    if add_android:
+        args.remove("--add-android")
+    return ConfigApp(screenshot, page, add_android).run([argv[0], *args])
 
 
 if __name__ == "__main__":

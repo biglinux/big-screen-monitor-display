@@ -24,9 +24,16 @@ def main():
     from bsmd import i18n
     i18n.set_language(request["settings"].get("language", "auto"))
     from bsmd.displays.smartmonitor import capture, fields, imgdat
+    if request.get("date"):
+        import datetime as _dt
+        fields.set_date(_dt.date.fromisoformat(request["date"]))
     hour = request.get("hour")
     if hour is not None:
         fields.T0 = fields.T0.replace(hour=int(hour))
+    if request.get("astronomy"):
+        import datetime
+        from bsmd import legacy_themes
+        legacy_themes.ASTRONOMY_TIME = datetime.datetime.fromisoformat(request["astronomy"])
     art = None
     if request.get("art_png"):
         import base64

@@ -111,7 +111,8 @@ def cyberpunk(width, height, seed=7):
         _windows(draw, x, x + bw, horizon - bh, horizon, rng, [(70, 60, 130), (120, 60, 140)], 0.18, s)
         x += bw + rng.randint(0, int(6 * s))
     # Portal: crisp rings and a central tower.
-    draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), outline=(150, 245, 255), width=max(2, int(4 * s)))
+    draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), outline=(150, 245, 255),
+                 width=max(2, int(4 * s)))
     r2 = radius * 1.25
     draw.ellipse((cx - r2, cy - r2, cx + r2, cy + r2), outline=(255, 140, 240), width=max(1, int(2 * s)))
     tower_w = radius * 0.32
@@ -368,8 +369,10 @@ def _fit(image, size, settings, background):
     if fit == "original":
         x, y = int(ox * width / 2), int(oy * height / 2)
     else:
-        x = int((width - rw) / 2 + ox * abs(width - rw) / 2) if fit != "contain" else int((width - rw) / 2 + ox * width / 2)
-        y = int((height - rh) / 2 + oy * abs(height - rh) / 2) if fit != "contain" else int((height - rh) / 2 + oy * height / 2)
+        span_x = abs(width - rw) if fit != "contain" else width
+        span_y = abs(height - rh) if fit != "contain" else height
+        x = int((width - rw) / 2 + ox * span_x / 2)
+        y = int((height - rh) / 2 + oy * span_y / 2)
     canvas.paste(resized, (x, y))
     return canvas
 

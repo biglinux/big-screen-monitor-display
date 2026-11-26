@@ -15,7 +15,8 @@ from dataclasses import dataclass, field
 
 from .registry import AMBIGUOUS, CONFIDENCE_ORDER, PROFILES, UNKNOWN, get
 
-SYSFS = "/sys/bus/usb/devices"
+# BSM_SYSFS: tests point it at a fake tree so the PC's real devices never leak in
+SYSFS = os.environ.get("BSM_SYSFS", "/sys/bus/usb/devices")
 
 
 @dataclass

@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""Render the bsmd-ce waiting screen and embed it in the client (src/splash_data.h).
+
+The Windows CE client only has GDI, so the artwork (app icon, Adwaita colours,
+the application's own font, icons) is composed here at build time with the
+same helpers the service uses, converted to RGB565 and zlib-compressed; the
+client inflates it once with its own inflate (fsp_inflate) and only writes the
+live texts (status, diagnostics, version) into the areas declared below.
+
+Usage: python3 make_splash.py [--preview out.png]
+Needs: Pillow, rsvg-convert, the Adwaita icon theme (build time only).
+"""
+
+import argparse
+import os
+import sys
+import zlib
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+APP = os.path.join(REPO, "usr", "share", "big-screen-monitor-display")
+sys.path.insert(0, APP)
+
+from bsmd import touch  # noqa: E402  (icons, colours)
+from bsmd.bigmedia.paint import font  # noqa: E402  (the application's font)
+
+W, H = 800, 480
+ACCENT = touch.ACCENT
+BG_TOP, BG_BOTTOM = (34, 34, 40), (16, 16, 20)
+CARD = (44, 44, 52)
+TEXT, DIM = (255, 255, 255), (170, 170, 182)
+
+# Areas the client fills at run time (x0, y0, x1, y1), shared through the header.
+STATUS = (196, 238, 760, 312)
+DIAG = (40, 394, 560, 470)
+EXIT = (600, 392, 760, 452)
+VERSION = (560, 14, 784, 36)
+
+
+def icon(name, size, color=TEXT):
+    image = touch.symbolic_icon(name, size, color)
+    if image is None:
+        raise SystemExit(f"icon {name} not found (install adwaita-icon-theme and rsvg-convert)")
+    return image
+
+
+def compose():
+    image = Image.new("RGB", (W, H))
+    gradient = np.linspace(0, 1, H)[:, None]
+    top, bottom = np.array(BG_TOP), np.array(BG_BOTTOM)
+    image = Image.fromarray(np.repeat((top + (bottom - top) * gradient)[:, None, :], W, axis=1).astype(np.uint8)
+                            .reshape(H, W, 3), "RGB")
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+
+    # soft accent glow behind the logo
+    glow = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(glow).ellipse((-60, -120, 380, 300), fill=90)
+    glow = glow.filter(ImageFilter.GaussianBlur(80))
+    image = Image.composite(Image.new("RGB", (W, H), ACCENT), image, glow.point(lambda v: v // 3))
+
+    draw.rectangle((0, 0, W, 6), fill=(*ACCENT, 255))
+
+    # identity: app icon, name, device
+    app = touch.app_icon(132)
+    if app is None:
+        raise SystemExit("application icon not found")
+    layer.alpha_composite(app, (40, 52))
+    draw.text((196, 66), "Big Screen Monitor", font=font(46, True), fill=TEXT)
+    draw.text((198, 126), "FOSTON FS-707DC Touch Display", font=font(22), fill=(*ACCENT, 255))
+    draw.text((198, 158), "BigLinux · Windows CE", font=font(16), fill=DIM)
+
+    # status card (the client writes the status text inside STATUS)
+    card = (40, 214, 760, 336)
+    draw.rounded_rectangle(card, radius=18, fill=(*CARD, 255))
+    cx, cy = 118, (card[1] + card[3]) // 2
+    draw.ellipse((cx - 44, cy - 44, cx + 44, cy + 44), fill=(*touch.mix(CARD, ACCENT, 0.3)[:3], 255))
+    layer.alpha_composite(icon("network-wired", 48, ACCENT), (cx - 24, cy - 24))
+
+    # how to use, three steps
+    steps = (("media-removable", "Conecte o cabo USB"), ("computer", "Big Screen Monitor no PC"),
+             ("input-touchpad", "Toque: menu e temas"))
+    x = 40
+    for name, label in steps:
+        draw.rounded_rectangle((x, 350, x + 232, 372), radius=11, fill=(255, 255, 255, 0))
+        layer.alpha_composite(icon(name, 18, DIM), (x, 352))
+        draw.text((x + 26, 361), label, font=font(15), fill=DIM, anchor="lm")
+        x += 248
+
+    # diagnostics well (the client writes up to five small lines inside DIAG)
+    draw.rounded_rectangle((DIAG[0] - 10, DIAG[1] - 8, DIAG[2], DIAG[3] + 6), radius=10,
+                           fill=(*touch.mix(BG_BOTTOM, TEXT, 0.04)[:3], 255))
+
+    # exit button
+    draw.rounded_rectangle(EXIT, radius=14, fill=(*touch.mix(CARD, touch.DANGER, 0.55)[:3], 255))
+    ex, ey = EXIT[0] + 40, (EXIT[1] + EXIT[3]) // 2
+    layer.alpha_composite(icon("system-shutdown", 26, TEXT), (ex - 13, ey - 13))
+    draw.text((ex + 26, ey), "Sair", font=font(22, True), fill=TEXT, anchor="lm")
+
+    return Image.alpha_composite(image.convert("RGBA"), layer).convert("RGB")
+
+
+def rgb565(image):
+    rgb = np.asarray(image, dtype=np.uint16)
+    return (((rgb[..., 0] & 0xF8) << 8) | ((rgb[..., 1] & 0xFC) << 3) | (rgb[..., 2] >> 3)).astype("<u2")
+
+
+def write_header(image, path):
+    data = zlib.compress(rgb565(image).tobytes(), 9)
+    rows = [", ".join(f"0x{b:02x}" for b in data[i:i + 20]) for i in range(0, len(data), 20)]
+
+    def rect(name, box):
+        return "\n".join(f"#define SPLASH_{name}_{k} {v}" for k, v in zip(("X0", "Y0", "X1", "Y1"), box, strict=False))
+    with open(path, "w", encoding="ascii") as out:
+        out.write("/* Generated by tools/make_splash.py - do not edit. SPDX-License-Identifier: GPL-3.0-or-later */\n")
+        out.write("#ifndef SPLASH_DATA_H\n#define SPLASH_DATA_H\n\n")
+        out.write(f"#define SPLASH_W {W}\n#define SPLASH_H {H}\n#define SPLASH_Z_LEN {len(data)}\n")
+        for name, box in (("STATUS", STATUS), ("DIAG", DIAG), ("EXIT", EXIT), ("VERSION", VERSION)):
+            out.write(rect(name, box) + "\n")
+        out.write("#define SPLASH_TEXT RGB(255, 255, 255)\n#define SPLASH_DIM RGB(150, 200, 165)\n"
+                  "#define SPLASH_FAINT RGB(120, 120, 132)\n\n")
+        out.write("static const unsigned char splash_z[SPLASH_Z_LEN] = {\n    " + ",\n    ".join(rows) + "\n};\n\n")
+        out.write("#endif\n")
+    return len(data)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--preview")
+    parser.add_argument("--out", default=os.path.join(HERE, "..", "src", "splash_data.h"))
+    args = parser.parse_args()
+    image = compose()
+    if args.preview:
+        preview = image.copy()
+        d = ImageDraw.Draw(preview)
+        d.text(((STATUS[0] + STATUS[2]) // 2, (STATUS[1] + STATUS[3]) // 2),
+               "Conectado via USB (COM6:).\nAguardando o Big Screen Monitor no computador...",
+               font=font(20, True), fill=TEXT, anchor="mm", align="center")
+        for i, line in enumerate(("USB fn: $bus\\BuiltIn_-1_26_0", "Cliente USB: Mass_Storage_Class -> Serial_Class",
+                                  "Porta serial USB: COM6:")):
+            d.text((DIAG[0], DIAG[1] + i * 16), line, font=font(12), fill=(150, 200, 165))
+        d.text((VERSION[2], VERSION[1]), "bsmd-ce 1.2.0", font=font(13), fill=(120, 120, 132), anchor="ra")
+        preview.save(args.preview)
+    size = write_header(image, os.path.abspath(args.out))
+    print(f"splash: {W}x{H}, {size} bytes compressed -> {os.path.abspath(args.out)}")
+
+
+if __name__ == "__main__":
+    main()

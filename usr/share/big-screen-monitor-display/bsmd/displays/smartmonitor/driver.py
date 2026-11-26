@@ -14,6 +14,7 @@ flash.
 """
 
 import datetime
+import errno
 import glob
 import json
 import logging
@@ -22,7 +23,8 @@ import threading
 import time
 from dataclasses import dataclass, field
 
-from ..base import DISCONNECTED, NOT_FOUND, PROTOCOL, TIMEOUT, DeviceInfo, DisplayError, TelemetryDriver, Transfer
+from ..base import (DISCONNECTED, NEEDS_REPLUG, NOT_FOUND, PROTOCOL, TIMEOUT, DeviceInfo, DisplayError, TelemetryDriver,
+                    Transfer)
 from ..deepcool.hid import Hidraw
 from . import layout, protocol
 
@@ -36,6 +38,24 @@ RESTART_VANISH = 5.0          # measured: the panel drops off USB ~1 s after the
 ACK_TIMEOUT = 5.0
 BLOCK_RETRIES = 5
 UPLOAD_ATTEMPTS = 3
+# Live values: the panel takes a report in ~1 ms, so while a song plays (progress,
+# time, spectrum - the media agent sends it 12 times a second) values go out
+# several times a second; otherwise once a second, like the telemetry.
+MEDIA_INTERVAL = {"economy": 1.0, "balanced": 0.25, "auto": 0.2, "fluid": 0.1}
+IDLE_INTERVAL = 1.0
+CLOCK_EVERY = 1.0             # the clock / backlight report
+DATA_WAIT = 15.0              # the first picture waits this long for data being sampled
+PRECAPTURE_IDLE = 45.0        # quiet this long: the other themes are adapted ahead of a switch
+FLASH_SETTLE = 4.0            # a new picture waits until the settings stop changing (editing a theme)
+STUCK_REPROBE = 60.0          # a stuck panel on the same USB address is tried again this often
+
+# Measured on hardware: after any USB reset of a panel the host has configured
+# (a PC restart or resume, ``usbreset``), the firmware stops taking reports: every
+# write times out in the kernel (5 s) until its power is removed. Nothing sent
+# over USB (control requests, port resets, suspend) brings it back. Ports seen
+# stuck: {usb_path: (bus:address, when)}, so retries cost nothing until the
+# panel is plugged in again (it then gets a new address).
+_STUCK = {}
 
 
 class _Hid(Hidraw):
@@ -68,6 +88,36 @@ def find_hidraw(usb_path, sysfs=SYSFS_USB):
     return "/dev/" + os.path.basename(nodes[0]) if nodes else ""
 
 
+def usb_address(usb_path, sysfs=SYSFS_USB):
+    """``"bus:address"`` of the device on ``usb_path`` (a new one after every replug)."""
+    try:
+        with open(os.path.join(sysfs, usb_path, "busnum"), encoding="ascii") as bus, \
+                open(os.path.join(sysfs, usb_path, "devnum"), encoding="ascii") as dev:
+            return f"{bus.read().strip()}:{dev.read().strip()}"
+    except (OSError, TypeError):
+        return ""
+
+
+def _timed_out(error):
+    cause = getattr(error, "cause", None)
+    return getattr(cause, "errno", None) == errno.ETIMEDOUT or getattr(error, "kind", None) == TIMEOUT
+
+
+STUCK_MESSAGE = ("the panel stopped taking data after a USB reset (PC restart or resume from sleep); "
+                 "unplug its USB cable and plug it in again")
+STUCK_UPLOAD_MESSAGE = ("the panel stopped answering after an interrupted theme upload; "
+                        "unplug its USB cable and plug it in again")
+
+
+def _lacks_data(settings, stats):
+    """True when a theme shows optional data the collector only samples while that
+    theme is shown (Kojiro fans, the Standard process list): adapted ahead now, it
+    would leave them out."""
+    from ...runtime import _telemetry_needs
+    needs = _telemetry_needs(settings) or {}
+    return bool((needs.get("fans") and not stats.get("fans")) or (needs.get("processes") and not stats.get("procs")))
+
+
 def state_dir():
     base = os.environ.get("STATE_DIRECTORY", "").split(":")[0]
     if not base:
@@ -95,7 +145,10 @@ class SmartMonitorHid(TelemetryDriver):
         caps.native_size = layout.SIZE
         caps.metrics = ("cpu", "gpu", "ram", "disk", "network", "clock")
         caps.notes = ("Draws a dashboard flashed into the panel; live values are pushed every second.",)
-        self.min_interval = 1.0
+        self.min_interval = min(MEDIA_INTERVAL.values())
+        self._clock_at = -1e9          # last clock / backlight report
+        self._clock_brightness = None
+        self._playing = False
         self.brightness = 70
         safe = (usb_path or "default").replace("/", "_")
         self.state_path = state_path or os.path.join(state_dir(), f"smartmonitor-{safe}.json")
@@ -109,6 +162,11 @@ class SmartMonitorHid(TelemetryDriver):
         # one keeps its live values; only the flash itself pauses the panel.
         self.background_capture = True
         self._job = None
+        self._wanted = (None, -1e9, False)   # (picture key asked for, since, while editing): FLASH_SETTLE
+        self.precapture = True         # adapt the other themes ahead of a switch (see PRECAPTURE_IDLE)
+        self._pre = None               # the thread doing it
+        self._pre_done = None          # signature of the settings it was done for
+        self._started = time.monotonic()
 
     # ------------------------------------------------------------ state
     def _load_state(self):
@@ -133,7 +191,23 @@ class SmartMonitorHid(TelemetryDriver):
     def open(self):
         if not self.hid.path:
             self.hid.path = find_hidraw(self.usb_path)
+        address = usb_address(self.usb_path) if self.usb_path else ""
+        stuck = _STUCK.get(self.usb_path)
+        if stuck and address and stuck[0] == address and \
+                (len(stuck) > 2 or time.monotonic() - stuck[1] < STUCK_REPROBE):
+            raise DisplayError(NEEDS_REPLUG, STUCK_UPLOAD_MESSAGE if len(stuck) > 2 else STUCK_MESSAGE)
         self.hid.open()
+        try:
+            # Liveness: the clock and backlight report (harmless, sent every second anyway).
+            self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+        except DisplayError as error:
+            self.hid.close()
+            if not _timed_out(error):
+                raise
+            if address:
+                _STUCK[self.usb_path] = (address, time.monotonic())
+            raise DisplayError(NEEDS_REPLUG, STUCK_MESSAGE, getattr(error, "cause", None)) from None
+        _STUCK.pop(self.usb_path, None)
         self.info = DeviceInfo(self.DRIVER, self.MODEL, *layout.SIZE, f"usb {self.usb_path}",
                                {"hidraw": self.hid.path, "product": self.product, "flashed_layout": self.flashed or "",
                                 "protocol": "SmartMonitor HID (img.dat + channels)"})
@@ -148,8 +222,10 @@ class SmartMonitorHid(TelemetryDriver):
             frame.values = layout.values(picture, stats, now)
         return frame
 
-    def frame_interval(self, _settings):
-        return 1.0
+    def frame_interval(self, settings):
+        if self._playing and settings.get("theme") == "big_media_player":
+            return MEDIA_INTERVAL.get(settings.get("performance_profile", "auto"), MEDIA_INTERVAL["auto"])
+        return IDLE_INTERVAL
 
     def _adapt(self, frame):
         """The compiled picture for a frame (a theme capture can take a few seconds)."""
@@ -192,6 +268,17 @@ class SmartMonitorHid(TelemetryDriver):
             picture.source_spec = job["spec"]
             self.picture = picture
             return picture
+        if _lacks_data(frame.settings, frame.stats):
+            return current                               # its data is being sampled: in a moment
+        # Every new picture restarts the panel (its firmware reloads the theme): while the
+        # settings keep changing (a theme being edited) the current one stays, live.
+        now = time.monotonic()
+        if self._wanted[0] != frame.key:
+            # A change right after another one is a theme being edited: wait for quiet.
+            # A single change (another theme picked) starts at once.
+            self._wanted = (frame.key, now, now - self._wanted[1] < FLASH_SETTLE)
+        if self._wanted[2] and now - self._wanted[1] < FLASH_SETTLE:
+            return current
         # Nothing running (or a finished capture of a picture no longer wanted): start one.
         job = {"key": frame.key, "spec": frame.spec, "done": threading.Event()}
 
@@ -215,22 +302,68 @@ class SmartMonitorHid(TelemetryDriver):
     def present(self, frame):
         start = time.monotonic()
         sent = 0
+        if self.picture is None and _lacks_data(frame.settings, frame.stats) and \
+                start - self._started < DATA_WAIT:
+            return Transfer(0, 0, False, 0.0)            # the first picture waits for its data
         picture = self._adapt(frame)
         if picture.key != self.flashed:
             sent += self.flash(picture)
+            self._clock_at = -1e9                        # the panel restarted
         if not frame.values:
             frame.values = layout.values(picture, frame.stats)
+        media = frame.stats.get("media") if isinstance(frame.stats.get("media"), dict) else {}
+        self._playing = bool(media.get("present")) and media.get("status") == "Playing"
         self.brightness = frame.brightness
-        sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+        now = time.monotonic()
+        if now - self._clock_at >= CLOCK_EVERY or self._clock_brightness != self.brightness:
+            sent += self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+            self._clock_at, self._clock_brightness = now, self.brightness
+        # Every value in every update. Measured: sending only the changed channels left
+        # the panel showing frozen values after a flash, although it took the reports.
         for packet in protocol.sensor_reports(frame.values):
             sent += self.hid.write(packet)
         self.last_frame = frame
+        self._maybe_precapture(frame, now)
         return Transfer(sent, 1, True, time.monotonic() - start)
+
+    def _maybe_precapture(self, frame, now):
+        """Adapt the other themes in the background once things are quiet, so that
+        switching theme only costs the flash (a capture takes 2 to 10 s)."""
+        if not self.precapture or (self._pre is not None and self._pre.is_alive()):
+            return
+        if (self._job is not None and not self._job["done"].is_set()) or \
+                now - max(self._wanted[1], self.last_flash, self._started) < PRECAPTURE_IDLE:
+            return
+        settings = {k: v for k, v in frame.settings.items() if k != "theme"}
+        signature = layout.key({"settings": settings, "hw": layout._hardware(frame.stats)})
+        if signature == self._pre_done:
+            return
+        self._pre_done = signature
+        stats = {k: v for k, v in frame.stats.items() if k != "media"}
+        current = frame.settings.get("theme")
+
+        def work():
+            from . import capture
+            for theme_id in capture.THEME_OPTIONS:
+                if theme_id == current:
+                    continue
+                wanted = dict(frame.settings, theme=theme_id)
+                if _lacks_data(wanted, stats):
+                    continue            # adapted on the switch, once the collector samples it
+                try:
+                    theme_spec = layout.spec(wanted, stats)
+                    if not layout.is_cached(theme_spec):
+                        layout.compiled(theme_spec, wanted, stats)
+                except Exception:  # noqa: BLE001 - only a head start; the switch captures it anyway
+                    log.debug("SmartMonitor: %s could not be adapted ahead", theme_id, exc_info=True)
+        self._pre = threading.Thread(target=work, name="smartmonitor-precapture", daemon=True)
+        self._pre.start()
 
     def set_brightness(self, percent):
         self.brightness = max(0, min(100, int(percent)))
         if self.hid.fd is not None:
             self.hid.write(protocol.datetime_report(datetime.datetime.now(), self.brightness))
+            self._clock_at, self._clock_brightness = time.monotonic(), self.brightness
 
     def probe(self):
         if not self.hid.alive():
@@ -366,10 +499,19 @@ class SmartMonitorHid(TelemetryDriver):
 
     def upload(self, data):
         """Upload ``img.dat`` bytes, recovering from a transfer left open or refused."""
+        refused = 0
         for attempt in range(1, UPLOAD_ATTEMPTS + 1):
             try:
                 return self._upload(data)
             except DisplayError as error:
+                refused += "refused the upload mode" in str(error)
+                if refused == UPLOAD_ATTEMPTS:
+                    # Measured: a panel whose upload was cut after its theme was erased
+                    # answers nothing any more (not even "ymodem") until it loses power.
+                    address = usb_address(self.usb_path) if self.usb_path else ""
+                    if address:
+                        _STUCK[self.usb_path] = (address, time.monotonic(), "upload")
+                    raise DisplayError(NEEDS_REPLUG, STUCK_UPLOAD_MESSAGE) from None
                 if "interrupted" in str(error) or attempt == UPLOAD_ATTEMPTS:
                     raise
                 log.warning("SmartMonitor upload attempt %d failed: %s; retrying", attempt, error)

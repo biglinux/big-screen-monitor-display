@@ -1,0 +1,7 @@
+# Lint do projeto (o CI roda "ruff check"). Python 3.10 é o mínimo do PKGBUILD.
+target-version = "py310"
+line-length = 120
+extend-exclude = ["locale-build", "android", "device-clients/wince/build"]
+
+[lint]
+select = ["E", "F", "W", "B"]

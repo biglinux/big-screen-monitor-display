@@ -20,6 +20,12 @@ import config_gui  # noqa: E402
 from gi.repository import GLib  # noqa: E402
 
 from bsmd import settings  # noqa: E402
+from bsmd.displays import discovery  # noqa: E402
+
+# The displays come from the fake status only: whatever is plugged into the
+# machine running the tests must not appear (an unidentified USB device made
+# the "needs your choice" card show up and failed the dashboard checks).
+discovery.scan_usb = lambda sysfs=None: []
 
 context = GLib.MainContext.default()
 result = {"errors": [], "checks": {}}
@@ -91,6 +97,73 @@ def run_main(window):
     pump(1.5)
     check("hidden_previews_idle", frames(window) == before)
     check("renderers_inactive", not any(e["renderer"].active for e in window._previews))
+    trays = window.preferences_page.trays
+    check("tray_switches", sorted(trays.rows) == ["big-screen-monitor-deepcool", "big-screen-monitor-tray"]
+          and not any(row.get_active() for row in trays.rows.values()))
+    # Window open with Preferences already built: the tray switched on by the
+    # first-run offer must show on its switch (host and start simulated here).
+    from gui import preferences_page, tray_settings
+    from traykit import autostart, session
+    saved = (session.qt_available, session.tray_host_available, session.start, window.status)
+    session.qt_available, session.tray_host_available = (lambda: True), (lambda: True)
+    session.start = lambda app_id: True
+    os.environ.pop("BSM_NO_TRAY_START", None)
+    window.status = {"displays": [{"id": "usb-1-2", "source": {"profile": "turing_rev_a"},
+                                   "capabilities": {"output": "raster"}}]}
+    tray_settings.ensure_running(window, preferences_page.load_gui_settings, preferences_page.save_gui_settings)
+    pump(0.2)
+    check("tray_switch_follows_window_open", trays.rows["big-screen-monitor-tray"].get_active()
+          and not trays.rows["big-screen-monitor-deepcool"].get_active())
+    autostart.disable("big-screen-monitor-tray")
+    load, save = preferences_page.load_gui_settings, preferences_page.save_gui_settings
+
+    def offer(done):
+        data = load()
+        data[session.OFFER_KEY] = done
+        save(data)
+
+    # A cooler plugged in after the window opened gets the first-run offer too.
+    offer(False)
+    window.tray_kinds = set()
+    window.status = {"displays": [{"id": "usb-1-3", "source": {"profile": "deepcool_ak"},
+                                   "capabilities": {"output": "segment"}}]}
+    tray_settings.status_changed(window, load, save)
+    pump(0.2)
+    check("tray_offer_follows_new_device", autostart.is_enabled("big-screen-monitor-deepcool")
+          and trays.rows["big-screen-monitor-deepcool"].get_active() and load()[session.OFFER_KEY] is True)
+    trays._updating = True
+    trays.rows["big-screen-monitor-deepcool"].set_active(False)
+    trays._updating = False
+    autostart.disable("big-screen-monitor-deepcool")
+    # A switch flipped before any offer is the user's choice: no offer afterwards.
+    offer(False)
+    saved_send = session.send
+
+    class Launch:
+        def __init__(self):
+            self.alive, self.terminated = True, False
+
+        def poll(self):
+            return None if self.alive else 0
+
+        def terminate(self):
+            self.terminated, self.alive = True, False
+
+    launch = Launch()
+    session.start = lambda app_id: launch
+    session.send = lambda app_id, command: False          # still starting: no socket yet
+    switch = trays.rows["big-screen-monitor-tray"]
+    switch.set_active(True)
+    switch.set_active(False)
+    check("tray_switch_is_a_choice", load()[session.OFFER_KEY] is True
+          and not autostart.is_enabled("big-screen-monitor-tray"))
+    # Switched off while it was starting: it is ended, not left running.
+    trays._stop_launch("big-screen-monitor-tray", 1)
+    check("tray_switch_off_while_starting", launch.terminated and "big-screen-monitor-tray" not in trays.launches)
+    session.send = saved_send
+    session.qt_available, session.tray_host_available, session.start, window.status = saved
+    os.environ["BSM_NO_TRAY_START"] = "1"
+    trays.refresh()
 
     # Edit -> pending bar -> apply -> saved.
     window.show_section("home")
@@ -233,6 +306,7 @@ def run_stopped(window):
 
 def run_narrow(window):
     pump(1.5)
+    check("width", window.get_width())
     check("collapsed", window.split.get_collapsed())
     check("adaptive_narrow", config_gui.ui.ADAPTIVE.narrow)
     window.show_section("themes")
@@ -282,7 +356,73 @@ def run_deepcool(window):
     window.close()
 
 
-SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool}
+def run_android(window):
+    """An Android phone next to a simulated panel; a pairing request waiting."""
+    import glob
+    pump(1.5)
+    window.show_section("displays")
+    pump(2.0)
+    displays = window.displays_page
+    group = displays.android
+    check("android_group", group.group.get_visible())
+    card = displays.grid.cards.get("android-0123456789ab")
+    check("android_card", card is not None)
+    check("android_card_title", card.title.get_label() if card else "")
+    check("android_card_subtitle", card.subtitle.get_label() if card else "")
+    check("android_request_rows", len(group.dynamic))
+    check("android_state", group.state_row.get_subtitle())
+    spool = os.path.join(os.path.dirname(os.environ["BSM_STATUS"]), "commands")
+    group._decide("0011223344556677", True)
+    pump(1.0)
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    check("android_approve_sent", [c.get("action") for c in sent])
+    for path in glob.glob(os.path.join(spool, "*.json")):
+        os.unlink(path)
+    displays.open_display("android-0123456789ab")
+    pump(0.8)
+    page = displays.details.get("android-0123456789ab")
+    check("android_detail", page is not None)
+    check("android_connection", page.rows["connection"].get_subtitle() if page else "")
+    check("android_protocol", page.rows["protocol"].get_subtitle() if page else "")
+    group.open_pairing()
+    pump(1.5)
+    dialog = group.dialog
+    check("android_qr", bool(dialog and dialog.picture.get_paintable() is not None and dialog.picture.get_visible()))
+    check("android_address", dialog.address_row.get_subtitle() if dialog else "")
+    check("android_steps", dialog.steps.get_label() if dialog else "")
+    # the download URL wraps inside the 560 px dialog instead of widening it
+    check("android_steps_width", dialog.steps.get_width() if dialog else -1)
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    opened = [c for c in sent if c.get("action") == "android_pair_open"]
+    check("android_pair_open", bool(opened) and len(opened[0].get("secret", "")) >= 22)
+    status = open(os.environ["BSM_STATUS"]).read()
+    check("android_secret_not_in_status", bool(opened) and opened[0]["secret"] not in status)
+    dialog.dialog.close()
+    pump(1.0)
+    sent = [json.load(open(path)) for path in sorted(glob.glob(os.path.join(spool, "*.json")))]
+    check("android_pair_closed", any(c.get("action") == "android_pair_close" for c in sent))
+    window.close()
+
+
+def run_empty(window):
+    """Service running, nothing detected: the first-use page offers the three ways forward."""
+    pump(1.5)
+    window.show_section("displays")
+    pump(1.5)
+    displays = window.displays_page
+    check("empty_visible", displays.empty.get_visible())
+    check("empty_actions", [button.get_label() for button in displays.empty_actions])
+    displays.empty_actions[1].emit("clicked")          # "Use a Phone or Tablet": the pairing QR
+    pump(1.0)
+    dialog = getattr(displays.android, "dialog", None)
+    check("pairing_dialog_opened", dialog is not None)
+    if dialog is not None:
+        dialog.dialog.close()
+        pump(0.3)
+
+
+SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool,
+             "android": run_android, "empty": run_empty}
 original = config_gui.ConfigWindow.__init__
 
 

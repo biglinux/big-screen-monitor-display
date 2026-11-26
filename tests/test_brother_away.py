@@ -104,7 +104,7 @@ def test_selection_avoids_immediate_repetition():
         picks.append(item.id)
         engine.last_run[item.id] = engine.time
         engine.history = (engine.history + [item.id])[-10:]
-    repeats = sum(1 for a, b in zip(picks, picks[1:]) if a == b)
+    repeats = sum(1 for a, b in zip(picks, picks[1:], strict=False) if a == b)
     assert repeats < len(picks) * 0.1
     assert len(set(picks)) >= 8
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed icon (Android 13+): the three status bars of the official icon, in one colour. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M36,44h30a3,3 0,0 1,0 6h-30a3,3 0,0 1,0 -6zM36,54h12a3,3 0,0 1,0 6h-12a3,3 0,0 1,0 -6zM36,64h22a3,3 0,0 1,0 6h-22a3,3 0,0 1,0 -6z" />
+    <path android:fillColor="#FFFFFFFF" android:fillAlpha="0.45"
+        android:pathData="M66,54h6a3,3 0,0 1,0 6h-6zM58,64h14a3,3 0,0 1,0 6h-14zM66,44h6a3,3 0,0 1,0 6h-6z" />
+</vector>

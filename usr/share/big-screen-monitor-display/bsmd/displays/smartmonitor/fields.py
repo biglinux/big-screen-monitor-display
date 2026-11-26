@@ -20,7 +20,15 @@ import time
 T0 = datetime.datetime(2026, 11, 8, 14, 29, 35)
 T1 = datetime.datetime(2027, 3, 17, 9, 47, 57)     # odd seconds like T0: a blinking colon stays the same
 BOOT0 = 4380.0          # seconds of uptime at T0 -> 01:13
-BOOT1 = 135720.0        # -> 1 day 13:42 (37:42)
+BOOT1 = 49320.0         # -> 13:42: the same day, so "up 01:13" keeps its format ("1d 13:42" would not)
+
+
+def set_date(day):
+    """Capture at ``day`` (a date): the date is drawn into the picture (renewed daily,
+    see layout.spec) and only the time of day moves between T0 and T1."""
+    global T0, T1
+    T0 = T0.replace(year=day.year, month=day.month, day=day.day)
+    T1 = T1.replace(year=day.year, month=day.month, day=day.day)
 
 
 def _gpu(stats):
@@ -67,6 +75,8 @@ def _load(stats, index):
 # candidate name -> f(stats, now_epoch, now_datetime)
 CANDIDATES = {
     "cpu_percent": lambda s, t, d: s.get("cpu_percent") or 0.0,
+    "cpu_user": lambda s, t, d: s.get("cpu_user") or 0.0,
+    "cpu_system": lambda s, t, d: s.get("cpu_system") or 0.0,
     "cpu_temp": lambda s, t, d: s.get("cpu_temp_value") or 0.0,
     "cpu_temp_f": lambda s, t, d: (s.get("cpu_temp_value") or 0.0) * 9 / 5 + 32,
     "cpu_mhz": lambda s, t, d: s.get("cpu_freq_mhz") or 0.0,
@@ -145,7 +155,9 @@ def _temp_text(value):
 # the base stats returning the keys to change. Lower priority numbers are kept
 # first when a theme has more live values than the panel can serve.
 FIELDS = {
-    "cpu_percent": (10, (lambda s: {"cpu_percent": 7.0}, lambda s: {"cpu_percent": 36.0}), ("cpu_percent",)),
+    # Two digits in both variants: the "%" after it is drawn into the picture, so the
+    # value captured sets where it sits (with "7%" a later "13%" covered the sign).
+    "cpu_percent": (10, (lambda s: {"cpu_percent": 17.0}, lambda s: {"cpu_percent": 36.0}), ("cpu_percent",)),
     "cpu_temp": (12, (lambda s: {"cpu_temp_value": 53.0, "cpu_temp": _temp_text(53)},
                       lambda s: {"cpu_temp_value": 61.0, "cpu_temp": _temp_text(61)}), ("cpu_temp", "cpu_temp_f")),
     "ram_percent": (14, (lambda s: {"ram_percent": 24.0}, lambda s: {"ram_percent": 47.0}), ("ram_percent",)),
@@ -161,6 +173,9 @@ FIELDS = {
     "disk_used": (32, (lambda s: _disk(s, 262.4), lambda s: _disk(s, 371.8)), ("disk_used_gb", "disk_used_pct")),
     "net_rx": (34, (lambda s: {"net_rx_mbps": 2.9}, lambda s: {"net_rx_mbps": 6.3}), ("net_rx_mbps",)),
     "net_tx": (35, (lambda s: {"net_tx_mbps": 0.87}, lambda s: {"net_tx_mbps": 0.31}), ("net_tx_mbps",)),
+    "cpu_split": (41, (lambda s: {"cpu_user": 15.0, "cpu_system": 12.0},
+                       lambda s: {"cpu_user": 31.0, "cpu_system": 19.0}),
+                  ("cpu_user", "cpu_system")),
     "cpu_freq": (40, (lambda s: {"cpu_freq_mhz": 3774.0}, lambda s: {"cpu_freq_mhz": 2210.0}), ("cpu_mhz",)),
     "swap_percent": (42, (lambda s: {"swap_percent": 3.0}, lambda s: {"swap_percent": 27.0}), ("swap_percent",)),
     "swap_used": (43, (lambda s: {"swap_used_mb": 612}, lambda s: {"swap_used_mb": 9420}),
@@ -187,6 +202,90 @@ FIELDS = {
     "procs": (80, (lambda s: {"proc_count": 497}, lambda s: {"proc_count": 1208}), ("procs",)),
 }
 CLOCK_PRIORITY = 0
+
+# Key of a capture variant setting the level of every history graph (see capture.render).
+HISTORY_LEVEL = "_history_level"
+
+# Fans: one live value per fan (RPM and PWM duty), found by its id ("nct6793/fan2"),
+# so a theme showing a chosen fan keeps showing that one. Each fan gets its own
+# values in the capture variants, so a number drawn for a fan tells which fan it is.
+# Fans standing still keep 0 RPM in every variant: "auto" picks the same fan the
+# themes pick at run time (the first one spinning).
+FAN_PRIORITY = 38
+FAN_RPM, FAN_PCT = "fan_rpm:", "fan_pct:"
+
+
+def _fan_changes(stats, variant):
+    fans = []
+    for index, fan in enumerate(stats.get("fans") or []):
+        fan = dict(fan)
+        if fan.get("rpm"):
+            fan["rpm"] = (1137 if variant == 0 else 2351) + 97 * index
+        if fan.get("percent") is not None or fan.get("rpm"):
+            fan["percent"] = float((23 if variant == 0 else 58) + 3 * index)
+        fans.append(fan)
+    return {"fans": fans}
+
+
+def _fan_percent(stats, pct):
+    return {"fans": [dict(fan, percent=float(pct)) for fan in stats.get("fans") or []]}
+
+
+def _fan_value(stats, name):
+    kind, wanted = (FAN_RPM, name[len(FAN_RPM):]) if name.startswith(FAN_RPM) else (FAN_PCT, name[len(FAN_PCT):])
+    fan = next((f for f in stats.get("fans") or [] if f.get("id") == wanted), None)
+    if fan is None:
+        return 0.0
+    return float((fan.get("rpm") if kind == FAN_RPM else fan.get("percent")) or 0.0)
+
+
+IFACE_PRIORITY = 36
+IFACE_RX, IFACE_TX = "iface_rx:", "iface_tx:"
+NESTED_HISTORIES = (("gpus", ("usage_history", "mem_history")), ("net_ifaces", ("rx_history", "tx_history")))
+
+
+def _iface_changes(stats, variant):
+    ifaces = {}
+    for index, (name, data) in enumerate(sorted((stats.get("net_ifaces") or {}).items())):
+        data = dict(data)
+        data["rx"] = (2.9 if variant == 0 else 6.3) + 0.4 * index      # Mb/s, above 1: "2.9M"
+        data["tx"] = (1.3 if variant == 0 else 4.7) + 0.4 * index
+        ifaces[name] = data
+    return {"net_ifaces": ifaces}
+
+
+def _iface_value(stats, name):
+    key, wanted = ("rx", name[len(IFACE_RX):]) if name.startswith(IFACE_RX) else ("tx", name[len(IFACE_TX):])
+    data = (stats.get("net_ifaces") or {}).get(wanted) or {}
+    return float(data.get(key) or 0.0)
+
+
+def set_ifaces(ifaces):
+    """Make each network interface's traffic a live value of the next capture."""
+    names = sorted(ifaces or {})
+    if not names:
+        FIELDS.pop("iface", None)
+        return
+    FIELDS["iface"] = (IFACE_PRIORITY, (lambda s: _iface_changes(s, 0), lambda s: _iface_changes(s, 1)),
+                       tuple(IFACE_RX + n for n in names) + tuple(IFACE_TX + n for n in names))
+
+
+def set_fans(fans):
+    """Make the fans of this computer live values of the next capture."""
+    fans = [f for f in fans or [] if f.get("id")]
+    if not fans:
+        FIELDS.pop("fan", None)
+        PERCENT.pop("fan", None)
+        return
+    names = tuple(FAN_RPM + f["id"] for f in fans) + tuple(FAN_PCT + f["id"] for f in fans)
+    FIELDS["fan"] = (FAN_PRIORITY, (lambda s: _fan_changes(s, 0), lambda s: _fan_changes(s, 1)), names)
+    spinning = [f for f in fans if f.get("rpm")]
+    from ...kojiro.data import _fan as pick
+    auto = pick({"fans": spinning}, "auto") if spinning else None
+    if auto is not None:
+        PERCENT["fan"] = (_fan_percent, FAN_PCT + auto["id"])
+    else:
+        PERCENT.pop("fan", None)
 
 # How to put a field at a given percentage (0..100) of its bar, and the candidate
 # that bar follows. Used to find bars and photograph them empty and full.
@@ -286,8 +385,10 @@ def noise(stats):
     gpus = [dict(g) for g in stats.get("gpus") or []]
     active = stats.get("active_gpu_idx", 0)
     for index, gpu in enumerate(gpus):
+        # The active GPU's clock, power and encoder are live fields: only the other
+        # GPUs' are noise (left out when a theme shows them).
         for key in ("clock_mhz", "power_w", "enc_percent"):
-            if gpu.get(key) is not None or index != active:
+            if index != active:
                 gpu[key] = (gpu.get(key) or 0) * 1.37 + 11
         for key in ("edge", "junc", "mem"):             # hwmon temperature strings ("54.0°C")
             if gpu.get(key):
@@ -302,10 +403,22 @@ def noise(stats):
             gpu["temp"] = f"{gpu['temp_value']:.0f}°C"
     if gpus:
         changes["gpus"] = gpus
+    changes[HISTORY_LEVEL] = 70
+    for key, names in NESTED_HISTORIES:
+        items = changes.get(key, stats.get(key))
+        if not items:
+            continue
+        moved = [dict(i) for i in items] if isinstance(items, list) else {n: dict(d) for n, d in items.items()}
+        for item in (moved if isinstance(moved, list) else moved.values()):
+            for name in names:
+                if item.get(name):
+                    item[name] = [70] * len(item[name])
+        changes[key] = moved
     changes["sensors"] = [(group, label, (value or 0) + 7.3 if isinstance(value, (int, float)) else value, unit)
                           for group, label, value, unit in (tuple(item) for item in stats.get("sensors") or [])]
-    changes["fans"] = [dict(fan, rpm=(fan.get("rpm") or 0) + 111, percent=(fan.get("percent") or 0) + 17)
-                       for fan in stats.get("fans") or []]
+    if "fan" not in FIELDS:
+        changes["fans"] = [dict(fan, rpm=(fan.get("rpm") or 0) + 111, percent=(fan.get("percent") or 0) + 17)
+                           for fan in stats.get("fans") or []]
     changes["cpu_cores_percent"] = [(value or 0) + 13 for value in stats.get("cpu_cores_percent") or []]
     changes["disks"] = {mount: {k: (v * 1.3 + 3 if isinstance(v, (int, float)) and not isinstance(v, bool) else v)
                                 for k, v in info.items()} for mount, info in (stats.get("disks") or {}).items()}
@@ -328,6 +441,8 @@ def _disk(stats, used):
 def base_stats(stats):
     """The telemetry every capture render starts from (realistic, fixed)."""
     base = dict(stats)
+    set_fans(stats.get("fans"))
+    set_ifaces(stats.get("net_ifaces"))
     base.update({"valid": True, "boot_time": T0.timestamp() - BOOT0, "proc_count": 497,
                  "load_avg": (3.78, 3.96, 3.79), "cpu_freq_mhz": 3774.0, "cpu_power_w": 26.0,
                  "cpu_power_status": "ok", "disk_io_kbs": 2048.0, "cpu_temp_at": T0.timestamp()})
@@ -355,6 +470,10 @@ def base_stats(stats):
 
 
 def candidate_value(name, stats, now=None):
+    if name.startswith((FAN_RPM, FAN_PCT)):
+        return _fan_value(stats, name)
+    if name.startswith((IFACE_RX, IFACE_TX)):
+        return _iface_value(stats, name)
     now = now or time.time()
     return float(CANDIDATES[name](stats, now, datetime.datetime.fromtimestamp(now)))
 
@@ -385,6 +504,9 @@ def binding_value(binding, stats, now=None):
     elif part == "frac":
         scaled = round(abs(value) * 10 ** decimals)
         result = scaled % (10 ** decimals)
+    elif part == "frac_digit":
+        scaled = round(abs(value) * 10 ** decimals) % (10 ** decimals)
+        result = (scaled // 10 ** (decimals - 1 - binding.get("digit", 0))) % 10
     elif part == "int":
         result = math.floor(round(abs(value), decimals))
     elif part == "tens":

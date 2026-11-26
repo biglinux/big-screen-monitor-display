@@ -104,6 +104,10 @@ class BrotherAwayTheme:
         self.engine = Engine(self.world, self.hero, self.dialogue, self.memory, self.rng, story_list, activities)
         self.last = None
 
+    def play_story(self, story_id):
+        """Start ``story_id`` at the next frame (called from another thread)."""
+        self.pending_story = story_id
+
     def debug_seek(self, seconds, story=None, hour=None, weather=None, until_speech=None):
         """Preview/screenshot helper: start ``story`` and advance ``seconds``
         (or until the character says something containing ``until_speech``)."""
@@ -167,6 +171,11 @@ class BrotherAwayTheme:
         self.last = now_mono
         if self.pending_seek:
             self._apply_seek(settings)
+        story, self.pending_story = getattr(self, "pending_story", None), None
+        if story and getattr(self, "engine", None) is not None:
+            # Chosen on a touch panel: start it now, whatever was playing.
+            self.engine.interrupt()
+            self.engine.forced = story
         self._advance(dt if settings.get("ba_animation", True) else 0.0, settings, now)
         logical = self._compose()
         image = logical.resize((logical.width * self.scale, logical.height * self.scale), Image.Resampling.NEAREST)

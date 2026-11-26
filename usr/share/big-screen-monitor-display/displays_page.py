@@ -22,11 +22,11 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
-from bsmd import patterns, runtime, settings, themes  # noqa: E402
+from bsmd import HARDWARE_REPORT_URL, patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
-from bsmd.i18n import N_, _  # noqa: E402
+from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from gui import components as ui  # noqa: E402
-from gui import deepcool_page, smartmonitor_view  # noqa: E402
+from gui import android_page, deepcool_page, smartmonitor_view  # noqa: E402
 from gui.theme_gallery import render_theme  # noqa: E402
 
 GLOBAL = "__global__"
@@ -49,7 +49,7 @@ PROFILES = (("auto", N_("Automatic (recommended)")), ("economy", N_("Economy")),
 LED_LABELS = {"off": N_("Off"), "white": N_("White"), "red": N_("Red"), "green": N_("Green"), "blue": N_("Blue"),
               "cyan": N_("Cyan"), "magenta": N_("Magenta"), "yellow": N_("Yellow"), "orange": N_("Orange"),
               "purple": N_("Purple")}
-TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated")}
+TRANSPORT = {"usb": N_("USB"), "serial": N_("USB serial"), "memory": N_("Simulated"), "android": N_("Android")}
 
 
 def send_display_command(command, run_helper):
@@ -79,7 +79,13 @@ class DisplayEntry:
         self.unknown = False        # serial device no family recognises
 
     @property
+    def android(self):
+        return self.id.startswith("android-")
+
+    @property
     def title(self):
+        if self.android and self.status and self.status.get("name"):
+            return self.status["name"]
         if self.status and self.status.get("device"):
             return self.status["device"]["model"]
         if self.candidate and self.candidate.best:
@@ -119,11 +125,24 @@ class DisplaysPage:
         self.empty = Adw.StatusPage(icon_name="video-display-symbolic", title=_("No display found"),
                                     description=_("Connect the panel over USB, then look again. Supported models are "
                                                   "listed in the documentation (Compatibility)."), visible=False)
-        look = Gtk.Button(label=_("Look Again"), halign=Gtk.Align.CENTER)
+        # First use with nothing detected: the three ways forward (PLANNING.md, Fase 7.2).
+        look = Gtk.Button(label=_("Look Again"))
         look.add_css_class("pill")
         look.add_css_class("suggested-action")
         look.connect("clicked", lambda *_: self.refresh(force=True, announce=True))
-        self.empty.set_child(look)
+        phone = Gtk.Button(label=_("Use a Phone or Tablet"))
+        phone.add_css_class("pill")
+        phone.connect("clicked", lambda *_: self.android.open_pairing())
+        report = Gtk.Button(label=_("My Model Is Not Listed"))
+        report.add_css_class("pill")
+        report.add_css_class("flat")
+        report.connect("clicked", lambda *_: Gtk.UriLauncher.new(HARDWARE_REPORT_URL).launch(
+            self.window, None, None, None))
+        ways = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, halign=Gtk.Align.CENTER)
+        for button in (look, phone, report):
+            ways.append(button)
+        self.empty_actions = (look, phone, report)
+        self.empty.set_child(ways)
         self.other_group = Adw.PreferencesGroup(
             title=_("Other serial devices"),
             description=_("Not recognised automatically. If one of them is a display, choose its model; "
@@ -134,8 +153,9 @@ class DisplaysPage:
             description=_("Identified by their USB ids, but their protocol is not implemented here. Nothing is sent "
                           "to them."), visible=False)
         self.deepcool_rows = []
-        self.content = ui.page_layout(intro, self.grid, self.empty, self.other_group, self.deepcool_group,
-                                      maximum=1200)
+        self.android = android_page.AndroidGroup(self)
+        self.content = ui.page_layout(intro, self.grid, self.empty, self.android.group, self.other_group,
+                                      self.deepcool_group, maximum=1200)
         self.page = ui.navigation_page(_("My Displays"), self.content, tag="displays", header_end=[refresh])
 
     def add_defaults(self, group):
@@ -202,16 +222,18 @@ class DisplaysPage:
         for entry in self.entries.values():
             self._update_card(entry)
             self._update_detail(entry)
+        self.android.update()
         if self._announce:
             self._announce = False
             count = sum(1 for e in self.entries.values() if e.candidate)
-            self.window.toast(_("{count} display(s) found.").format(count=count) if count else
-                              _("No display found. Check the cable and the USB port."))
+            found = ngettext("{count} display found.", "{count} displays found.", count).format(count=count)
+            self.window.toast(found if count else _("No display found. Check the cable and the USB port."))
 
     def _rebuild(self):
         self.grid.clear()
         for display_id, entry in self.entries.items():
-            icon = "power-profile-performance-symbolic" if self._family(entry) else "video-display-symbolic"
+            icon = "power-profile-performance-symbolic" if self._family(entry) else \
+                "phone-symbolic" if entry.android else "video-display-symbolic"
             card = ui.Card(entry.title, icon=icon)
             self.grid.add_card(display_id, card)
         self.empty.set_visible(not self.entries)
@@ -255,6 +277,8 @@ class DisplaysPage:
         state = (entry.status or {}).get("state")
         if own.get("enabled", True) is False:
             return _("Disabled"), None
+        if (entry.status or {}).get("attention") == "replug":
+            return _("Unplug and plug in again"), "error"
         if state:
             return _(STATE_TEXT.get(state, state)), STATE_KIND.get(state)
         if entry.candidate and entry.candidate.auto_profile() is None and own.get("profile", "auto") == "auto":
@@ -275,6 +299,11 @@ class DisplaysPage:
         card = self.grid.cards[entry.id]
         own = self._entry_settings(entry.id)
         effective = settings.merged(self.window.values, entry.id)
+        live_theme = ((entry.status or {}).get("settings") or {}).get("theme")
+        if live_theme and effective.get("theme") == settings.merged(self.window.saved, entry.id).get("theme"):
+            # Chosen on the display itself (touch panel, Android): show what it really shows,
+            # unless the window has an unapplied change of its own.
+            effective["theme"] = live_theme
         state, _kind = self._state(entry)
         family = self._family(entry)
         if family is not None:
@@ -368,11 +397,21 @@ class DisplaysPage:
                                  lambda value: self._set(display_id, "theme", value),
                                  _("Theme options (colours, modules) are shared and set in the Theme Gallery.")))
             orientation = dict(ORIENTATIONS).get(values.get("orientation"), ORIENTATIONS[0][1])
+            choices = ORIENTATIONS
+            hint = None
+            if smartmonitor_view.is_panel(entry.status, own, entry.candidate):
+                # The panel draws its picture lying down only: portrait would show the
+                # landscape picture (or upside down), never a portrait theme.
+                choices = tuple(o for o in ORIENTATIONS if o[0].startswith("horizontal"))
+                hint = _("This display shows themes lying down (landscape) only.")
+            own_orientation = own.get("orientation", GLOBAL)
+            if own_orientation != GLOBAL and own_orientation not in dict(choices):
+                choices = choices + ((own_orientation, dict(ORIENTATIONS).get(own_orientation, own_orientation)),)
             look.add(self._combo(_("Orientation"),
                                  [(GLOBAL, _("Same as default ({value})").format(value=_(orientation)))]
-                                 + [(k, _(v)) for k, v in ORIENTATIONS],
-                                 own.get("orientation", GLOBAL), lambda value: self._set(display_id, "orientation",
-                                                                                         value)))
+                                 + [(k, _(v)) for k, v in choices],
+                                 own_orientation, lambda value: self._set(display_id, "orientation", value),
+                                 hint))
             levels = [(GLOBAL, _("Same as default ({value}%)").format(value=values.get("brightness", 70)))] + \
                 [(level, f"{level}%") for level in range(100, -1, -10)]
             current = own.get("brightness", GLOBAL)
@@ -392,13 +431,32 @@ class DisplaysPage:
                 # The panel shows a flashed adaptation of the theme: song details cannot be live.
                 follow = Adw.SwitchRow(
                     title=_("Big Media Player: cover and title of every song"),
-                    subtitle=_("Flashes the panel again on each new song (at most every 2 minutes): it restarts "
-                               "for about 10 seconds each time and its memory wears with use. Off: time, progress, "
-                               "volume and play/pause stay live without the song details."),
+                    subtitle=_("Flashes the panel again on each new song (at most every 25 seconds): it restarts "
+                               "for about 17 seconds each time and its memory wears with use. Off: time, progress, "
+                               "volume, play/pause and the spectrum stay live without the song details."),
                     active=bool(values.get("sm_bmp_track_refresh")))
                 follow.connect("notify::active", lambda r, _p: self._set(display_id, "sm_bmp_track_refresh",
                                                                          True if r.get_active() else None))
                 look.add(follow)
+                processes = Adw.SwitchRow(
+                    title=_("Standard: process list (snapshot every 30 minutes)"),
+                    subtitle=_("This display only receives numbers. In the Standard theme's side panel, graphs "
+                               "show their values live but not their lines, and the process list cannot be "
+                               "updated in real time, so it is left out. On: the process list is shown as a "
+                               "snapshot flashed with the theme and renewed every 30 minutes; the display "
+                               "restarts for about 17 seconds each time and its memory wears with use."),
+                    active=str(values.get("sm_std_processes", "0")) != "0")
+                processes.connect("notify::active", lambda r, _p: self._set(display_id, "sm_std_processes",
+                                                                            "30" if r.get_active() else None))
+                look.add(processes)
+                planet = [("30", _("Every 30 minutes")), ("60", _("Every hour")),
+                          ("180", _("Every 3 hours (recommended)"))]
+                look.add(self._combo(_("Planet: position of the globe"), planet,
+                                     str(values.get("sm_planet_minutes", "180")),
+                                     lambda value: self._set(display_id, "sm_planet_minutes", value),
+                                     _("The globe is drawn at the real time and turns as a new picture flashed "
+                                       "at this interval: the display restarts for about 17 seconds each time and "
+                                       "its memory wears with use.")))
                 scenes = [("0", _("Off: one scene per time of day")), ("15", _("Every 15 minutes")),
                           ("30", _("Every 30 minutes (recommended)")), ("60", _("Every hour"))]
                 look.add(self._combo(_("Brother Away: story scenes"), scenes,
@@ -409,12 +467,15 @@ class DisplaysPage:
                                        "(about 20 seconds).")))
 
             hardware = Adw.PreferencesGroup(title=_("Hardware"))
+            if entry.android:
+                android_page.detail_rows(self, hardware, display_id, own)
             detected = entry.candidate.best.profile.name if entry.candidate and entry.candidate.best else None
             auto_label = _("Automatic ({model})").format(model=_(detected)) if detected else _("Automatic")
             options = [("auto", auto_label)] + [(p.id, _(p.name)) for p in registry.PROFILES]
-            hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
-                                     lambda value: self._model_changed(display_id, value),
-                                     _("Choose manually only if detection is wrong or ambiguous.")))
+            if not entry.android:
+                hardware.add(self._combo(_("Model / protocol"), options, own.get("profile", "auto"),
+                                         lambda value: self._model_changed(display_id, value),
+                                         _("Choose manually only if detection is wrong or ambiguous.")))
             profile_id = own.get("profile", "auto")
             effective = registry.get(profile_id) if profile_id != "auto" else (
                 entry.candidate.auto_profile() if entry.candidate else None)
@@ -430,6 +491,8 @@ class DisplaysPage:
                                          lambda value: self._set(display_id, "led_color",
                                                                  None if value == "off" else value),
                                          _("Only the flagship model has LEDs.")))
+            if effective is not None and effective.id == "foston_fs707dc":
+                self._foston_rows(hardware, display_id, own)
             rows = {}
             for key, title in (("state", _("State")), ("resolution", _("Resolution")),
                                ("connection", _("Connection")), ("protocol", _("Protocol")),
@@ -542,6 +605,11 @@ class DisplaysPage:
         if firmware:
             details.append(_("Firmware: {version}").format(version=firmware))
         rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(details) or "—"))
+        if entry.android and status:
+            connection, protocol, lines = android_page.describe(status)
+            rows["connection"].set_subtitle(GLib.markup_escape_text(connection))
+            rows["protocol"].set_subtitle(GLib.markup_escape_text(protocol))
+            rows["details"].set_subtitle(GLib.markup_escape_text("\n".join(lines) or "—"))
         sensors = status.get("sensors") or {}
         page.sensors.set_visible(bool(sensors))
         if sensors:
@@ -592,9 +660,54 @@ class DisplaysPage:
         dialog.connect("response", response)
         dialog.present(self.window)
 
-    def command(self, command):
+    def _foston_rows(self, group, display_id, own):
+        """FOSTON FS-707DC: touchscreen on the panel and the Windows CE client."""
+        touch_row = Adw.SwitchRow(title=_("Touchscreen"), active=own.get("touch_enabled", True),
+                                  subtitle=_("Tap, hold and swipe on the panel itself; the computer's keyboard "
+                                             "focus and mouse are never touched."))
+        touch_row.connect("notify::active", lambda r, _p: self._set(display_id, "touch_enabled",
+                                                                    None if r.get_active() else False))
+        group.add(touch_row)
+        for title, subtitle, action, icon in (
+                (_("Touch test"), _("Draws your finger's path on the panel (hold to leave)"), "touch_test",
+                 "input-touchscreen-symbolic"),
+                (_("Calibrate touch"), _("Opens the navigator's own calibration (tap the crosses)"), "calibrate",
+                 "find-location-symbolic"),
+                (_("Close the client on the navigator"),
+                 _("Returns the navigator to its main menu and USB storage mode"), "quit_client",
+                 "application-exit-symbolic")):
+            row = Adw.ActionRow(title=title, subtitle=subtitle, activatable=True)
+            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+            row.connect("activated", lambda *_a, a=action: self.command({"action": a, "display": display_id}))
+            group.add(row)
+        install_row = Adw.ActionRow(
+            title=_("Install the client on the navigator"),
+            subtitle=_("With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. "
+                       "Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."),
+            activatable=True)
+        install_row.add_prefix(Gtk.Image.new_from_icon_name("document-save-symbolic"))
+        install_row.connect("activated", lambda *_a: self._foston_install())
+        group.add(install_row)
+
+    def _foston_install(self):
+        from bsmd.displays.foston import install
+        try:
+            volumes = install.find_volumes()
+            if not volumes:
+                self.window.toast(_("No navigator mounted as USB storage. Quit the client on the navigator "
+                                    "(Exit button) and open its volume in the file manager."))
+                return
+            path = install.install(volumes[0])
+        except OSError as error:
+            self.window.toast(_("Could not install the client: {error}").format(error=error))
+            return
+        self.window.toast(_("Client installed at {path}. Reset the navigator before starting it.").format(path=path))
+
+    def command(self, command, quiet=False):
         def worker():
             ok, message = send_display_command(command, self.run_helper)
+            if ok and quiet:
+                return
             GLib.idle_add(lambda: (self.window.toast(_("Sent to the display.")) if ok else
                                    self.window._error(_("The display did not receive the command"), message))
                           and False)

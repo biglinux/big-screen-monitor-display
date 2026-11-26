@@ -70,7 +70,8 @@ def test_incident_log_is_bounded_on_disk(tmp_path):
     for index in range(55):
         log.record("x", "warning", f"n{index}", attempts=index)
     assert len(log.recent(100)) == 10
-    lines = open(path).read().splitlines()
+    with open(path) as handle:
+        lines = handle.read().splitlines()
     assert len(lines) <= 20
     assert json.loads(lines[-1])["message"] == "n54"
     reloaded = health.IncidentLog(path, maxlen=10)

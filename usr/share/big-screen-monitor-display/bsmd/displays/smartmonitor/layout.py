@@ -33,7 +33,8 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
-from ...i18n import _
+from ... import fonts
+from ...i18n import N_, _
 from . import imgdat
 
 LAYOUT_VERSION = 1
@@ -57,7 +58,7 @@ UNITS = ("KB/s", "MB/s")
 
 def _font(name, size):
     try:
-        return ImageFont.truetype(os.path.join(FONT_DIR, name), size)
+        return fonts.truetype(os.path.join(FONT_DIR, name), size)
     except OSError:
         return ImageFont.load_default()
 
@@ -99,12 +100,12 @@ def dashboard_spec(settings, stats):
         "host": (stats.get("hostname") or "")[:22],
         "name": (settings.get("name") or "").strip()[:22],
         "rotation": rotation,
-        "labels": {
-            "cpu": "CPU", "gpu": "GPU", "system": _("SYSTEM"), "memory": _("MEMORY"), "network": _("NETWORK"),
-            "usage": _("USAGE %"), "temp": _("TEMP °F") if settings.get("std_temp_unit") == "f" else _("TEMP °C"),
-            "vram": "VRAM %", "used": _("USED GB"), "swap": "SWAP %", "uptime": _("UPTIME h"),
-            "load": _("LOAD %"), "io": _("DISK MB/s"), "down": _("DOWN"), "up": _("UP"), "disk": _("DISK %"), "of": _("of"),
-        },
+        "labels": {key: _(text) for key, text in {
+            "cpu": "CPU", "gpu": "GPU", "system": N_("SYSTEM"), "memory": N_("MEMORY"), "network": N_("NETWORK"),
+            "usage": N_("USAGE %"), "temp": N_("TEMP °F") if settings.get("std_temp_unit") == "f" else N_("TEMP °C"),
+            "vram": "VRAM %", "used": N_("USED GB"), "swap": "SWAP %", "uptime": N_("UPTIME h"),
+            "load": N_("LOAD %"), "io": N_("DISK MB/s"), "down": N_("DOWN"), "up": N_("UP"), "disk": N_("DISK %"),
+        }.items()},
     }
 
 
@@ -362,9 +363,10 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 # ---------------------------------------------------------------- every theme (capture)
 
-CAPTURE_VERSION = 9
+CAPTURE_VERSION = 13
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
-THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",), "old_computer": ("oc_",),
+THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_", "sm_planet_"),
+              "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
 # Scenes that follow the time of day are captured again when the period changes,
 # drawn at a representative hour (chosen so no clock component collides with the
@@ -372,7 +374,23 @@ THEME_KEYS = {"standard": ("std_",), "gkrellm": ("gk_",), "planet": ("planet_",)
 BROTHER_AWAY_PERIODS = ((4.5, 7), (11.0, 13), (17.5, 18), (20.5, 23))     # (from hour, captured at)
 PLANET_HOURS = (1, 4, 7, 10, 13, 16, 19, 22)
 CAPTURE_TIMEOUT = 150.0
-CACHE_KEEP = 6
+CACHE_KEEP = 12              # every theme adapted ahead of a switch (see driver PRECAPTURE_IDLE)
+
+
+def planet_minutes(settings):
+    """Minutes between two positions of the Planet theme's globe on the panel."""
+    try:
+        return min(180, max(30, int(settings.get("sm_planet_minutes", "180"))))
+    except (TypeError, ValueError):
+        return 180
+
+
+def process_minutes(settings):
+    """Minutes between two snapshots of the Standard theme's process list (0: no list)."""
+    try:
+        return max(0, int(settings.get("sm_std_processes", "0")))
+    except (TypeError, ValueError):
+        return 0
 
 
 def _epoch(theme_id, settings, now):
@@ -414,7 +432,8 @@ def _hardware(stats):
     """What themes print as fixed text (names, totals): a change means a new picture."""
     gpus = [(g.get("name", ""), round((g.get("mem_total_mb") or 0) / 256)) for g in stats.get("gpus") or []]
     return {"host": stats.get("hostname", ""), "kernel": stats.get("kernel", ""), "cpu": stats.get("cpu_model", ""),
-            "ram": round((stats.get("ram_total_mb") or 0) / 512), "swap": round((stats.get("swap_total_mb") or 0) / 512),
+            "ram": round((stats.get("ram_total_mb") or 0) / 512),
+            "swap": round((stats.get("swap_total_mb") or 0) / 512),
             "disk": round(stats.get("disk_total_gb") or 0), "gpus": gpus, "cores": list(stats.get("cpu_cores") or ())}
 
 
@@ -431,8 +450,21 @@ def spec(settings, stats, now=None):
               if k in COMMON_KEYS or (prefixes and k.startswith(prefixes))}
     now = now or datetime.datetime.now()
     rotation = 180 if settings.get("orientation") in ("horizontal_flipped", "vertical_flipped") else 0
+    # The date is drawn into the picture (it needs up to six number widgets live): a new
+    # picture once a day, at midnight.
     result = {"v": CAPTURE_VERSION, "kind": "capture", "theme": theme_id, "settings": subset,
-              "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation}
+              "hw": _hardware(stats), "hour": _epoch(theme_id, settings, now), "rotation": rotation,
+              "date": now.date().isoformat()}
+    if theme_id == "planet":
+        # The globe at the real time, renewed every N minutes (a new picture each time).
+        step = planet_minutes(settings) * 60
+        utc = (now.astimezone() if now.tzinfo is None else now).astimezone(datetime.timezone.utc)
+        slot = int(utc.timestamp() // step) * step + step // 2       # the middle of the slot
+        result["astronomy"] = datetime.datetime.fromtimestamp(slot, datetime.timezone.utc).isoformat()
+    minutes = process_minutes(settings)
+    if theme_id == "standard" and minutes:
+        # The process list is a snapshot: a new one (a new picture) every N minutes.
+        result["procs"] = int(now.timestamp() // (minutes * 60))
     if theme_id == "brother_away":
         scene = brother_away_scene(settings, now)
         if scene is not None:
@@ -518,6 +550,15 @@ def _remember(key_, result):
         _MEMORY.pop(next(iter(_MEMORY)))
 
 
+def is_cached(theme_spec):
+    """True when the picture for ``theme_spec`` is ready (memory or disk cache)."""
+    key_ = key(theme_spec)
+    if key_ in _MEMORY or theme_spec.get("kind") != "capture":
+        return True
+    base = os.path.join(cache_dir(), key_)
+    return os.path.exists(base + ".json") and os.path.exists(base + ".dat")
+
+
 def compiled(theme_spec, settings, stats, progress=None):
     with _LOCK:
         return _compiled(theme_spec, settings, stats, progress)
@@ -530,6 +571,7 @@ def _compiled(theme_spec, settings, stats, progress=None):
     import logging
     import subprocess
     import sys
+    import tempfile
     log = logging.getLogger("bsmd.smartmonitor")
     key_ = key(theme_spec)
     if key_ in _MEMORY:
@@ -556,6 +598,7 @@ def _compiled(theme_spec, settings, stats, progress=None):
             hints = {}
         request = {"theme": theme_spec["theme"], "settings": _jsonable(settings), "stats": _jsonable(stats),
                    "hour": theme_spec.get("hour"), "rotation": theme_spec.get("rotation", 0), "out": out,
+                   "astronomy": theme_spec.get("astronomy"), "date": theme_spec.get("date"),
                    "scene": theme_spec.get("scene"), "spectrum": hints.get(base_key)}
         if art is not None and settings.get("sm_bmp_track_refresh"):
             import base64
@@ -566,19 +609,27 @@ def _compiled(theme_spec, settings, stats, progress=None):
         worker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "worker.py")
         started = time.monotonic()
         try:
-            proc = subprocess.Popen([sys.executable, "-I", worker], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE, text=True)
-            proc.stdin.write(json.dumps(request))
-            proc.stdin.close()
-            while proc.poll() is None:
-                if progress is not None and progress():
-                    proc.kill()
-                    raise TimeoutError("capture stopped")
-                if time.monotonic() - started > CAPTURE_TIMEOUT:
-                    proc.kill()
-                    raise TimeoutError("capture took too long")
-                time.sleep(0.2)
-            error = proc.stderr.read()
+            # The result comes back through the disk cache. stderr goes to a file read at
+            # the end (a pipe read only after exit would fill up and stall the worker);
+            # nothing is left open and a killed worker is reaped.
+            with tempfile.TemporaryFile("w+", encoding="utf-8") as errors, \
+                    subprocess.Popen([sys.executable, "-I", worker], stdin=subprocess.PIPE,
+                                     stdout=subprocess.DEVNULL, stderr=errors, text=True) as proc:
+                try:
+                    proc.stdin.write(json.dumps(request))
+                    proc.stdin.close()
+                    while proc.poll() is None:
+                        if progress is not None and progress():
+                            raise TimeoutError("capture stopped")
+                        if time.monotonic() - started > CAPTURE_TIMEOUT:
+                            raise TimeoutError("capture took too long")
+                        time.sleep(0.2)
+                finally:
+                    if proc.poll() is None:
+                        proc.kill()
+                        proc.wait()
+                errors.seek(0)
+                error = errors.read()
             if proc.returncode != 0:
                 raise RuntimeError(error.strip().splitlines()[-1] if error.strip() else f"exit {proc.returncode}")
         except (OSError, RuntimeError, TimeoutError) as error:

@@ -13,7 +13,7 @@ import time
 
 from . import SERVICE_NAME, runtime, settings
 from .displays import discovery
-from .i18n import _
+from .i18n import _, ngettext
 
 UDEV_RULE = "/usr/lib/udev/rules.d/70-big-screen-monitor-display.rules"
 HELPER = "/usr/lib/big-screen-monitor-display/bsm-helper"
@@ -144,7 +144,8 @@ def run_checks(status_file=None):
                                  severity="warning"))
         recent = [i for i in status.get("incidents", []) if i.get("severity") in ("error", "critical")]
         checks.append(_check("incidents", _("Recent errors"), not recent,
-                             _("{count} recent error(s); last: {message}").format(
+                             ngettext("{count} recent error; last: {message}",
+                                      "{count} recent errors; last: {message}", len(recent)).format(
                                  count=len(recent), message=recent[-1]["message"]) if recent
                              else _("No recent errors."), severity="warning"))
     return {"checks": checks, "status": status, "devices": devices}

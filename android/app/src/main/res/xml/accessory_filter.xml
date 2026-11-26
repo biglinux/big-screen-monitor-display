@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android Open Accessory: the computer announces itself with these strings
+     (bsmd/displays/android/aoa.py). Android then offers to open this app. -->
+<resources>
+    <usb-accessory manufacturer="BigLinux" model="BigScreenMonitorDisplay" />
+</resources>

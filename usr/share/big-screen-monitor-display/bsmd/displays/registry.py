@@ -85,6 +85,12 @@ class Profile:
         if self.id == "weact_b":
             from .weact import WeActB
             return WeActB(port, options=options)
+        if self.id == "foston_fs707dc":
+            from .foston.driver import FostonDisplay
+            return FostonDisplay(port, options=options)
+        if self.id == "foston_bigfoston":
+            from .foston.driver import FostonLinuxDisplay
+            return FostonLinuxDisplay(options=options)
         if self.id == "smartmonitor_hid":
             from .smartmonitor import driver as smartmonitor_driver
             return smartmonitor_driver.create(candidate.device, options)
@@ -97,6 +103,7 @@ class Profile:
 REF = "https://github.com/mathoudebine/turing-smart-screen-python"
 QINHENG = 0x1A86
 LINUX_GADGET = (0x0525, 0x1D6B)
+WINCE_VID, WINCE_SERIAL_PID = 0x045E, 0x00CE     # Microsoft "Windows CE USB serial" (ipaq driver)
 
 PROFILES = (
     Profile("ax206", "AX206 DPF (AIDA64 / USB-Display)", "Appotech AX206 based frames",
@@ -128,7 +135,8 @@ PROFILES = (
              Rule(LINUX_GADGET[0], (0xA4A7,), PROBABLE, serial=("20080411",)),
              Rule(LINUX_GADGET[1], (0x0121, 0x0106), PROBABLE, serial=("20080411",))),
             "B", REF, options=("size",),
-            notes=(N_("Sleeps until opened and then reappears as a generic USB gadget; the size may need to be chosen."),)),
+            notes=(N_("Sleeps until opened and then reappears as a generic USB gadget; "
+                      "the size may need to be chosen."),)),
     Profile("kipye_rev_d", "Kipye Qiye Smart Display 3.5\"", "Kipye / Qiye",
             ("Kipye Qiye Smart Display 3.5\"",), "320x480", "rev. D serial, RGB565 BE", "serial",
             (Rule(0x454D, (0x4E41,), PROBABLE),),
@@ -149,7 +157,8 @@ PROFILES = (
             "480x480, 320x960, 720x1280, 800x1280, 480x1920, 462x1920, 720x1920",
             "native USB, DES header + PNG/JPEG", "usb",
             (Rule(0x1CBE, (0x0028, 0x0046, 0x0050, 0x0080, 0x0088, 0x0092, 0x0123), PROBABLE),),
-            "B", REF, notes=(N_("Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."),)),
+            "B", REF, notes=(N_("Whole frames only (PNG, JPEG when larger than 1 MB); "
+                                "no video or storage functions."),)),
     Profile("smartmonitor_hid", "SmartMonitor 3.5\" (HID, llhmi / llTechCo)", "SmartMonitor (sold under many brands)",
             ("3.5\" PC CPU Data Monitor", "SmartMonitor 3.5\""), "480x320",
             "HID: theme flashed over YMODEM + live channels", "hid",
@@ -160,6 +169,26 @@ PROFILES = (
                       "(about a minute, only when the look changes) and then sends the live values."),
                    N_("Themes are not drawn on this panel; the dashboard follows the Standard theme's colour "
                       "scheme, temperature unit, name and brightness of this display."))),
+    Profile("foston_fs707dc", "FOSTON FS-707DC Touch Display", "FOSTON (Windows CE / MediaTek MT3351 navigators)",
+            ("FOSTON FS-707DC 7\"",), N_("reported by the device (800x480 on the FS-707DC)"),
+            "FSP over the Windows CE USB serial class (bsmd-ce client on the device)", "serial",
+            # 045e:00ce is the generic Windows CE USB serial function: the HELLO
+            # handshake with the bsmd-ce client confirms the device.
+            (Rule(WINCE_VID, (WINCE_SERIAL_PID,), PROBABLE),),
+            "A", "device-clients/wince",
+            notes=(N_("Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."),
+                   N_("Single-point resistive touchscreen: tap, hold and swipe on the panel itself."),)),
+    Profile("foston_bigfoston", "FOSTON FS-707DC (BigFoston OS)",
+            "FOSTON (MediaTek MT3351 navigators with BigFoston OS)",
+            ("FOSTON FS-707DC 7\" (BigFoston OS)",), N_("reported by the device (800x480 on the FS-707DC)"),
+            "FSP over TCP on the USB network (Big Screen app of BigFoston OS)", "network",
+            # Linux USB gadget (g_cdc) of BigFoston OS: its serial number names the device;
+            # the HELLO handshake with the Big Screen app confirms it.
+            (Rule(0x0525, (0xA4AA,), CONFIRMED, serial=("BIGFOSTON-FS707DC",)),),
+            "A", "https://github.com/ruscher/foston-monitor",
+            notes=(N_("Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."),
+                   N_("Connects over the USB network to 192.168.7.2, TCP port 7707."),
+                   N_("Single-point resistive touchscreen: tap, hold and swipe on the panel itself."),)),
 )
 
 
