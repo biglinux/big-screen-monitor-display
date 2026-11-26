@@ -64,6 +64,7 @@ class ThemeGallery:
         search_bar = Gtk.SearchBar(child=Adw.Clamp(child=self.search, maximum_size=480), show_close_button=False)
         search_bar.connect_entry(self.search)
         search_button = Gtk.ToggleButton(icon_name="system-search-symbolic", tooltip_text=_("Search (Ctrl+F)"))
+        ui.set_label(search_button, _("Search (Ctrl+F)"))
         search_button.bind_property("active", search_bar, "search-mode-enabled",
                                     GObject.BindingFlags.BIDIRECTIONAL)
         self.search_button = search_button
