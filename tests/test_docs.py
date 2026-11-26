@@ -28,3 +28,13 @@ def test_aur_package_installs_to_the_real_paths():
     package = text[text.index("package() {"):]
     assert "${pkgname}" not in package and "$pkgname" not in package     # would be ...-git
     assert "pkgname=big-screen-monitor-display-git" in text and "conflicts=" in text
+
+
+def test_documentation_index_links_exist():
+    import re
+    index = os.path.join(ROOT, "docs", "README.md")
+    with open(index, encoding="utf-8") as fh:
+        links = re.findall(r"\]\(([^)#]+)(?:#[^)]*)?\)", fh.read())
+    missing = [link for link in links if not link.startswith("http")
+               and not os.path.exists(os.path.normpath(os.path.join(ROOT, "docs", link)))]
+    assert not missing, missing

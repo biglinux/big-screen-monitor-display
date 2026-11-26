@@ -142,6 +142,14 @@ def test_deepcool_cooler_pages(tmp_path):
 
 
 @needs_gui
+def test_first_use_without_displays(tmp_path):
+    checks = drive(tmp_path, "empty", [])
+    assert checks["empty_visible"] is True
+    assert checks["empty_actions"] == ["Look Again", "Use a Phone or Tablet", "My Model Is Not Listed"]
+    assert checks["pairing_dialog_opened"] is True
+
+
+@needs_gui
 def test_service_stopped_states(tmp_path):
     checks = drive(tmp_path, "stopped", None)
     assert checks["state_card_visible"] is True

@@ -8,6 +8,38 @@ Cada etapa traz **o quê**, **por quê** e **como saber que terminou**. A ordem 
 a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 últimas são investimento.
 
+## Status da execução (26/11/2026)
+
+| Etapa | Status | Onde |
+| --- | --- | --- |
+| 0.1 Confirmar de onde o pacote é compilado | ⏳ **com você**: instalar o pacote do repositório BigLinux numa VM e ver `--version` | — |
+| 0.2 Webhook falha de verdade (`curl -fsS`) | ✅ | PR #21 |
+| 0.3 Pacote só com Tests verde na `main` | ✅ | PR #21 |
+| 0.4 Release v5.5.2 | ✅ tag na `main` de 25/11 (a 5.5.2 do CHANGELOG) | — |
+| 0.5 Uma fonte da versão (`test_version.py`, `tools/release.sh`) | ✅ | PR #21 |
+| 1.1 Issues ativas com formulários, rótulo `hardware`, relato privado de vulnerabilidade | ✅ | PR #22 e configuração do repositório |
+| 1.2 "Relatar um problema" na janela (28 idiomas) | ✅ | PR #22 |
+| 1.3 `CHANGELOG.md`, README mais curto | ✅ | PR #22 |
+| 1.4 `README.en.md` | ✅ | PR #22 |
+| 1.5 `CONTRIBUTING.md`, `SECURITY.md` | ✅ | PR #22 |
+| 2.1 "—" quando a GPU não mede o uso | ✅ todos os temas | PR #23 |
+| 2.2 NVIDIA pela NVML | ✅ ⏳ falta validar numa NVIDIA real | PR #23 |
+| 2.3 Intel: frequência | ✅ | PR #23 |
+| 2.4 Nome "RX 580" errado | ✅ | PR #23 |
+| 3.1 CI com Python 3.10, 3.12 e 3.14 | ✅ | PR #24 |
+| 3.2 `ruff` no CI, 110 avisos → 0 | ✅ | PR #24 |
+| 3.3 Cobertura com piso (66 % no CI, sem GTK) | ✅ | PR #24 / #26 |
+| 3.4 Instalação em Debian, Ubuntu, Fedora, openSUSE, Arch | ✅ workflow *Install* | PR #24 |
+| 4 Arquivos grandes | ✅ como regra no CONTRIBUTING (dividir só ao mexer) | PR #25 |
+| 5.1 AUR (`-git`) | ✅ PKGBUILD gerado e compilado; ⏳ **com você**: publicar exige a sua conta no AUR | PR #25 |
+| 5.2 `.deb`/`.rpm` no Open Build Service | ⏳ **com você**: exige conta no OBS; o workflow *Install* já cobre as 5 distros | — |
+| 5.3 Página de compatibilidade | ✅ gerada do registro de drivers | PR #25 |
+| 6.1 Protocolo BSMD-lite e bridge genérica | ✅ | PR #26 |
+| 6.2 Exemplo para ESP32 | ⏳ precisa de hardware para validar; o cliente de referência em Python existe | — |
+| 7.1 Teste com o Orca | ⏳ **com você**: teste manual com leitor de tela | — |
+| 7.2 Primeiro uso guiado | ✅ procurar de novo · celular/tablet · "meu modelo não está na lista" | PR #27 |
+| 7.3 Índice da documentação | ✅ `docs/README.md`, com teste de links | PR #27 |
+
 ---
 
 ## Diagnóstico em uma página

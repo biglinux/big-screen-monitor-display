@@ -1511,7 +1511,7 @@ msgid "Instrument gauges with needles and clear alerts."
 msgstr "Osoittimelliset mittarit ja selkeät hälytykset."
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:16
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Identify"
 msgstr "Tunnista"
 
@@ -1531,7 +1531,7 @@ msgstr "Liukuvärit"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
-#: usr/share/big-screen-monitor-display/displays_page.py:397
+#: usr/share/big-screen-monitor-display/displays_page.py:410
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
 #: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
@@ -1843,7 +1843,7 @@ msgstr "Ulkoasu"
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
 #: usr/share/big-screen-monitor-display/config_gui.py:729
-#: usr/share/big-screen-monitor-display/displays_page.py:379
+#: usr/share/big-screen-monitor-display/displays_page.py:392
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:69
 #: usr/share/big-screen-monitor-display/kojiro_page.py:514
 #: usr/share/big-screen-monitor-display/media_player_page.py:190
@@ -1866,7 +1866,7 @@ msgstr "Ei mediasoitinta"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
@@ -1902,7 +1902,7 @@ msgid "Choose a story"
 msgstr "Valitse tarina"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:893
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Touch test"
 msgstr "Kosketustesti"
 
@@ -1946,7 +1946,7 @@ msgid "Home"
 msgstr "Etusivu"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/displays_page.py:146
+#: usr/share/big-screen-monitor-display/displays_page.py:159
 msgid "My Displays"
 msgstr "Omat näytöt"
 
@@ -1979,7 +1979,7 @@ msgstr "Järjestelmä"
 #: usr/share/big-screen-monitor-display/config_gui.py:56
 #: usr/share/big-screen-monitor-display/config_gui.py:570
 #: usr/share/big-screen-monitor-display/config_gui.py:836
-#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:424
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:94
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:275
 msgid "Performance"
@@ -2135,7 +2135,7 @@ msgid "Vertical, upside down"
 msgstr "Pysty, ylösalaisin"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:569
-#: usr/share/big-screen-monitor-display/displays_page.py:407
+#: usr/share/big-screen-monitor-display/displays_page.py:420
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
 #: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
@@ -2828,7 +2828,7 @@ msgid "Every theme, display and performance option goes back to its original val
 msgstr "Kaikki teema-, näyttö- ja suorituskykyasetukset palautuvat alkuperäisiin arvoihinsa, myös kunkin näytön nimet ja teemat sekä Kojiro-asettelu. Näytöillä ei muutu mitään ennen kuin painat Käytä."
 
 #: usr/share/big-screen-monitor-display/config_gui.py:976
-#: usr/share/big-screen-monitor-display/displays_page.py:637
+#: usr/share/big-screen-monitor-display/displays_page.py:650
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1211
@@ -3208,7 +3208,7 @@ msgid "Open the complete configuration window"
 msgstr "Avaa kaikki asetukset sisältävä ikkuna"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:272
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:258
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:299
 msgid "Reconnect"
@@ -3417,7 +3417,7 @@ msgid "Reconnecting"
 msgstr "Yhdistetään uudelleen"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:36
-#: usr/share/big-screen-monitor-display/displays_page.py:275
+#: usr/share/big-screen-monitor-display/displays_page.py:288
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:22
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:399
 msgid "Not connected"
@@ -3503,89 +3503,97 @@ msgstr "Näyttöä ei löytynyt"
 msgid "Connect the panel over USB, then look again. Supported models are listed in the documentation (Compatibility)."
 msgstr "Yhdistä paneeli USB:llä ja etsi sitten uudelleen. Tuetut mallit on lueteltu dokumentaatiossa (Yhteensopivuus)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:128
+#: usr/share/big-screen-monitor-display/displays_page.py:129
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:245
 msgid "Look Again"
 msgstr "Etsi uudelleen"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:134
+#: usr/share/big-screen-monitor-display/displays_page.py:133
+msgid "Use a Phone or Tablet"
+msgstr "Käytä puhelinta tai tablettia"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:136
+msgid "My Model Is Not Listed"
+msgstr "Mallini ei ole luettelossa"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:147
 msgid "Other serial devices"
 msgstr "Muut sarjaliitäntälaitteet"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:135
+#: usr/share/big-screen-monitor-display/displays_page.py:148
 msgid "Not recognised automatically. If one of them is a display, choose its model; otherwise leave it alone."
 msgstr "Ei tunnistettu automaattisesti. Jos jokin niistä on näyttö, valitse sen malli; muuten jätä se rauhaan."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:139
+#: usr/share/big-screen-monitor-display/displays_page.py:152
 msgid "Other DeepCool devices"
 msgstr "Muut DeepCool-laitteet"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:140
+#: usr/share/big-screen-monitor-display/displays_page.py:153
 msgid "Identified by their USB ids, but their protocol is not implemented here. Nothing is sent to them."
 msgstr "Tunnistettu USB-tunnisteista, mutta niiden protokollaa ei ole toteutettu tässä. Niille ei lähetetä mitään."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:216
+#: usr/share/big-screen-monitor-display/displays_page.py:229
 #, python-brace-format
 msgid "{count} display found."
 msgid_plural "{count} displays found."
 msgstr[0] "{count} näyttö löytyi."
 msgstr[1] "{count} näyttöä löytyi."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:217
+#: usr/share/big-screen-monitor-display/displays_page.py:230
 msgid "No display found. Check the cable and the USB port."
 msgstr "Näyttöä ei löytynyt. Tarkista kaapeli ja USB-portti."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:237
+#: usr/share/big-screen-monitor-display/displays_page.py:250
 msgid "Choose Model…"
 msgstr "Valitse malli…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:266
+#: usr/share/big-screen-monitor-display/displays_page.py:279
 msgid "Disabled"
 msgstr "Pois käytöstä"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:268
+#: usr/share/big-screen-monitor-display/displays_page.py:281
 msgid "Unplug and plug in again"
 msgstr "Irrota ja kytke uudelleen"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:272
+#: usr/share/big-screen-monitor-display/displays_page.py:285
 msgid "Needs a model choice"
 msgstr "Malli on valittava"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:274
+#: usr/share/big-screen-monitor-display/displays_page.py:287
 msgid "Detected"
 msgstr "Tunnistettu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:363
+#: usr/share/big-screen-monitor-display/displays_page.py:376
 #, python-brace-format
 msgid "What {name} shows"
 msgstr "Mitä {name} näyttää"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:368
+#: usr/share/big-screen-monitor-display/displays_page.py:381
 msgid "This display"
 msgstr "Tämä näyttö"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:369
+#: usr/share/big-screen-monitor-display/displays_page.py:382
 msgid "These values apply only to this display and take precedence over the defaults."
 msgstr "Nämä arvot koskevat vain tätä näyttöä ja ohittavat oletukset."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:371
+#: usr/share/big-screen-monitor-display/displays_page.py:384
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:185
 msgid "Name"
 msgstr "Nimi"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:374
+#: usr/share/big-screen-monitor-display/displays_page.py:387
 msgid "Use this display"
 msgstr "Käytä tätä näyttöä"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:381
-#: usr/share/big-screen-monitor-display/displays_page.py:398
-#: usr/share/big-screen-monitor-display/displays_page.py:412
+#: usr/share/big-screen-monitor-display/displays_page.py:394
+#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:425
 #, python-brace-format
 msgid "Same as default ({value})"
 msgstr "Sama kuin oletus ({value})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:383
+#: usr/share/big-screen-monitor-display/displays_page.py:396
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
@@ -3593,310 +3601,310 @@ msgstr "Sama kuin oletus ({value})"
 msgid "Theme"
 msgstr "Teema"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:385
+#: usr/share/big-screen-monitor-display/displays_page.py:398
 msgid "Theme options (colours, modules) are shared and set in the Theme Gallery."
 msgstr "Teeman asetukset (värit, moduulit) ovat yhteisiä, ja ne määritetään Teemagalleriassa."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:393
+#: usr/share/big-screen-monitor-display/displays_page.py:406
 msgid "This display shows themes lying down (landscape) only."
 msgstr "Tämä näyttö näyttää teemat vain vaakasuunnassa."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:402
+#: usr/share/big-screen-monitor-display/displays_page.py:415
 #, python-brace-format
 msgid "Same as default ({value}%)"
 msgstr "Sama kuin oletus ({value}%)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:420
+#: usr/share/big-screen-monitor-display/displays_page.py:433
 msgid "Big Media Player: cover and title of every song"
 msgstr "Big Media Player: jokaisen kappaleen kansikuva ja nimi"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:421
+#: usr/share/big-screen-monitor-display/displays_page.py:434
 msgid "Flashes the panel again on each new song (at most every 25 seconds): it restarts for about 17 seconds each time and its memory wears with use. Off: time, progress, volume, play/pause and the spectrum stay live without the song details."
 msgstr "Kirjoittaa paneelin uudelleen jokaisen uuden kappaleen kohdalla (enintään 25 sekunnin välein): se käynnistyy joka kerta uudelleen noin 17 sekunnin ajan, ja sen muisti kuluu käytössä. Pois päältä: aika, edistyminen, äänenvoimakkuus, toisto/tauko ja taajuusnäyttö pysyvät reaaliaikaisina ilman kappaleen tietoja."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:429
+#: usr/share/big-screen-monitor-display/displays_page.py:442
 msgid "Standard: process list (snapshot every 30 minutes)"
 msgstr "Vakio: prosessiluettelo (tilannekuva 30 minuutin välein)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:430
+#: usr/share/big-screen-monitor-display/displays_page.py:443
 msgid "This display only receives numbers. In the Standard theme's side panel, graphs show their values live but not their lines, and the process list cannot be updated in real time, so it is left out. On: the process list is shown as a snapshot flashed with the theme and renewed every 30 minutes; the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Tämä näyttö vastaanottaa vain numeroita. Vakio-teeman sivupaneelissa kaaviot näyttävät arvonsa reaaliaikaisesti mutta eivät käyriään, eikä prosessiluetteloa voi päivittää reaaliajassa, joten se jätetään pois. Päällä: prosessiluettelo näytetään teeman mukana kirjoitettuna tilannekuvana, joka uusitaan 30 minuutin välein; näyttö käynnistyy joka kerta uudelleen noin 17 sekunnin ajan, ja sen muisti kuluu käytössä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
+#: usr/share/big-screen-monitor-display/displays_page.py:452
 msgid "Every 30 minutes"
 msgstr "30 minuutin välein"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every hour"
 msgstr "Tunnin välein"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:440
+#: usr/share/big-screen-monitor-display/displays_page.py:453
 msgid "Every 3 hours (recommended)"
 msgstr "3 tunnin välein (suositus)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:441
+#: usr/share/big-screen-monitor-display/displays_page.py:454
 msgid "Planet: position of the globe"
 msgstr "Planet: maapallon asento"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:444
+#: usr/share/big-screen-monitor-display/displays_page.py:457
 msgid "The globe is drawn at the real time and turns as a new picture flashed at this interval: the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Maapallo piirretään todellisen ajan mukaan, ja se kääntyy uutena kuvana, joka kirjoitetaan tällä välillä: näyttö käynnistyy joka kerta uudelleen noin 17 sekunnin ajan, ja sen muisti kuluu käytössä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Off: one scene per time of day"
 msgstr "Pois päältä: yksi näkymä vuorokaudenaikaa kohti"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Every 15 minutes"
 msgstr "15 minuutin välein"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every 30 minutes (recommended)"
 msgstr "30 minuutin välein (suositus)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:449
+#: usr/share/big-screen-monitor-display/displays_page.py:462
 msgid "Brother Away: story scenes"
 msgstr "Brother Away: tarinan kohtaukset"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:465
 msgid "The panel tells the stories as scenes (beginning, middle, end) with the castaway animated and the speech bubble; each new scene is flashed (about 20 seconds)."
 msgstr "Paneeli kertoo tarinat kohtauksina (alku, keskikohta, loppu) animoidun haaksirikkoisen ja puhekuplan kera; jokainen uusi kohtaus kirjoitetaan paneeliin (noin 20 sekuntia)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:456
+#: usr/share/big-screen-monitor-display/displays_page.py:469
 msgid "Hardware"
 msgstr "Laitteisto"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:294
 #, python-brace-format
 msgid "Automatic ({model})"
 msgstr "Automaattinen ({model})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:463
+#: usr/share/big-screen-monitor-display/displays_page.py:476
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:296
 msgid "Model / protocol"
 msgstr "Malli / protokolla"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:465
+#: usr/share/big-screen-monitor-display/displays_page.py:478
 msgid "Choose manually only if detection is wrong or ambiguous."
 msgstr "Valitse käsin vain, jos tunnistus on väärä tai epäselvä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Panel size"
 msgstr "Paneelin koko"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Detect"
 msgstr "Tunnista"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:476
+#: usr/share/big-screen-monitor-display/displays_page.py:489
 msgid "Backplate LEDs"
 msgstr "Takalevyn LEDit"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:480
+#: usr/share/big-screen-monitor-display/displays_page.py:493
 msgid "Only the flagship model has LEDs."
 msgstr "Vain lippulaivamallissa on LEDit."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:315
 msgid "State"
 msgstr "Tila"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 msgid "Resolution"
 msgstr "Tarkkuus"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 msgid "Connection"
 msgstr "Yhteys"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:197
 msgid "Protocol"
 msgstr "Protokolla"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Transfer"
 msgstr "Siirto"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Details"
 msgstr "Tiedot"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:494
+#: usr/share/big-screen-monitor-display/displays_page.py:507
 msgid "Room sensors"
 msgstr "Huoneanturit"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:498
+#: usr/share/big-screen-monitor-display/displays_page.py:511
 msgid "Tests"
 msgstr "Testit"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:499
+#: usr/share/big-screen-monitor-display/displays_page.py:512
 msgid "A pattern stays on for a few seconds, then the theme returns."
 msgstr "Testikuvio näkyy muutaman sekunnin, minkä jälkeen teema palaa."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Shows this display's name on it"
 msgstr "Näyttää tämän näytön nimen sen ruudulla"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:505
+#: usr/share/big-screen-monitor-display/displays_page.py:518
 msgid "Show a test pattern"
 msgstr "Näytä testikuvio"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:506
+#: usr/share/big-screen-monitor-display/displays_page.py:519
 #: usr/share/big-screen-monitor-display/media_player_page.py:231
 msgid "Choose…"
 msgstr "Valitse…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 msgid "Closes and reopens this display only"
 msgstr "Sulkee ja avaa uudelleen vain tämän näytön"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:554
+#: usr/share/big-screen-monitor-display/displays_page.py:567
 msgid "Waiting for a model choice"
 msgstr "Odotetaan mallin valintaa"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:555
+#: usr/share/big-screen-monitor-display/displays_page.py:568
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:384
 #, python-brace-format
 msgid "for {seconds:.0f} s"
 msgstr "{seconds:.0f} s ajan"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:564
+#: usr/share/big-screen-monitor-display/displays_page.py:577
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:392
 #, python-brace-format
 msgid "USB {ids} at port {path}"
 msgstr "USB {ids} portissa {path}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:567
+#: usr/share/big-screen-monitor-display/displays_page.py:580
 #, python-brace-format
 msgid "serial port {port}"
 msgstr "sarjaportti {port}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:578
+#: usr/share/big-screen-monitor-display/displays_page.py:591
 #, python-brace-format
 msgid "{encoding}, {mode}"
 msgstr "{encoding}, {mode}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "partial updates"
 msgstr "osittaiset päivitykset"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "whole frames"
 msgstr "kokonaiset kuvat"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:582
+#: usr/share/big-screen-monitor-display/displays_page.py:595
 #, python-brace-format
 msgid "{fps:.1f} fps · {ms:.0f} ms per transfer · {recoveries} recoveries"
 msgstr "{fps:.1f} fps · {ms:.0f} ms siirtoa kohden · {recoveries} palautusta"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:588
+#: usr/share/big-screen-monitor-display/displays_page.py:601
 #, python-brace-format
 msgid "Serial number {serial}"
 msgstr "Sarjanumero {serial}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:593
+#: usr/share/big-screen-monitor-display/displays_page.py:606
 #, python-brace-format
 msgid "Firmware: {version}"
 msgstr "Laiteohjelmisto: {version}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:605
+#: usr/share/big-screen-monitor-display/displays_page.py:618
 #, python-brace-format
 msgid "{value:.1f} °C"
 msgstr "{value:.1f} °C"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:607
+#: usr/share/big-screen-monitor-display/displays_page.py:620
 #, python-brace-format
 msgid "{value:.0f}% humidity"
 msgstr "{value:.0f}% kosteus"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:616
+#: usr/share/big-screen-monitor-display/displays_page.py:629
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:171
 msgid "This display has no adjustable brightness."
 msgstr "Tämän näytön kirkkautta ei voi säätää."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:617
+#: usr/share/big-screen-monitor-display/displays_page.py:630
 msgid "Not connected · preview"
 msgstr "Ei yhdistetty · esikatselu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:630
+#: usr/share/big-screen-monitor-display/displays_page.py:643
 msgid "Which display is this?"
 msgstr "Mikä näyttö tämä on?"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:631
+#: usr/share/big-screen-monitor-display/displays_page.py:644
 #, python-brace-format
 msgid "{device} ({ids}) was not recognised. Choose its model only if you are sure: the service will then talk to it with that protocol. Nothing is sent before you press Apply."
 msgstr "Laitetta {device} ({ids}) ei tunnistettu. Valitse sen malli vain, jos olet varma: palvelu viestii sen jälkeen laitteen kanssa kyseisellä protokollalla. Mitään ei lähetetä ennen kuin painat Käytä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:638
+#: usr/share/big-screen-monitor-display/displays_page.py:651
 msgid "Use this model"
 msgstr "Käytä tätä mallia"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:646
+#: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Model chosen. Press Apply to start using the display."
 msgstr "Malli valittu. Ota näyttö käyttöön painamalla Käytä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:652
+#: usr/share/big-screen-monitor-display/displays_page.py:665
 #: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "Kosketusnäyttö"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:653
+#: usr/share/big-screen-monitor-display/displays_page.py:666
 msgid "Tap, hold and swipe on the panel itself; the computer's keyboard focus and mouse are never touched."
 msgstr "Napauta, pidä painettuna ja pyyhkäise suoraan paneelilla; tietokoneen näppäimistön kohdistukseen ja hiireen ei koskaan kosketa."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Draws your finger's path on the panel (hold to leave)"
 msgstr "Piirtää sormesi reitin paneelille (poistu pitämällä painettuna)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Calibrate touch"
 msgstr "Kalibroi kosketus"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Opens the navigator's own calibration (tap the crosses)"
 msgstr "Avaa navigaattorin oman kalibroinnin (napauta ristejä)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:663
+#: usr/share/big-screen-monitor-display/displays_page.py:676
 msgid "Close the client on the navigator"
 msgstr "Sulje navigaattorin asiakasohjelma"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:664
+#: usr/share/big-screen-monitor-display/displays_page.py:677
 msgid "Returns the navigator to its main menu and USB storage mode"
 msgstr "Palauttaa navigaattorin sen päävalikkoon ja USB-tallennustilaan"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:671
+#: usr/share/big-screen-monitor-display/displays_page.py:684
 msgid "Install the client on the navigator"
 msgstr "Asenna asiakasohjelma navigaattoriin"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:672
+#: usr/share/big-screen-monitor-display/displays_page.py:685
 msgid "With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."
 msgstr "Kun navigaattori on yhdistetty USB-tallennuslaitteena: kopioi bsmd-ce.exe sen BigScreen-kansioon. Nollaa sitten navigaattori ja valitse sen navigointipoluksi BigScreen\\bsmd-ce.exe."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:684
+#: usr/share/big-screen-monitor-display/displays_page.py:697
 msgid "No navigator mounted as USB storage. Quit the client on the navigator (Exit button) and open its volume in the file manager."
 msgstr "Yhtään navigaattoria ei ole liitetty USB-tallennuslaitteena. Lopeta navigaattorin asiakasohjelma (Exit-painike) ja avaa sen taltio tiedostonhallinnassa."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:689
+#: usr/share/big-screen-monitor-display/displays_page.py:702
 #, python-brace-format
 msgid "Could not install the client: {error}"
 msgstr "Asiakasohjelmaa ei voitu asentaa: {error}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:691
+#: usr/share/big-screen-monitor-display/displays_page.py:704
 #, python-brace-format
 msgid "Client installed at {path}. Reset the navigator before starting it."
 msgstr "Asiakasohjelma asennettu sijaintiin {path}. Nollaa navigaattori ennen sen käynnistämistä."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:698
+#: usr/share/big-screen-monitor-display/displays_page.py:711
 msgid "Sent to the display."
 msgstr "Lähetetty näytölle."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:699
+#: usr/share/big-screen-monitor-display/displays_page.py:712
 msgid "The display did not receive the command"
 msgstr "Näyttö ei vastaanottanut komentoa"
 

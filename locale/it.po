@@ -1511,7 +1511,7 @@ msgid "Instrument gauges with needles and clear alerts."
 msgstr "Strumenti a lancetta e avvisi chiari."
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:16
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Identify"
 msgstr "Identifica"
 
@@ -1531,7 +1531,7 @@ msgstr "Sfumature"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
-#: usr/share/big-screen-monitor-display/displays_page.py:397
+#: usr/share/big-screen-monitor-display/displays_page.py:410
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
 #: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
@@ -1843,7 +1843,7 @@ msgstr "Skin"
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
 #: usr/share/big-screen-monitor-display/config_gui.py:729
-#: usr/share/big-screen-monitor-display/displays_page.py:379
+#: usr/share/big-screen-monitor-display/displays_page.py:392
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:69
 #: usr/share/big-screen-monitor-display/kojiro_page.py:514
 #: usr/share/big-screen-monitor-display/media_player_page.py:190
@@ -1866,7 +1866,7 @@ msgstr "Nessun lettore multimediale"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
@@ -1902,7 +1902,7 @@ msgid "Choose a story"
 msgstr "Scegli una storia"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:893
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Touch test"
 msgstr "Test del tocco"
 
@@ -1946,7 +1946,7 @@ msgid "Home"
 msgstr "Home"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/displays_page.py:146
+#: usr/share/big-screen-monitor-display/displays_page.py:159
 msgid "My Displays"
 msgstr "I miei display"
 
@@ -1979,7 +1979,7 @@ msgstr "Sistema"
 #: usr/share/big-screen-monitor-display/config_gui.py:56
 #: usr/share/big-screen-monitor-display/config_gui.py:570
 #: usr/share/big-screen-monitor-display/config_gui.py:836
-#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:424
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:94
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:275
 msgid "Performance"
@@ -2135,7 +2135,7 @@ msgid "Vertical, upside down"
 msgstr "Verticale, capovolto"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:569
-#: usr/share/big-screen-monitor-display/displays_page.py:407
+#: usr/share/big-screen-monitor-display/displays_page.py:420
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
 #: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
@@ -2828,7 +2828,7 @@ msgid "Every theme, display and performance option goes back to its original val
 msgstr "Ogni opzione di temi, display e prestazioni torna al suo valore originale, compresi i nomi e i temi di ciascun display e il layout di Kojiro. Sui display non cambia nulla finché non premi Applica."
 
 #: usr/share/big-screen-monitor-display/config_gui.py:976
-#: usr/share/big-screen-monitor-display/displays_page.py:637
+#: usr/share/big-screen-monitor-display/displays_page.py:650
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1211
@@ -3208,7 +3208,7 @@ msgid "Open the complete configuration window"
 msgstr "Apri la finestra di configurazione completa"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:272
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:258
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:299
 msgid "Reconnect"
@@ -3417,7 +3417,7 @@ msgid "Reconnecting"
 msgstr "Riconnessione"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:36
-#: usr/share/big-screen-monitor-display/displays_page.py:275
+#: usr/share/big-screen-monitor-display/displays_page.py:288
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:22
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:399
 msgid "Not connected"
@@ -3503,89 +3503,97 @@ msgstr "Nessun display trovato"
 msgid "Connect the panel over USB, then look again. Supported models are listed in the documentation (Compatibility)."
 msgstr "Collega il pannello tramite USB, poi cerca di nuovo. I modelli supportati sono elencati nella documentazione (Compatibilità)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:128
+#: usr/share/big-screen-monitor-display/displays_page.py:129
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:245
 msgid "Look Again"
 msgstr "Cerca di nuovo"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:134
+#: usr/share/big-screen-monitor-display/displays_page.py:133
+msgid "Use a Phone or Tablet"
+msgstr "Usa un telefono o un tablet"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:136
+msgid "My Model Is Not Listed"
+msgstr "Il mio modello non è nell’elenco"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:147
 msgid "Other serial devices"
 msgstr "Altri dispositivi seriali"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:135
+#: usr/share/big-screen-monitor-display/displays_page.py:148
 msgid "Not recognised automatically. If one of them is a display, choose its model; otherwise leave it alone."
 msgstr "Non riconosciuti automaticamente. Se uno di essi è un display, scegline il modello; altrimenti lascialo stare."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:139
+#: usr/share/big-screen-monitor-display/displays_page.py:152
 msgid "Other DeepCool devices"
 msgstr "Altri dispositivi DeepCool"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:140
+#: usr/share/big-screen-monitor-display/displays_page.py:153
 msgid "Identified by their USB ids, but their protocol is not implemented here. Nothing is sent to them."
 msgstr "Identificati dagli ID USB, ma il loro protocollo non è implementato qui. A questi dispositivi non viene inviato nulla."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:216
+#: usr/share/big-screen-monitor-display/displays_page.py:229
 #, python-brace-format
 msgid "{count} display found."
 msgid_plural "{count} displays found."
 msgstr[0] "{count} display trovato."
 msgstr[1] "{count} display trovati."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:217
+#: usr/share/big-screen-monitor-display/displays_page.py:230
 msgid "No display found. Check the cable and the USB port."
 msgstr "Nessun display trovato. Controlla il cavo e la porta USB."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:237
+#: usr/share/big-screen-monitor-display/displays_page.py:250
 msgid "Choose Model…"
 msgstr "Scegli modello…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:266
+#: usr/share/big-screen-monitor-display/displays_page.py:279
 msgid "Disabled"
 msgstr "Disattivato"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:268
+#: usr/share/big-screen-monitor-display/displays_page.py:281
 msgid "Unplug and plug in again"
 msgstr "Scollega e ricollega"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:272
+#: usr/share/big-screen-monitor-display/displays_page.py:285
 msgid "Needs a model choice"
 msgstr "Richiede la scelta del modello"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:274
+#: usr/share/big-screen-monitor-display/displays_page.py:287
 msgid "Detected"
 msgstr "Rilevato"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:363
+#: usr/share/big-screen-monitor-display/displays_page.py:376
 #, python-brace-format
 msgid "What {name} shows"
 msgstr "Cosa mostra {name}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:368
+#: usr/share/big-screen-monitor-display/displays_page.py:381
 msgid "This display"
 msgstr "Questo display"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:369
+#: usr/share/big-screen-monitor-display/displays_page.py:382
 msgid "These values apply only to this display and take precedence over the defaults."
 msgstr "Questi valori si applicano solo a questo display e hanno la precedenza su quelli predefiniti."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:371
+#: usr/share/big-screen-monitor-display/displays_page.py:384
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:185
 msgid "Name"
 msgstr "Nome"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:374
+#: usr/share/big-screen-monitor-display/displays_page.py:387
 msgid "Use this display"
 msgstr "Usa questo display"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:381
-#: usr/share/big-screen-monitor-display/displays_page.py:398
-#: usr/share/big-screen-monitor-display/displays_page.py:412
+#: usr/share/big-screen-monitor-display/displays_page.py:394
+#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:425
 #, python-brace-format
 msgid "Same as default ({value})"
 msgstr "Come il predefinito ({value})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:383
+#: usr/share/big-screen-monitor-display/displays_page.py:396
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
@@ -3593,310 +3601,310 @@ msgstr "Come il predefinito ({value})"
 msgid "Theme"
 msgstr "Tema"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:385
+#: usr/share/big-screen-monitor-display/displays_page.py:398
 msgid "Theme options (colours, modules) are shared and set in the Theme Gallery."
 msgstr "Le opzioni dei temi (colori, moduli) sono condivise e si impostano nella Galleria dei temi."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:393
+#: usr/share/big-screen-monitor-display/displays_page.py:406
 msgid "This display shows themes lying down (landscape) only."
 msgstr "Questo display mostra i temi solo in orizzontale."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:402
+#: usr/share/big-screen-monitor-display/displays_page.py:415
 #, python-brace-format
 msgid "Same as default ({value}%)"
 msgstr "Come il predefinito ({value}%)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:420
+#: usr/share/big-screen-monitor-display/displays_page.py:433
 msgid "Big Media Player: cover and title of every song"
 msgstr "Big Media Player: copertina e titolo di ogni brano"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:421
+#: usr/share/big-screen-monitor-display/displays_page.py:434
 msgid "Flashes the panel again on each new song (at most every 25 seconds): it restarts for about 17 seconds each time and its memory wears with use. Off: time, progress, volume, play/pause and the spectrum stay live without the song details."
 msgstr "Riscrive il pannello a ogni nuovo brano (al massimo ogni 25 secondi): ogni volta si riavvia per circa 17 secondi e la sua memoria si usura con l'uso. Disattivato: ora, avanzamento, volume, riproduzione/pausa e lo spettro restano in tempo reale senza i dettagli del brano."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:429
+#: usr/share/big-screen-monitor-display/displays_page.py:442
 msgid "Standard: process list (snapshot every 30 minutes)"
 msgstr "Standard: elenco dei processi (istantanea ogni 30 minuti)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:430
+#: usr/share/big-screen-monitor-display/displays_page.py:443
 msgid "This display only receives numbers. In the Standard theme's side panel, graphs show their values live but not their lines, and the process list cannot be updated in real time, so it is left out. On: the process list is shown as a snapshot flashed with the theme and renewed every 30 minutes; the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Questo display riceve solo numeri. Nel pannello laterale del tema Standard i grafici mostrano i loro valori in tempo reale ma non le linee, e l'elenco dei processi non può essere aggiornato in tempo reale, quindi viene omesso. Attivato: l'elenco dei processi viene mostrato come un'istantanea scritta insieme al tema e rinnovata ogni 30 minuti; ogni volta il display si riavvia per circa 17 secondi e la sua memoria si usura con l'uso."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
+#: usr/share/big-screen-monitor-display/displays_page.py:452
 msgid "Every 30 minutes"
 msgstr "Ogni 30 minuti"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every hour"
 msgstr "Ogni ora"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:440
+#: usr/share/big-screen-monitor-display/displays_page.py:453
 msgid "Every 3 hours (recommended)"
 msgstr "Ogni 3 ore (consigliato)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:441
+#: usr/share/big-screen-monitor-display/displays_page.py:454
 msgid "Planet: position of the globe"
 msgstr "Planet: posizione del globo"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:444
+#: usr/share/big-screen-monitor-display/displays_page.py:457
 msgid "The globe is drawn at the real time and turns as a new picture flashed at this interval: the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Il globo viene disegnato all'ora reale e ruota come una nuova immagine scritta a questo intervallo: ogni volta il display si riavvia per circa 17 secondi e la sua memoria si usura con l'uso."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Off: one scene per time of day"
 msgstr "Disattivato: una scena per momento della giornata"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Every 15 minutes"
 msgstr "Ogni 15 minuti"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every 30 minutes (recommended)"
 msgstr "Ogni 30 minuti (consigliato)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:449
+#: usr/share/big-screen-monitor-display/displays_page.py:462
 msgid "Brother Away: story scenes"
 msgstr "Brother Away: scene delle storie"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:465
 msgid "The panel tells the stories as scenes (beginning, middle, end) with the castaway animated and the speech bubble; each new scene is flashed (about 20 seconds)."
 msgstr "Il pannello racconta le storie per scene (inizio, svolgimento, fine) con il naufrago animato e il fumetto; ogni nuova scena viene scritta sul pannello (circa 20 secondi)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:456
+#: usr/share/big-screen-monitor-display/displays_page.py:469
 msgid "Hardware"
 msgstr "Hardware"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:294
 #, python-brace-format
 msgid "Automatic ({model})"
 msgstr "Automatico ({model})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:463
+#: usr/share/big-screen-monitor-display/displays_page.py:476
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:296
 msgid "Model / protocol"
 msgstr "Modello / protocollo"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:465
+#: usr/share/big-screen-monitor-display/displays_page.py:478
 msgid "Choose manually only if detection is wrong or ambiguous."
 msgstr "Scegli manualmente solo se il rilevamento è errato o ambiguo."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Panel size"
 msgstr "Dimensione del pannello"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Detect"
 msgstr "Rileva"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:476
+#: usr/share/big-screen-monitor-display/displays_page.py:489
 msgid "Backplate LEDs"
 msgstr "LED posteriori"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:480
+#: usr/share/big-screen-monitor-display/displays_page.py:493
 msgid "Only the flagship model has LEDs."
 msgstr "Solo il modello di punta ha i LED."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:315
 msgid "State"
 msgstr "Stato"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 msgid "Resolution"
 msgstr "Risoluzione"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 msgid "Connection"
 msgstr "Connessione"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:197
 msgid "Protocol"
 msgstr "Protocollo"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Transfer"
 msgstr "Trasferimento"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Details"
 msgstr "Dettagli"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:494
+#: usr/share/big-screen-monitor-display/displays_page.py:507
 msgid "Room sensors"
 msgstr "Sensori ambientali"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:498
+#: usr/share/big-screen-monitor-display/displays_page.py:511
 msgid "Tests"
 msgstr "Test"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:499
+#: usr/share/big-screen-monitor-display/displays_page.py:512
 msgid "A pattern stays on for a few seconds, then the theme returns."
 msgstr "Un motivo di prova resta visibile per qualche secondo, poi torna il tema."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Shows this display's name on it"
 msgstr "Mostra il nome di questo display sul display stesso"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:505
+#: usr/share/big-screen-monitor-display/displays_page.py:518
 msgid "Show a test pattern"
 msgstr "Mostra un motivo di prova"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:506
+#: usr/share/big-screen-monitor-display/displays_page.py:519
 #: usr/share/big-screen-monitor-display/media_player_page.py:231
 msgid "Choose…"
 msgstr "Scegli…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 msgid "Closes and reopens this display only"
 msgstr "Chiude e riapre solo questo display"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:554
+#: usr/share/big-screen-monitor-display/displays_page.py:567
 msgid "Waiting for a model choice"
 msgstr "In attesa della scelta del modello"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:555
+#: usr/share/big-screen-monitor-display/displays_page.py:568
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:384
 #, python-brace-format
 msgid "for {seconds:.0f} s"
 msgstr "da {seconds:.0f} s"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:564
+#: usr/share/big-screen-monitor-display/displays_page.py:577
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:392
 #, python-brace-format
 msgid "USB {ids} at port {path}"
 msgstr "USB {ids} sulla porta {path}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:567
+#: usr/share/big-screen-monitor-display/displays_page.py:580
 #, python-brace-format
 msgid "serial port {port}"
 msgstr "porta seriale {port}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:578
+#: usr/share/big-screen-monitor-display/displays_page.py:591
 #, python-brace-format
 msgid "{encoding}, {mode}"
 msgstr "{encoding}, {mode}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "partial updates"
 msgstr "aggiornamenti parziali"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "whole frames"
 msgstr "fotogrammi interi"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:582
+#: usr/share/big-screen-monitor-display/displays_page.py:595
 #, python-brace-format
 msgid "{fps:.1f} fps · {ms:.0f} ms per transfer · {recoveries} recoveries"
 msgstr "{fps:.1f} fps · {ms:.0f} ms per trasferimento · {recoveries} ripristini"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:588
+#: usr/share/big-screen-monitor-display/displays_page.py:601
 #, python-brace-format
 msgid "Serial number {serial}"
 msgstr "Numero di serie {serial}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:593
+#: usr/share/big-screen-monitor-display/displays_page.py:606
 #, python-brace-format
 msgid "Firmware: {version}"
 msgstr "Firmware: {version}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:605
+#: usr/share/big-screen-monitor-display/displays_page.py:618
 #, python-brace-format
 msgid "{value:.1f} °C"
 msgstr "{value:.1f} °C"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:607
+#: usr/share/big-screen-monitor-display/displays_page.py:620
 #, python-brace-format
 msgid "{value:.0f}% humidity"
 msgstr "{value:.0f}% di umidità"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:616
+#: usr/share/big-screen-monitor-display/displays_page.py:629
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:171
 msgid "This display has no adjustable brightness."
 msgstr "Questo display non ha una luminosità regolabile."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:617
+#: usr/share/big-screen-monitor-display/displays_page.py:630
 msgid "Not connected · preview"
 msgstr "Non connesso · anteprima"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:630
+#: usr/share/big-screen-monitor-display/displays_page.py:643
 msgid "Which display is this?"
 msgstr "Che display è questo?"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:631
+#: usr/share/big-screen-monitor-display/displays_page.py:644
 #, python-brace-format
 msgid "{device} ({ids}) was not recognised. Choose its model only if you are sure: the service will then talk to it with that protocol. Nothing is sent before you press Apply."
 msgstr "{device} ({ids}) non è stato riconosciuto. Scegline il modello solo se ne sei sicuro: il servizio comunicherà con esso usando quel protocollo. Non viene inviato nulla prima che tu prema Applica."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:638
+#: usr/share/big-screen-monitor-display/displays_page.py:651
 msgid "Use this model"
 msgstr "Usa questo modello"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:646
+#: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Model chosen. Press Apply to start using the display."
 msgstr "Modello scelto. Premi Applica per iniziare a usare il display."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:652
+#: usr/share/big-screen-monitor-display/displays_page.py:665
 #: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "Touchscreen"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:653
+#: usr/share/big-screen-monitor-display/displays_page.py:666
 msgid "Tap, hold and swipe on the panel itself; the computer's keyboard focus and mouse are never touched."
 msgstr "Tocca, tieni premuto e scorri direttamente sul pannello; il focus della tastiera e il mouse del computer non vengono mai toccati."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Draws your finger's path on the panel (hold to leave)"
 msgstr "Disegna sul pannello il percorso del dito (tieni premuto per uscire)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Calibrate touch"
 msgstr "Calibra il tocco"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Opens the navigator's own calibration (tap the crosses)"
 msgstr "Apre la calibrazione propria del navigatore (tocca le croci)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:663
+#: usr/share/big-screen-monitor-display/displays_page.py:676
 msgid "Close the client on the navigator"
 msgstr "Chiudi il client sul navigatore"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:664
+#: usr/share/big-screen-monitor-display/displays_page.py:677
 msgid "Returns the navigator to its main menu and USB storage mode"
 msgstr "Riporta il navigatore al menu principale e alla modalità di archiviazione USB"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:671
+#: usr/share/big-screen-monitor-display/displays_page.py:684
 msgid "Install the client on the navigator"
 msgstr "Installa il client sul navigatore"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:672
+#: usr/share/big-screen-monitor-display/displays_page.py:685
 msgid "With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."
 msgstr "Con il navigatore connesso come archiviazione USB: copia bsmd-ce.exe nella sua cartella BigScreen. Poi riavvia il navigatore e scegli BigScreen\\bsmd-ce.exe come percorso di navigazione."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:684
+#: usr/share/big-screen-monitor-display/displays_page.py:697
 msgid "No navigator mounted as USB storage. Quit the client on the navigator (Exit button) and open its volume in the file manager."
 msgstr "Nessun navigatore montato come archiviazione USB. Chiudi il client sul navigatore (pulsante Exit) e apri il suo volume nel gestore di file."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:689
+#: usr/share/big-screen-monitor-display/displays_page.py:702
 #, python-brace-format
 msgid "Could not install the client: {error}"
 msgstr "Impossibile installare il client: {error}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:691
+#: usr/share/big-screen-monitor-display/displays_page.py:704
 #, python-brace-format
 msgid "Client installed at {path}. Reset the navigator before starting it."
 msgstr "Client installato in {path}. Riavvia il navigatore prima di avviarlo."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:698
+#: usr/share/big-screen-monitor-display/displays_page.py:711
 msgid "Sent to the display."
 msgstr "Inviato al display."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:699
+#: usr/share/big-screen-monitor-display/displays_page.py:712
 msgid "The display did not receive the command"
 msgstr "Il display non ha ricevuto il comando"
 

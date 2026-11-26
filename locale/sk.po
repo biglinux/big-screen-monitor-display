@@ -1516,7 +1516,7 @@ msgid "Instrument gauges with needles and clear alerts."
 msgstr "Ručičkové ukazovatele prístrojov a zreteľné upozornenia."
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:16
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Identify"
 msgstr "Identifikácia"
 
@@ -1536,7 +1536,7 @@ msgstr "Prechody"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
-#: usr/share/big-screen-monitor-display/displays_page.py:397
+#: usr/share/big-screen-monitor-display/displays_page.py:410
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
 #: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
@@ -1848,7 +1848,7 @@ msgstr "Skin"
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
 #: usr/share/big-screen-monitor-display/config_gui.py:729
-#: usr/share/big-screen-monitor-display/displays_page.py:379
+#: usr/share/big-screen-monitor-display/displays_page.py:392
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:69
 #: usr/share/big-screen-monitor-display/kojiro_page.py:514
 #: usr/share/big-screen-monitor-display/media_player_page.py:190
@@ -1871,7 +1871,7 @@ msgstr "Žiadny prehrávač médií"
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:26
 #: usr/share/big-screen-monitor-display/kojiro_page.py:44
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
@@ -1907,7 +1907,7 @@ msgid "Choose a story"
 msgstr "Vyberte príbeh"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:893
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Touch test"
 msgstr "Test dotyku"
 
@@ -1951,7 +1951,7 @@ msgid "Home"
 msgstr "Domov"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:51
-#: usr/share/big-screen-monitor-display/displays_page.py:146
+#: usr/share/big-screen-monitor-display/displays_page.py:159
 msgid "My Displays"
 msgstr "Moje displeje"
 
@@ -1984,7 +1984,7 @@ msgstr "Systém"
 #: usr/share/big-screen-monitor-display/config_gui.py:56
 #: usr/share/big-screen-monitor-display/config_gui.py:570
 #: usr/share/big-screen-monitor-display/config_gui.py:836
-#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:424
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:94
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:275
 msgid "Performance"
@@ -2140,7 +2140,7 @@ msgid "Vertical, upside down"
 msgstr "Zvisle, hore nohami"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:569
-#: usr/share/big-screen-monitor-display/displays_page.py:407
+#: usr/share/big-screen-monitor-display/displays_page.py:420
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
 #: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
@@ -2833,7 +2833,7 @@ msgid "Every theme, display and performance option goes back to its original val
 msgstr "Všetky voľby tém, displejov a výkonu sa vrátia na pôvodné hodnoty vrátane názvov a tém jednotlivých displejov a rozloženia Kojiro. Na displejoch sa nič nezmení, kým nestlačíte Použiť."
 
 #: usr/share/big-screen-monitor-display/config_gui.py:976
-#: usr/share/big-screen-monitor-display/displays_page.py:637
+#: usr/share/big-screen-monitor-display/displays_page.py:650
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
 #: usr/share/big-screen-monitor-display/kojiro_page.py:1211
@@ -3216,7 +3216,7 @@ msgid "Open the complete configuration window"
 msgstr "Otvoriť úplné okno konfigurácie"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:272
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:258
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:299
 msgid "Reconnect"
@@ -3425,7 +3425,7 @@ msgid "Reconnecting"
 msgstr "Opätovné pripájanie"
 
 #: usr/share/big-screen-monitor-display/displays_page.py:36
-#: usr/share/big-screen-monitor-display/displays_page.py:275
+#: usr/share/big-screen-monitor-display/displays_page.py:288
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:22
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:399
 msgid "Not connected"
@@ -3511,28 +3511,36 @@ msgstr "Nenašiel sa žiadny displej"
 msgid "Connect the panel over USB, then look again. Supported models are listed in the documentation (Compatibility)."
 msgstr "Pripojte panel cez USB a potom vyhľadajte znova. Podporované modely sú uvedené v dokumentácii (Kompatibilita)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:128
+#: usr/share/big-screen-monitor-display/displays_page.py:129
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:245
 msgid "Look Again"
 msgstr "Vyhľadať znova"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:134
+#: usr/share/big-screen-monitor-display/displays_page.py:133
+msgid "Use a Phone or Tablet"
+msgstr "Použiť telefón alebo tablet"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:136
+msgid "My Model Is Not Listed"
+msgstr "Môj model nie je v zozname"
+
+#: usr/share/big-screen-monitor-display/displays_page.py:147
 msgid "Other serial devices"
 msgstr "Ostatné sériové zariadenia"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:135
+#: usr/share/big-screen-monitor-display/displays_page.py:148
 msgid "Not recognised automatically. If one of them is a display, choose its model; otherwise leave it alone."
 msgstr "Neboli automaticky rozpoznané. Ak je niektoré z nich displej, vyberte jeho model; inak ho nechajte tak."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:139
+#: usr/share/big-screen-monitor-display/displays_page.py:152
 msgid "Other DeepCool devices"
 msgstr "Ostatné zariadenia DeepCool"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:140
+#: usr/share/big-screen-monitor-display/displays_page.py:153
 msgid "Identified by their USB ids, but their protocol is not implemented here. Nothing is sent to them."
 msgstr "Identifikované podľa ID USB, ale ich protokol tu nie je implementovaný. Nič sa im neodosiela."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:216
+#: usr/share/big-screen-monitor-display/displays_page.py:229
 #, python-brace-format
 msgid "{count} display found."
 msgid_plural "{count} displays found."
@@ -3540,61 +3548,61 @@ msgstr[0] "Nájdených {count} displejov."
 msgstr[1] "Nájdený {count} displej."
 msgstr[2] "Nájdené {count} displeje."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:217
+#: usr/share/big-screen-monitor-display/displays_page.py:230
 msgid "No display found. Check the cable and the USB port."
 msgstr "Nenašiel sa žiadny displej. Skontrolujte kábel a port USB."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:237
+#: usr/share/big-screen-monitor-display/displays_page.py:250
 msgid "Choose Model…"
 msgstr "Vybrať model…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:266
+#: usr/share/big-screen-monitor-display/displays_page.py:279
 msgid "Disabled"
 msgstr "Zakázané"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:268
+#: usr/share/big-screen-monitor-display/displays_page.py:281
 msgid "Unplug and plug in again"
 msgstr "Odpojte a znova pripojte"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:272
+#: usr/share/big-screen-monitor-display/displays_page.py:285
 msgid "Needs a model choice"
 msgstr "Vyžaduje výber modelu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:274
+#: usr/share/big-screen-monitor-display/displays_page.py:287
 msgid "Detected"
 msgstr "Rozpoznané"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:363
+#: usr/share/big-screen-monitor-display/displays_page.py:376
 #, python-brace-format
 msgid "What {name} shows"
 msgstr "Čo zobrazuje {name}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:368
+#: usr/share/big-screen-monitor-display/displays_page.py:381
 msgid "This display"
 msgstr "Tento displej"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:369
+#: usr/share/big-screen-monitor-display/displays_page.py:382
 msgid "These values apply only to this display and take precedence over the defaults."
 msgstr "Tieto hodnoty platia iba pre tento displej a majú prednosť pred predvolenými."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:371
+#: usr/share/big-screen-monitor-display/displays_page.py:384
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:185
 msgid "Name"
 msgstr "Názov"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:374
+#: usr/share/big-screen-monitor-display/displays_page.py:387
 msgid "Use this display"
 msgstr "Používať tento displej"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:381
-#: usr/share/big-screen-monitor-display/displays_page.py:398
-#: usr/share/big-screen-monitor-display/displays_page.py:412
+#: usr/share/big-screen-monitor-display/displays_page.py:394
+#: usr/share/big-screen-monitor-display/displays_page.py:411
+#: usr/share/big-screen-monitor-display/displays_page.py:425
 #, python-brace-format
 msgid "Same as default ({value})"
 msgstr "Rovnaké ako predvolené ({value})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:383
+#: usr/share/big-screen-monitor-display/displays_page.py:396
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
@@ -3602,310 +3610,310 @@ msgstr "Rovnaké ako predvolené ({value})"
 msgid "Theme"
 msgstr "Téma"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:385
+#: usr/share/big-screen-monitor-display/displays_page.py:398
 msgid "Theme options (colours, modules) are shared and set in the Theme Gallery."
 msgstr "Možnosti tém (farby, moduly) sú spoločné a nastavujú sa v Galérii tém."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:393
+#: usr/share/big-screen-monitor-display/displays_page.py:406
 msgid "This display shows themes lying down (landscape) only."
 msgstr "Tento displej zobrazuje témy iba naležato (na šírku)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:402
+#: usr/share/big-screen-monitor-display/displays_page.py:415
 #, python-brace-format
 msgid "Same as default ({value}%)"
 msgstr "Rovnaké ako predvolené ({value}%)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:420
+#: usr/share/big-screen-monitor-display/displays_page.py:433
 msgid "Big Media Player: cover and title of every song"
 msgstr "Big Media Player: obal a názov každej skladby"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:421
+#: usr/share/big-screen-monitor-display/displays_page.py:434
 msgid "Flashes the panel again on each new song (at most every 25 seconds): it restarts for about 17 seconds each time and its memory wears with use. Off: time, progress, volume, play/pause and the spectrum stay live without the song details."
 msgstr "Pri každej novej skladbe (najviac raz za 25 sekúnd) panel znova prepíše: zakaždým sa asi na 17 sekúnd reštartuje a jeho pamäť sa používaním opotrebúva. Vypnuté: čas, priebeh, hlasitosť, prehrávanie/pozastavenie a spektrum zostávajú živé, ale bez podrobností o skladbe."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:429
+#: usr/share/big-screen-monitor-display/displays_page.py:442
 msgid "Standard: process list (snapshot every 30 minutes)"
 msgstr "Štandardná: zoznam procesov (snímka každých 30 minút)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:430
+#: usr/share/big-screen-monitor-display/displays_page.py:443
 msgid "This display only receives numbers. In the Standard theme's side panel, graphs show their values live but not their lines, and the process list cannot be updated in real time, so it is left out. On: the process list is shown as a snapshot flashed with the theme and renewed every 30 minutes; the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Tento displej prijíma iba čísla. V bočnom paneli Štandardnej témy zobrazujú grafy svoje hodnoty naživo, ale bez čiar, a zoznam procesov nie je možné aktualizovať v reálnom čase, preto sa vynecháva. Zapnuté: zoznam procesov sa zobrazí ako snímka zapísaná spolu s témou a obnovuje sa každých 30 minút; displej sa zakaždým asi na 17 sekúnd reštartuje a jeho pamäť sa používaním opotrebúva."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
+#: usr/share/big-screen-monitor-display/displays_page.py:452
 msgid "Every 30 minutes"
 msgstr "Každých 30 minút"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:439
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every hour"
 msgstr "Každú hodinu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:440
+#: usr/share/big-screen-monitor-display/displays_page.py:453
 msgid "Every 3 hours (recommended)"
 msgstr "Každé 3 hodiny (odporúčané)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:441
+#: usr/share/big-screen-monitor-display/displays_page.py:454
 msgid "Planet: position of the globe"
 msgstr "Planet: poloha glóbusu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:444
+#: usr/share/big-screen-monitor-display/displays_page.py:457
 msgid "The globe is drawn at the real time and turns as a new picture flashed at this interval: the display restarts for about 17 seconds each time and its memory wears with use."
 msgstr "Glóbus sa vykresľuje podľa skutočného času a otáča sa ako nový obrázok zapísaný v tomto intervale: displej sa zakaždým asi na 17 sekúnd reštartuje a jeho pamäť sa používaním opotrebúva."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Off: one scene per time of day"
 msgstr "Vypnuté: jedna scéna pre každú dennú dobu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:447
+#: usr/share/big-screen-monitor-display/displays_page.py:460
 msgid "Every 15 minutes"
 msgstr "Každých 15 minút"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:448
+#: usr/share/big-screen-monitor-display/displays_page.py:461
 msgid "Every 30 minutes (recommended)"
 msgstr "Každých 30 minút (odporúčané)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:449
+#: usr/share/big-screen-monitor-display/displays_page.py:462
 msgid "Brother Away: story scenes"
 msgstr "Brother Away: scény príbehov"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:452
+#: usr/share/big-screen-monitor-display/displays_page.py:465
 msgid "The panel tells the stories as scenes (beginning, middle, end) with the castaway animated and the speech bubble; each new scene is flashed (about 20 seconds)."
 msgstr "Panel rozpráva príbehy ako scény (začiatok, stred, koniec) s animovaným stroskotancom a bublinou s rečou; každá nová scéna sa zapíše (asi 20 sekúnd)."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:456
+#: usr/share/big-screen-monitor-display/displays_page.py:469
 msgid "Hardware"
 msgstr "Hardvér"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:460
+#: usr/share/big-screen-monitor-display/displays_page.py:473
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:294
 #, python-brace-format
 msgid "Automatic ({model})"
 msgstr "Automaticky ({model})"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:463
+#: usr/share/big-screen-monitor-display/displays_page.py:476
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:296
 msgid "Model / protocol"
 msgstr "Model / protokol"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:465
+#: usr/share/big-screen-monitor-display/displays_page.py:478
 msgid "Choose manually only if detection is wrong or ambiguous."
 msgstr "Vyberte ručne, iba ak je detekcia nesprávna alebo nejednoznačná."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Panel size"
 msgstr "Veľkosť panela"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:470
+#: usr/share/big-screen-monitor-display/displays_page.py:483
 msgid "Detect"
 msgstr "Rozpoznať"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:476
+#: usr/share/big-screen-monitor-display/displays_page.py:489
 msgid "Backplate LEDs"
 msgstr "LED na zadnej doske"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:480
+#: usr/share/big-screen-monitor-display/displays_page.py:493
 msgid "Only the flagship model has LEDs."
 msgstr "LED má iba vlajkový model."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:315
 msgid "State"
 msgstr "Stav"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:484
+#: usr/share/big-screen-monitor-display/displays_page.py:497
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:92
 msgid "Resolution"
 msgstr "Rozlíšenie"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 msgid "Connection"
 msgstr "Pripojenie"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:485
+#: usr/share/big-screen-monitor-display/displays_page.py:498
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:197
 msgid "Protocol"
 msgstr "Protokol"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Transfer"
 msgstr "Prenos"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:486
+#: usr/share/big-screen-monitor-display/displays_page.py:499
 msgid "Details"
 msgstr "Podrobnosti"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:494
+#: usr/share/big-screen-monitor-display/displays_page.py:507
 msgid "Room sensors"
 msgstr "Snímače v miestnosti"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:498
+#: usr/share/big-screen-monitor-display/displays_page.py:511
 msgid "Tests"
 msgstr "Testy"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:499
+#: usr/share/big-screen-monitor-display/displays_page.py:512
 msgid "A pattern stays on for a few seconds, then the theme returns."
 msgstr "Vzor zostane zobrazený niekoľko sekúnd, potom sa vráti téma."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:500
+#: usr/share/big-screen-monitor-display/displays_page.py:513
 msgid "Shows this display's name on it"
 msgstr "Zobrazí na displeji jeho názov"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:505
+#: usr/share/big-screen-monitor-display/displays_page.py:518
 msgid "Show a test pattern"
 msgstr "Zobraziť testovací vzor"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:506
+#: usr/share/big-screen-monitor-display/displays_page.py:519
 #: usr/share/big-screen-monitor-display/media_player_page.py:231
 msgid "Choose…"
 msgstr "Vybrať…"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:519
+#: usr/share/big-screen-monitor-display/displays_page.py:532
 msgid "Closes and reopens this display only"
 msgstr "Zatvorí a znova otvorí iba tento displej"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:554
+#: usr/share/big-screen-monitor-display/displays_page.py:567
 msgid "Waiting for a model choice"
 msgstr "Čaká sa na výber modelu"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:555
+#: usr/share/big-screen-monitor-display/displays_page.py:568
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:384
 #, python-brace-format
 msgid "for {seconds:.0f} s"
 msgstr "už {seconds:.0f} s"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:564
+#: usr/share/big-screen-monitor-display/displays_page.py:577
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:392
 #, python-brace-format
 msgid "USB {ids} at port {path}"
 msgstr "USB {ids} na porte {path}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:567
+#: usr/share/big-screen-monitor-display/displays_page.py:580
 #, python-brace-format
 msgid "serial port {port}"
 msgstr "sériový port {port}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:578
+#: usr/share/big-screen-monitor-display/displays_page.py:591
 #, python-brace-format
 msgid "{encoding}, {mode}"
 msgstr "{encoding}, {mode}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "partial updates"
 msgstr "čiastočné aktualizácie"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:580
+#: usr/share/big-screen-monitor-display/displays_page.py:593
 msgid "whole frames"
 msgstr "celé snímky"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:582
+#: usr/share/big-screen-monitor-display/displays_page.py:595
 #, python-brace-format
 msgid "{fps:.1f} fps · {ms:.0f} ms per transfer · {recoveries} recoveries"
 msgstr "{fps:.1f} fps · {ms:.0f} ms na prenos · obnovy: {recoveries}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:588
+#: usr/share/big-screen-monitor-display/displays_page.py:601
 #, python-brace-format
 msgid "Serial number {serial}"
 msgstr "Sériové číslo {serial}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:593
+#: usr/share/big-screen-monitor-display/displays_page.py:606
 #, python-brace-format
 msgid "Firmware: {version}"
 msgstr "Firmvér: {version}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:605
+#: usr/share/big-screen-monitor-display/displays_page.py:618
 #, python-brace-format
 msgid "{value:.1f} °C"
 msgstr "{value:.1f} °C"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:607
+#: usr/share/big-screen-monitor-display/displays_page.py:620
 #, python-brace-format
 msgid "{value:.0f}% humidity"
 msgstr "vlhkosť {value:.0f}%"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:616
+#: usr/share/big-screen-monitor-display/displays_page.py:629
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:171
 msgid "This display has no adjustable brightness."
 msgstr "Tento displej nemá nastaviteľný jas."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:617
+#: usr/share/big-screen-monitor-display/displays_page.py:630
 msgid "Not connected · preview"
 msgstr "Nepripojené · náhľad"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:630
+#: usr/share/big-screen-monitor-display/displays_page.py:643
 msgid "Which display is this?"
 msgstr "Ktorý displej to je?"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:631
+#: usr/share/big-screen-monitor-display/displays_page.py:644
 #, python-brace-format
 msgid "{device} ({ids}) was not recognised. Choose its model only if you are sure: the service will then talk to it with that protocol. Nothing is sent before you press Apply."
 msgstr "{device} ({ids}) nebolo rozpoznané. Jeho model vyberte, iba ak ste si istí: služba s ním potom bude komunikovať týmto protokolom. Kým nestlačíte Použiť, nič sa neodošle."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:638
+#: usr/share/big-screen-monitor-display/displays_page.py:651
 msgid "Use this model"
 msgstr "Použiť tento model"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:646
+#: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Model chosen. Press Apply to start using the display."
 msgstr "Model vybraný. Stlačením Použiť začnete displej používať."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:652
+#: usr/share/big-screen-monitor-display/displays_page.py:665
 #: usr/share/big-screen-monitor-display/gui/android_page.py:414
 msgid "Touchscreen"
 msgstr "Dotyková obrazovka"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:653
+#: usr/share/big-screen-monitor-display/displays_page.py:666
 msgid "Tap, hold and swipe on the panel itself; the computer's keyboard focus and mouse are never touched."
 msgstr "Ťuknutie, podržanie a potiahnutie priamo na paneli; fokus klávesnice a myš počítača zostávajú nedotknuté."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:659
+#: usr/share/big-screen-monitor-display/displays_page.py:672
 msgid "Draws your finger's path on the panel (hold to leave)"
 msgstr "Kreslí na paneli dráhu vášho prsta (podržaním ukončíte)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Calibrate touch"
 msgstr "Kalibrovať dotyk"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:661
+#: usr/share/big-screen-monitor-display/displays_page.py:674
 msgid "Opens the navigator's own calibration (tap the crosses)"
 msgstr "Otvorí vlastnú kalibráciu navigácie (ťuknite na krížiky)"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:663
+#: usr/share/big-screen-monitor-display/displays_page.py:676
 msgid "Close the client on the navigator"
 msgstr "Zatvoriť klienta v navigácii"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:664
+#: usr/share/big-screen-monitor-display/displays_page.py:677
 msgid "Returns the navigator to its main menu and USB storage mode"
 msgstr "Vráti navigáciu do hlavnej ponuky a režimu úložiska USB"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:671
+#: usr/share/big-screen-monitor-display/displays_page.py:684
 msgid "Install the client on the navigator"
 msgstr "Nainštalovať klienta do navigácie"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:672
+#: usr/share/big-screen-monitor-display/displays_page.py:685
 msgid "With the navigator connected as USB storage: copies bsmd-ce.exe to its BigScreen folder. Then reset the navigator and choose BigScreen\\bsmd-ce.exe as its navigation path."
 msgstr "Keď je navigácia pripojená ako úložisko USB: skopíruje bsmd-ce.exe do jej priečinka BigScreen. Potom navigáciu resetujte a ako cestu navigačného programu vyberte BigScreen\\bsmd-ce.exe."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:684
+#: usr/share/big-screen-monitor-display/displays_page.py:697
 msgid "No navigator mounted as USB storage. Quit the client on the navigator (Exit button) and open its volume in the file manager."
 msgstr "Nie je pripojená žiadna navigácia ako úložisko USB. Ukončite klienta v navigácii (tlačidlo Exit) a otvorte jej zväzok v správcovi súborov."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:689
+#: usr/share/big-screen-monitor-display/displays_page.py:702
 #, python-brace-format
 msgid "Could not install the client: {error}"
 msgstr "Klienta sa nepodarilo nainštalovať: {error}"
 
-#: usr/share/big-screen-monitor-display/displays_page.py:691
+#: usr/share/big-screen-monitor-display/displays_page.py:704
 #, python-brace-format
 msgid "Client installed at {path}. Reset the navigator before starting it."
 msgstr "Klient bol nainštalovaný do {path}. Pred jeho spustením navigáciu resetujte."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:698
+#: usr/share/big-screen-monitor-display/displays_page.py:711
 msgid "Sent to the display."
 msgstr "Odoslané na displej."
 
-#: usr/share/big-screen-monitor-display/displays_page.py:699
+#: usr/share/big-screen-monitor-display/displays_page.py:712
 msgid "The display did not receive the command"
 msgstr "Displej príkaz neprijal"
 

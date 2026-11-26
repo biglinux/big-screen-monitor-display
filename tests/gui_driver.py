@@ -404,8 +404,25 @@ def run_android(window):
     window.close()
 
 
+def run_empty(window):
+    """Service running, nothing detected: the first-use page offers the three ways forward."""
+    pump(1.5)
+    window.show_section("displays")
+    pump(1.5)
+    displays = window.displays_page
+    check("empty_visible", displays.empty.get_visible())
+    check("empty_actions", [button.get_label() for button in displays.empty_actions])
+    displays.empty_actions[1].emit("clicked")          # "Use a Phone or Tablet": the pairing QR
+    pump(1.0)
+    dialog = getattr(displays.android, "dialog", None)
+    check("pairing_dialog_opened", dialog is not None)
+    if dialog is not None:
+        dialog.dialog.close()
+        pump(0.3)
+
+
 SCENARIOS = {"main": run_main, "stopped": run_stopped, "narrow": run_narrow, "deepcool": run_deepcool,
-             "android": run_android}
+             "android": run_android, "empty": run_empty}
 original = config_gui.ConfigWindow.__init__
 
 

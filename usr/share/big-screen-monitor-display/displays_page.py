@@ -22,7 +22,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
-from bsmd import patterns, runtime, settings, themes  # noqa: E402
+from bsmd import HARDWARE_REPORT_URL, patterns, runtime, settings, themes  # noqa: E402
 from bsmd.displays import discovery, registry  # noqa: E402
 from bsmd.i18n import N_, _, ngettext  # noqa: E402
 from gui import components as ui  # noqa: E402
@@ -125,11 +125,24 @@ class DisplaysPage:
         self.empty = Adw.StatusPage(icon_name="video-display-symbolic", title=_("No display found"),
                                     description=_("Connect the panel over USB, then look again. Supported models are "
                                                   "listed in the documentation (Compatibility)."), visible=False)
-        look = Gtk.Button(label=_("Look Again"), halign=Gtk.Align.CENTER)
+        # First use with nothing detected: the three ways forward (PLANNING.md, Fase 7.2).
+        look = Gtk.Button(label=_("Look Again"))
         look.add_css_class("pill")
         look.add_css_class("suggested-action")
         look.connect("clicked", lambda *_: self.refresh(force=True, announce=True))
-        self.empty.set_child(look)
+        phone = Gtk.Button(label=_("Use a Phone or Tablet"))
+        phone.add_css_class("pill")
+        phone.connect("clicked", lambda *_: self.android.open_pairing())
+        report = Gtk.Button(label=_("My Model Is Not Listed"))
+        report.add_css_class("pill")
+        report.add_css_class("flat")
+        report.connect("clicked", lambda *_: Gtk.UriLauncher.new(HARDWARE_REPORT_URL).launch(
+            self.window, None, None, None))
+        ways = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, halign=Gtk.Align.CENTER)
+        for button in (look, phone, report):
+            ways.append(button)
+        self.empty_actions = (look, phone, report)
+        self.empty.set_child(ways)
         self.other_group = Adw.PreferencesGroup(
             title=_("Other serial devices"),
             description=_("Not recognised automatically. If one of them is a display, choose its model; "

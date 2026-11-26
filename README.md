@@ -27,7 +27,7 @@
 [Uso](#uso) ·
 [Detalhes técnicos](#detalhes-tecnicos) ·
 [Problemas](#problemas) ·
-[Documentação](docs/) ·
+[Documentação](docs/README.md) ·
 [Contribuir](CONTRIBUTING.md)
 
 🇬🇧 [Read in English](README.en.md)

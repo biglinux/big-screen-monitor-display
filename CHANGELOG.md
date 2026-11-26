@@ -26,6 +26,8 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 - **BSMD-lite:** protocolo de texto versionado e bridge (serial, TCP, terminal)
   para displays caseiros (ESP32, Arduino, Raspberry Pi), com cliente de
   referência; a bridge do Palm passou a usar a mesma leitura da telemetria.
+- **Primeiro uso:** sem display detectado, a janela oferece procurar de novo,
+  usar um celular/tablet (QR) ou relatar o modelo; índice em `docs/README.md`.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 
