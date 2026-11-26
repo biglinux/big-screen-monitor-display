@@ -21,8 +21,8 @@ android {
         applicationId = "br.com.biglinux.bigscreen"
         minSdk = 21
         targetSdk = 36
-        versionCode = 50502
-        versionName = "5.5.2"
+        versionCode = 50600
+        versionName = "5.6.0"
     }
 
     signingConfigs {
