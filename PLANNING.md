@@ -12,7 +12,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 
 | Etapa | Status | Onde |
 | --- | --- | --- |
-| 0.1 Confirmar de onde o pacote é compilado | ⏳ **com você**: instalar o pacote do repositório BigLinux numa VM e ver `--version` | — |
+| 0.1 Confirmar de onde o pacote é compilado | ✅ respondido: o `ruscher/` **nunca** pediu pacote (sem `WEBHOOK_TOKEN`, "Bad credentials" escondido pelo `curl` sem `-f`); o BigLinux entrega o `biglinux/`, parado na **5.1.0**, 117 commits atrás. PR de sincronização aberto no `biglinux/` | PR biglinux |
 | 0.2 Webhook falha de verdade (`curl -fsS`) | ✅ | PR #21 |
 | 0.3 Pacote só com Tests verde na `main` | ✅ | PR #21 |
 | 0.4 Release v5.5.2 | ✅ tag na `main` de 25/11 (a 5.5.2 do CHANGELOG) | — |

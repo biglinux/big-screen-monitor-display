@@ -9,6 +9,8 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 
 - Entrega: o pacote do BigLinux só é pedido depois dos testes verdes na `main`;
   `tools/release.sh` confere versões e publica a tag.
+- Entrega: um fork sem `WEBHOOK_TOKEN` (como o repositório de desenvolvimento)
+  avisa e não falha; quem pede o pacote é o `biglinux/big-screen-monitor-display`.
 - Comunidade: issues com formulários (hardware, bug, recurso), `CONTRIBUTING.md`,
   `SECURITY.md`, este `CHANGELOG.md` e o README em inglês.
 - Janela: **Diagnóstico › Relatar um problema** copia o relatório e abre o
