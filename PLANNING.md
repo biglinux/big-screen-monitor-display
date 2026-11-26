@@ -28,7 +28,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 2.4 Nome "RX 580" errado | ✅ | PR #23 |
 | 3.1 CI com Python 3.10, 3.12 e 3.14 | ✅ | PR #24 |
 | 3.2 `ruff` no CI, 110 avisos → 0 | ✅ | PR #24 |
-| 3.3 Cobertura com piso (66 % no CI, sem GTK) | ✅ | PR #24 / #26 |
+| 3.3 Cobertura com piso | ✅ piso 66 % no CI; `sdnotify` 100 %. `.coveragerc` mede os subprocessos localmente (worker do SmartMonitor 0→80 %, miniaturas 0→88 %, total 74 % sem tela); ⏳ no runner do GitHub a medição de subprocesso ainda não pega | PR #24 / #26 / #29 |
 | 3.4 Instalação em Debian, Ubuntu, Fedora, openSUSE, Arch | ✅ workflow *Install* | PR #24 |
 | 4 Arquivos grandes | ✅ como regra no CONTRIBUTING (dividir só ao mexer) | PR #25 |
 | 5.1 AUR (`-git`) | ✅ PKGBUILD gerado e compilado; ⏳ **com você**: publicar exige a sua conta no AUR | PR #25 |
@@ -36,7 +36,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 5.3 Página de compatibilidade | ✅ gerada do registro de drivers | PR #25 |
 | 6.1 Protocolo BSMD-lite e bridge genérica | ✅ | PR #26 |
 | 6.2 Exemplo para ESP32 | ⏳ precisa de hardware para validar; o cliente de referência em Python existe | — |
-| 7.1 Teste com o Orca | ⏳ **com você**: teste manual com leitor de tela | — |
+| 7.1 Teste com o Orca | ✅ parte automática: 9 botões só de ícone sem nome acessível corrigidos (o Orca lia só "botão") e um teste impede novos; ⏳ **com você**: percorrer a janela com o Orca | PR acessibilidade |
 | 7.2 Primeiro uso guiado | ✅ procurar de novo · celular/tablet · "meu modelo não está na lista" | PR #27 |
 | 7.3 Índice da documentação | ✅ `docs/README.md`, com teste de links | PR #27 |
 

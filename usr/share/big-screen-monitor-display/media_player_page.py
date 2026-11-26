@@ -402,6 +402,7 @@ class MediaPlayerPage:
         volume = Gtk.Box(spacing=8)
         self.mute_button = Gtk.ToggleButton(icon_name="audio-volume-high-symbolic", tooltip_text=_("Mute (Ctrl+M)"),
                                             valign=Gtk.Align.CENTER)
+        ui.set_label(self.mute_button, _("Mute (Ctrl+M)"))
         self.mute_button.add_css_class("flat")
         ui.set_label(self.mute_button, _("Mute"))
         self.mute_button.connect("toggled", self._on_mute)

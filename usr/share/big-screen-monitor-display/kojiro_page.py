@@ -613,6 +613,7 @@ class KojiroPage:
         button.connect("notify::font-desc", chosen)
         reset = Gtk.Button(icon_name="edit-clear-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat"],
                            tooltip_text=_("Use the default font"))
+        reset.update_property([Gtk.AccessibleProperty.LABEL], [_("Use the default font")])
         reset.connect("clicked", lambda *_: (row.set_subtitle(_("Default")), callback("default")))
         row.add_suffix(button)
         row.add_suffix(reset)
@@ -836,10 +837,12 @@ class KojiroPage:
             eye = Gtk.ToggleButton(icon_name="view-reveal-symbolic" if widget.get("visible", True)
                                    else "view-conceal-symbolic", active=widget.get("visible", True),
                                    valign=Gtk.Align.CENTER, css_classes=["flat"], tooltip_text=_("Visible"))
+            eye.update_property([Gtk.AccessibleProperty.LABEL], [_("Visible")])
             eye.connect("toggled", lambda b, i=wid: self.state.set_prop(i, "visible", b.get_active()))
             lock = Gtk.ToggleButton(icon_name="changes-prevent-symbolic" if widget.get("locked")
                                     else "changes-allow-symbolic", active=widget.get("locked", False),
                                     valign=Gtk.Align.CENTER, css_classes=["flat"], tooltip_text=_("Lock position"))
+            lock.update_property([Gtk.AccessibleProperty.LABEL], [_("Lock position")])
             lock.connect("toggled", lambda b, i=wid: self.state.set_prop(i, "locked", b.get_active()))
             row.add_suffix(eye)
             row.add_suffix(lock)
@@ -851,6 +854,7 @@ class KojiroPage:
                                ("go-down-symbolic", _("Send backward"), "down"),
                                ("go-bottom-symbolic", _("Send to back"), "bottom")):
             button = Gtk.Button(icon_name=icon, tooltip_text=tip)
+            button.update_property([Gtk.AccessibleProperty.LABEL], [tip])
             button.connect("clicked", lambda _b, h=how: self._act("restack", h))
             buttons.append(button)
         group.add(buttons)
@@ -941,6 +945,7 @@ class KojiroPage:
         if deletable:
             delete = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat"],
                                 tooltip_text=_("Remove this wallpaper"))
+            delete.update_property([Gtk.AccessibleProperty.LABEL], [_("Remove this wallpaper")])
             delete.connect("clicked", lambda *_: self._delete_wallpaper(source[5:]))
             row.append(delete)
         box.append(row)
@@ -1149,6 +1154,7 @@ class KojiroPage:
                 use.connect("clicked", lambda _b, p=path: self._load_preset(p))
                 delete = Gtk.Button(icon_name="user-trash-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat"],
                                     tooltip_text=_("Delete preset"))
+                delete.update_property([Gtk.AccessibleProperty.LABEL], [_("Delete preset")])
                 delete.connect("clicked", lambda _b, p=path: self._delete_preset(p))
                 row.add_suffix(use)
                 row.add_suffix(delete)
