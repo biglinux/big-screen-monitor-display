@@ -27,6 +27,7 @@ depends=(
     'python-pyqt6'
 )
 optdepends=(
+    'nvidia-utils: NVIDIA GPU usage, temperature, VRAM, clock and power (NVML; the proprietary driver has no sysfs usage)'
     'lm_sensors: detect and configure extra hardware sensors (fans on the Kojiro and SmartMonitor themes)'
     'python-pystray: tray icon when running the monitor manually'
     'libcanberra: sound after applying settings'

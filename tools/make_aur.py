@@ -31,7 +31,7 @@ _pkgname={NAME}
 pkgname={NAME}-git
 """
 
-VERSION = """pkgver=5.6.0
+VERSION = """pkgver=5.6.1
 pkgrel=1
 pkgver() {
     cd "${srcdir}/${_pkgname}"

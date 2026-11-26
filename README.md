@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.6.0-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.6.1-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -48,7 +48,9 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
-## ✨ Novidades da 5.6.0 — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
+## ✨ Novidades da 5.6 — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
+
+*5.6.1:* o pacote indica o `nvidia-utils` (opcional) para a GPU NVIDIA; notas das releases geradas do CHANGELOG.
 
 - **NVIDIA de verdade:** uso, temperatura, memória, frequência e consumo pela biblioteca do próprio driver (antes: sempre 0 % e sem temperatura). Na Intel, a frequência atual.
 - **Sem número falso:** quando o driver não informa o uso da GPU, os temas mostram "—" em vez de 0 %.
@@ -446,7 +448,7 @@ Outras versões, notas e o `SHA256SUMS` ficam nas [releases](https://github.com/
 | Execução | `bash`, `python` ≥ 3.10, `python-pillow`, `python-numpy`, `python-psutil`, `python-pyusb`, `libusb`, `python-pyserial`, `pciutils`, `librsvg`, `fontconfig`, `systemd`, `polkit`, `openssl` (certificado para os displays Android) |
 | Janela | `python-gobject`, `python-cairo`, `glib2` ≥ 2.80, `gtk4`, `libadwaita` ≥ 1.6 (1.7+ usa as abas compactas do Kojiro Studio), `hicolor-icon-theme` |
 | Bandejas | `python-pyqt6` (PyQt5 também serve) |
-| Opcionais | `openrgb` (cor dos LEDs dos coolers DeepCool), `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB), `python-qrcode` (QR Code para adicionar celulares Android), `tailscale` (display Android longe de casa pela VPN), `noto-fonts-cjk` (chinês, japonês e coreano nos displays) |
+| Opcionais | `nvidia-utils` (uso, temperatura e memória das GPUs NVIDIA com o driver proprietário), `openrgb` (cor dos LEDs dos coolers DeepCool), `lm_sensors` (sensores extras), `python-pystray` (ícone de bandeja em execução manual), `libcanberra` (som ao aplicar), `pipewire-audio` / `libpulse` / `alsa-utils` (efeitos sonoros e módulo de volume do GKrellM), `adwaita-fonts` (fonte do GKrellM), `playerctl` (módulo de mídia do GKrellM), `libpulse` (volume do Big Media Player via `pactl` e espectro real via `parec`), `wireplumber` (volume do Big Media Player sem `pactl`), `mpv-mpris` (mostrar o que o mpv toca no Big Media Player), `docker` (contagem de contêineres no GKrellM), `python-cryptography` (cabeçalho mais rápido nos Turing USB), `python-qrcode` (QR Code para adicionar celulares Android), `tailscale` (display Android longe de casa pela VPN), `noto-fonts-cjk` (chinês, japonês e coreano nos displays) |
 | Build | `gettext`, `git` |
 
 ---
