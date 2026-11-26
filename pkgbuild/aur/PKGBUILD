@@ -48,7 +48,7 @@ optdepends=(
     'noto-fonts-cjk: Chinese, Japanese and Korean text on the displays (otherwise drawn in English)'
 )
 makedepends=('gettext' 'git')
-pkgver=5.5.2
+pkgver=5.6.0
 pkgrel=1
 pkgver() {
     cd "${srcdir}/${_pkgname}"

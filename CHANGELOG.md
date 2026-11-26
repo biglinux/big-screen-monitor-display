@@ -7,31 +7,35 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 
 ## [Não lançado]
 
-- Entrega: o pacote do BigLinux só é pedido depois dos testes verdes na `main`;
-  `tools/release.sh` confere versões e publica a tag.
-- Entrega: um fork sem `WEBHOOK_TOKEN` (como o repositório de desenvolvimento)
-  avisa e não falha; quem pede o pacote é o `biglinux/big-screen-monitor-display`.
-- Comunidade: issues com formulários (hardware, bug, recurso), `CONTRIBUTING.md`,
-  `SECURITY.md`, este `CHANGELOG.md` e o README em inglês.
-- Janela: **Diagnóstico › Relatar um problema** copia o relatório e abre o
-  formulário de issue; "Sobre" aponta para o repositório onde as issues ficam.
+## [5.6.0] — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
+
+**Para quem usa**
+
 - **GPU NVIDIA de verdade:** uso, temperatura, VRAM, frequência e consumo pela
   NVML (a biblioteca do driver, lida em processo, sem `nvidia-smi`). Antes a
-  NVIDIA aparecia sempre com 0 % e sem temperatura.
-- **Intel:** frequência atual da GPU (i915 e xe).
+  NVIDIA aparecia sempre com 0 % e sem temperatura. **Intel:** frequência atual
+  (i915 e xe).
 - **Sem número falso:** GPU cujo driver não informa o uso mostra "—" em todos os
   temas, em vez de 0 %.
-- Qualidade: CI com Python 3.10, 3.12 e 3.14, `ruff` sem avisos, cobertura com
-  piso e instalação testada em Debian, Ubuntu, Fedora, openSUSE e Arch.
-- Distribuição: pacote `big-screen-monitor-display-git` para o AUR, gerado do
-  PKGBUILD do BigLinux; `docs/compatibilidade.md` gerado do registro de drivers.
-- **BSMD-lite:** protocolo de texto versionado e bridge (serial, TCP, terminal)
-  para displays caseiros (ESP32, Arduino, Raspberry Pi), com cliente de
-  referência; a bridge do Palm passou a usar a mesma leitura da telemetria.
-- Acessibilidade: botões só de ícone (Kojiro, galeria, Big Media Player) agora têm
+- **Diagnóstico › Relatar um problema** copia o relatório e abre o formulário de
+  issue (agora ativas, com formulários de hardware, bug e ideia).
+- **Primeiro uso:** sem display detectado, a janela oferece procurar de novo, usar
+  um celular ou tablet (QR) ou relatar o modelo.
+- **Acessibilidade:** botões só de ícone (Kojiro, galeria, Big Media Player) têm
   nome para o leitor de tela.
-- **Primeiro uso:** sem display detectado, a janela oferece procurar de novo,
-  usar um celular/tablet (QR) ou relatar o modelo; índice em `docs/README.md`.
+- **BSMD-lite:** protocolo e bridge (serial, TCP, terminal) para displays caseiros
+  (ESP32, Arduino, Raspberry Pi), com cliente de referência.
+
+**Distribuição e qualidade**
+
+- O pacote do BigLinux só é pedido depois dos testes verdes na `main`; um token
+  recusado deixa o job vermelho (antes ficava verde); um fork sem token só avisa.
+- Pacote `big-screen-monitor-display-git` para o AUR, gerado do PKGBUILD;
+  `docs/compatibilidade.md` gerado do registro de drivers.
+- CI com Python 3.10, 3.12 e 3.14, `ruff` sem avisos, cobertura com piso e
+  instalação testada em Debian, Ubuntu, Fedora, openSUSE e Arch.
+- `CHANGELOG.md`, README em inglês, `CONTRIBUTING.md`, `SECURITY.md`, índice em
+  `docs/README.md`; `tools/release.sh` confere as versões e publica a tag.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 

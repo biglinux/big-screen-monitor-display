@@ -6,7 +6,7 @@
 
 **Monitor de hardware livre para pequenos displays USB e coolers DeepCool com visor no Linux — com temas, autorrecuperação, o Big Media Player, o Brother Away e o Kojiro, que transforma qualquer papel de parede em painel de hardware.**
 
-![Versão](https://img.shields.io/badge/vers%C3%A3o-5.5.2-2ea44f)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-5.6.0-2ea44f)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-blue)
 ![Python](https://img.shields.io/badge/python-%E2%89%A5%203.10-3776ab?logo=python&logoColor=white)
 ![GTK4](https://img.shields.io/badge/GTK4-libadwaita-4a86cf?logo=gnome&logoColor=white)
@@ -48,15 +48,15 @@ Como usuário fiel de Linux, ele não pretendia mudar de sistema por causa de um
 
 <a id="novidades"></a>
 
-## ✨ Novidades da 5.5.2 — Display no celular de qualquer lugar, pelo Tailscale
+## ✨ Novidades da 5.6.0 — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
 
-- **Acesso remoto pela VPN:** com o [Tailscale](https://tailscale.com) (ou Headscale/NetBird, faixa `100.64.0.0/10`) ligado no computador e no celular, o app conecta ao display longe de casa. Antes, o serviço descartava todo pacote da faixa do Tailscale e o celular só funcionava no mesmo Wi-Fi.
-- **Sem digitar endereço:** o computador informa ao app, a cada conexão, os endereços da rede de casa e da VPN; o QR Code também já leva o endereço do Tailscale. Pareou em casa, funciona na rua.
-- **Conexão rápida em qualquer lugar:** o app tenta todos os endereços conhecidos ao mesmo tempo (a rede local com uma pequena vantagem); antes tentava um por um, 4 s cada, e levava ~16 s para chegar ao Tailscale.
-- O app reconecta assim que a VPN sobe, e a janela e o diagnóstico mostram o transporte **VPN**.
-- **APK com assinatura oficial:** até a 5.5.1 cada versão saía com uma chave diferente e o Android recusava atualizar. Desta vez instale a 5.5.2 (aparece ao lado da antiga), pareie uma vez e desinstale a anterior; daqui em diante as atualizações instalam por cima.
-- Passo a passo em [docs/android/04-conexao-rede.md](docs/android/04-conexao-rede.md#acesso-remoto-tailscale).
-- **Pacote:** versões mínimas declaradas (`glib2>=2.80`, `libadwaita>=1.6`, `python>=3.10`) e `tailscale` como opcional. Corrigido: o Kojiro Studio usava `Adw.InlineViewSwitcher` (libadwaita 1.7) e não abria na 1.6, o mínimo declarado.
+- **NVIDIA de verdade:** uso, temperatura, memória, frequência e consumo pela biblioteca do próprio driver (antes: sempre 0 % e sem temperatura). Na Intel, a frequência atual.
+- **Sem número falso:** quando o driver não informa o uso da GPU, os temas mostram "—" em vez de 0 %.
+- **Relatar um problema:** em *Diagnóstico*, um botão copia o relatório e abre o formulário. As [issues](https://github.com/ruscher/big-screen-monitor-display/issues/new/choose) estão abertas, com um formulário para quem tem um display nível **B** confirmar que funciona.
+- **Primeiro uso guiado:** sem display detectado, a janela oferece procurar de novo, usar o celular ou tablet (QR Code) ou contar qual é o seu modelo.
+- **Acessibilidade:** os botões só de ícone têm nome para o leitor de tela.
+- **Displays caseiros:** o protocolo [BSMD-lite](docs/25-protocolo-bsmd-lite.md) manda a telemetria para ESP32, Arduino ou Raspberry Pi.
+- No Arch, também pelo AUR: `big-screen-monitor-display-git`.
 
 Histórico completo de versões: [CHANGELOG.md](CHANGELOG.md).
 
