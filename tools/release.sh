@@ -29,7 +29,11 @@ git ls-remote --exit-code --tags origin "$tag" >/dev/null 2>&1 && die "a tag $ta
 # O CI precisa estar verde neste commit: sem o gh não há como conferir, então para.
 command -v gh >/dev/null || die "o gh (GitHub CLI) é necessário para conferir o workflow Tests"
 sha=$(git rev-parse HEAD)
-state=$(gh run list --commit "$sha" --workflow Tests --json conclusion --jq '.[0].conclusion' 2>/dev/null || true)
+# The REST API filtered by head_sha (``gh run list --commit`` returned nothing here
+# even with a green run, which blocked every release).
+repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+state=$(gh api "repos/$repo/actions/runs?head_sha=$sha&event=push" \
+        --jq '[.workflow_runs[] | select(.name == "Tests")][0].conclusion // empty' 2>/dev/null || true)
 [ "$state" = "success" ] || die "o workflow Tests deste commit não está verde (estado: ${state:-sem execução})"
 
 echo "release: $tag pronta ($(git rev-parse --short HEAD))"
