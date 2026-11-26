@@ -16,6 +16,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 0.2 Webhook falha de verdade (`curl -fsS`) | ✅ | PR #21 |
 | 0.3 Pacote só com Tests verde na `main` | ✅ | PR #21 |
 | 0.4 Release v5.5.2 | ✅ tag na `main` de 25/11 (a 5.5.2 do CHANGELOG) | — |
+| — Release v5.6.0 | ✅ publicada pelo `tools/release.sh` (corrigido: num clone de fork o `gh` consultava o repositório pai); notas da release saem do CHANGELOG | PR #30 / #31 / #32 / manutenção |
 | 0.5 Uma fonte da versão (`test_version.py`, `tools/release.sh`) | ✅ | PR #21 |
 | 1.1 Issues ativas com formulários, rótulo `hardware`, relato privado de vulnerabilidade | ✅ | PR #22 e configuração do repositório |
 | 1.2 "Relatar um problema" na janela (28 idiomas) | ✅ | PR #22 |
@@ -28,7 +29,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 2.4 Nome "RX 580" errado | ✅ | PR #23 |
 | 3.1 CI com Python 3.10, 3.12 e 3.14 | ✅ | PR #24 |
 | 3.2 `ruff` no CI, 110 avisos → 0 | ✅ | PR #24 |
-| 3.3 Cobertura com piso | ✅ piso 66 % no CI; `sdnotify` 100 %. `.coveragerc` mede os subprocessos localmente (worker do SmartMonitor 0→80 %, miniaturas 0→88 %, total 74 % sem tela); ⏳ no runner do GitHub a medição de subprocesso ainda não pega | PR #24 / #26 / #29 |
+| 3.3 Cobertura com piso | ✅ `sdnotify` 100 %; subprocessos medidos também no CI (o `.coveragerc` estava fora do repositório por um padrão do `.gitignore`); piso ajustado ao valor do CI | PR #24 / #26 / #29 / manutenção |
 | 3.4 Instalação em Debian, Ubuntu, Fedora, openSUSE, Arch | ✅ workflow *Install* | PR #24 |
 | 4 Arquivos grandes | ✅ como regra no CONTRIBUTING (dividir só ao mexer) | PR #25 |
 | 5.1 AUR (`-git`) | ✅ PKGBUILD gerado e compilado; ⏳ **com você**: publicar exige a sua conta no AUR | PR #25 |

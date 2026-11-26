@@ -91,8 +91,19 @@ jobs:
           # A new release is created as a draft and published only after the
           # upload, so releases/latest never points at a release without the APK.
           if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG" --verify-tag --draft --title "$TAG" \
-              --notes "Big Screen Monitor Display $version. Android app: big-screen-monitor-display.apk (see README)."
+            # Title and notes from the CHANGELOG section "## [x.y.z] — title";
+            # a generic line when the section is missing.
+            heading=$(grep -m1 "^## \[$version\]" CHANGELOG.md || true)
+            title="$TAG"
+            if [ -n "$heading" ]; then
+              subtitle=$(printf '%s' "$heading" | sed -E 's/^## \[[^]]*\]( — )?//')
+              [ -n "$subtitle" ] && title="$TAG — $subtitle"
+              awk -v h="$heading" '$0 == h {f=1; next} /^## \[/ {f=0} f' CHANGELOG.md > release-notes.md
+            else
+              printf 'Big Screen Monitor Display %s.\n' "$version" > release-notes.md
+            fi
+            printf '\n**App Android:** `big-screen-monitor-display.apk` abaixo.\n' >> release-notes.md
+            gh release create "$TAG" --verify-tag --draft --title "$title" --notes-file release-notes.md
           fi
           gh release upload "$TAG" dist/* --clobber
           gh release edit "$TAG" --draft=false

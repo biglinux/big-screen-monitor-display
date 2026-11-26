@@ -1,0 +1,5 @@
+# Coverage (pytest --cov): the SmartMonitor capture worker, the tray thumbnails
+# and main.py run in child processes (python3 -I ...); measure those too.
+[run]
+patch = subprocess
+parallel = true
