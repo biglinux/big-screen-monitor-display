@@ -29,9 +29,9 @@ git ls-remote --exit-code --tags origin "$tag" >/dev/null 2>&1 && die "a tag $ta
 # O CI precisa estar verde neste commit: sem o gh não há como conferir, então para.
 command -v gh >/dev/null || die "o gh (GitHub CLI) é necessário para conferir o workflow Tests"
 sha=$(git rev-parse HEAD)
-# The REST API filtered by head_sha (``gh run list --commit`` returned nothing here
-# even with a green run, which blocked every release).
-repo=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+# The repository the tag goes to (origin). Not "gh repo view": in a fork clone gh
+# resolves to the parent repository, where this commit has no runs.
+repo=$(git remote get-url origin | sed -E 's#^(git@github\.com:|https://github\.com/)##; s#\.git$##')
 state=$(gh api "repos/$repo/actions/runs?head_sha=$sha&event=push" \
         --jq '[.workflow_runs[] | select(.name == "Tests")][0].conclusion // empty' 2>/dev/null || true)
 [ "$state" = "success" ] || die "o workflow Tests deste commit não está verde (estado: ${state:-sem execução})"
