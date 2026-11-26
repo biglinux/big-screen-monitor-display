@@ -29,7 +29,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 2.4 Nome "RX 580" errado | ✅ | PR #23 |
 | 3.1 CI com Python 3.10, 3.12 e 3.14 | ✅ | PR #24 |
 | 3.2 `ruff` no CI, 110 avisos → 0 | ✅ | PR #24 |
-| 3.3 Cobertura com piso | ✅ `sdnotify` 100 %; subprocessos medidos também no CI (o `.coveragerc` estava fora do repositório por um padrão do `.gitignore`); piso ajustado ao valor do CI | PR #24 / #26 / #29 / manutenção |
+| 3.3 Cobertura com piso | ✅ `sdnotify` 100 %; subprocessos medidos também no CI (o `.coveragerc` estava fora do repositório por um padrão do `.gitignore`); piso 68 % (o CI mede 68,56 %) | PR #24 / #26 / #29 / manutenção |
 | 3.4 Instalação em Debian, Ubuntu, Fedora, openSUSE, Arch | ✅ workflow *Install* | PR #24 |
 | 4 Arquivos grandes | ✅ como regra no CONTRIBUTING (dividir só ao mexer) | PR #25 |
 | 5.1 AUR (`-git`) | ✅ PKGBUILD gerado e compilado; ⏳ **com você**: publicar exige a sua conta no AUR | PR #25 |
