@@ -28,7 +28,7 @@ a de prioridade: as primeiras fases são baratas e protegem o que já existe; as
 | 2.4 Nome "RX 580" errado | ✅ | PR #23 |
 | 3.1 CI com Python 3.10, 3.12 e 3.14 | ✅ | PR #24 |
 | 3.2 `ruff` no CI, 110 avisos → 0 | ✅ | PR #24 |
-| 3.3 Cobertura com piso | ✅ subprocessos agora medidos (worker do SmartMonitor 0→80 %, miniaturas 0→88 %); `sdnotify` 100 %; piso 68 % no CI | PR #24 / #26 / acessibilidade |
+| 3.3 Cobertura com piso | ✅ piso 66 % no CI; `sdnotify` 100 %. `.coveragerc` mede os subprocessos localmente (worker do SmartMonitor 0→80 %, miniaturas 0→88 %, total 74 % sem tela); ⏳ no runner do GitHub a medição de subprocesso ainda não pega | PR #24 / #26 / #29 |
 | 3.4 Instalação em Debian, Ubuntu, Fedora, openSUSE, Arch | ✅ workflow *Install* | PR #24 |
 | 4 Arquivos grandes | ✅ como regra no CONTRIBUTING (dividir só ao mexer) | PR #25 |
 | 5.1 AUR (`-git`) | ✅ PKGBUILD gerado e compilado; ⏳ **com você**: publicar exige a sua conta no AUR | PR #25 |
