@@ -7,6 +7,15 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 
 ## [Não lançado]
 
+## [5.6.1] — NVIDIA no pacote e releases com notas
+
+- **Pacote:** `nvidia-utils` como dependência opcional (é ele que traz a NVML,
+  usada desde a 5.6.0 para o uso, a temperatura e a memória das GPUs NVIDIA);
+  também no README e no pacote do AUR.
+- **Releases:** título e notas saem automaticamente da seção do CHANGELOG.
+- **Qualidade:** a cobertura dos testes passa a medir também os subprocessos no
+  CI (o arquivo de configuração estava fora do repositório); piso 68 %.
+
 ## [5.6.0] — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
 
 **Para quem usa**
