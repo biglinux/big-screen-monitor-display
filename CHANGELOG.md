@@ -23,6 +23,9 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   piso e instalação testada em Debian, Ubuntu, Fedora, openSUSE e Arch.
 - Distribuição: pacote `big-screen-monitor-display-git` para o AUR, gerado do
   PKGBUILD do BigLinux; `docs/compatibilidade.md` gerado do registro de drivers.
+- **BSMD-lite:** protocolo de texto versionado e bridge (serial, TCP, terminal)
+  para displays caseiros (ESP32, Arduino, Raspberry Pi), com cliente de
+  referência; a bridge do Palm passou a usar a mesma leitura da telemetria.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 

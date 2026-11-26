@@ -31,12 +31,12 @@ _pkgname={NAME}
 pkgname={NAME}-git
 """
 
-VERSION = f"""pkgver=5.5.2
+VERSION = """pkgver=5.5.2
 pkgrel=1
-pkgver() {{
-    cd "${{srcdir}}/${{_pkgname}}"
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
     git describe --long --tags --abbrev=7 --match 'v*' | sed 's/^v//;s/\\([^-]*-g\\)/r\\1/;s/-/./g'
-}}
+}
 """
 
 

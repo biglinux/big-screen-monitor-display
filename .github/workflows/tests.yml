@@ -46,7 +46,7 @@ jobs:
         if: matrix.python == '3.12' && matrix.qt == 'PyQt6'
         run: |
           python -m pytest -q tests --cov=usr/share/big-screen-monitor-display --cov-report=term:skip-covered \
-            --cov-fail-under=60
+            --cov-fail-under=66
       - name: Check the shell scripts
         if: matrix.python == '3.12' && matrix.qt == 'PyQt6'
         run: shellcheck -s bash install-system.sh uninstall-system.sh run-local.sh pkgbuild/pkgbuild.install tools/update-pot.sh tools/release.sh

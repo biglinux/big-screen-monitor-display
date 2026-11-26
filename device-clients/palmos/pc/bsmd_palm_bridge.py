@@ -17,7 +17,6 @@ O Palm responde com linhas "CMD|<ação>\\n" (controle de mídia e volume).
 import argparse
 import os
 import re
-import shutil
 import signal
 import socket
 import struct
@@ -38,11 +37,15 @@ def _app_dir_candidates():
     return (repo, "/usr/share/big-screen-monitor-display")
 
 
-for _path in reversed(_app_dir_candidates()):
-    if os.path.isdir(os.path.join(_path, "bsmd")) and _path not in sys.path:
+# O bsmd do repositório (quando a bridge roda de dentro dele) vence o instalado.
+for _path in _app_dir_candidates():
+    if os.path.isdir(os.path.join(_path, "bsmd")):
+        if _path in sys.path:
+            sys.path.remove(_path)
         sys.path.insert(0, _path)
+        break
 
-from bsmd import telemetry  # noqa: E402
+from bsmd import lite, telemetry  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from palm_bt import resolve_palm  # noqa: E402
@@ -50,89 +53,38 @@ from palm_bt import resolve_palm  # noqa: E402
 
 # --- Pacote -------------------------------------------------------------------
 
-def _safe_int(val, default=0):
-    try:
-        if val is None:
-            return default
-        if isinstance(val, str):
-            m = re.search(r"-?\d+(?:\.\d+)?", val)
-            return int(round(float(m.group(0)))) if m else default
-        return int(round(float(val)))
-    except (TypeError, ValueError, OverflowError):
-        return default
-
-
-def _safe_float(val, default=0.0):
-    try:
-        return float(val) if val is not None else default
-    except (TypeError, ValueError):
-        return default
-
-
 def _clean_text(text, limit):
     """Texto seguro para um campo do pacote: sem '|' nem controles, cabe em ``limit`` bytes cp1252."""
-    text = "".join(ch if ch.isprintable() else " " for ch in str(text or ""))
-    text = " ".join(text.replace("|", "/").split())
-    return text.encode("cp1252", errors="replace")[:limit].decode("cp1252")
+    return lite.clean_text(text, limit)
 
 
 def media_text(players_cmd=None, timeout=1.0):
     """'Artista - Título' do player MPRIS ativo (playerctl), ou '-'."""
-    exe = players_cmd or shutil.which("playerctl")
-    if not exe:
-        return "-"
-    try:
-        out = subprocess.run([exe, "metadata", "--format", "{{artist}}\t{{title}}"],
-                             capture_output=True, text=True, timeout=timeout)
-    except (OSError, subprocess.SubprocessError):
-        return "-"
-    if out.returncode != 0:
-        return "-"
-    artist, _, title = out.stdout.strip().partition("\t")
-    artist, title = artist.strip(), title.strip()
-    text = f"{artist} - {title}" if artist and title else (title or artist)
-    return _clean_text(text, MEDIA_MAX) or "-"
+    return _clean_text(lite.media_text(players_cmd, timeout) or "", MEDIA_MAX) or "-"
 
 
-def pick_gpu(gpus, index=None):
-    """GPU mostrada no Palm: ``index`` quando válido, senão a de mais VRAM (a dedicada).
+pick_gpu = lite.pick_gpu
 
-    O bsmd alterna ``active_gpu_idx`` a cada 3 s; o Palm só escreve "GPU", então
-    alternar misturaria iGPU e dGPU no mesmo histórico.
-    """
-    gpus = [g for g in (gpus or []) if isinstance(g, dict)]
-    if not gpus:
-        return {}
-    if index is not None and 0 <= index < len(gpus):
-        return gpus[index]
-    return max(gpus, key=lambda g: _safe_int(g.get("mem_total_mb")))   # max() mantém a primeira no empate
+
+def _int(value):
+    return "-" if value is None else f"{value:.0f}"
+
+
+def _one(value):
+    return "-" if value is None else f"{value:.1f}"
 
 
 def build_packet(snap, media="-", gpu_index=None):
-    cpu_pct = _safe_int(snap.get("cpu_percent"))
-    cpu_temp = _safe_int(snap.get("cpu_temp_value"), _safe_int(snap.get("cpu_temp")))
-    cpu_mhz = _safe_int(snap.get("cpu_freq_mhz"))
-
-    gpu = pick_gpu(snap.get("gpus"), gpu_index)
-    gpu_pct = _safe_int(gpu.get("percent"))
-    gpu_temp = _safe_int(gpu.get("temp_value"), _safe_int(gpu.get("temp")))
-
-    ram_pct = _safe_int(snap.get("ram_percent"))
-    ram_used_gb = _safe_float(snap.get("ram_used_mb")) / 1024.0
-    ram_tot_gb = _safe_float(snap.get("ram_total_mb")) / 1024.0
-
-    disk_pct = _safe_int(snap.get("disk_percent"))
-    rx_mbps = _safe_float(snap.get("net_rx_mbps"))
-    tx_mbps = _safe_float(snap.get("net_tx_mbps"))
-
-    host = _clean_text(snap.get("hostname") or socket.gethostname() or "linux", HOST_MAX) or "linux"
+    """Pacote do ZireMon (formato fixo do app C). Os números vêm de ``bsmd.lite.metrics``,
+    a mesma leitura da telemetria usada pelos outros clientes; '-' = não medido."""
+    m = lite.metrics(snap, gpu_index)
+    host = _clean_text(m["host"] or socket.gethostname() or "linux", HOST_MAX) or "linux"
     media = _clean_text(media, MEDIA_MAX) or "-"
-
     return (
-        f"M|{cpu_pct}|{cpu_temp}|{cpu_mhz}|"
-        f"{gpu_pct}|{gpu_temp}|"
-        f"{ram_pct}|{ram_used_gb:.1f}|{ram_tot_gb:.1f}|"
-        f"{disk_pct}|{rx_mbps:.1f}|{tx_mbps:.1f}|"
+        f"M|{_int(m['cpu'])}|{_int(m['cpu_t'])}|{_int(m['cpu_mhz'])}|"
+        f"{_int(m['gpu'])}|{_int(m['gpu_t'])}|"
+        f"{_int(m['ram'])}|{_one(m['ram_used'])}|{_one(m['ram_total'])}|"
+        f"{_int(m['disk'])}|{_one(m['rx'])}|{_one(m['tx'])}|"
         f"{host}|{media}\n"
     )
 
@@ -175,45 +127,12 @@ class Sampler:
 
 # --- Comandos vindos do Palm ----------------------------------------------------
 
-def _volume_cmd(delta):
-    if shutil.which("pactl"):
-        return ["pactl", "set-sink-volume", "@DEFAULT_SINK@", f"{delta:+d}%"]
-    if shutil.which("wpctl"):
-        return ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", f"{abs(delta)}%{'+' if delta > 0 else '-'}"]
-    return None
-
-
-COMMANDS = {
-    "PLAY_PAUSE": lambda: ["playerctl", "play-pause"],
-    "NEXT": lambda: ["playerctl", "next"],
-    "PREV": lambda: ["playerctl", "previous"],
-    "VOL_UP": lambda: _volume_cmd(+5),
-    "VOL_DOWN": lambda: _volume_cmd(-5),
-}
+COMMANDS = lite.COMMANDS
 
 
 def handle_palm_command(cmd, run=subprocess.run):
-    """Executa uma linha 'CMD|AÇÃO'. Devolve a ação reconhecida ou None."""
-    cmd = cmd.strip()
-    if not cmd.startswith("CMD|"):
-        return None
-    action = cmd[4:]
-    factory = COMMANDS.get(action)
-    if factory is None:
-        print(f"[CMD] Ação desconhecida: {action!r}")
-        return None
-    argv = factory()
-    print(f"[CMD] Palm -> {action}")
-    if not argv:
-        print("[CMD] Nem pactl nem wpctl encontrados para o volume")
-        return action
-    try:
-        run(argv, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3)
-    except FileNotFoundError as exc:
-        print(f"[CMD] Ferramenta não encontrada: {exc}")
-    except subprocess.TimeoutExpired:
-        print(f"[CMD] {argv[0]} não respondeu")
-    return action
+    """Executa uma linha 'CMD|AÇÃO' (só as de ``bsmd.lite.COMMANDS``). Devolve a ação ou None."""
+    return lite.handle_command(cmd, run=run)
 
 
 def rx_loop(sock, stop_ev):
