@@ -179,7 +179,7 @@ class ThemeGallery:
         self.window._set("theme", theme_id)
         displays = copy.deepcopy(self.window.values.get("displays") or {})
         changed = False
-        for disp_id, entry in displays.items():
+        for entry in displays.values():
             if isinstance(entry, dict) and "theme" in entry:
                 entry.pop("theme", None)
                 changed = True

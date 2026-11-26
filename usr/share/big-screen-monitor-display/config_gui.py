@@ -1145,9 +1145,9 @@ class ConfigWindow(Adw.ApplicationWindow):
         self.perf_rows["fps"].set_subtitle(_("{fps:.1f} (target {target:g})").format(
             fps=min(stats.get("fps", 0), stats.get("target_fps", 0) or 99), target=stats.get("target_fps", 0)))
         self.perf_rows["usb"].set_subtitle(f"{stats.get('transfer_ms', 0):.1f} ms")
-        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · "
-                                            + ngettext("{frames} frame", "{frames} frames", stats.get("frames_sent", 0)).format(
-                                                frames=stats.get("frames_sent", 0)))
+        frames = stats.get("frames_sent", 0)
+        frames_text = ngettext("{frames} frame", "{frames} frames", frames).format(frames=frames)
+        self.perf_rows["data"].set_subtitle(f"{stats.get('bytes_sent', 0) / 1048576:.1f} MB · " + frames_text)
         self.perf_rows["drop"].set_subtitle(str(stats.get("frames_dropped", 0)))
 
     def _refresh_diagnostics(self):

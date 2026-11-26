@@ -87,7 +87,7 @@ def original(text):
         match = regex.match(text)
         if match and not any(sep.strip() in value for value in match.groups() for sep in _SEPARATORS):
             values = {name: match.group(f"f{i}") for i, name in enumerate(names)}
-            return _FIELD.sub(lambda m: values.get(m.group(1), m.group(0)), source)
+            return _FIELD.sub(lambda m: values.get(m.group(1), m.group(0)), source)  # noqa: B023 - used at once
     for separator in _SEPARATORS:
         if separator in text:
             parts = text.split(separator)

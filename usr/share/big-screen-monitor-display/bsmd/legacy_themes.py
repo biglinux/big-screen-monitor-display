@@ -155,7 +155,7 @@ def get_theme_colors(theme_name):
         theme["icon_color"] = (255, 255, 255) if theme_name != "light" else (40, 40, 45)
     return theme
 
-# Cache Global de Icones SVG 
+# Cache Global de Icones SVG
 ICON_CACHE = {}
 
 _LOGO_CACHE = {}
@@ -201,29 +201,29 @@ def get_svg_icon(name, size, color=None):
     cache_key = f"{name}_{size}_{color}"
     if cache_key in ICON_CACHE:
         return ICON_CACHE[cache_key]
-        
+
     path = os.path.join(BASE_DIR, "img", name)
     if os.path.exists(path):
         try:
             if color:
                 with open(path, 'r') as f:
                     svg_data = f.read()
-                
+
                 # Converte tupla (R, G, B) para Hex
                 c_hex = '#{:02x}{:02x}{:02x}'.format(*color) if isinstance(color, tuple) else color
-                
+
                 # Recolour white strokes/fills in one pass. (The former second
                 # pass also matched the colour just inserted - "#ffff00" became
                 # "#ffff0000" - and icons in yellowish colours disappeared.)
                 svg_data = re.sub(r'#(?:[fF]{6}|[fF]{3})(?![0-9a-fA-F])', c_hex, svg_data)
-                
-                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size)], 
+
+                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size)],
                                    input=svg_data.encode('utf-8'),
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2)
             else:
-                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size), path], 
+                p = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size), path],
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=2)
-            
+
             if p.returncode == 0:
                 img = Image.open(io.BytesIO(p.stdout)).convert("RGBA")
                 ICON_CACHE[cache_key] = img
@@ -641,7 +641,8 @@ def render_dashboard_planet_portrait(width, height, settings):
     panel(margin, margin, width - margin * 2, height - margin * 2, (2, 8, 22))
     text(inner_x, int(10 * scale), "PLANET", font_title, colors["text_label"])
     text(inner_x, int(27 * scale), "SYSTEM ORBIT // PORTRAIT", font_mono, colors["text_muted"])
-    text(inner_x, int(39 * scale), now_local.strftime("%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"), font_time, colors["time"])
+    clock_format = "%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"
+    text(inner_x, int(39 * scale), now_local.strftime(clock_format), font_time, colors["time"])
     text(inner_x, int(65 * scale), now_local.strftime("%a, %Y-%m-%d"), font_small, colors["text_main"])
     text(inner_x, int(77 * scale), clipped(_planet_status_line(), 34), font_mono, colors["text_muted"])
 
@@ -800,7 +801,8 @@ def render_dashboard_planet_portrait(width, height, settings):
                    width=max(2, line_width + 1))
 
     metric_specs = [
-        ("CPU", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY, colors["good"]),
+        ("CPU", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY,
+         colors["good"]),
         ("FREQ", cpu_freq_text, min(100.0, (cpu_freq or 0) / 40.0), [], colors["text_label"]),
         ("GPU", gpu_percent_text(active_gpu), gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
         ("CLOCK", _planet_gpu_clock(active_gpu), min(100.0, (active_gpu.get("clock_mhz") or 0) / 30.0), [],
@@ -1012,7 +1014,8 @@ def render_dashboard_planet(width, height, settings):
     time_y = max(30, int(50 * scale))
     date_y = max(52, int(87 * scale))
     weather_y = max(66, int(105 * scale))
-    text(left_x, time_y, now_local.strftime("%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"), font_time, colors["time"])
+    clock_format = "%H:%M:%S" if settings.get("planet_seconds", True) else "%H:%M"
+    text(left_x, time_y, now_local.strftime(clock_format), font_time, colors["time"])
     text(left_x, date_y, now_local.strftime("%a, %Y-%m-%d"), font_small, colors["text_main"])
     text(left_x, weather_y, clipped(_planet_status_line(), 34), font_mono, colors["text_muted"])
 
@@ -1151,7 +1154,8 @@ def render_dashboard_planet(width, height, settings):
     metric_y = cpu_card_y + card_h + max(6, int(8 * scale))
     metric_h = max(34, int(66 * scale))
     metric_specs = [
-        ("CPU USAGE", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0), CPU_USAGE_HISTORY, colors["good"]),
+        ("CPU USAGE", f"{SYSTEM_STATS.get('cpu_percent', 0):.0f}%", SYSTEM_STATS.get("cpu_percent", 0),
+         CPU_USAGE_HISTORY, colors["good"]),
         ("CPU FREQ", cpu_freq_text, min(100.0, (cpu_freq or 0) / 40.0), [], colors["text_label"]),
         ("GPU USAGE", gpu_percent_text(active_gpu), gpu_usage, GPU_USAGE_HISTORY, colors["warn"]),
         ("GPU CLOCK", _planet_gpu_clock(active_gpu), min(100.0, (active_gpu.get("clock_mhz") or 0) / 30.0), [],
@@ -1501,7 +1505,8 @@ def render_dashboard_old_computer(width, height, settings):
     d.line((content_pad, separator_y, width - content_pad, separator_y), fill=navy, width=max(1, int(scale)))
 
     graph_data = [
-        ("CPU", cpu_usage, cpu_model, CPU_USAGE_HISTORY, f"CLOCK {cpu_freq_text}  |  AVG {cpu_avg:.0f}%  PEAK {cpu_peak:.0f}%", "cpu"),
+        ("CPU", cpu_usage, cpu_model, CPU_USAGE_HISTORY,
+         f"CLOCK {cpu_freq_text}  |  AVG {cpu_avg:.0f}%  PEAK {cpu_peak:.0f}%", "cpu"),
         ("RAM", ram_usage, f"{ram_total_gb:.1f}GB DDR  MEMORY", RAM_USAGE_HISTORY,
          f"{ram_used_gb:.1f}/{ram_total_gb:.1f}GB  |  AVG {ram_avg:.0f}%  PEAK {ram_peak:.0f}%", "ram"),
     ]
@@ -1509,7 +1514,8 @@ def render_dashboard_old_computer(width, height, settings):
         gpu_clock = f"{gpu['clock_mhz']}MHz" if gpu.get("clock_mhz") else "--MHz"
         graph_data += [
             ("GPU", gpu_usage if gpu.get("usage_known") else None, gpu_model, GPU_USAGE_HISTORY,
-             f"CLOCK {gpu_clock}  |  TEMP {safe_temperature(gpu.get('temp'))}  |  AVG {gpu_avg:.0f}%  PEAK {gpu_peak:.0f}%",
+             f"CLOCK {gpu_clock}  |  TEMP {safe_temperature(gpu.get('temp'))}  |  "
+             f"AVG {gpu_avg:.0f}%  PEAK {gpu_peak:.0f}%",
              "gpu"),
             ("VRAM", gpu_mem_percent, gpu_model, GPU_MEM_HISTORY,
              f"{vram_used_gb:.1f}/{vram_total_gb:.1f}GB  |  AVG {vram_avg:.0f}%  PEAK {vram_peak:.0f}%", "vram"),

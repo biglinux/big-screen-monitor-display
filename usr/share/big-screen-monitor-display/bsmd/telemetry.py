@@ -631,7 +631,7 @@ class Collector:
             history = SYSTEM_STATS["cpu_cores_history"]
             if len(history) != len(cores):
                 history[:] = [[] for _ in cores]
-            for core_history, value in zip(history, cores):
+            for core_history, value in zip(history, cores, strict=False):
                 core_history.append(value)
                 if len(core_history) > 40:
                     del core_history[0]

@@ -213,8 +213,8 @@ class DisplaysPage:
         if self._announce:
             self._announce = False
             count = sum(1 for e in self.entries.values() if e.candidate)
-            self.window.toast(ngettext("{count} display found.", "{count} displays found.", count).format(count=count) if count else
-                              _("No display found. Check the cable and the USB port."))
+            found = ngettext("{count} display found.", "{count} displays found.", count).format(count=count)
+            self.window.toast(found if count else _("No display found. Check the cable and the USB port."))
 
     def _rebuild(self):
         self.grid.clear()

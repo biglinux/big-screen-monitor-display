@@ -90,7 +90,7 @@ class AX206:
                 dev = core.find(idVendor=self.VID, idProduct=self.PID,
                                 custom_match=lambda d: (d.bus, d.address) == (self.bus, self.address))
         except Exception as error:
-            raise DisplayError(NOT_FOUND, "USB backend unavailable", error)
+            raise DisplayError(NOT_FOUND, "USB backend unavailable", error) from error
         if dev is None:
             raise DisplayError(NOT_FOUND, "AX206 not connected")
         if dev.idVendor != self.VID or dev.idProduct != self.PID:
@@ -119,7 +119,7 @@ class AX206:
         except Exception as error:
             classified = self._classify(error, "open")
             self.close()
-            raise classified
+            raise classified from error
         if not (0 < width <= 2048 and 0 < height <= 2048):
             self.close()
             raise DisplayError(PROTOCOL, f"AX206 reported invalid size {width}x{height}")
@@ -178,7 +178,7 @@ class AX206:
             csw = bytes(self.dev.read(self.EP_IN, 13, timeout=3000))
         except Exception as error:
             self._prev = None
-            raise self._classify(error, "transfer")
+            raise self._classify(error, "transfer") from error
         if len(csw) != 13 or csw[:4] != b"USBS":
             self._prev = None
             raise DisplayError(PROTOCOL, f"AX206 bad CSW {csw[:4]!r} len={len(csw)}")

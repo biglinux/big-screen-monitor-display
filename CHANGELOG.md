@@ -19,6 +19,8 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 - **Intel:** frequência atual da GPU (i915 e xe).
 - **Sem número falso:** GPU cujo driver não informa o uso mostra "—" em todos os
   temas, em vez de 0 %.
+- Qualidade: CI com Python 3.10, 3.12 e 3.14, `ruff` sem avisos, cobertura com
+  piso e instalação testada em Debian, Ubuntu, Fedora, openSUSE e Arch.
 
 ## [5.5.2] — Display no celular de qualquer lugar, pelo Tailscale
 

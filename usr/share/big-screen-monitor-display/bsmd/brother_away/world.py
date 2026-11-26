@@ -554,7 +554,8 @@ class World:
             self.hour = 15.0
         self.weather.update(dt, settings.get("ba_weather", True))
         for cloud in self.clouds:
-            cloud["x"] += (0.5 + abs(self.weather.wind) * 4) * cloud["speed"] * dt * (1 if self.weather.wind >= 0 else -1)
+            direction = 1 if self.weather.wind >= 0 else -1
+            cloud["x"] += (0.5 + abs(self.weather.wind) * 4) * cloud["speed"] * dt * direction
         self.clouds = [c for c in self.clouds if -c["w"] - 4 < c["x"] < self.layout.w + 4]
         want = 4 + int(self.weather.darkness * 6)
         while len(self.clouds) < want:
@@ -576,7 +577,8 @@ class World:
     def palm_crown(self):
         lay = self.layout
         height = int((lay.ground - lay.horizon) + lay.h * 0.18)
-        lean = 10 + self.weather.wind * 3 + self.palm_lean + math.sin(math.floor(self.time * 4) / 4 * 1.3) * self.weather.wind
+        sway = math.sin(math.floor(self.time * 4) / 4 * 1.3) * self.weather.wind
+        lean = 10 + self.weather.wind * 3 + self.palm_lean + sway
         lean += math.sin(self.time * 18) * 2 * self.palm_shake
         top_x = lay.palm_x + lean
         top_y = lay.ground - height
@@ -815,7 +817,8 @@ class World:
                 d.line([(px, y + (i % 3) - 1), (px + 4, y + (i % 2))], fill=P.shade(P.WOOD, light), width=2)
             return
         for i in range(min(5, stage)):
-            d.line([(x0, y - i * 2), (x0 + 16, y - i * 2)], fill=P.shade(P.WOOD if i % 2 else P.WOOD_DARK, light), width=2)
+            d.line([(x0, y - i * 2), (x0 + 16, y - i * 2)],
+                   fill=P.shade(P.WOOD if i % 2 else P.WOOD_DARK, light), width=2)
         if stage >= 6:
             d.line([(x0 + 8, y - 8), (x0 + 8, y - 20)], fill=P.shade(P.WOOD_DARK, light))
             d.polygon([(x0 + 9, y - 20), (x0 + 15, y - 12), (x0 + 9, y - 12)], fill=P.shade(P.SAIL, light))

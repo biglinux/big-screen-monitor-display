@@ -498,7 +498,7 @@ msgstr "Autorizarea a fost anulată sau refuzată."
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
 #: usr/share/big-screen-monitor-display/config_gui.py:1084
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Eroare necunoscută"
@@ -639,35 +639,35 @@ msgstr "dec"
 msgid "Disk"
 msgstr "Disc"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:277
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:496
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:440
 #: usr/share/big-screen-monitor-display/gui/android_page.py:37
 #: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Rețea"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:448
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:449
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
 msgid "Processes"
 msgstr "Procese"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:471
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:472
 msgid "Collecting..."
 msgstr "Se colectează..."
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:537
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:307
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:538
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:308
 #, python-brace-format
 msgid "up {time}"
 msgstr "pornit de {time}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:539
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:540
 #, python-brace-format
 msgid "load {a:.2f} {b:.2f} {c:.2f}"
 msgstr "încărcare {a:.2f} {b:.2f} {c:.2f}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:541
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:543
 #, python-brace-format
 msgid "{count} process"
 msgid_plural "{count} processes"
@@ -1126,57 +1126,57 @@ msgstr "LED-urile din spate și reglajul fin al luminozității depind de subrev
 msgid "Sleeps until opened and then reappears as a generic USB gadget; the size may need to be chosen."
 msgstr "Stă în repaus până la deschidere, apoi reapare ca dispozitiv USB generic (gadget); poate fi necesar să alegeți dimensiunea."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:142
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:143
 msgid "The protocol has no handshake: identification relies on the USB IDs."
 msgstr "Protocolul nu are negociere inițială: identificarea se bazează pe ID-urile USB."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:147
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:148
 msgid "Also reports room temperature and humidity."
 msgstr "Raportează și temperatura și umiditatea din încăpere."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:152
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:153
 msgid "Tiny panel: themes switch to a compact layout."
 msgstr "Panou foarte mic: temele trec la un aranjament compact."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:159
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:160
 msgid "Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."
 msgstr "Doar cadre întregi (PNG, JPEG când depășesc 1 MB); fără funcții video sau de stocare."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:166
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
 msgid "The panel has no framebuffer: Big Screen Monitor flashes its own dashboard into it (about a minute, only when the look changes) and then sends the live values."
 msgstr "Panoul nu are framebuffer: Big Screen Monitor scrie în el propriul tablou de bord (circa un minut, doar când se schimbă aspectul) și apoi trimite valorile în timp real."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:170
 msgid "Themes are not drawn on this panel; the dashboard follows the Standard theme's colour scheme, temperature unit, name and brightness of this display."
 msgstr "Temele nu sunt desenate pe acest panou; tabloul de bord urmează schema de culori, unitatea de temperatură, numele și luminozitatea temei Standard pentru acest afișaj."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:171
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:173
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:183
 msgid "reported by the device (800x480 on the FS-707DC)"
 msgstr "raportată de dispozitiv (800x480 pe FS-707DC)"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:177
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:179
 msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
 msgstr "Rulează clientul bsmd-ce pe firmware-ul original al navigatorului (nu se scrie nimic în firmware)."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:178
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:188
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:191
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Ecran tactil rezistiv cu un singur punct: atingere, apăsare lungă și glisare direct pe panou."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:186
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:189
 msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
 msgstr "Rulează pe BigFoston OS (Linux pe navigator): deschideți aplicația Big Screen pe dispozitiv."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:187
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:190
 msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
 msgstr "Se conectează prin rețeaua USB la 192.168.7.2, portul TCP 7707."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:199
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:202
 msgid "numeric CPU display"
 msgstr "afișaj CPU numeric"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:200
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:203
 msgid "2.8\" LCD, information mode"
 msgstr "LCD de 2,8\", mod de informații"
 
@@ -1232,7 +1232,7 @@ msgstr "ÎNC."
 msgid "DISK %"
 msgstr "DISC %"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:341
 #, python-brace-format
 msgid "{count} core"
 msgid_plural "{count} cores"
@@ -1240,12 +1240,12 @@ msgstr[0] "{count} nucleu"
 msgstr[1] "{count} nuclee"
 msgstr[2] "{count} de nuclee"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:342
 #, python-brace-format
 msgid "max {value:.0f}%"
 msgstr "max. {value:.0f}%"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:354
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:356
 #, python-brace-format
 msgid "{count} proc"
 msgid_plural "{count} procs"
@@ -1253,45 +1253,45 @@ msgstr[0] "{count} proc."
 msgstr[1] "{count} proc."
 msgstr[2] "{count} de proc."
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:396
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:398
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:316
 msgid "Sensors"
 msgstr "Senzori"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:399
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:401
 msgid "no sensors"
 msgstr "fără senzori"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:416
 #: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "I/E disc"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:439
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:441
 msgid "no connection"
 msgstr "fără conexiune"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:504
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:506
 msgid "Disks"
 msgstr "Discuri"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:541
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:543
 msgid "no battery"
 msgstr "fără baterie"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:555
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:557
 msgid "profile"
 msgstr "profil"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:567
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:569
 msgid "no fan or power sensors"
 msgstr "fără senzori de ventilator sau putere"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:582
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:584
 msgid "unavailable"
 msgstr "indisponibil"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:586
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:588
 #, python-brace-format
 msgid "{count} container"
 msgid_plural "{count} containers"
@@ -1299,65 +1299,65 @@ msgstr[0] "{count} container"
 msgstr[1] "{count} containere"
 msgstr[2] "{count} de containere"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:596
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:598
 msgid "Devices"
 msgstr "Dispozitive"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:599
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:601
 msgid "no removable media"
 msgstr "niciun mediu amovibil"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:610
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:612
 msgid "Media"
 msgstr "Media"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:613
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:615
 msgid "no player"
 msgstr "niciun player"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:231
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:232
 msgid "no swap"
 msgstr "fără swap"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Monday"
 msgstr "Luni"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Tuesday"
 msgstr "Marți"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Wednesday"
 msgstr "Miercuri"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Thursday"
 msgstr "Joi"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Friday"
 msgstr "Vineri"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Saturday"
 msgstr "Sâmbătă"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:324
 msgid "Sunday"
 msgstr "Duminică"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "charging"
 msgstr "se încarcă"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "on battery"
 msgstr "pe baterie"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
@@ -1534,11 +1534,11 @@ msgstr "Degradeuri"
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:891
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:602
+#: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
 msgstr "Orientare"
 
@@ -1843,7 +1843,7 @@ msgstr "Skin"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:888
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
 #: usr/share/big-screen-monitor-display/config_gui.py:635
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
@@ -1867,8 +1867,8 @@ msgid "No media player"
 msgstr "Niciun player multimedia"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:884
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:999
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:885
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
@@ -1892,50 +1892,50 @@ msgid "Closing…"
 msgstr "Se închide…"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:575
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Tap again to exit"
 msgstr "Atingeți din nou pentru a ieși"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:886
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:887
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:71
 msgid "Themes"
 msgstr "Teme"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:890
 msgid "Choose a story"
 msgstr "Alegeți o poveste"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 #: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Touch test"
 msgstr "Test tactil"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 msgid "Draw with your finger"
 msgstr "Desenați cu degetul"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Calibrate"
 msgstr "Calibrează"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Device calibration"
 msgstr "Calibrarea dispozitivului"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Exit to the device menu"
 msgstr "Ieșire în meniul dispozitivului"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:899
 msgid "Back to the GPS main menu"
 msgstr "Înapoi la meniul principal al GPS-ului"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:964
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:967
 msgid "This theme has no options here."
 msgstr "Această temă nu are opțiuni aici."
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:1048
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1052
 msgid "Touch test - hold to leave"
 msgstr "Test tactil - țineți apăsat pentru a ieși"
 
@@ -2079,14 +2079,14 @@ msgstr "Despre Big Screen Monitor Display"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
-#: usr/share/big-screen-monitor-display/screentray/app.py:622
+#: usr/share/big-screen-monitor-display/screentray/app.py:623
 msgid "Quit"
 msgstr "Ieșire"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:336
 #: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
-#: usr/share/big-screen-monitor-display/screentray/app.py:541
+#: usr/share/big-screen-monitor-display/screentray/app.py:542
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
@@ -2142,10 +2142,10 @@ msgstr "Vertical, răsturnat"
 #: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
-#: usr/share/big-screen-monitor-display/screentray/app.py:590
+#: usr/share/big-screen-monitor-display/screentray/app.py:591
 msgid "Brightness"
 msgstr "Luminozitate"
 
@@ -2836,7 +2836,7 @@ msgstr "Fiecare opțiune de temă, afișaj și performanță revine la valoarea 
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1211
 msgid "Cancel"
 msgstr "Renunță"
 
@@ -2896,7 +2896,7 @@ msgstr "Închide"
 #: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 #: usr/share/big-screen-monitor-display/screentray/states.py:48
 #: usr/share/big-screen-monitor-display/screentray/states.py:126
 msgid "Service stopped"
@@ -2946,8 +2946,8 @@ msgstr "Rulați diagnosticarea pentru a afla motivul sau porniți serviciul."
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:526
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:527
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Start Service"
 msgstr "Pornește serviciul"
 
@@ -3170,7 +3170,7 @@ msgstr "Alarmă de temperatură"
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/media_player_page.py:264
 #: usr/share/big-screen-monitor-display/media_player_page.py:298
-#: usr/share/big-screen-monitor-display/screentray/app.py:513
+#: usr/share/big-screen-monitor-display/screentray/app.py:514
 msgid "Off"
 msgstr "Dezactivat"
 
@@ -3206,7 +3206,7 @@ msgstr "Alta…"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:270
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:623
 #: usr/share/big-screen-monitor-display/screentray/app.py:245
-#: usr/share/big-screen-monitor-display/screentray/app.py:613
+#: usr/share/big-screen-monitor-display/screentray/app.py:614
 msgid "Configuration…"
 msgstr "Configurare…"
 
@@ -3230,21 +3230,21 @@ msgstr "Închide și redeschide doar acest cooler"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:559
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/screentray/app.py:247
-#: usr/share/big-screen-monitor-display/screentray/app.py:527
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:528
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Restart Service"
 msgstr "Repornește serviciul"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:276
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/app.py:249
-#: usr/share/big-screen-monitor-display/screentray/app.py:617
+#: usr/share/big-screen-monitor-display/screentray/app.py:618
 msgid "Start with the session"
 msgstr "Pornește odată cu sesiunea"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:375
 #: usr/share/big-screen-monitor-display/screentray/app.py:401
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 msgid "Service not running"
 msgstr "Serviciul nu rulează"
 
@@ -3365,7 +3365,7 @@ msgid "Reconnect the Cooler"
 msgstr "Reconectează coolerul"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:691
-#: usr/share/big-screen-monitor-display/screentray/app.py:764
+#: usr/share/big-screen-monitor-display/screentray/app.py:765
 msgid "Could not start the service"
 msgstr "Serviciul nu a putut fi pornit"
 
@@ -3598,7 +3598,7 @@ msgstr "La fel ca implicit ({value})"
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
-#: usr/share/big-screen-monitor-display/screentray/app.py:569
+#: usr/share/big-screen-monitor-display/screentray/app.py:570
 msgid "Theme"
 msgstr "Temă"
 
@@ -4439,7 +4439,7 @@ msgstr "Implicit pentru fiecare afișaj; un afișaj o poate suprascrie."
 
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:173
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:242
-#: usr/share/big-screen-monitor-display/screentray/app.py:627
+#: usr/share/big-screen-monitor-display/screentray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/states.py:128
 msgid "No display connected"
 msgstr "Niciun afișaj conectat"
@@ -4691,7 +4691,7 @@ msgstr "Valori curente"
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
 #: usr/share/big-screen-monitor-display/kojiro_page.py:742
 #: usr/share/big-screen-monitor-display/kojiro_page.py:745
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Alerts"
 msgstr "Alerte"
 
@@ -4838,7 +4838,7 @@ msgstr "Trimise ca 0 deoarece coolerul nu are o valoare goală: {fields}"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -5091,14 +5091,14 @@ msgstr "Editor Kojiro: faceți clic pe un widget pentru a-l selecta, trageți pe
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
 #: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Duplicate"
 msgstr "Duplică"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
 #: usr/share/big-screen-monitor-display/kojiro_page.py:664
 #: usr/share/big-screen-monitor-display/kojiro_page.py:666
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Delete"
 msgstr "Șterge"
 
@@ -5110,7 +5110,7 @@ msgstr "Adu în față"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:851
+#: usr/share/big-screen-monitor-display/kojiro_page.py:852
 msgid "Send to back"
 msgstr "Trimite în spate"
 
@@ -5247,7 +5247,7 @@ msgid "Bars"
 msgstr "Bare"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Grid"
 msgstr "Grilă"
 
@@ -5265,7 +5265,7 @@ msgid "Light line"
 msgstr "Linie luminoasă"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Dots"
 msgstr "Puncte"
 
@@ -5287,7 +5287,7 @@ msgstr "Stânga mijloc"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Centre"
 msgstr "Centru"
 
@@ -5537,12 +5537,12 @@ msgid "Distribute vertically"
 msgstr "Distribuie pe verticală"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:849
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Bring forward"
 msgstr "Adu mai în față"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:850
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send backward"
 msgstr "Trimite mai în spate"
 
@@ -5612,8 +5612,8 @@ msgstr "S-a atins limita de widgeturi."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:408
 #: usr/share/big-screen-monitor-display/screentray/app.py:364
-#: usr/share/big-screen-monitor-display/screentray/app.py:455
-#: usr/share/big-screen-monitor-display/screentray/app.py:642
+#: usr/share/big-screen-monitor-display/screentray/app.py:456
+#: usr/share/big-screen-monitor-display/screentray/app.py:643
 msgid "All displays"
 msgstr "Toate afișajele"
 
@@ -5721,7 +5721,7 @@ msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Colțul sau marginea de care rămâne prins widgetul pe alte dimensiuni de ecran."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:685
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Rotation"
 msgstr "Rotire"
 
@@ -5782,12 +5782,12 @@ msgid "Alignment"
 msgstr "Aliniere"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Left"
 msgstr "Stânga"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Right"
 msgstr "Dreapta"
 
@@ -5910,463 +5910,463 @@ msgstr "Automat (capsula CPU)"
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Elementul din capul listei este desenat deasupra. Faceți clic pentru a selecta."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:864
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Wallpaper"
 msgstr "Imagine de fundal"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:865
+#: usr/share/big-screen-monitor-display/kojiro_page.py:866
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Imagini incluse, propriile imagini, o culoare sau un degrade."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:873
 msgid "Imported"
 msgstr "Importate"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:877
 msgid "Import image…"
 msgstr "Importă imagine…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:880
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Colour or gradient"
 msgstr "Culoare sau degrade"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1148
 msgid "Use"
 msgstr "Folosește"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "The image above"
 msgstr "Imaginea de mai sus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Solid colour"
 msgstr "Culoare uniformă"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:883
 msgid "Gradient"
 msgstr "Degrade"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Colour"
 msgstr "Culoare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Second colour"
 msgstr "A doua culoare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Gradient angle"
 msgstr "Unghiul degradeului"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:888
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit and position"
 msgstr "Potrivire și poziție"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fit"
 msgstr "Potrivire"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fill the screen (crop)"
 msgstr "Umple ecranul (decupare)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Fit whole image"
 msgstr "Încadrează imaginea întreagă"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Stretch"
 msgstr "Întinde"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Tile"
 msgstr "Mozaic"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Original size"
 msgstr "Dimensiune originală"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:893
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Zoom (%)"
 msgstr "Zoom (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Horizontal offset"
 msgstr "Deplasare orizontală"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:897
 msgid "Vertical offset"
 msgstr "Deplasare verticală"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Mirror"
 msgstr "Oglindește"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Flip vertically"
 msgstr "Răstoarnă pe verticală"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Adjustments"
 msgstr "Ajustări"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Contrast"
 msgstr "Contrast"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Saturation"
 msgstr "Saturație"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Gamma"
 msgstr "Gama"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Blur"
 msgstr "Estompare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Darken"
 msgstr "Întunecare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Vignette"
 msgstr "Vignetare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Tint colour"
 msgstr "Culoare de nuanțare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Tint strength"
 msgstr "Intensitatea nuanțării"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:908
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Text protection gradient"
 msgstr "Degrade de protecție pentru text"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Gradient side"
 msgstr "Partea degradeului"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "Jos"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Sus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:911
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Top and bottom"
 msgstr "Sus și jos"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:913
+#: usr/share/big-screen-monitor-display/kojiro_page.py:915
 msgid "Reset adjustments"
 msgstr "Restabilește ajustările"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:941
+#: usr/share/big-screen-monitor-display/kojiro_page.py:943
 msgid "Remove this wallpaper"
 msgstr "Elimină această imagine de fundal"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:980
+#: usr/share/big-screen-monitor-display/kojiro_page.py:982
 msgid "Choose a wallpaper"
 msgstr "Alegeți o imagine de fundal"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:981
+#: usr/share/big-screen-monitor-display/kojiro_page.py:983
 msgid "Images"
 msgstr "Imagini"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:994
+#: usr/share/big-screen-monitor-display/kojiro_page.py:996
 msgid "Importing the image…"
 msgstr "Se importă imaginea…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Imaginea nu a putut fi importată"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1018
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Imaginea de fundal a fost importată. Fișierul original nu a fost modificat."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1034
 msgid "The wallpaper could not be removed"
 msgstr "Imaginea de fundal nu a putut fi eliminată"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1051
 msgid "Presets"
 msgstr "Presetări"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1052
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Înlocuiește widgeturile cu o compoziție gata făcută (Ctrl+Z o anulează). O imagine de fundal importată se păstrează."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1075
 msgid "Colour palette"
 msgstr "Paletă de culori"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1076
 msgid "Recolours every widget with a palette."
 msgstr "Recolorează toate widgeturile cu o paletă."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Text and background effect"
 msgstr "Text și efect de fundal"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Font for all widgets"
 msgstr "Font pentru toate widgeturile"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Background effect"
 msgstr "Efect de fundal"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Scanlines"
 msgstr "Linii de baleiaj"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect strength"
 msgstr "Intensitatea efectului"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 msgid "Effect colour"
 msgstr "Culoarea efectului"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Readability panels"
 msgstr "Panouri de lizibilitate"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Automatic (bright or busy areas)"
 msgstr "Automat (zone luminoase sau aglomerate)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Întotdeauna"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Niciodată"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Adaugă un panou translucid închis în spatele widgeturilor care ar fi greu de citit."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Animations and alerts"
 msgstr "Animații și alerte"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Animații"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Fan spin, smooth values and pulses."
 msgstr "Rotirea ventilatoarelor, valori line și pulsații."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Reduce motion"
 msgstr "Reduce mișcarea"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Animation speed (%)"
 msgstr "Viteza animațiilor (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Pulse on critical values"
 msgstr "Pulsează la valori critice"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "Turns every visual alert off when disabled."
 msgstr "Când este dezactivat, oprește toate alertele vizuale."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Hysteresis"
 msgstr "Histerezis"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "How far a value must drop before an alert ends."
 msgstr "Cât trebuie să scadă o valoare înainte ca o alertă să se încheie."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1106
 msgid "Cooldown (s)"
 msgstr "Timp de calmare (s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1107
 msgid "Minimum time before an alert can calm down."
 msgstr "Timpul minim înainte ca o alertă să se poată potoli."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1115
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Presetarea a fost aplicată. Ctrl+Z restabilește aranjamentul anterior."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1144
 msgid "My presets"
 msgstr "Presetările mele"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
 msgid "Saved on this computer for your user."
 msgstr "Salvate pe acest calculator pentru utilizatorul dumneavoastră."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1151
 msgid "Delete preset"
 msgstr "Șterge presetarea"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
 msgid "Save current layout as preset…"
 msgstr "Salvează aranjamentul curent ca presetare…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Import and export"
 msgstr "Import și export"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Partajați aranjamente ca fișier .json sau ca pachet care poate include imaginea de fundal."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Export layout (.json)…"
 msgstr "Exportă aranjamentul (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
 msgid "Export package (.kojiro.zip)…"
 msgstr "Exportă pachetul (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1163
 msgid "Import layout or package…"
 msgstr "Importă aranjament sau pachet…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1168
 msgid "Restore the default layout"
 msgstr "Restabilește aranjamentul implicit"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Aranjament"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1173
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Pozițiile sunt stocate relativ la o rezoluție de referință; ancorele mențin widgeturile la locul lor pe alte ecrane."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Reference resolution"
 msgstr "Rezoluție de referință"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
 msgid "Use the preview resolution as reference"
 msgstr "Folosește rezoluția de previzualizare ca referință"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
 msgid "Keeps every widget where it is now"
 msgstr "Păstrează fiecare widget acolo unde este acum"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Portrait layout"
 msgstr "Aranjament vertical"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1183
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Automat (rearanjat din aranjamentul orizontal)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Customised"
 msgstr "Personalizat"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
 msgid "Back to automatic"
 msgstr "Revino la automat"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Grid size (px)"
 msgstr "Dimensiunea grilei (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Safe margin (px)"
 msgstr "Margine de siguranță (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Show overlaps of the selection"
 msgstr "Afișează suprapunerile selecției"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Keyboard"
 msgstr "Tastatură"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Mută 1 px (Shift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Undo / redo"
 msgstr "Anulează / refă"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Select all"
 msgstr "Selectează tot"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Group (Shift: ungroup)"
 msgstr "Grupează (Shift: degrupează)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Copy / paste style"
 msgstr "Copiază / lipește stilul"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1201
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Ordinea straturilor (Ctrl: în față/în spate de tot)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Apply to the display"
 msgstr "Aplică pe afișaj"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Clear selection"
 msgstr "Golește selecția"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Save preset"
 msgstr "Salvează presetarea"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Name of the preset:"
 msgstr "Numele presetării:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "My layout"
 msgstr "Aranjamentul meu"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1212
 msgid "Save"
 msgstr "Salvează"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Preset saved."
 msgstr "Presetarea a fost salvată."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1223
 msgid "Could not save the preset"
 msgstr "Presetarea nu a putut fi salvată"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1232
 msgid "Could not load the preset"
 msgstr "Presetarea nu a putut fi încărcată"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1241
 msgid "Could not delete the preset"
 msgstr "Presetarea nu a putut fi ștearsă"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1249
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
@@ -6374,122 +6374,122 @@ msgstr[0] "Încărcat; {n} valoare nevalidă a fost înlocuită cu valoarea impl
 msgstr[1] "Încărcat; {n} valori nevalide au fost înlocuite cu valorile implicite."
 msgstr[2] "Încărcat; {n} de valori nevalide au fost înlocuite cu valorile implicite."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1253
 msgid "Layout loaded."
 msgstr "Aranjamentul a fost încărcat."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1256
 msgid "Export Kojiro layout"
 msgstr "Exportă aranjamentul Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1268
 msgid "Layout exported."
 msgstr "Aranjamentul a fost exportat."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Package exported."
 msgstr "Pachetul a fost exportat."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
 msgid "Could not export"
 msgstr "Exportul nu a reușit"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1292
 msgid "Include your wallpaper?"
 msgstr "Includeți imaginea de fundal?"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Aranjamentul folosește o imagine pe care ați importat-o. Includeți-o doar dacă aveți dreptul să o partajați; altfel, pachetul folosește o imagine de fundal inclusă."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
 msgid "Do not include"
 msgstr "Nu include"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
 msgid "Include the image"
 msgstr "Include imaginea"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1301
 msgid "Import Kojiro layout"
 msgstr "Importă un aranjament Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1302
 msgid "Kojiro layouts"
 msgstr "Aranjamente Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1339
 msgid "Could not import"
 msgstr "Importul nu a reușit"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1352
 msgid "Sensors on this computer"
 msgstr "Senzorii acestui calculator"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Ce pot afișa widgeturile. Senzorii opționali sunt citiți doar cât timp îi folosește un widget vizibil."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1359
 msgid "limit"
 msgstr "limită"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
 msgid "no hardware limit reported"
 msgstr "nicio limită raportată de hardware"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "codare/decodare video: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "not reported"
 msgstr "neraportat"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "Fans"
 msgstr "Ventilatoare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "none reported"
 msgstr "niciunul raportat"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Disc {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "no temperature sensor"
 msgstr "fără senzor de temperatură"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
 msgid "Rendering"
 msgstr "Randare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
 msgid "Last preview frame"
 msgstr "Ultimul cadru de previzualizare"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
 msgid "Cached widget layers"
 msgstr "Straturi de widgeturi în cache"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 msgid "Optional collectors used"
 msgstr "Colectoare opționale folosite"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "niciunul"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1387
 msgid "Settings size"
 msgstr "Dimensiunea setărilor"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1388
 msgid "Refresh"
 msgstr "Reîmprospătează"
 
@@ -7428,70 +7428,70 @@ msgstr[0] "{count} afișaj: {state}"
 msgstr[1] "{count} afișaje: {state}"
 msgstr[2] "{count} de afișaje: {state}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:490
+#: usr/share/big-screen-monitor-display/screentray/app.py:491
 msgid "The monitor service is not running, so nothing reaches the displays. Start it below (administrator authorization)."
 msgstr "Serviciul de monitorizare nu rulează, așa că nimic nu ajunge la afișaje. Porniți-l mai jos (necesită autorizare de administrator)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:493
+#: usr/share/big-screen-monitor-display/screentray/app.py:494
 #, python-brace-format
 msgid "“{name}” is not connected now. Its theme can still be chosen (used when it connects again); brightness and orientation wait for it. Choose another display above."
 msgstr "„{name}” nu este conectat acum. Tema sa poate fi totuși aleasă (va fi folosită când se reconectează); luminozitatea și orientarea așteaptă reconectarea. Alegeți alt afișaj mai sus."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:497
+#: usr/share/big-screen-monitor-display/screentray/app.py:498
 msgid "Connect a USB display. It appears here a moment after it is plugged in; your choices below are kept and used when it connects."
 msgstr "Conectați un afișaj USB. Apare aici la scurt timp după ce este conectat; opțiunile de mai jos se păstrează și se folosesc când se conectează."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:507
+#: usr/share/big-screen-monitor-display/screentray/app.py:508
 msgid "More options for this theme are in the configuration window."
 msgstr "Mai multe opțiuni pentru această temă se găsesc în fereastra de configurare."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn On"
 msgstr "Pornește"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn Off"
 msgstr "Oprește"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:518
 msgid "Switch the backlight off and on again; the theme keeps running."
 msgstr "Oprește și repornește iluminarea de fundal; tema continuă să ruleze."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:519
+#: usr/share/big-screen-monitor-display/screentray/app.py:520
 msgid "This display has no adjustable backlight (its firmware does not offer it)."
 msgstr "Acest afișaj nu are iluminare de fundal reglabilă (firmware-ul său nu o oferă)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:543
+#: usr/share/big-screen-monitor-display/screentray/app.py:544
 #, python-brace-format
 msgid "Changes go to: {name}"
 msgstr "Modificările merg la: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:545
+#: usr/share/big-screen-monitor-display/screentray/app.py:546
 #, python-brace-format
 msgid "Theme: {name}"
 msgstr "Temă: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:547
+#: usr/share/big-screen-monitor-display/screentray/app.py:548
 #, python-brace-format
 msgid "Brightness: {value}%"
 msgstr "Luminozitate: {value}%"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:563
+#: usr/share/big-screen-monitor-display/screentray/app.py:564
 msgid "Service running"
 msgstr "Serviciul rulează"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:612
+#: usr/share/big-screen-monitor-display/screentray/app.py:613
 msgid "Theme Gallery…"
 msgstr "Galeria de teme…"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:638
+#: usr/share/big-screen-monitor-display/screentray/app.py:639
 #, python-brace-format
 msgid "Display: {name}"
 msgstr "Afișaj: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:644
+#: usr/share/big-screen-monitor-display/screentray/app.py:645
 #, python-brace-format
 msgid "{connected} of {count} connected"
 msgid_plural "{connected} of {count} connected"
@@ -7499,11 +7499,11 @@ msgstr[0] "{connected} din {count} conectat"
 msgstr[1] "{connected} din {count} conectate"
 msgstr[2] "{connected} din {count} conectate"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:703
+#: usr/share/big-screen-monitor-display/screentray/app.py:704
 msgid "Apply to all displays?"
 msgstr "Aplicați pe toate afișajele?"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:704
+#: usr/share/big-screen-monitor-display/screentray/app.py:705
 #, python-brace-format
 msgid "These displays have their own setting, which will be replaced: {names}."
 msgstr "Aceste afișaje au propria setare, care va fi înlocuită: {names}."

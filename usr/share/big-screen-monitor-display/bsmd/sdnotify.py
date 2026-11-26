@@ -42,7 +42,7 @@ class Notifier:
             return False
 
     def ready(self, status=None):
-        return self.notify("READY=1", *( [f"STATUS={status}"] if status else []))
+        return self.notify("READY=1", *([f"STATUS={status}"] if status else []))
 
     def status(self, text):
         return self.notify(f"STATUS={text}")
@@ -52,3 +52,8 @@ class Notifier:
 
     def stopping(self):
         return self.notify("STOPPING=1")
+
+    def close(self):
+        if self._sock is not None:
+            self._sock.close()
+            self._sock = None

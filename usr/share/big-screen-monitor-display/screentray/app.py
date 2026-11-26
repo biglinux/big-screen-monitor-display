@@ -401,7 +401,8 @@ class ScreenTray(TrayApp):
             label = N_("Service not running")
         text = _(label)
         if count > 1:
-            text = ngettext("{count} display: {state}", "{count} displays: {state}", count).format(count=count, state=text)
+            text = ngettext("{count} display: {state}", "{count} displays: {state}", count).format(
+                count=count, state=text)
         return PILL[colour], text
 
     def supports(self, key, entry):
@@ -641,8 +642,8 @@ class ScreenTray(TrayApp):
         group.setExclusive(True)
         every = QAction(_("All displays"), sub, checkable=True)
         every.setChecked(not self.target_id)
-        every.setToolTip(ngettext("{connected} of {count} connected", "{connected} of {count} connected", connected).format(
-            connected=connected, count=len(displays)))
+        tip = ngettext("{connected} of {count} connected", "{connected} of {count} connected", connected)
+        every.setToolTip(tip.format(connected=connected, count=len(displays)))
         every.triggered.connect(lambda _c=False: self.select_target(ALL))
         group.addAction(every)
         sub.addAction(every)

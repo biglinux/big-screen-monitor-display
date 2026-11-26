@@ -498,7 +498,7 @@ msgstr "Volitamisest loobuti või see keelati."
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
 #: usr/share/big-screen-monitor-display/config_gui.py:1084
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Tundmatu viga"
@@ -639,35 +639,35 @@ msgstr "dets"
 msgid "Disk"
 msgstr "Ketas"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:277
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:496
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:440
 #: usr/share/big-screen-monitor-display/gui/android_page.py:37
 #: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Võrk"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:448
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:449
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
 msgid "Processes"
 msgstr "Protsessid"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:471
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:472
 msgid "Collecting..."
 msgstr "Kogumine..."
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:537
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:307
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:538
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:308
 #, python-brace-format
 msgid "up {time}"
 msgstr "töös {time}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:539
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:540
 #, python-brace-format
 msgid "load {a:.2f} {b:.2f} {c:.2f}"
 msgstr "koormus {a:.2f} {b:.2f} {c:.2f}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:541
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:543
 #, python-brace-format
 msgid "{count} process"
 msgid_plural "{count} processes"
@@ -1124,57 +1124,57 @@ msgstr "Tagaplaadi LED-id ja peen heleduse reguleerimine sõltuvad paneeli teata
 msgid "Sleeps until opened and then reappears as a generic USB gadget; the size may need to be chosen."
 msgstr "Magab kuni avamiseni ja ilmub siis uuesti üldise USB-vidinana; suurus võib vajada valimist."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:142
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:143
 msgid "The protocol has no handshake: identification relies on the USB IDs."
 msgstr "Protokollil puudub kätlus: tuvastamine põhineb USB ID-del."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:147
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:148
 msgid "Also reports room temperature and humidity."
 msgstr "Teatab ka ruumi temperatuuri ja niiskust."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:152
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:153
 msgid "Tiny panel: themes switch to a compact layout."
 msgstr "Väga väike paneel: teemad lülituvad kompaktsele paigutusele."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:159
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:160
 msgid "Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."
 msgstr "Ainult terved kaadrid (PNG, JPEG, kui suurem kui 1 MB); video- ja salvestusfunktsioonid puuduvad."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:166
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
 msgid "The panel has no framebuffer: Big Screen Monitor flashes its own dashboard into it (about a minute, only when the look changes) and then sends the live values."
 msgstr "Paneelil pole kaadripuhvrit: Big Screen Monitor kirjutab sellesse oma armatuurlaua (umbes minut, ainult välimuse muutumisel) ja saadab seejärel reaalajas väärtusi."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:170
 msgid "Themes are not drawn on this panel; the dashboard follows the Standard theme's colour scheme, temperature unit, name and brightness of this display."
 msgstr "Sellel paneelil teemasid ei joonistata; armatuurlaud järgib selle kuvari puhul standardse teema värviskeemi, temperatuuriühikut, nime ja heledust."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:171
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:173
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:183
 msgid "reported by the device (800x480 on the FS-707DC)"
 msgstr "seadme teatatud (FS-707DC puhul 800x480)"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:177
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:179
 msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
 msgstr "Käitab bsmd-ce klienti navigaatori algsel püsivaral (midagi ei kirjutata üle)."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:178
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:188
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:191
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Ühepunktiline takistuslik puuteekraan: puuduta, hoia ja libista otse paneelil."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:186
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:189
 msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
 msgstr "Töötab BigFoston OS-is (Linux navigaatoris): ava seadmes rakendus Big Screen."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:187
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:190
 msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
 msgstr "Ühendub USB-võrgu kaudu aadressile 192.168.7.2, TCP-port 7707."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:199
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:202
 msgid "numeric CPU display"
 msgstr "numbriline CPU kuvar"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:200
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:203
 msgid "2.8\" LCD, information mode"
 msgstr "2,8\" LCD, teaberežiim"
 
@@ -1230,129 +1230,129 @@ msgstr "ÜLES"
 msgid "DISK %"
 msgstr "KETAS %"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:341
 #, python-brace-format
 msgid "{count} core"
 msgid_plural "{count} cores"
 msgstr[0] "{count} tuum"
 msgstr[1] "{count} tuuma"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:342
 #, python-brace-format
 msgid "max {value:.0f}%"
 msgstr "maks {value:.0f}%"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:354
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:356
 #, python-brace-format
 msgid "{count} proc"
 msgid_plural "{count} procs"
 msgstr[0] "{count} prots"
 msgstr[1] "{count} prots"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:396
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:398
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:316
 msgid "Sensors"
 msgstr "Andurid"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:399
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:401
 msgid "no sensors"
 msgstr "andureid pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:416
 #: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "Ketta S/V"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:439
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:441
 msgid "no connection"
 msgstr "ühendus puudub"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:504
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:506
 msgid "Disks"
 msgstr "Kettad"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:541
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:543
 msgid "no battery"
 msgstr "akut pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:555
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:557
 msgid "profile"
 msgstr "profiil"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:567
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:569
 msgid "no fan or power sensors"
 msgstr "ventilaatori- ega võimsusandureid pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:582
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:584
 msgid "unavailable"
 msgstr "pole saadaval"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:586
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:588
 #, python-brace-format
 msgid "{count} container"
 msgid_plural "{count} containers"
 msgstr[0] "{count} konteiner"
 msgstr[1] "{count} konteinerit"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:596
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:598
 msgid "Devices"
 msgstr "Seadmed"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:599
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:601
 msgid "no removable media"
 msgstr "eemaldatavaid andmekandjaid pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:610
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:612
 msgid "Media"
 msgstr "Meedia"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:613
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:615
 msgid "no player"
 msgstr "mängijat pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:231
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:232
 msgid "no swap"
 msgstr "saalemälu pole"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Monday"
 msgstr "Esmaspäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Tuesday"
 msgstr "Teisipäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Wednesday"
 msgstr "Kolmapäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Thursday"
 msgstr "Neljapäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Friday"
 msgstr "Reede"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Saturday"
 msgstr "Laupäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:324
 msgid "Sunday"
 msgstr "Pühapäev"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "charging"
 msgstr "laeb"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "on battery"
 msgstr "akutoitel"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
@@ -1529,11 +1529,11 @@ msgstr "Värviüleminekud"
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:891
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:602
+#: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
 msgstr "Asend"
 
@@ -1838,7 +1838,7 @@ msgstr "Kest"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:888
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
 #: usr/share/big-screen-monitor-display/config_gui.py:635
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
@@ -1862,8 +1862,8 @@ msgid "No media player"
 msgstr "Meediamängija puudub"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:884
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:999
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:885
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
@@ -1887,50 +1887,50 @@ msgid "Closing…"
 msgstr "Sulgemine…"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:575
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Tap again to exit"
 msgstr "Väljumiseks puuduta uuesti"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:886
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:887
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:71
 msgid "Themes"
 msgstr "Teemad"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:890
 msgid "Choose a story"
 msgstr "Vali lugu"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 #: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Touch test"
 msgstr "Puutetest"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 msgid "Draw with your finger"
 msgstr "Joonista sõrmega"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Calibrate"
 msgstr "Kalibreeri"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Device calibration"
 msgstr "Seadme kalibreerimine"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Exit to the device menu"
 msgstr "Välju seadme menüüsse"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:899
 msgid "Back to the GPS main menu"
 msgstr "Tagasi GPS-i peamenüüsse"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:964
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:967
 msgid "This theme has no options here."
 msgstr "Sellel teemal pole siin valikuid."
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:1048
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1052
 msgid "Touch test - hold to leave"
 msgstr "Puutetest – lahkumiseks hoia all"
 
@@ -2074,14 +2074,14 @@ msgstr "Big Screen Monitor Display teave"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
-#: usr/share/big-screen-monitor-display/screentray/app.py:622
+#: usr/share/big-screen-monitor-display/screentray/app.py:623
 msgid "Quit"
 msgstr "Välju"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:336
 #: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
-#: usr/share/big-screen-monitor-display/screentray/app.py:541
+#: usr/share/big-screen-monitor-display/screentray/app.py:542
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
@@ -2137,10 +2137,10 @@ msgstr "Püstine, tagurpidi"
 #: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
-#: usr/share/big-screen-monitor-display/screentray/app.py:590
+#: usr/share/big-screen-monitor-display/screentray/app.py:591
 msgid "Brightness"
 msgstr "Heledus"
 
@@ -2831,7 +2831,7 @@ msgstr "Kõik teema-, kuvari- ja jõudlusvalikud saavad tagasi oma algse väärt
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1211
 msgid "Cancel"
 msgstr "Loobu"
 
@@ -2891,7 +2891,7 @@ msgstr "Sulge"
 #: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 #: usr/share/big-screen-monitor-display/screentray/states.py:48
 #: usr/share/big-screen-monitor-display/screentray/states.py:126
 msgid "Service stopped"
@@ -2939,8 +2939,8 @@ msgstr "Põhjuse leidmiseks tee diagnoos või käivita teenus."
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:526
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:527
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Start Service"
 msgstr "Käivita teenus"
 
@@ -3162,7 +3162,7 @@ msgstr "Temperatuurihäire"
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/media_player_page.py:264
 #: usr/share/big-screen-monitor-display/media_player_page.py:298
-#: usr/share/big-screen-monitor-display/screentray/app.py:513
+#: usr/share/big-screen-monitor-display/screentray/app.py:514
 msgid "Off"
 msgstr "Väljas"
 
@@ -3198,7 +3198,7 @@ msgstr "Muu…"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:270
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:623
 #: usr/share/big-screen-monitor-display/screentray/app.py:245
-#: usr/share/big-screen-monitor-display/screentray/app.py:613
+#: usr/share/big-screen-monitor-display/screentray/app.py:614
 msgid "Configuration…"
 msgstr "Seadistamine…"
 
@@ -3222,21 +3222,21 @@ msgstr "Sulge ja ava uuesti ainult see jahuti"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:559
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/screentray/app.py:247
-#: usr/share/big-screen-monitor-display/screentray/app.py:527
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:528
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Restart Service"
 msgstr "Taaskäivita teenus"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:276
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/app.py:249
-#: usr/share/big-screen-monitor-display/screentray/app.py:617
+#: usr/share/big-screen-monitor-display/screentray/app.py:618
 msgid "Start with the session"
 msgstr "Käivita koos seansiga"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:375
 #: usr/share/big-screen-monitor-display/screentray/app.py:401
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 msgid "Service not running"
 msgstr "Teenus ei tööta"
 
@@ -3357,7 +3357,7 @@ msgid "Reconnect the Cooler"
 msgstr "Ühenda jahuti uuesti"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:691
-#: usr/share/big-screen-monitor-display/screentray/app.py:764
+#: usr/share/big-screen-monitor-display/screentray/app.py:765
 msgid "Could not start the service"
 msgstr "Teenuse käivitamine nurjus"
 
@@ -3589,7 +3589,7 @@ msgstr "Sama mis vaikimisi ({value})"
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
-#: usr/share/big-screen-monitor-display/screentray/app.py:569
+#: usr/share/big-screen-monitor-display/screentray/app.py:570
 msgid "Theme"
 msgstr "Teema"
 
@@ -4429,7 +4429,7 @@ msgstr "Vaikeväärtus kõigile kuvaritele; kuvar võib kasutada oma väärtust.
 
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:173
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:242
-#: usr/share/big-screen-monitor-display/screentray/app.py:627
+#: usr/share/big-screen-monitor-display/screentray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/states.py:128
 msgid "No display connected"
 msgstr "Ühtegi kuvarit pole ühendatud"
@@ -4680,7 +4680,7 @@ msgstr "Praegused väärtused"
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
 #: usr/share/big-screen-monitor-display/kojiro_page.py:742
 #: usr/share/big-screen-monitor-display/kojiro_page.py:745
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Alerts"
 msgstr "Hoiatused"
 
@@ -4827,7 +4827,7 @@ msgstr "Saadetakse nullina, sest jahutil pole tühja väärtust: {fields}"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -5080,14 +5080,14 @@ msgstr "Kojiro redaktor: vidina valimiseks klõpsa sellel, liigutamiseks lohista
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
 #: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Duplicate"
 msgstr "Klooni"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
 #: usr/share/big-screen-monitor-display/kojiro_page.py:664
 #: usr/share/big-screen-monitor-display/kojiro_page.py:666
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Delete"
 msgstr "Kustuta"
 
@@ -5099,7 +5099,7 @@ msgstr "Too ette"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:851
+#: usr/share/big-screen-monitor-display/kojiro_page.py:852
 msgid "Send to back"
 msgstr "Saada taha"
 
@@ -5236,7 +5236,7 @@ msgid "Bars"
 msgstr "Ribad"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Grid"
 msgstr "Ruudustik"
 
@@ -5254,7 +5254,7 @@ msgid "Light line"
 msgstr "Valgusjoon"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Dots"
 msgstr "Punktid"
 
@@ -5276,7 +5276,7 @@ msgstr "Keskel vasakul"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Centre"
 msgstr "Keskel"
 
@@ -5526,12 +5526,12 @@ msgid "Distribute vertically"
 msgstr "Jaota püstsalt"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:849
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Bring forward"
 msgstr "Too ettepoole"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:850
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send backward"
 msgstr "Vii tahapoole"
 
@@ -5601,8 +5601,8 @@ msgstr "Vidinate piirarv on täis."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:408
 #: usr/share/big-screen-monitor-display/screentray/app.py:364
-#: usr/share/big-screen-monitor-display/screentray/app.py:455
-#: usr/share/big-screen-monitor-display/screentray/app.py:642
+#: usr/share/big-screen-monitor-display/screentray/app.py:456
+#: usr/share/big-screen-monitor-display/screentray/app.py:643
 msgid "All displays"
 msgstr "Kõik kuvarid"
 
@@ -5709,7 +5709,7 @@ msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Nurk või serv, mille külge vidin teiste ekraanisuuruste korral kinnituma jääb."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:685
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Rotation"
 msgstr "Pööre"
 
@@ -5770,12 +5770,12 @@ msgid "Alignment"
 msgstr "Joondus"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Left"
 msgstr "Vasakul"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Right"
 msgstr "Paremal"
 
@@ -5898,585 +5898,585 @@ msgstr "Automaatne (CPU kiip)"
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Loendi ülemine joonistatakse kõige peale. Valimiseks klõpsa."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:864
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Wallpaper"
 msgstr "Taustapilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:865
+#: usr/share/big-screen-monitor-display/kojiro_page.py:866
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Sisseehitatud kujundus, sinu oma pildid, värv või värviüleminek."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:873
 msgid "Imported"
 msgstr "Imporditud"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:877
 msgid "Import image…"
 msgstr "Impordi pilt…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:880
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Colour or gradient"
 msgstr "Värv või värviüleminek"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1148
 msgid "Use"
 msgstr "Kasuta"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "The image above"
 msgstr "Ülalolev pilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Solid colour"
 msgstr "Ühtlane värv"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:883
 msgid "Gradient"
 msgstr "Värviüleminek"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Colour"
 msgstr "Värv"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Second colour"
 msgstr "Teine värv"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Gradient angle"
 msgstr "Värviülemineku nurk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:888
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit and position"
 msgstr "Sobitamine ja asukoht"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fit"
 msgstr "Sobitamine"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fill the screen (crop)"
 msgstr "Täida ekraan (kärbi)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Fit whole image"
 msgstr "Mahuta kogu pilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Stretch"
 msgstr "Venita"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Tile"
 msgstr "Paanidena"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Original size"
 msgstr "Algne suurus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:893
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Zoom (%)"
 msgstr "Suurendus (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Horizontal offset"
 msgstr "Rõhtnihe"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:897
 msgid "Vertical offset"
 msgstr "Püstnihe"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Mirror"
 msgstr "Peegelda"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Flip vertically"
 msgstr "Pööra püstsuunas ümber"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Adjustments"
 msgstr "Kohandused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Contrast"
 msgstr "Kontrastsus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Saturation"
 msgstr "Küllastus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Gamma"
 msgstr "Gamma"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Blur"
 msgstr "Hägusus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Darken"
 msgstr "Tumendamine"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Vignette"
 msgstr "Vinjett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Tint colour"
 msgstr "Toonimisvärv"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Tint strength"
 msgstr "Toonimise tugevus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:908
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Text protection gradient"
 msgstr "Teksti kaitsev värviüleminek"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Gradient side"
 msgstr "Värviülemineku pool"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "All"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Üleval"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:911
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Top and bottom"
 msgstr "Üleval ja all"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:913
+#: usr/share/big-screen-monitor-display/kojiro_page.py:915
 msgid "Reset adjustments"
 msgstr "Lähtesta kohandused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:941
+#: usr/share/big-screen-monitor-display/kojiro_page.py:943
 msgid "Remove this wallpaper"
 msgstr "Eemalda see taustapilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:980
+#: usr/share/big-screen-monitor-display/kojiro_page.py:982
 msgid "Choose a wallpaper"
 msgstr "Vali taustapilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:981
+#: usr/share/big-screen-monitor-display/kojiro_page.py:983
 msgid "Images"
 msgstr "Pildid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:994
+#: usr/share/big-screen-monitor-display/kojiro_page.py:996
 msgid "Importing the image…"
 msgstr "Pildi importimine…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Pildi importimine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1018
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Taustapilt on imporditud. Sinu algset faili ei muudetud."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1034
 msgid "The wallpaper could not be removed"
 msgstr "Taustapildi eemaldamine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1051
 msgid "Presets"
 msgstr "Valmiskujundused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1052
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Asendab vidinad valmis kompositsiooniga (Ctrl+Z võtab selle tagasi). Imporditud taustapilt säilib."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1075
 msgid "Colour palette"
 msgstr "Värvipalett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1076
 msgid "Recolours every widget with a palette."
 msgstr "Värvib kõik vidinad paleti järgi ümber."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Text and background effect"
 msgstr "Tekst ja taustaefekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Font for all widgets"
 msgstr "Kõigi vidinate font"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Background effect"
 msgstr "Taustaefekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Scanlines"
 msgstr "Skaneerimisjooned"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect strength"
 msgstr "Efekti tugevus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 msgid "Effect colour"
 msgstr "Efekti värv"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Readability panels"
 msgstr "Loetavuspaneelid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Automatic (bright or busy areas)"
 msgstr "Automaatne (heledad või kirjud alad)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Alati"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Mitte kunagi"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Lisab raskesti loetavate vidinate taha tumeda poolläbipaistva paneeli."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Animations and alerts"
 msgstr "Animatsioonid ja hoiatused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Animatsioonid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Fan spin, smooth values and pulses."
 msgstr "Ventilaatori pöörlemine, sujuvad väärtused ja pulseerimine."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Reduce motion"
 msgstr "Vähenda liikumist"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Animation speed (%)"
 msgstr "Animatsioonide kiirus (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Pulse on critical values"
 msgstr "Pulseeri kriitiliste väärtuste korral"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "Turns every visual alert off when disabled."
 msgstr "Väljalülitatuna lülitab välja kõik visuaalsed hoiatused."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Hysteresis"
 msgstr "Hüsterees"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "How far a value must drop before an alert ends."
 msgstr "Kui palju peab väärtus langema, enne kui hoiatus lõpeb."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1106
 msgid "Cooldown (s)"
 msgstr "Rahunemisaeg (s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1107
 msgid "Minimum time before an alert can calm down."
 msgstr "Minimaalne aeg, enne kui hoiatus saab vaibuda."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1115
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Valmiskujundus on rakendatud. Ctrl+Z taastab eelmise paigutuse."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1144
 msgid "My presets"
 msgstr "Minu valmiskujundused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
 msgid "Saved on this computer for your user."
 msgstr "Salvestatud selles arvutis sinu kasutaja jaoks."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1151
 msgid "Delete preset"
 msgstr "Kustuta valmiskujundus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
 msgid "Save current layout as preset…"
 msgstr "Salvesta praegune paigutus valmiskujundusena…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Import and export"
 msgstr "Import ja eksport"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Jaga paigutusi .json-failina või paketina, mis võib sisaldada ka taustapilti."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Export layout (.json)…"
 msgstr "Ekspordi paigutus (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
 msgid "Export package (.kojiro.zip)…"
 msgstr "Ekspordi pakett (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1163
 msgid "Import layout or package…"
 msgstr "Impordi paigutus või pakett…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1168
 msgid "Restore the default layout"
 msgstr "Taasta vaikepaigutus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Paigutus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1173
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Asukohad salvestatakse viite-eraldusvõime suhtes; ankrud hoiavad vidinaid teistel ekraanidel paigal."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Reference resolution"
 msgstr "Viite-eraldusvõime"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
 msgid "Use the preview resolution as reference"
 msgstr "Kasuta viitena eelvaate eraldusvõimet"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
 msgid "Keeps every widget where it is now"
 msgstr "Hoiab iga vidina seal, kus see praegu on"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Portrait layout"
 msgstr "Püstpaigutus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1183
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Automaatne (rõhtpaigutusest ümber paigutatud)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Customised"
 msgstr "Kohandatud"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
 msgid "Back to automatic"
 msgstr "Tagasi automaatsele"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Grid size (px)"
 msgstr "Ruudustiku suurus (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Safe margin (px)"
 msgstr "Turvaveeris (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Show overlaps of the selection"
 msgstr "Näita valiku ülekatteid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Keyboard"
 msgstr "Klaviatuur"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Liiguta 1 px (Shift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Undo / redo"
 msgstr "Võta tagasi / tee uuesti"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Select all"
 msgstr "Vali kõik"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Group (Shift: ungroup)"
 msgstr "Rühmita (Shift: tühista rühmitamine)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Copy / paste style"
 msgstr "Kopeeri / aseta stiil"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1201
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Kihtide järjekord (Ctrl: kõige ette/taha)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Apply to the display"
 msgstr "Rakenda kuvarile"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Clear selection"
 msgstr "Tühjenda valik"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Save preset"
 msgstr "Salvesta valmiskujundus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Name of the preset:"
 msgstr "Valmiskujunduse nimi:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "My layout"
 msgstr "Minu paigutus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1212
 msgid "Save"
 msgstr "Salvesta"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Preset saved."
 msgstr "Valmiskujundus on salvestatud."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1223
 msgid "Could not save the preset"
 msgstr "Valmiskujunduse salvestamine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1232
 msgid "Could not load the preset"
 msgstr "Valmiskujunduse laadimine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1241
 msgid "Could not delete the preset"
 msgstr "Valmiskujunduse kustutamine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1249
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
 msgstr[0] "Laaditud; {n} vigane väärtus asendati vaikeväärtusega."
 msgstr[1] "Laaditud; {n} vigast väärtust asendati vaikeväärtustega."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1253
 msgid "Layout loaded."
 msgstr "Paigutus on laaditud."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1256
 msgid "Export Kojiro layout"
 msgstr "Kojiro paigutuse eksportimine"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1268
 msgid "Layout exported."
 msgstr "Paigutus on eksporditud."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Package exported."
 msgstr "Pakett on eksporditud."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
 msgid "Could not export"
 msgstr "Eksportimine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1292
 msgid "Include your wallpaper?"
 msgstr "Kas lisada sinu taustapilt?"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Paigutus kasutab sinu imporditud pilti. Lisa see ainult siis, kui sul on õigus seda jagada; vastasel juhul kasutab pakett sisseehitatud taustapilti."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
 msgid "Do not include"
 msgstr "Ära lisa"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
 msgid "Include the image"
 msgstr "Lisa pilt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1301
 msgid "Import Kojiro layout"
 msgstr "Kojiro paigutuse importimine"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1302
 msgid "Kojiro layouts"
 msgstr "Kojiro paigutused"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1339
 msgid "Could not import"
 msgstr "Importimine nurjus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1352
 msgid "Sensors on this computer"
 msgstr "Selle arvuti andurid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Mida vidinad saavad näidata. Valikulisi andureid loetakse ainult siis, kui mõni nähtav vidin neid kasutab."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1359
 msgid "limit"
 msgstr "piir"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
 msgid "no hardware limit reported"
 msgstr "riistvara ei teata piiri"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "video kodeerimine/dekodeerimine: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "not reported"
 msgstr "pole teatatud"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "Fans"
 msgstr "Ventilaatorid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "none reported"
 msgstr "ühtegi pole teatatud"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Ketas {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "no temperature sensor"
 msgstr "temperatuuriandur puudub"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
 msgid "Rendering"
 msgstr "Renderdamine"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
 msgid "Last preview frame"
 msgstr "Viimane eelvaate kaader"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
 msgid "Cached widget layers"
 msgstr "Puhverdatud vidinakihid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 msgid "Optional collectors used"
 msgstr "Kasutatavad valikulised kogujad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "puudub"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1387
 msgid "Settings size"
 msgstr "Seadistuste suurus"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1388
 msgid "Refresh"
 msgstr "Värskenda"
 
@@ -7412,81 +7412,81 @@ msgid_plural "{count} displays: {state}"
 msgstr[0] "{count} kuvar: {state}"
 msgstr[1] "{count} kuvarit: {state}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:490
+#: usr/share/big-screen-monitor-display/screentray/app.py:491
 msgid "The monitor service is not running, so nothing reaches the displays. Start it below (administrator authorization)."
 msgstr "Jälgimisteenus ei tööta, seega ei jõua kuvariteni midagi. Käivita see allpool (vajab administraatori autentimist)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:493
+#: usr/share/big-screen-monitor-display/screentray/app.py:494
 #, python-brace-format
 msgid "“{name}” is not connected now. Its theme can still be chosen (used when it connects again); brightness and orientation wait for it. Choose another display above."
 msgstr "„{name}“ pole praegu ühendatud. Selle teemat saab siiski valida (kasutatakse, kui see uuesti ühendub); heledus ja asend ootavad seda. Vali ülal mõni teine kuvar."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:497
+#: usr/share/big-screen-monitor-display/screentray/app.py:498
 msgid "Connect a USB display. It appears here a moment after it is plugged in; your choices below are kept and used when it connects."
 msgstr "Ühenda USB-kuvar. See ilmub siia hetk pärast ühendamist; sinu allolevad valikud säilitatakse ja neid kasutatakse, kui see ühendub."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:507
+#: usr/share/big-screen-monitor-display/screentray/app.py:508
 msgid "More options for this theme are in the configuration window."
 msgstr "Selle teema rohkem valikuid on seadistusaknas."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn On"
 msgstr "Lülita sisse"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn Off"
 msgstr "Lülita välja"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:518
 msgid "Switch the backlight off and on again; the theme keeps running."
 msgstr "Lülita taustvalgus välja ja uuesti sisse; teema jätkab tööd."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:519
+#: usr/share/big-screen-monitor-display/screentray/app.py:520
 msgid "This display has no adjustable backlight (its firmware does not offer it)."
 msgstr "Sellel kuvaril pole reguleeritavat taustvalgust (selle püsivara seda ei paku)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:543
+#: usr/share/big-screen-monitor-display/screentray/app.py:544
 #, python-brace-format
 msgid "Changes go to: {name}"
 msgstr "Muudatused lähevad: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:545
+#: usr/share/big-screen-monitor-display/screentray/app.py:546
 #, python-brace-format
 msgid "Theme: {name}"
 msgstr "Teema: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:547
+#: usr/share/big-screen-monitor-display/screentray/app.py:548
 #, python-brace-format
 msgid "Brightness: {value}%"
 msgstr "Heledus: {value}%"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:563
+#: usr/share/big-screen-monitor-display/screentray/app.py:564
 msgid "Service running"
 msgstr "Teenus töötab"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:612
+#: usr/share/big-screen-monitor-display/screentray/app.py:613
 msgid "Theme Gallery…"
 msgstr "Teemagalerii…"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:638
+#: usr/share/big-screen-monitor-display/screentray/app.py:639
 #, python-brace-format
 msgid "Display: {name}"
 msgstr "Kuvar: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:644
+#: usr/share/big-screen-monitor-display/screentray/app.py:645
 #, python-brace-format
 msgid "{connected} of {count} connected"
 msgid_plural "{connected} of {count} connected"
 msgstr[0] "Ühendatud {connected}/{count}"
 msgstr[1] "Ühendatud {connected}/{count}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:703
+#: usr/share/big-screen-monitor-display/screentray/app.py:704
 msgid "Apply to all displays?"
 msgstr "Kas rakendada kõigile kuvaritele?"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:704
+#: usr/share/big-screen-monitor-display/screentray/app.py:705
 #, python-brace-format
 msgid "These displays have their own setting, which will be replaced: {names}."
 msgstr "Neil kuvaritel on oma seadistus, mis asendatakse: {names}."

@@ -498,7 +498,7 @@ msgstr "Auktoriseringen avbröts eller nekades."
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
 #: usr/share/big-screen-monitor-display/config_gui.py:1084
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Okänt fel"
@@ -639,35 +639,35 @@ msgstr "dec"
 msgid "Disk"
 msgstr "Disk"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:277
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:496
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:440
 #: usr/share/big-screen-monitor-display/gui/android_page.py:37
 #: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Nätverk"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:448
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:449
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
 msgid "Processes"
 msgstr "Processer"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:471
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:472
 msgid "Collecting..."
 msgstr "Samlar in..."
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:537
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:307
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:538
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:308
 #, python-brace-format
 msgid "up {time}"
 msgstr "drifttid {time}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:539
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:540
 #, python-brace-format
 msgid "load {a:.2f} {b:.2f} {c:.2f}"
 msgstr "last {a:.2f} {b:.2f} {c:.2f}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:541
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:543
 #, python-brace-format
 msgid "{count} process"
 msgid_plural "{count} processes"
@@ -1124,57 +1124,57 @@ msgstr "Lysdioderna på bakplattan och finjusterad ljusstyrka beror på den unde
 msgid "Sleeps until opened and then reappears as a generic USB gadget; the size may need to be chosen."
 msgstr "Sover tills den öppnas och dyker sedan upp igen som en generisk USB-enhet; storleken kan behöva väljas."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:142
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:143
 msgid "The protocol has no handshake: identification relies on the USB IDs."
 msgstr "Protokollet har ingen handskakning: identifieringen bygger på USB-ID:na."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:147
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:148
 msgid "Also reports room temperature and humidity."
 msgstr "Rapporterar även rumstemperatur och luftfuktighet."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:152
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:153
 msgid "Tiny panel: themes switch to a compact layout."
 msgstr "Mycket liten panel: teman växlar till en kompakt layout."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:159
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:160
 msgid "Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."
 msgstr "Endast hela bildrutor (PNG, JPEG när större än 1 MB); inga video- eller lagringsfunktioner."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:166
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
 msgid "The panel has no framebuffer: Big Screen Monitor flashes its own dashboard into it (about a minute, only when the look changes) and then sends the live values."
 msgstr "Panelen har ingen bildbuffert: Big Screen Monitor flashar in sin egen instrumentpanel i den (cirka en minut, bara när utseendet ändras) och skickar sedan livevärdena."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:170
 msgid "Themes are not drawn on this panel; the dashboard follows the Standard theme's colour scheme, temperature unit, name and brightness of this display."
 msgstr "Teman ritas inte på den här panelen; instrumentpanelen följer standardtemats färgschema, temperaturenhet, namn och den här skärmens ljusstyrka."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:171
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:173
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:183
 msgid "reported by the device (800x480 on the FS-707DC)"
 msgstr "rapporteras av enheten (800x480 på FS-707DC)"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:177
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:179
 msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
 msgstr "Kör bsmd-ce-klienten på navigatorns originalfirmware (inget flashas)."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:178
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:188
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:191
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Resistiv pekskärm med en beröringspunkt: tryck, håll och svep direkt på panelen."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:186
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:189
 msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
 msgstr "Körs på BigFoston OS (Linux på navigatorn): öppna appen Big Screen på enheten."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:187
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:190
 msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
 msgstr "Ansluter via USB-nätverket till 192.168.7.2, TCP-port 7707."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:199
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:202
 msgid "numeric CPU display"
 msgstr "numerisk CPU-display"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:200
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:203
 msgid "2.8\" LCD, information mode"
 msgstr "2,8\" LCD, informationsläge"
 
@@ -1230,129 +1230,129 @@ msgstr "UPP"
 msgid "DISK %"
 msgstr "DISK %"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:341
 #, python-brace-format
 msgid "{count} core"
 msgid_plural "{count} cores"
 msgstr[0] "{count} kärna"
 msgstr[1] "{count} kärnor"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:342
 #, python-brace-format
 msgid "max {value:.0f}%"
 msgstr "max {value:.0f}%"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:354
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:356
 #, python-brace-format
 msgid "{count} proc"
 msgid_plural "{count} procs"
 msgstr[0] "{count} proc."
 msgstr[1] "{count} proc."
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:396
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:398
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:316
 msgid "Sensors"
 msgstr "Sensorer"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:399
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:401
 msgid "no sensors"
 msgstr "inga sensorer"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:416
 #: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "Disk-I/O"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:439
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:441
 msgid "no connection"
 msgstr "ingen anslutning"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:504
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:506
 msgid "Disks"
 msgstr "Diskar"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:541
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:543
 msgid "no battery"
 msgstr "inget batteri"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:555
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:557
 msgid "profile"
 msgstr "profil"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:567
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:569
 msgid "no fan or power sensors"
 msgstr "inga fläkt- eller effektsensorer"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:582
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:584
 msgid "unavailable"
 msgstr "inte tillgänglig"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:586
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:588
 #, python-brace-format
 msgid "{count} container"
 msgid_plural "{count} containers"
 msgstr[0] "{count} container"
 msgstr[1] "{count} containrar"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:596
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:598
 msgid "Devices"
 msgstr "Enheter"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:599
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:601
 msgid "no removable media"
 msgstr "inga flyttbara media"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:610
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:612
 msgid "Media"
 msgstr "Media"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:613
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:615
 msgid "no player"
 msgstr "ingen spelare"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:231
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:232
 msgid "no swap"
 msgstr "inget växlingsminne"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Monday"
 msgstr "Måndag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Friday"
 msgstr "Fredag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Saturday"
 msgstr "Lördag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:324
 msgid "Sunday"
 msgstr "Söndag"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "charging"
 msgstr "laddar"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "on battery"
 msgstr "på batteri"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
@@ -1529,11 +1529,11 @@ msgstr "Övertoningar"
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:891
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:602
+#: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
 msgstr "Orientering"
 
@@ -1838,7 +1838,7 @@ msgstr "Skal"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:888
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
 #: usr/share/big-screen-monitor-display/config_gui.py:635
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
@@ -1862,8 +1862,8 @@ msgid "No media player"
 msgstr "Ingen mediaspelare"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:884
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:999
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:885
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
@@ -1887,50 +1887,50 @@ msgid "Closing…"
 msgstr "Avslutar…"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:575
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Tap again to exit"
 msgstr "Tryck igen för att avsluta"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:886
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:887
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:71
 msgid "Themes"
 msgstr "Teman"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:890
 msgid "Choose a story"
 msgstr "Välj en berättelse"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 #: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Touch test"
 msgstr "Pektest"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 msgid "Draw with your finger"
 msgstr "Rita med fingret"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Calibrate"
 msgstr "Kalibrera"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Device calibration"
 msgstr "Kalibrering av enheten"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Exit to the device menu"
 msgstr "Avsluta till enhetens meny"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:899
 msgid "Back to the GPS main menu"
 msgstr "Tillbaka till GPS:ens huvudmeny"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:964
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:967
 msgid "This theme has no options here."
 msgstr "Det här temat har inga alternativ här."
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:1048
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1052
 msgid "Touch test - hold to leave"
 msgstr "Pektest - håll för att lämna"
 
@@ -2074,14 +2074,14 @@ msgstr "Om Big Screen Monitor Display"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
-#: usr/share/big-screen-monitor-display/screentray/app.py:622
+#: usr/share/big-screen-monitor-display/screentray/app.py:623
 msgid "Quit"
 msgstr "Avsluta"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:336
 #: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
-#: usr/share/big-screen-monitor-display/screentray/app.py:541
+#: usr/share/big-screen-monitor-display/screentray/app.py:542
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
@@ -2137,10 +2137,10 @@ msgstr "Vertikal, upp och ned"
 #: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
-#: usr/share/big-screen-monitor-display/screentray/app.py:590
+#: usr/share/big-screen-monitor-display/screentray/app.py:591
 msgid "Brightness"
 msgstr "Ljusstyrka"
 
@@ -2831,7 +2831,7 @@ msgstr "Alla alternativ för teman, skärmar och prestanda återgår till sina u
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1211
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -2891,7 +2891,7 @@ msgstr "Stäng"
 #: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 #: usr/share/big-screen-monitor-display/screentray/states.py:48
 #: usr/share/big-screen-monitor-display/screentray/states.py:126
 msgid "Service stopped"
@@ -2939,8 +2939,8 @@ msgstr "Kör diagnosen för att ta reda på varför, eller starta tjänsten."
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:526
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:527
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Start Service"
 msgstr "Starta tjänsten"
 
@@ -3162,7 +3162,7 @@ msgstr "Temperaturlarm"
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/media_player_page.py:264
 #: usr/share/big-screen-monitor-display/media_player_page.py:298
-#: usr/share/big-screen-monitor-display/screentray/app.py:513
+#: usr/share/big-screen-monitor-display/screentray/app.py:514
 msgid "Off"
 msgstr "Av"
 
@@ -3198,7 +3198,7 @@ msgstr "Annan…"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:270
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:623
 #: usr/share/big-screen-monitor-display/screentray/app.py:245
-#: usr/share/big-screen-monitor-display/screentray/app.py:613
+#: usr/share/big-screen-monitor-display/screentray/app.py:614
 msgid "Configuration…"
 msgstr "Konfiguration…"
 
@@ -3222,21 +3222,21 @@ msgstr "Stäng och öppna endast den här kylaren igen"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:559
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/screentray/app.py:247
-#: usr/share/big-screen-monitor-display/screentray/app.py:527
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:528
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Restart Service"
 msgstr "Starta om tjänsten"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:276
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/app.py:249
-#: usr/share/big-screen-monitor-display/screentray/app.py:617
+#: usr/share/big-screen-monitor-display/screentray/app.py:618
 msgid "Start with the session"
 msgstr "Starta med sessionen"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:375
 #: usr/share/big-screen-monitor-display/screentray/app.py:401
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 msgid "Service not running"
 msgstr "Tjänsten körs inte"
 
@@ -3357,7 +3357,7 @@ msgid "Reconnect the Cooler"
 msgstr "Återanslut kylaren"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:691
-#: usr/share/big-screen-monitor-display/screentray/app.py:764
+#: usr/share/big-screen-monitor-display/screentray/app.py:765
 msgid "Could not start the service"
 msgstr "Det gick inte att starta tjänsten"
 
@@ -3589,7 +3589,7 @@ msgstr "Samma som standard ({value})"
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
-#: usr/share/big-screen-monitor-display/screentray/app.py:569
+#: usr/share/big-screen-monitor-display/screentray/app.py:570
 msgid "Theme"
 msgstr "Tema"
 
@@ -4429,7 +4429,7 @@ msgstr "Standard för alla skärmar; en skärm kan åsidosätta det."
 
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:173
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:242
-#: usr/share/big-screen-monitor-display/screentray/app.py:627
+#: usr/share/big-screen-monitor-display/screentray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/states.py:128
 msgid "No display connected"
 msgstr "Ingen skärm ansluten"
@@ -4680,7 +4680,7 @@ msgstr "Aktuella värden"
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
 #: usr/share/big-screen-monitor-display/kojiro_page.py:742
 #: usr/share/big-screen-monitor-display/kojiro_page.py:745
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Alerts"
 msgstr "Varningar"
 
@@ -4827,7 +4827,7 @@ msgstr "Skickas som 0 eftersom kylaren saknar tomt värde: {fields}"
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -5080,14 +5080,14 @@ msgstr "Kojiro-redigerare: klicka på en widget för att markera den, dra för a
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
 #: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Duplicate"
 msgstr "Duplicera"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
 #: usr/share/big-screen-monitor-display/kojiro_page.py:664
 #: usr/share/big-screen-monitor-display/kojiro_page.py:666
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -5099,7 +5099,7 @@ msgstr "Placera längst fram"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:851
+#: usr/share/big-screen-monitor-display/kojiro_page.py:852
 msgid "Send to back"
 msgstr "Placera längst bak"
 
@@ -5236,7 +5236,7 @@ msgid "Bars"
 msgstr "Staplar"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Grid"
 msgstr "Rutnät"
 
@@ -5254,7 +5254,7 @@ msgid "Light line"
 msgstr "Ljuslinje"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Dots"
 msgstr "Punkter"
 
@@ -5276,7 +5276,7 @@ msgstr "Mitten till vänster"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Centre"
 msgstr "Mitten"
 
@@ -5526,12 +5526,12 @@ msgid "Distribute vertically"
 msgstr "Fördela vertikalt"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:849
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Bring forward"
 msgstr "Flytta framåt"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:850
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send backward"
 msgstr "Flytta bakåt"
 
@@ -5601,8 +5601,8 @@ msgstr "Gränsen för antal widgetar har nåtts."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:408
 #: usr/share/big-screen-monitor-display/screentray/app.py:364
-#: usr/share/big-screen-monitor-display/screentray/app.py:455
-#: usr/share/big-screen-monitor-display/screentray/app.py:642
+#: usr/share/big-screen-monitor-display/screentray/app.py:456
+#: usr/share/big-screen-monitor-display/screentray/app.py:643
 msgid "All displays"
 msgstr "Alla skärmar"
 
@@ -5709,7 +5709,7 @@ msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Hörn eller kant som widgeten förblir fäst vid på andra skärmstorlekar."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:685
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Rotation"
 msgstr "Rotation"
 
@@ -5770,12 +5770,12 @@ msgid "Alignment"
 msgstr "Justering"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Left"
 msgstr "Vänster"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Right"
 msgstr "Höger"
 
@@ -5898,585 +5898,585 @@ msgstr "Automatisk (CPU-paket)"
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Överst i listan ritas överst. Klicka för att markera."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:864
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Wallpaper"
 msgstr "Bakgrundsbild"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:865
+#: usr/share/big-screen-monitor-display/kojiro_page.py:866
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Inbyggda motiv, egna bilder, en färg eller en övertoning."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:873
 msgid "Imported"
 msgstr "Importerad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:877
 msgid "Import image…"
 msgstr "Importera bild…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:880
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Colour or gradient"
 msgstr "Färg eller övertoning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1148
 msgid "Use"
 msgstr "Använd"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "The image above"
 msgstr "Bilden ovan"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Solid colour"
 msgstr "Enfärgad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:883
 msgid "Gradient"
 msgstr "Övertoning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Colour"
 msgstr "Färg"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Second colour"
 msgstr "Andra färgen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Gradient angle"
 msgstr "Övertoningsvinkel"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:888
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit and position"
 msgstr "Anpassning och position"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fit"
 msgstr "Anpassning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fill the screen (crop)"
 msgstr "Fyll skärmen (beskär)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Fit whole image"
 msgstr "Anpassa hela bilden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Stretch"
 msgstr "Sträck ut"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Tile"
 msgstr "Sida vid sida"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Original size"
 msgstr "Originalstorlek"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:893
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Zoom (%)"
 msgstr "Zoom (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Horizontal offset"
 msgstr "Horisontell förskjutning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:897
 msgid "Vertical offset"
 msgstr "Vertikal förskjutning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Mirror"
 msgstr "Spegelvänd"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Flip vertically"
 msgstr "Vänd vertikalt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Adjustments"
 msgstr "Justeringar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Saturation"
 msgstr "Mättnad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Gamma"
 msgstr "Gamma"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Blur"
 msgstr "Oskärpa"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Darken"
 msgstr "Mörkning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Vignette"
 msgstr "Vinjettering"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Tint colour"
 msgstr "Tonfärg"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Tint strength"
 msgstr "Tonstyrka"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:908
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Text protection gradient"
 msgstr "Övertoning som skyddar texten"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Gradient side"
 msgstr "Övertoningens sida"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "Nederkant"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Överkant"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:911
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Top and bottom"
 msgstr "Över- och nederkant"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:913
+#: usr/share/big-screen-monitor-display/kojiro_page.py:915
 msgid "Reset adjustments"
 msgstr "Återställ justeringar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:941
+#: usr/share/big-screen-monitor-display/kojiro_page.py:943
 msgid "Remove this wallpaper"
 msgstr "Ta bort den här bakgrundsbilden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:980
+#: usr/share/big-screen-monitor-display/kojiro_page.py:982
 msgid "Choose a wallpaper"
 msgstr "Välj en bakgrundsbild"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:981
+#: usr/share/big-screen-monitor-display/kojiro_page.py:983
 msgid "Images"
 msgstr "Bilder"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:994
+#: usr/share/big-screen-monitor-display/kojiro_page.py:996
 msgid "Importing the image…"
 msgstr "Importerar bilden…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Det gick inte att importera bilden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1018
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Bakgrundsbilden har importerats. Din originalfil har inte ändrats."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1034
 msgid "The wallpaper could not be removed"
 msgstr "Det gick inte att ta bort bakgrundsbilden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1051
 msgid "Presets"
 msgstr "Förinställningar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1052
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Ersätter widgetarna med en färdig komposition (Ctrl+Z ångrar det). En importerad bakgrundsbild behålls."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1075
 msgid "Colour palette"
 msgstr "Färgpalett"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1076
 msgid "Recolours every widget with a palette."
 msgstr "Färglägger om alla widgetar med en palett."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Text and background effect"
 msgstr "Text- och bakgrundseffekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Font for all widgets"
 msgstr "Typsnitt för alla widgetar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Background effect"
 msgstr "Bakgrundseffekt"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Scanlines"
 msgstr "Sveplinjer"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect strength"
 msgstr "Effektstyrka"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 msgid "Effect colour"
 msgstr "Effektfärg"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Readability panels"
 msgstr "Läsbarhetspaneler"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Automatic (bright or busy areas)"
 msgstr "Automatisk (ljusa eller röriga områden)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Alltid"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Aldrig"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Lägger till en mörk genomskinlig panel bakom widgetar som annars vore svåra att läsa."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Animations and alerts"
 msgstr "Animeringar och varningar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Animeringar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Fan spin, smooth values and pulses."
 msgstr "Fläktsnurr, mjuka värden och pulser."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Reduce motion"
 msgstr "Minska rörelse"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Animation speed (%)"
 msgstr "Animeringshastighet (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Pulse on critical values"
 msgstr "Pulsera vid kritiska värden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "Turns every visual alert off when disabled."
 msgstr "Stänger av alla visuella varningar när den är inaktiverad."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Hysteresis"
 msgstr "Hysteres"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "How far a value must drop before an alert ends."
 msgstr "Hur mycket ett värde måste sjunka innan en varning upphör."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1106
 msgid "Cooldown (s)"
 msgstr "Spärrtid (s)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1107
 msgid "Minimum time before an alert can calm down."
 msgstr "Minsta tid innan en varning kan lugna sig."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1115
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Förinställningen har tillämpats. Ctrl+Z återställer den föregående layouten."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1144
 msgid "My presets"
 msgstr "Mina förinställningar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
 msgid "Saved on this computer for your user."
 msgstr "Sparas på den här datorn för din användare."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1151
 msgid "Delete preset"
 msgstr "Ta bort förinställning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
 msgid "Save current layout as preset…"
 msgstr "Spara aktuell layout som förinställning…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Import and export"
 msgstr "Import och export"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Dela layouter som en .json-fil eller som ett paket som kan innehålla bakgrundsbilden."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Export layout (.json)…"
 msgstr "Exportera layout (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
 msgid "Export package (.kojiro.zip)…"
 msgstr "Exportera paket (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1163
 msgid "Import layout or package…"
 msgstr "Importera layout eller paket…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1168
 msgid "Restore the default layout"
 msgstr "Återställ standardlayouten"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Layout"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1173
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Positioner lagras i förhållande till en referensupplösning; ankare håller widgetarna på plats på andra skärmar."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Reference resolution"
 msgstr "Referensupplösning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
 msgid "Use the preview resolution as reference"
 msgstr "Använd förhandsvisningens upplösning som referens"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
 msgid "Keeps every widget where it is now"
 msgstr "Behåller varje widget där den är nu"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Portrait layout"
 msgstr "Stående layout"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1183
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Automatisk (omarrangerad från den liggande layouten)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Customised"
 msgstr "Anpassad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
 msgid "Back to automatic"
 msgstr "Tillbaka till automatisk"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Grid size (px)"
 msgstr "Rutnätsstorlek (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Safe margin (px)"
 msgstr "Säker marginal (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Show overlaps of the selection"
 msgstr "Visa överlappningar i markeringen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Keyboard"
 msgstr "Tangentbord"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Flytta 1 px (Skift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Undo / redo"
 msgstr "Ångra / gör om"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Select all"
 msgstr "Markera alla"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Group (Shift: ungroup)"
 msgstr "Gruppera (Skift: dela upp grupp)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Copy / paste style"
 msgstr "Kopiera / klistra in stil"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1201
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Lagerordning (Ctrl: längst fram/bak)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Apply to the display"
 msgstr "Verkställ på skärmen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Clear selection"
 msgstr "Avmarkera"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Save preset"
 msgstr "Spara förinställning"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Name of the preset:"
 msgstr "Förinställningens namn:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "My layout"
 msgstr "Min layout"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1212
 msgid "Save"
 msgstr "Spara"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Preset saved."
 msgstr "Förinställningen har sparats."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1223
 msgid "Could not save the preset"
 msgstr "Det gick inte att spara förinställningen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1232
 msgid "Could not load the preset"
 msgstr "Det gick inte att läsa in förinställningen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1241
 msgid "Could not delete the preset"
 msgstr "Det gick inte att ta bort förinställningen"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1249
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
 msgstr[0] "Inläst; {n} ogiltigt värde ersattes med sitt standardvärde."
 msgstr[1] "Inläst; {n} ogiltiga värden ersattes med standardvärden."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1253
 msgid "Layout loaded."
 msgstr "Layouten har lästs in."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1256
 msgid "Export Kojiro layout"
 msgstr "Exportera Kojiro-layout"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1268
 msgid "Layout exported."
 msgstr "Layouten har exporterats."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Package exported."
 msgstr "Paketet har exporterats."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
 msgid "Could not export"
 msgstr "Det gick inte att exportera"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1292
 msgid "Include your wallpaper?"
 msgstr "Inkludera din bakgrundsbild?"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Layouten använder en bild som du har importerat. Inkludera den endast om du har rätt att dela den; annars använder paketet en inbyggd bakgrundsbild."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
 msgid "Do not include"
 msgstr "Inkludera inte"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
 msgid "Include the image"
 msgstr "Inkludera bilden"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1301
 msgid "Import Kojiro layout"
 msgstr "Importera Kojiro-layout"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1302
 msgid "Kojiro layouts"
 msgstr "Kojiro-layouter"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1339
 msgid "Could not import"
 msgstr "Det gick inte att importera"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1352
 msgid "Sensors on this computer"
 msgstr "Sensorer på den här datorn"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Vad widgetarna kan visa. Valfria sensorer läses endast medan en synlig widget använder dem."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1359
 msgid "limit"
 msgstr "gräns"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
 msgid "no hardware limit reported"
 msgstr "ingen hårdvarugräns rapporterad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "videokodning/-avkodning: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "not reported"
 msgstr "inte rapporterad"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "Fans"
 msgstr "Fläktar"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "none reported"
 msgstr "inga rapporterade"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Disk {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "no temperature sensor"
 msgstr "ingen temperatursensor"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
 msgid "Rendering"
 msgstr "Rendering"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
 msgid "Last preview frame"
 msgstr "Senaste förhandsvisningsbildruta"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
 msgid "Cached widget layers"
 msgstr "Cachade widgetlager"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 msgid "Optional collectors used"
 msgstr "Valfria insamlare som används"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "inga"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1387
 msgid "Settings size"
 msgstr "Inställningarnas storlek"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1388
 msgid "Refresh"
 msgstr "Uppdatera"
 
@@ -7412,81 +7412,81 @@ msgid_plural "{count} displays: {state}"
 msgstr[0] "{count} skärm: {state}"
 msgstr[1] "{count} skärmar: {state}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:490
+#: usr/share/big-screen-monitor-display/screentray/app.py:491
 msgid "The monitor service is not running, so nothing reaches the displays. Start it below (administrator authorization)."
 msgstr "Övervakningstjänsten körs inte, så ingenting når skärmarna. Starta den nedan (kräver administratörsbehörighet)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:493
+#: usr/share/big-screen-monitor-display/screentray/app.py:494
 #, python-brace-format
 msgid "“{name}” is not connected now. Its theme can still be chosen (used when it connects again); brightness and orientation wait for it. Choose another display above."
 msgstr "”{name}” är inte ansluten just nu. Dess tema kan ändå väljas (används när den ansluts igen); ljusstyrka och orientering väntar på den. Välj en annan skärm ovan."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:497
+#: usr/share/big-screen-monitor-display/screentray/app.py:498
 msgid "Connect a USB display. It appears here a moment after it is plugged in; your choices below are kept and used when it connects."
 msgstr "Anslut en USB-skärm. Den visas här en stund efter att den har anslutits; dina val nedan behålls och används när den ansluts."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:507
+#: usr/share/big-screen-monitor-display/screentray/app.py:508
 msgid "More options for this theme are in the configuration window."
 msgstr "Fler alternativ för det här temat finns i konfigurationsfönstret."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn On"
 msgstr "Slå på"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn Off"
 msgstr "Stäng av"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:518
 msgid "Switch the backlight off and on again; the theme keeps running."
 msgstr "Stäng av och slå på bakgrundsbelysningen igen; temat fortsätter att köras."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:519
+#: usr/share/big-screen-monitor-display/screentray/app.py:520
 msgid "This display has no adjustable backlight (its firmware does not offer it)."
 msgstr "Den här skärmen har ingen justerbar bakgrundsbelysning (dess firmware erbjuder det inte)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:543
+#: usr/share/big-screen-monitor-display/screentray/app.py:544
 #, python-brace-format
 msgid "Changes go to: {name}"
 msgstr "Ändringar går till: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:545
+#: usr/share/big-screen-monitor-display/screentray/app.py:546
 #, python-brace-format
 msgid "Theme: {name}"
 msgstr "Tema: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:547
+#: usr/share/big-screen-monitor-display/screentray/app.py:548
 #, python-brace-format
 msgid "Brightness: {value}%"
 msgstr "Ljusstyrka: {value}%"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:563
+#: usr/share/big-screen-monitor-display/screentray/app.py:564
 msgid "Service running"
 msgstr "Tjänsten körs"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:612
+#: usr/share/big-screen-monitor-display/screentray/app.py:613
 msgid "Theme Gallery…"
 msgstr "Temagalleri…"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:638
+#: usr/share/big-screen-monitor-display/screentray/app.py:639
 #, python-brace-format
 msgid "Display: {name}"
 msgstr "Skärm: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:644
+#: usr/share/big-screen-monitor-display/screentray/app.py:645
 #, python-brace-format
 msgid "{connected} of {count} connected"
 msgid_plural "{connected} of {count} connected"
 msgstr[0] "{connected} av {count} ansluten"
 msgstr[1] "{connected} av {count} anslutna"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:703
+#: usr/share/big-screen-monitor-display/screentray/app.py:704
 msgid "Apply to all displays?"
 msgstr "Verkställ på alla skärmar?"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:704
+#: usr/share/big-screen-monitor-display/screentray/app.py:705
 #, python-brace-format
 msgid "These displays have their own setting, which will be replaced: {names}."
 msgstr "Dessa skärmar har en egen inställning, som kommer att ersättas: {names}."

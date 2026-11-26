@@ -52,7 +52,7 @@ class SerialTransport:
             self.ser.reset_output_buffer()
         except Exception as error:
             self.close()
-            raise classify_serial_error(error, self.port, "open")
+            raise classify_serial_error(error, self.port, "open") from error
         return self
 
     def close(self):
@@ -74,7 +74,7 @@ class SerialTransport:
                 if written is not None and written != len(chunk):
                     raise DisplayError(IO, f"short write {written}/{len(chunk)} on {self.port}")
         except Exception as error:
-            raise classify_serial_error(error, self.port, "write")
+            raise classify_serial_error(error, self.port, "write") from error
         return len(view)
 
     def read(self, size):
@@ -83,14 +83,14 @@ class SerialTransport:
         try:
             return bytes(self.ser.read(size) or b"")
         except Exception as error:
-            raise classify_serial_error(error, self.port, "read")
+            raise classify_serial_error(error, self.port, "read") from error
 
     def reset_input(self):
         if self.ser is not None:
             try:
                 self.ser.reset_input_buffer()
             except Exception as error:
-                raise classify_serial_error(error, self.port, "flush")
+                raise classify_serial_error(error, self.port, "flush") from error
 
     def drain_input(self):
         """Discard whatever the panel already sent (non-blocking)."""
@@ -100,7 +100,7 @@ class SerialTransport:
             waiting = getattr(self.ser, "in_waiting", 0) or 0
             return bytes(self.ser.read(waiting)) if waiting else b""
         except Exception as error:
-            raise classify_serial_error(error, self.port, "read")
+            raise classify_serial_error(error, self.port, "read") from error
 
     def alive(self):
         """Cheap liveness check: port node present and modem lines readable."""
@@ -109,7 +109,7 @@ class SerialTransport:
         try:
             _ = self.ser.cts
         except Exception as error:
-            raise classify_serial_error(error, self.port, "probe")
+            raise classify_serial_error(error, self.port, "probe") from error
 
 
 class TcpTransport:
@@ -133,12 +133,12 @@ class TcpTransport:
         try:
             sock = socket.create_connection((self.host, self.tcp_port), timeout=self._connect_timeout)
         except socket.timeout as error:
-            raise DisplayError(TIMEOUT, f"no answer from {self.port}", error)
+            raise DisplayError(TIMEOUT, f"no answer from {self.port}", error) from error
         except ConnectionRefusedError as error:
-            raise DisplayError(NOT_FOUND, f"nothing listening on {self.port}", error)
+            raise DisplayError(NOT_FOUND, f"nothing listening on {self.port}", error) from error
         except OSError as error:
             kind = NOT_FOUND if error.errno in (errno.EHOSTUNREACH, errno.ENETUNREACH) else IO
-            raise DisplayError(kind, f"cannot connect to {self.port}", error)
+            raise DisplayError(kind, f"cannot connect to {self.port}", error) from error
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         sock.settimeout(self._write_timeout)          # affects sendall only; reads use select
         self.sock = sock
@@ -163,9 +163,9 @@ class TcpTransport:
         try:
             sock.sendall(view)
         except socket.timeout as error:
-            raise DisplayError(TIMEOUT, f"write timed out on {self.port}", error)
+            raise DisplayError(TIMEOUT, f"write timed out on {self.port}", error) from error
         except OSError as error:
-            raise DisplayError(DISCONNECTED, f"write failed on {self.port}", error)
+            raise DisplayError(DISCONNECTED, f"write failed on {self.port}", error) from error
         return len(view)
 
     def _recv(self, size, timeout):
@@ -176,7 +176,7 @@ class TcpTransport:
                 return b""
             data = sock.recv(size)
         except (OSError, ValueError) as error:
-            raise DisplayError(DISCONNECTED, f"read failed on {self.port}", error)
+            raise DisplayError(DISCONNECTED, f"read failed on {self.port}", error) from error
         if not data:
             raise DisplayError(DISCONNECTED, f"{self.port} closed the connection")
         return data

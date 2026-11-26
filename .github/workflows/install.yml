@@ -1,0 +1,66 @@
+name: Install
+
+# Separate from "Tests" on purpose: the BigLinux package build waits for
+# "Tests" only, so a packaging change in another distribution never blocks it.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "install-system.sh"
+      - "uninstall-system.sh"
+      - "usr/**"
+      - ".github/workflows/install.yml"
+  pull_request:
+    paths:
+      - "install-system.sh"
+      - "uninstall-system.sh"
+      - "usr/**"
+      - ".github/workflows/install.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"        # weekly: distributions rename packages on their own
+
+jobs:
+  install:
+    # install-system.sh on each distribution family it supports: the package
+    # names from --print-deps must exist there (the openSUSE psutil name was
+    # only found by a user, PR #11), and the app must render with that Python.
+    name: install (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["debian:stable", "ubuntu:24.04", "fedora:latest", "opensuse/tumbleweed", "archlinux:latest"]
+    steps:
+      - name: Base tools
+        run: |
+          if command -v apt-get >/dev/null; then apt-get update && apt-get install -y bash ca-certificates git
+          elif command -v dnf >/dev/null; then dnf install -y bash git
+          elif command -v zypper >/dev/null; then zypper --non-interactive install bash git tar gzip
+          elif command -v pacman >/dev/null; then pacman -Syu --noconfirm bash git
+          fi
+      - uses: actions/checkout@v7
+      - name: Install the packages install-system.sh asks for
+        shell: bash
+        run: |
+          ./install-system.sh --print-deps
+          pkgs=$(./install-system.sh --print-deps | sed -n 's/^essential: //p')
+          if command -v apt-get >/dev/null; then DEBIAN_FRONTEND=noninteractive apt-get install -y $pkgs
+          elif command -v dnf >/dev/null; then dnf install -y $pkgs
+          elif command -v zypper >/dev/null; then zypper --non-interactive install $pkgs
+          elif command -v pacman >/dev/null; then pacman -S --noconfirm --needed $pkgs
+          fi
+      - name: Install into a staging directory
+        shell: bash
+        run: ./install-system.sh --destdir /tmp/stage --skip-deps
+      - name: Render themes with the distribution's Python
+        shell: bash
+        run: |
+          app=/tmp/stage/usr/share/big-screen-monitor-display
+          python3 --version
+          for theme in standard gkrellm planet brother_away; do
+            python3 "$app/main.py" --render "$theme" --size 480x320 --out "/tmp/$theme.png"
+            test -s "/tmp/$theme.png"
+          done
+

@@ -498,7 +498,7 @@ msgstr "Η εξουσιοδότηση ακυρώθηκε ή απορρίφθηκ
 
 #: usr/share/big-screen-monitor-display/bsmd/control.py:55
 #: usr/share/big-screen-monitor-display/config_gui.py:1084
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "Unknown error"
 msgstr "Άγνωστο σφάλμα"
@@ -639,35 +639,35 @@ msgstr "Δεκ"
 msgid "Disk"
 msgstr "Δίσκος"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:276
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:495
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:438
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:277
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:496
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:440
 #: usr/share/big-screen-monitor-display/gui/android_page.py:37
 #: usr/share/big-screen-monitor-display/gui/android_page.py:38
 msgid "Network"
 msgstr "Δίκτυο"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:448
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:449
 #: usr/share/big-screen-monitor-display/kojiro_page.py:69
 msgid "Processes"
 msgstr "Διεργασίες"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:471
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:472
 msgid "Collecting..."
 msgstr "Συλλογή..."
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:537
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:307
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:538
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:308
 #, python-brace-format
 msgid "up {time}"
 msgstr "σε λειτ. {time}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:539
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:540
 #, python-brace-format
 msgid "load {a:.2f} {b:.2f} {c:.2f}"
 msgstr "φορτίο {a:.2f} {b:.2f} {c:.2f}"
 
-#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:541
+#: usr/share/big-screen-monitor-display/bsmd/dashboard.py:543
 #, python-brace-format
 msgid "{count} process"
 msgid_plural "{count} processes"
@@ -1124,57 +1124,57 @@ msgstr "Τα LED της πίσω πλάκας και η λεπτή ρύθμισ�
 msgid "Sleeps until opened and then reappears as a generic USB gadget; the size may need to be chosen."
 msgstr "Βρίσκεται σε αναστολή μέχρι να ανοιχτεί και μετά εμφανίζεται ξανά ως γενική συσκευή USB· μπορεί να χρειαστεί να επιλεγεί το μέγεθος."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:142
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:143
 msgid "The protocol has no handshake: identification relies on the USB IDs."
 msgstr "Το πρωτόκολλο δεν έχει χειραψία: η αναγνώριση βασίζεται στα αναγνωριστικά USB."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:147
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:148
 msgid "Also reports room temperature and humidity."
 msgstr "Αναφέρει επίσης θερμοκρασία και υγρασία χώρου."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:152
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:153
 msgid "Tiny panel: themes switch to a compact layout."
 msgstr "Μικροσκοπικό πάνελ: τα θέματα αλλάζουν σε συμπαγή διάταξη."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:159
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:160
 msgid "Whole frames only (PNG, JPEG when larger than 1 MB); no video or storage functions."
 msgstr "Μόνο ολόκληρα καρέ (PNG, JPEG όταν είναι μεγαλύτερα από 1 MB)· χωρίς λειτουργίες βίντεο ή αποθήκευσης."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:166
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
 msgid "The panel has no framebuffer: Big Screen Monitor flashes its own dashboard into it (about a minute, only when the look changes) and then sends the live values."
 msgstr "Το πάνελ δεν έχει framebuffer: το Big Screen Monitor εγγράφει σε αυτό τον δικό του πίνακα ενδείξεων (περίπου ένα λεπτό, μόνο όταν αλλάζει η εμφάνιση) και μετά στέλνει τις ζωντανές τιμές."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:168
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:170
 msgid "Themes are not drawn on this panel; the dashboard follows the Standard theme's colour scheme, temperature unit, name and brightness of this display."
 msgstr "Τα θέματα δεν σχεδιάζονται σε αυτό το πάνελ· ο πίνακας ενδείξεων ακολουθεί τον συνδυασμό χρωμάτων, τη μονάδα θερμοκρασίας, το όνομα και τη φωτεινότητα του Τυπικού θέματος για αυτή την οθόνη."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:171
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:173
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:183
 msgid "reported by the device (800x480 on the FS-707DC)"
 msgstr "αναφέρεται από τη συσκευή (800x480 στο FS-707DC)"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:177
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:179
 msgid "Runs the bsmd-ce client on the navigator's original firmware (nothing is flashed)."
 msgstr "Εκτελεί το πρόγραμμα-πελάτη bsmd-ce στο αρχικό υλικολογισμικό του πλοηγού (δεν εγγράφεται τίποτα)."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:178
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:188
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:180
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:191
 msgid "Single-point resistive touchscreen: tap, hold and swipe on the panel itself."
 msgstr "Ωμική οθόνη αφής ενός σημείου: πάτημα, παρατεταμένο πάτημα και σάρωση πάνω στο ίδιο το πάνελ."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:186
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:189
 msgid "Runs on BigFoston OS (Linux on the navigator): open the Big Screen app on the device."
 msgstr "Εκτελείται στο BigFoston OS (Linux στον πλοηγό): ανοίξτε την εφαρμογή Big Screen στη συσκευή."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:187
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:190
 msgid "Connects over the USB network to 192.168.7.2, TCP port 7707."
 msgstr "Συνδέεται μέσω του δικτύου USB στο 192.168.7.2, θύρα TCP 7707."
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:199
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:202
 msgid "numeric CPU display"
 msgstr "αριθμητική οθόνη CPU"
 
-#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:200
+#: usr/share/big-screen-monitor-display/bsmd/displays/registry.py:203
 msgid "2.8\" LCD, information mode"
 msgstr "LCD 2,8\", λειτουργία πληροφοριών"
 
@@ -1230,129 +1230,129 @@ msgstr "ΑΠΟΣ."
 msgid "DISK %"
 msgstr "ΔΙΣΚΟΣ %"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:341
 #, python-brace-format
 msgid "{count} core"
 msgid_plural "{count} cores"
 msgstr[0] "{count} πυρήνας"
 msgstr[1] "{count} πυρήνες"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:340
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:342
 #, python-brace-format
 msgid "max {value:.0f}%"
 msgstr "μέγ. {value:.0f}%"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:354
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:356
 #, python-brace-format
 msgid "{count} proc"
 msgid_plural "{count} procs"
 msgstr[0] "{count} διεργ."
 msgstr[1] "{count} διεργ."
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:396
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:398
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:316
 msgid "Sensors"
 msgstr "Αισθητήρες"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:399
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:401
 msgid "no sensors"
 msgstr "χωρίς αισθητήρες"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:414
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:416
 #: usr/share/big-screen-monitor-display/config_gui.py:700
 msgid "Disk I/O"
 msgstr "Ι/Ε δίσκου"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:439
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:441
 msgid "no connection"
 msgstr "χωρίς σύνδεση"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:504
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:506
 msgid "Disks"
 msgstr "Δίσκοι"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:541
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:543
 msgid "no battery"
 msgstr "χωρίς μπαταρία"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:555
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:557
 msgid "profile"
 msgstr "προφίλ"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:567
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:569
 msgid "no fan or power sensors"
 msgstr "χωρίς αισθητήρες ανεμιστήρα ή ισχύος"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:582
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:584
 msgid "unavailable"
 msgstr "μη διαθέσιμο"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:586
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:588
 #, python-brace-format
 msgid "{count} container"
 msgid_plural "{count} containers"
 msgstr[0] "{count} κοντέινερ"
 msgstr[1] "{count} κοντέινερ"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:596
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:598
 msgid "Devices"
 msgstr "Συσκευές"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:599
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:601
 msgid "no removable media"
 msgstr "χωρίς αφαιρούμενα μέσα"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:610
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:612
 msgid "Media"
 msgstr "Πολυμέσα"
 
-#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:613
+#: usr/share/big-screen-monitor-display/bsmd/gkrellm.py:615
 msgid "no player"
 msgstr "χωρίς πρόγραμμα αναπαραγωγής"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:231
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:232
 msgid "no swap"
 msgstr "χωρίς swap"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Monday"
 msgstr "Δευτέρα"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Tuesday"
 msgstr "Τρίτη"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Wednesday"
 msgstr "Τετάρτη"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Thursday"
 msgstr "Πέμπτη"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Friday"
 msgstr "Παρασκευή"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:322
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
 msgid "Saturday"
 msgstr "Σάββατο"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:323
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:324
 msgid "Sunday"
 msgstr "Κυριακή"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "charging"
 msgstr "φόρτιση"
 
-#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:370
+#: usr/share/big-screen-monitor-display/bsmd/kojiro/data.py:371
 msgid "on battery"
 msgstr "σε μπαταρία"
 
 #: usr/share/big-screen-monitor-display/bsmd/kojiro/model.py:33
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1355
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
 #: usr/share/big-screen-monitor-display/media_player_page.py:284
 msgid "CPU"
 msgstr "CPU"
@@ -1529,11 +1529,11 @@ msgstr "Διαβαθμίσεις"
 
 #: usr/share/big-screen-monitor-display/bsmd/patterns.py:20
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:891
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
 #: usr/share/big-screen-monitor-display/config_gui.py:566
 #: usr/share/big-screen-monitor-display/displays_page.py:397
 #: usr/share/big-screen-monitor-display/screentray/app.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:602
+#: usr/share/big-screen-monitor-display/screentray/app.py:603
 msgid "Orientation"
 msgstr "Προσανατολισμός"
 
@@ -1838,7 +1838,7 @@ msgstr "Κέλυφος"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:152
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:765
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:888
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
 #: usr/share/big-screen-monitor-display/config_gui.py:635
 #: usr/share/big-screen-monitor-display/config_gui.py:682
 #: usr/share/big-screen-monitor-display/config_gui.py:712
@@ -1862,8 +1862,8 @@ msgid "No media player"
 msgstr "Κανένα πρόγραμμα αναπαραγωγής"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:539
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:884
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:999
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:885
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1003
 #: usr/share/big-screen-monitor-display/config_gui.py:73
 #: usr/share/big-screen-monitor-display/config_gui.py:687
 #: usr/share/big-screen-monitor-display/displays_page.py:460
@@ -1887,50 +1887,50 @@ msgid "Closing…"
 msgstr "Κλείσιμο…"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:575
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Tap again to exit"
 msgstr "Πατήστε ξανά για έξοδο"
 
 #: usr/share/big-screen-monitor-display/bsmd/touch.py:763
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:886
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:887
 #: usr/share/big-screen-monitor-display/gui/theme_gallery.py:71
 msgid "Themes"
 msgstr "Θέματα"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:889
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:890
 msgid "Choose a story"
 msgstr "Επιλέξτε ιστορία"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 #: usr/share/big-screen-monitor-display/displays_page.py:659
 msgid "Touch test"
 msgstr "Δοκιμή αφής"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:892
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:893
 msgid "Draw with your finger"
 msgstr "Ζωγραφίστε με το δάχτυλό σας"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Calibrate"
 msgstr "Βαθμονόμηση"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:894
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:895
 msgid "Device calibration"
 msgstr "Βαθμονόμηση συσκευής"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:897
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
 msgid "Exit to the device menu"
 msgstr "Έξοδος στο μενού της συσκευής"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:898
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:899
 msgid "Back to the GPS main menu"
 msgstr "Επιστροφή στο κύριο μενού του GPS"
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:964
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:967
 msgid "This theme has no options here."
 msgstr "Αυτό το θέμα δεν έχει επιλογές εδώ."
 
-#: usr/share/big-screen-monitor-display/bsmd/touch.py:1048
+#: usr/share/big-screen-monitor-display/bsmd/touch.py:1052
 msgid "Touch test - hold to leave"
 msgstr "Δοκιμή αφής - κρατήστε πατημένο για έξοδο"
 
@@ -2074,14 +2074,14 @@ msgstr "Σχετικά με το Big Screen Monitor Display"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:633
 #: usr/share/big-screen-monitor-display/gui/preferences_page.py:90
 #: usr/share/big-screen-monitor-display/main.py:140
-#: usr/share/big-screen-monitor-display/screentray/app.py:622
+#: usr/share/big-screen-monitor-display/screentray/app.py:623
 msgid "Quit"
 msgstr "Έξοδος"
 
 #: usr/share/big-screen-monitor-display/config_gui.py:336
 #: usr/share/big-screen-monitor-display/config_gui.py:356
 #: usr/share/big-screen-monitor-display/screentray/app.py:141
-#: usr/share/big-screen-monitor-display/screentray/app.py:541
+#: usr/share/big-screen-monitor-display/screentray/app.py:542
 msgid "Big Screen Monitor"
 msgstr "Big Screen Monitor"
 
@@ -2137,10 +2137,10 @@ msgstr "Κατακόρυφος, ανάποδα"
 #: usr/share/big-screen-monitor-display/config_gui.py:569
 #: usr/share/big-screen-monitor-display/displays_page.py:407
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:120
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 #: usr/share/big-screen-monitor-display/screentray/app.py:194
 #: usr/share/big-screen-monitor-display/screentray/app.py:200
-#: usr/share/big-screen-monitor-display/screentray/app.py:590
+#: usr/share/big-screen-monitor-display/screentray/app.py:591
 msgid "Brightness"
 msgstr "Φωτεινότητα"
 
@@ -2831,7 +2831,7 @@ msgstr "Κάθε επιλογή θέματος, οθόνης και επιδόσ
 #: usr/share/big-screen-monitor-display/displays_page.py:637
 #: usr/share/big-screen-monitor-display/gui/android_page.py:255
 #: usr/share/big-screen-monitor-display/kojiro_page.py:435
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1211
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -2891,7 +2891,7 @@ msgstr "Κλείσιμο"
 #: usr/share/big-screen-monitor-display/config_gui.py:1119
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:377
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:204
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 #: usr/share/big-screen-monitor-display/screentray/states.py:48
 #: usr/share/big-screen-monitor-display/screentray/states.py:126
 msgid "Service stopped"
@@ -2939,8 +2939,8 @@ msgstr "Εκτελέστε τη διάγνωση για να μάθετε για
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:558
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:229
-#: usr/share/big-screen-monitor-display/screentray/app.py:526
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:527
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Start Service"
 msgstr "Εκκίνηση υπηρεσίας"
 
@@ -3162,7 +3162,7 @@ msgstr "Συναγερμός θερμοκρασίας"
 #: usr/share/big-screen-monitor-display/displays_page.py:49
 #: usr/share/big-screen-monitor-display/media_player_page.py:264
 #: usr/share/big-screen-monitor-display/media_player_page.py:298
-#: usr/share/big-screen-monitor-display/screentray/app.py:513
+#: usr/share/big-screen-monitor-display/screentray/app.py:514
 msgid "Off"
 msgstr "Ανενεργό"
 
@@ -3198,7 +3198,7 @@ msgstr "Άλλο…"
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:270
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:623
 #: usr/share/big-screen-monitor-display/screentray/app.py:245
-#: usr/share/big-screen-monitor-display/screentray/app.py:613
+#: usr/share/big-screen-monitor-display/screentray/app.py:614
 msgid "Configuration…"
 msgstr "Διαμόρφωση…"
 
@@ -3222,21 +3222,21 @@ msgstr "Κλείσιμο και επανάνοιγμα μόνο αυτής τη�
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:559
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:626
 #: usr/share/big-screen-monitor-display/screentray/app.py:247
-#: usr/share/big-screen-monitor-display/screentray/app.py:527
-#: usr/share/big-screen-monitor-display/screentray/app.py:615
+#: usr/share/big-screen-monitor-display/screentray/app.py:528
+#: usr/share/big-screen-monitor-display/screentray/app.py:616
 msgid "Restart Service"
 msgstr "Επανεκκίνηση υπηρεσίας"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:276
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/app.py:249
-#: usr/share/big-screen-monitor-display/screentray/app.py:617
+#: usr/share/big-screen-monitor-display/screentray/app.py:618
 msgid "Start with the session"
 msgstr "Εκκίνηση μαζί με τη συνεδρία"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:375
 #: usr/share/big-screen-monitor-display/screentray/app.py:401
-#: usr/share/big-screen-monitor-display/screentray/app.py:564
+#: usr/share/big-screen-monitor-display/screentray/app.py:565
 msgid "Service not running"
 msgstr "Η υπηρεσία δεν εκτελείται"
 
@@ -3357,7 +3357,7 @@ msgid "Reconnect the Cooler"
 msgstr "Επανασύνδεση της ψύκτρας"
 
 #: usr/share/big-screen-monitor-display/deepcooltray/app.py:691
-#: usr/share/big-screen-monitor-display/screentray/app.py:764
+#: usr/share/big-screen-monitor-display/screentray/app.py:765
 msgid "Could not start the service"
 msgstr "Δεν ήταν δυνατή η εκκίνηση της υπηρεσίας"
 
@@ -3589,7 +3589,7 @@ msgstr "Όπως η προεπιλογή ({value})"
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:93
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:218
 #: usr/share/big-screen-monitor-display/screentray/app.py:162
-#: usr/share/big-screen-monitor-display/screentray/app.py:569
+#: usr/share/big-screen-monitor-display/screentray/app.py:570
 msgid "Theme"
 msgstr "Θέμα"
 
@@ -4429,7 +4429,7 @@ msgstr "Προεπιλογή για κάθε οθόνη· μια οθόνη μπ
 
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:173
 #: usr/share/big-screen-monitor-display/gui/dashboard.py:242
-#: usr/share/big-screen-monitor-display/screentray/app.py:627
+#: usr/share/big-screen-monitor-display/screentray/app.py:628
 #: usr/share/big-screen-monitor-display/screentray/states.py:128
 msgid "No display connected"
 msgstr "Δεν είναι συνδεδεμένη καμία οθόνη"
@@ -4680,7 +4680,7 @@ msgstr "Τρέχουσες τιμές"
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:254
 #: usr/share/big-screen-monitor-display/kojiro_page.py:742
 #: usr/share/big-screen-monitor-display/kojiro_page.py:745
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
 msgid "Alerts"
 msgstr "Ειδοποιήσεις"
 
@@ -4827,7 +4827,7 @@ msgstr "Στέλνεται ως 0 επειδή η ψύκτρα δεν έχει �
 
 #: usr/share/big-screen-monitor-display/gui/deepcool_page.py:419
 #: usr/share/big-screen-monitor-display/kojiro_page.py:74
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 #: usr/share/big-screen-monitor-display/media_player_page.py:207
 #: usr/share/big-screen-monitor-display/media_player_page.py:813
 msgid "None"
@@ -5080,14 +5080,14 @@ msgstr "Επεξεργαστής Kojiro: κάντε κλικ σε ένα γρα�
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:835
 #: usr/share/big-screen-monitor-display/kojiro_page.py:662
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Duplicate"
 msgstr "Δημιουργία αντιγράφου"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:836
 #: usr/share/big-screen-monitor-display/kojiro_page.py:664
 #: usr/share/big-screen-monitor-display/kojiro_page.py:666
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Delete"
 msgstr "Διαγραφή"
 
@@ -5099,7 +5099,7 @@ msgstr "Μεταφορά στο προσκήνιο"
 
 #: usr/share/big-screen-monitor-display/kojiro_editor.py:840
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:851
+#: usr/share/big-screen-monitor-display/kojiro_page.py:852
 msgid "Send to back"
 msgstr "Μεταφορά στο παρασκήνιο"
 
@@ -5236,7 +5236,7 @@ msgid "Bars"
 msgstr "Μπάρες"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Grid"
 msgstr "Πλέγμα"
 
@@ -5254,7 +5254,7 @@ msgid "Light line"
 msgstr "Φωτεινή γραμμή"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:41
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
 msgid "Dots"
 msgstr "Τελείες"
 
@@ -5276,7 +5276,7 @@ msgstr "Μέση αριστερά"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:45
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Centre"
 msgstr "Κέντρο"
 
@@ -5526,12 +5526,12 @@ msgid "Distribute vertically"
 msgstr "Κατακόρυφη κατανομή"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:306
-#: usr/share/big-screen-monitor-display/kojiro_page.py:849
+#: usr/share/big-screen-monitor-display/kojiro_page.py:850
 msgid "Bring forward"
 msgstr "Μεταφορά μπροστά"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:307
-#: usr/share/big-screen-monitor-display/kojiro_page.py:850
+#: usr/share/big-screen-monitor-display/kojiro_page.py:851
 msgid "Send backward"
 msgstr "Μεταφορά πίσω"
 
@@ -5601,8 +5601,8 @@ msgstr "Συμπληρώθηκε το όριο γραφικών στοιχείω
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:408
 #: usr/share/big-screen-monitor-display/screentray/app.py:364
-#: usr/share/big-screen-monitor-display/screentray/app.py:455
-#: usr/share/big-screen-monitor-display/screentray/app.py:642
+#: usr/share/big-screen-monitor-display/screentray/app.py:456
+#: usr/share/big-screen-monitor-display/screentray/app.py:643
 msgid "All displays"
 msgstr "Όλες οι οθόνες"
 
@@ -5709,7 +5709,7 @@ msgid "Corner or edge the widget stays attached to on other screen sizes."
 msgstr "Γωνία ή άκρη στην οποία μένει προσαρτημένο το γραφικό στοιχείο σε άλλα μεγέθη οθόνης."
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:685
-#: usr/share/big-screen-monitor-display/kojiro_page.py:896
+#: usr/share/big-screen-monitor-display/kojiro_page.py:898
 msgid "Rotation"
 msgstr "Περιστροφή"
 
@@ -5770,12 +5770,12 @@ msgid "Alignment"
 msgstr "Στοίχιση"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Left"
 msgstr "Αριστερά"
 
 #: usr/share/big-screen-monitor-display/kojiro_page.py:707
-#: usr/share/big-screen-monitor-display/kojiro_page.py:910
+#: usr/share/big-screen-monitor-display/kojiro_page.py:912
 msgid "Right"
 msgstr "Δεξιά"
 
@@ -5898,585 +5898,585 @@ msgstr "Αυτόματο (πακέτο CPU)"
 msgid "Top of the list is drawn on top. Click to select."
 msgstr "Η κορυφή της λίστας σχεδιάζεται από πάνω. Κάντε κλικ για επιλογή."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:864
+#: usr/share/big-screen-monitor-display/kojiro_page.py:865
 msgid "Wallpaper"
 msgstr "Ταπετσαρία"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:865
+#: usr/share/big-screen-monitor-display/kojiro_page.py:866
 msgid "Built-in art, your own images, a colour or a gradient."
 msgstr "Ενσωματωμένα έργα, δικές σας εικόνες, ένα χρώμα ή μια διαβάθμιση."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:872
+#: usr/share/big-screen-monitor-display/kojiro_page.py:873
 msgid "Imported"
 msgstr "Εισαγμένες"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:876
+#: usr/share/big-screen-monitor-display/kojiro_page.py:877
 msgid "Import image…"
 msgstr "Εισαγωγή εικόνας…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:880
+#: usr/share/big-screen-monitor-display/kojiro_page.py:881
 msgid "Colour or gradient"
 msgstr "Χρώμα ή διαβάθμιση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1146
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1148
 msgid "Use"
 msgstr "Χρήση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "The image above"
 msgstr "Η παραπάνω εικόνα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:881
+#: usr/share/big-screen-monitor-display/kojiro_page.py:882
 msgid "Solid colour"
 msgstr "Συμπαγές χρώμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:882
+#: usr/share/big-screen-monitor-display/kojiro_page.py:883
 msgid "Gradient"
 msgstr "Διαβάθμιση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:885
+#: usr/share/big-screen-monitor-display/kojiro_page.py:886
 msgid "Colour"
 msgstr "Χρώμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:886
+#: usr/share/big-screen-monitor-display/kojiro_page.py:887
 msgid "Second colour"
 msgstr "Δεύτερο χρώμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:887
+#: usr/share/big-screen-monitor-display/kojiro_page.py:888
 msgid "Gradient angle"
 msgstr "Γωνία διαβάθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:888
+#: usr/share/big-screen-monitor-display/kojiro_page.py:889
 msgid "Fit and position"
 msgstr "Προσαρμογή και θέση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fit"
 msgstr "Προσαρμογή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:890
 msgid "Fill the screen (crop)"
 msgstr "Γέμισμα οθόνης (περικοπή)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:889
+#: usr/share/big-screen-monitor-display/kojiro_page.py:891
 msgid "Fit whole image"
 msgstr "Προσαρμογή ολόκληρης εικόνας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:890
+#: usr/share/big-screen-monitor-display/kojiro_page.py:892
 msgid "Stretch"
 msgstr "Τέντωμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Tile"
 msgstr "Παράθεση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:891
+#: usr/share/big-screen-monitor-display/kojiro_page.py:893
 msgid "Original size"
 msgstr "Αρχικό μέγεθος"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:893
+#: usr/share/big-screen-monitor-display/kojiro_page.py:895
 msgid "Zoom (%)"
 msgstr "Μεγέθυνση (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:894
+#: usr/share/big-screen-monitor-display/kojiro_page.py:896
 msgid "Horizontal offset"
 msgstr "Οριζόντια μετατόπιση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:895
+#: usr/share/big-screen-monitor-display/kojiro_page.py:897
 msgid "Vertical offset"
 msgstr "Κατακόρυφη μετατόπιση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:898
+#: usr/share/big-screen-monitor-display/kojiro_page.py:900
 msgid "Mirror"
 msgstr "Κατοπτρισμός"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:899
+#: usr/share/big-screen-monitor-display/kojiro_page.py:901
 msgid "Flip vertically"
 msgstr "Κατακόρυφη αναστροφή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:900
+#: usr/share/big-screen-monitor-display/kojiro_page.py:902
 msgid "Adjustments"
 msgstr "Προσαρμογές"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:901
+#: usr/share/big-screen-monitor-display/kojiro_page.py:903
 msgid "Contrast"
 msgstr "Αντίθεση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Saturation"
 msgstr "Κορεσμός"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:902
+#: usr/share/big-screen-monitor-display/kojiro_page.py:904
 msgid "Gamma"
 msgstr "Γάμμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Blur"
 msgstr "Θόλωση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:903
+#: usr/share/big-screen-monitor-display/kojiro_page.py:905
 msgid "Darken"
 msgstr "Σκούρεμα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:904
+#: usr/share/big-screen-monitor-display/kojiro_page.py:906
 msgid "Vignette"
 msgstr "Βινιέτα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:906
+#: usr/share/big-screen-monitor-display/kojiro_page.py:908
 msgid "Tint colour"
 msgstr "Χρώμα απόχρωσης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:907
+#: usr/share/big-screen-monitor-display/kojiro_page.py:909
 msgid "Tint strength"
 msgstr "Ένταση απόχρωσης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:908
+#: usr/share/big-screen-monitor-display/kojiro_page.py:910
 msgid "Text protection gradient"
 msgstr "Διαβάθμιση προστασίας κειμένου"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 msgid "Gradient side"
 msgstr "Πλευρά διαβάθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Bottom"
 msgstr "Κάτω"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:909
+#: usr/share/big-screen-monitor-display/kojiro_page.py:911
 #: usr/share/big-screen-monitor-display/media_player_page.py:278
 msgid "Top"
 msgstr "Πάνω"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:911
+#: usr/share/big-screen-monitor-display/kojiro_page.py:913
 msgid "Top and bottom"
 msgstr "Πάνω και κάτω"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:913
+#: usr/share/big-screen-monitor-display/kojiro_page.py:915
 msgid "Reset adjustments"
 msgstr "Επαναφορά προσαρμογών"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:941
+#: usr/share/big-screen-monitor-display/kojiro_page.py:943
 msgid "Remove this wallpaper"
 msgstr "Αφαίρεση αυτής της ταπετσαρίας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:980
+#: usr/share/big-screen-monitor-display/kojiro_page.py:982
 msgid "Choose a wallpaper"
 msgstr "Επιλογή ταπετσαρίας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:981
+#: usr/share/big-screen-monitor-display/kojiro_page.py:983
 msgid "Images"
 msgstr "Εικόνες"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:994
+#: usr/share/big-screen-monitor-display/kojiro_page.py:996
 msgid "Importing the image…"
 msgstr "Εισαγωγή της εικόνας…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1011
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1013
 #: usr/share/big-screen-monitor-display/media_player_page.py:609
 msgid "The image could not be imported"
 msgstr "Δεν ήταν δυνατή η εισαγωγή της εικόνας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1016
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1018
 msgid "Wallpaper imported. Your original file was not changed."
 msgstr "Η ταπετσαρία εισήχθη. Το αρχικό σας αρχείο δεν άλλαξε."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1032
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1034
 msgid "The wallpaper could not be removed"
 msgstr "Δεν ήταν δυνατή η αφαίρεση της ταπετσαρίας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1049
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1051
 msgid "Presets"
 msgstr "Προκαθορισμένες ρυθμίσεις"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1050
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1052
 msgid "Replaces the widgets with a ready-made composition (Ctrl+Z undoes it). An imported wallpaper is kept."
 msgstr "Αντικαθιστά τα γραφικά στοιχεία με μια έτοιμη σύνθεση (το Ctrl+Z την αναιρεί). Μια εισαγμένη ταπετσαρία διατηρείται."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1073
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1075
 msgid "Colour palette"
 msgstr "Χρωματική παλέτα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1074
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1076
 msgid "Recolours every widget with a palette."
 msgstr "Επαναχρωματίζει κάθε γραφικό στοιχείο με μια παλέτα."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1082
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
 msgid "Text and background effect"
 msgstr "Εφέ κειμένου και φόντου"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1083
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1085
 msgid "Font for all widgets"
 msgstr "Γραμματοσειρά για όλα τα γραφικά στοιχεία"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Background effect"
 msgstr "Εφέ φόντου"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1084
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1086
 msgid "Scanlines"
 msgstr "Γραμμές σάρωσης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1087
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
 msgid "Effect strength"
 msgstr "Ένταση εφέ"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1089
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
 msgid "Effect colour"
 msgstr "Χρώμα εφέ"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Readability panels"
 msgstr "Πάνελ αναγνωσιμότητας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1090
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1092
 msgid "Automatic (bright or busy areas)"
 msgstr "Αυτόματο (φωτεινές ή φορτωμένες περιοχές)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Always"
 msgstr "Πάντα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1091
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
 #: usr/share/big-screen-monitor-display/media_player_page.py:465
 msgid "Never"
 msgstr "Ποτέ"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1093
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
 msgid "Adds a dark translucent panel behind widgets that would be hard to read."
 msgstr "Προσθέτει ένα σκούρο ημιδιαφανές πάνελ πίσω από γραφικά στοιχεία που θα ήταν δυσανάγνωστα."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1094
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
 msgid "Animations and alerts"
 msgstr "Κινήσεις και ειδοποιήσεις"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1095
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
 #: usr/share/big-screen-monitor-display/media_player_page.py:196
 msgid "Animations"
 msgstr "Κινήσεις"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1096
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
 msgid "Fan spin, smooth values and pulses."
 msgstr "Περιστροφή ανεμιστήρα, ομαλές τιμές και παλμοί."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1097
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
 msgid "Reduce motion"
 msgstr "Μείωση κίνησης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1098
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1100
 msgid "Animation speed (%)"
 msgstr "Ταχύτητα κίνησης (%)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1099
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
 msgid "Pulse on critical values"
 msgstr "Παλμός σε κρίσιμες τιμές"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1101
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
 msgid "Turns every visual alert off when disabled."
 msgstr "Απενεργοποιεί κάθε οπτική ειδοποίηση όταν είναι ανενεργό."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1102
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
 msgid "Hysteresis"
 msgstr "Υστέρηση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1103
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
 msgid "How far a value must drop before an alert ends."
 msgstr "Πόσο πρέπει να πέσει μια τιμή πριν τελειώσει μια ειδοποίηση."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1104
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1106
 msgid "Cooldown (s)"
 msgstr "Χρόνος αναμονής (δ)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1105
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1107
 msgid "Minimum time before an alert can calm down."
 msgstr "Ελάχιστος χρόνος πριν μπορέσει να υποχωρήσει μια ειδοποίηση."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1113
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1115
 msgid "Preset applied. Ctrl+Z restores the previous layout."
 msgstr "Η προκαθορισμένη ρύθμιση εφαρμόστηκε. Το Ctrl+Z επαναφέρει την προηγούμενη διάταξη."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1142
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1144
 msgid "My presets"
 msgstr "Οι προκαθορισμένες ρυθμίσεις μου"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1143
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1145
 msgid "Saved on this computer for your user."
 msgstr "Αποθηκεύονται σε αυτόν τον υπολογιστή για τον χρήστη σας."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1149
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1151
 msgid "Delete preset"
 msgstr "Διαγραφή προκαθορισμένης ρύθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1154
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1156
 msgid "Save current layout as preset…"
 msgstr "Αποθήκευση τρέχουσας διάταξης ως προκαθορισμένης ρύθμισης…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1157
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
 msgid "Import and export"
 msgstr "Εισαγωγή και εξαγωγή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1158
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
 msgid "Share layouts as a .json file, or as a package that can include the wallpaper."
 msgstr "Κοινοποίηση διατάξεων ως αρχείο .json ή ως πακέτο που μπορεί να περιλαμβάνει την ταπετσαρία."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1159
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
 msgid "Export layout (.json)…"
 msgstr "Εξαγωγή διάταξης (.json)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1160
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1162
 msgid "Export package (.kojiro.zip)…"
 msgstr "Εξαγωγή πακέτου (.kojiro.zip)…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1161
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1163
 msgid "Import layout or package…"
 msgstr "Εισαγωγή διάταξης ή πακέτου…"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1166
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1168
 msgid "Restore the default layout"
 msgstr "Επαναφορά της προεπιλεγμένης διάταξης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1170
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1172
 #: usr/share/big-screen-monitor-display/media_player_page.py:191
 msgid "Layout"
 msgstr "Διάταξη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1171
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1173
 msgid "Positions are stored relative to a reference resolution; anchors keep widgets in place on other screens."
 msgstr "Οι θέσεις αποθηκεύονται σε σχέση με μια ανάλυση αναφοράς· οι άγκυρες κρατούν τα γραφικά στοιχεία στη θέση τους σε άλλες οθόνες."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1174
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
 msgid "Reference resolution"
 msgstr "Ανάλυση αναφοράς"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1175
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1177
 msgid "Use the preview resolution as reference"
 msgstr "Χρήση της ανάλυσης προεπισκόπησης ως αναφοράς"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1176
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1178
 msgid "Keeps every widget where it is now"
 msgstr "Διατηρεί κάθε γραφικό στοιχείο εκεί που βρίσκεται τώρα"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1180
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
 msgid "Portrait layout"
 msgstr "Κατακόρυφη διάταξη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1181
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1183
 msgid "Automatic (rearranged from the landscape layout)"
 msgstr "Αυτόματη (αναδιάταξη από την οριζόντια διάταξη)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1182
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
 msgid "Customised"
 msgstr "Προσαρμοσμένη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1184
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1186
 msgid "Back to automatic"
 msgstr "Επιστροφή στην αυτόματη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1188
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
 msgid "Grid size (px)"
 msgstr "Μέγεθος πλέγματος (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1190
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
 msgid "Safe margin (px)"
 msgstr "Περιθώριο ασφαλείας (px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1192
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
 msgid "Show overlaps of the selection"
 msgstr "Εμφάνιση επικαλύψεων της επιλογής"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1194
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
 msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1195
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
 msgid "Move 1 px (Shift: 10 px)"
 msgstr "Μετακίνηση 1 px (Shift: 10 px)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1196
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
 msgid "Undo / redo"
 msgstr "Αναίρεση / επανάληψη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Select all"
 msgstr "Επιλογή όλων"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1197
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
 msgid "Group (Shift: ungroup)"
 msgstr "Ομαδοποίηση (Shift: κατάργηση ομαδοποίησης)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1198
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
 msgid "Copy / paste style"
 msgstr "Αντιγραφή / επικόλληση στιλ"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1199
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1201
 msgid "Layer order (Ctrl: to front/back)"
 msgstr "Σειρά επιπέδων (Ctrl: στο προσκήνιο/παρασκήνιο)"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Apply to the display"
 msgstr "Εφαρμογή στην οθόνη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1200
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1202
 msgid "Clear selection"
 msgstr "Εκκαθάριση επιλογής"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Save preset"
 msgstr "Αποθήκευση προκαθορισμένης ρύθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1206
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1208
 msgid "Name of the preset:"
 msgstr "Όνομα της προκαθορισμένης ρύθμισης:"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1207
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1209
 msgid "My layout"
 msgstr "Η διάταξή μου"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1210
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1212
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1219
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
 msgid "Preset saved."
 msgstr "Η προκαθορισμένη ρύθμιση αποθηκεύτηκε."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1221
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1223
 msgid "Could not save the preset"
 msgstr "Δεν ήταν δυνατή η αποθήκευση της προκαθορισμένης ρύθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1230
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1232
 msgid "Could not load the preset"
 msgstr "Δεν ήταν δυνατή η φόρτωση της προκαθορισμένης ρύθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1239
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1241
 msgid "Could not delete the preset"
 msgstr "Δεν ήταν δυνατή η διαγραφή της προκαθορισμένης ρύθμισης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1247
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1249
 #, python-brace-format
 msgid "Loaded; {n} invalid value was replaced by its default."
 msgid_plural "Loaded; {n} invalid values were replaced by defaults."
 msgstr[0] "Φορτώθηκε· {n} μη έγκυρη τιμή αντικαταστάθηκε με την προεπιλογή της."
 msgstr[1] "Φορτώθηκε· {n} μη έγκυρες τιμές αντικαταστάθηκαν με προεπιλογές."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1251
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1253
 msgid "Layout loaded."
 msgstr "Η διάταξη φορτώθηκε."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1254
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1256
 msgid "Export Kojiro layout"
 msgstr "Εξαγωγή διάταξης Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1266
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1268
 msgid "Layout exported."
 msgstr "Η διάταξη εξήχθη."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1283
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
 msgid "Package exported."
 msgstr "Το πακέτο εξήχθη."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1285
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1287
 msgid "Could not export"
 msgstr "Δεν ήταν δυνατή η εξαγωγή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1290
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1292
 msgid "Include your wallpaper?"
 msgstr "Να συμπεριληφθεί η ταπετσαρία σας;"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1291
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
 msgid "The layout uses an image you imported. Include it only if you have the right to share it; otherwise the package uses a built-in wallpaper."
 msgstr "Η διάταξη χρησιμοποιεί μια εικόνα που εισαγάγατε. Συμπεριλάβετέ την μόνο αν έχετε το δικαίωμα να την κοινοποιήσετε· διαφορετικά το πακέτο χρησιμοποιεί μια ενσωματωμένη ταπετσαρία."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1293
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1295
 msgid "Do not include"
 msgstr "Να μη συμπεριληφθεί"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1294
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1296
 msgid "Include the image"
 msgstr "Συμπερίληψη της εικόνας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1299
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1301
 msgid "Import Kojiro layout"
 msgstr "Εισαγωγή διάταξης Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1300
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1302
 msgid "Kojiro layouts"
 msgstr "Διατάξεις Kojiro"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1337
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1339
 msgid "Could not import"
 msgstr "Δεν ήταν δυνατή η εισαγωγή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1350
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1352
 msgid "Sensors on this computer"
 msgstr "Αισθητήρες σε αυτόν τον υπολογιστή"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1351
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1353
 msgid "What the widgets can show. Optional sensors are read only while a visible widget uses them."
 msgstr "Τι μπορούν να δείξουν τα γραφικά στοιχεία. Οι προαιρετικοί αισθητήρες διαβάζονται μόνο όσο τους χρησιμοποιεί ένα ορατό γραφικό στοιχείο."
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1359
 msgid "limit"
 msgstr "όριο"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1357
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1360
 msgid "no hardware limit reported"
 msgstr "δεν αναφέρεται όριο υλικού"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 #, python-brace-format
 msgid "video encode/decode: {v}"
 msgstr "κωδικοποίηση/αποκωδικοποίηση βίντεο: {v}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1364
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
 msgid "not reported"
 msgstr "δεν αναφέρεται"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "Fans"
 msgstr "Ανεμιστήρες"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1367
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1370
 msgid "none reported"
 msgstr "δεν αναφέρεται κανένας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1371
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
 #, python-brace-format
 msgid "Disk {m}"
 msgstr "Δίσκος {m}"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1374
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
 msgid "no temperature sensor"
 msgstr "χωρίς αισθητήρα θερμοκρασίας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1375
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1378
 msgid "Rendering"
 msgstr "Σχεδίαση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1376
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1379
 msgid "Last preview frame"
 msgstr "Τελευταίο καρέ προεπισκόπησης"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1377
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1380
 msgid "Cached widget layers"
 msgstr "Επίπεδα γραφικών στοιχείων στην κρυφή μνήμη"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 msgid "Optional collectors used"
 msgstr "Προαιρετικοί συλλέκτες σε χρήση"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1382
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1385
 #: usr/share/big-screen-monitor-display/media_player_page.py:805
 msgid "none"
 msgstr "κανένας"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1383
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1387
 msgid "Settings size"
 msgstr "Μέγεθος ρυθμίσεων"
 
-#: usr/share/big-screen-monitor-display/kojiro_page.py:1384
+#: usr/share/big-screen-monitor-display/kojiro_page.py:1388
 msgid "Refresh"
 msgstr "Ανανέωση"
 
@@ -7412,81 +7412,81 @@ msgid_plural "{count} displays: {state}"
 msgstr[0] "{count} οθόνη: {state}"
 msgstr[1] "{count} οθόνες: {state}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:490
+#: usr/share/big-screen-monitor-display/screentray/app.py:491
 msgid "The monitor service is not running, so nothing reaches the displays. Start it below (administrator authorization)."
 msgstr "Η υπηρεσία παρακολούθησης δεν εκτελείται, οπότε τίποτα δεν φτάνει στις οθόνες. Ξεκινήστε την παρακάτω (απαιτείται εξουσιοδότηση διαχειριστή)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:493
+#: usr/share/big-screen-monitor-display/screentray/app.py:494
 #, python-brace-format
 msgid "“{name}” is not connected now. Its theme can still be chosen (used when it connects again); brightness and orientation wait for it. Choose another display above."
 msgstr "Η «{name}» δεν είναι συνδεδεμένη τώρα. Το θέμα της μπορεί ακόμα να επιλεγεί (θα χρησιμοποιηθεί όταν συνδεθεί ξανά)· η φωτεινότητα και ο προσανατολισμός την περιμένουν. Επιλέξτε άλλη οθόνη παραπάνω."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:497
+#: usr/share/big-screen-monitor-display/screentray/app.py:498
 msgid "Connect a USB display. It appears here a moment after it is plugged in; your choices below are kept and used when it connects."
 msgstr "Συνδέστε μια οθόνη USB. Εμφανίζεται εδώ λίγο αφού συνδεθεί· οι επιλογές σας παρακάτω διατηρούνται και χρησιμοποιούνται όταν συνδεθεί."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:507
+#: usr/share/big-screen-monitor-display/screentray/app.py:508
 msgid "More options for this theme are in the configuration window."
 msgstr "Περισσότερες επιλογές για αυτό το θέμα υπάρχουν στο παράθυρο διαμόρφωσης."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn On"
 msgstr "Ενεργοποίηση"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:516
-#: usr/share/big-screen-monitor-display/screentray/app.py:600
+#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:601
 msgid "Turn Off"
 msgstr "Απενεργοποίηση"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:517
+#: usr/share/big-screen-monitor-display/screentray/app.py:518
 msgid "Switch the backlight off and on again; the theme keeps running."
 msgstr "Σβήνει και ανάβει ξανά τον οπίσθιο φωτισμό· το θέμα συνεχίζει να εκτελείται."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:519
+#: usr/share/big-screen-monitor-display/screentray/app.py:520
 msgid "This display has no adjustable backlight (its firmware does not offer it)."
 msgstr "Αυτή η οθόνη δεν έχει ρυθμιζόμενο οπίσθιο φωτισμό (το υλικολογισμικό της δεν το προσφέρει)."
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:543
+#: usr/share/big-screen-monitor-display/screentray/app.py:544
 #, python-brace-format
 msgid "Changes go to: {name}"
 msgstr "Οι αλλαγές πηγαίνουν σε: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:545
+#: usr/share/big-screen-monitor-display/screentray/app.py:546
 #, python-brace-format
 msgid "Theme: {name}"
 msgstr "Θέμα: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:547
+#: usr/share/big-screen-monitor-display/screentray/app.py:548
 #, python-brace-format
 msgid "Brightness: {value}%"
 msgstr "Φωτεινότητα: {value}%"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:563
+#: usr/share/big-screen-monitor-display/screentray/app.py:564
 msgid "Service running"
 msgstr "Η υπηρεσία εκτελείται"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:612
+#: usr/share/big-screen-monitor-display/screentray/app.py:613
 msgid "Theme Gallery…"
 msgstr "Συλλογή θεμάτων…"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:638
+#: usr/share/big-screen-monitor-display/screentray/app.py:639
 #, python-brace-format
 msgid "Display: {name}"
 msgstr "Οθόνη: {name}"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:644
+#: usr/share/big-screen-monitor-display/screentray/app.py:645
 #, python-brace-format
 msgid "{connected} of {count} connected"
 msgid_plural "{connected} of {count} connected"
 msgstr[0] "{connected} από {count} συνδεδεμένη"
 msgstr[1] "{connected} από {count} συνδεδεμένες"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:703
+#: usr/share/big-screen-monitor-display/screentray/app.py:704
 msgid "Apply to all displays?"
 msgstr "Εφαρμογή σε όλες τις οθόνες;"
 
-#: usr/share/big-screen-monitor-display/screentray/app.py:704
+#: usr/share/big-screen-monitor-display/screentray/app.py:705
 #, python-brace-format
 msgid "These displays have their own setting, which will be replaced: {names}."
 msgstr "Αυτές οι οθόνες έχουν δική τους ρύθμιση, η οποία θα αντικατασταθεί: {names}."

@@ -31,21 +31,6 @@ from .. import __version__, settings as settings_mod
 from . import artwork, ipc, model, mpris, selection, volume
 
 
-def unix_signal_add(signum, handler):
-    """GLibUnix.signal_add (PyGObject >= 3.52); GLib.unix_signal_add before it."""
-    try:
-        gi.require_version("GLibUnix", "2.0")
-        from gi.repository import GLibUnix
-        return GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, signum, handler)
-    except (ImportError, ValueError, AttributeError):
-        return GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signum, handler)
-
-
-def register_object(conn, path, interface, method_call, get_property=None, set_property=None):
-    """Gio's closure-based registration (register_object is deprecated in PyGObject 3.52+)."""
-    register = getattr(conn, "register_object_with_closures2", None) or conn.register_object
-    return register(path, interface, method_call, get_property, set_property)
-
 log = logging.getLogger("bsmd.media")
 
 

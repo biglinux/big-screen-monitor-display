@@ -365,7 +365,8 @@ def dashboard_preview(settings, metrics=None, now=None):
 
 CAPTURE_VERSION = 13
 COMMON_KEYS = ("theme", "language", "name", "orientation", "std_temp_unit")
-THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_", "sm_planet_"), "old_computer": ("oc_",),
+THEME_KEYS = {"standard": ("std_", "sm_std_"), "gkrellm": ("gk_",), "planet": ("planet_", "sm_planet_"),
+              "old_computer": ("oc_",),
               "brother_away": ("ba_", "overlay_", "sm_ba_"), "kojiro": ("kojiro",), "big_media_player": ("bmp_",)}
 # Scenes that follow the time of day are captured again when the period changes,
 # drawn at a representative hour (chosen so no clock component collides with the
@@ -431,7 +432,8 @@ def _hardware(stats):
     """What themes print as fixed text (names, totals): a change means a new picture."""
     gpus = [(g.get("name", ""), round((g.get("mem_total_mb") or 0) / 256)) for g in stats.get("gpus") or []]
     return {"host": stats.get("hostname", ""), "kernel": stats.get("kernel", ""), "cpu": stats.get("cpu_model", ""),
-            "ram": round((stats.get("ram_total_mb") or 0) / 512), "swap": round((stats.get("swap_total_mb") or 0) / 512),
+            "ram": round((stats.get("ram_total_mb") or 0) / 512),
+            "swap": round((stats.get("swap_total_mb") or 0) / 512),
             "disk": round(stats.get("disk_total_gb") or 0), "gpus": gpus, "cores": list(stats.get("cpu_cores") or ())}
 
 

@@ -649,8 +649,8 @@ class KojiroPage:
         set_prop = lambda key: (lambda value: self.state.set_prop(wid, key, value))  # noqa: E731
         set_opt = lambda key: (lambda value: self.state.set_opt(wid, key, value))   # noqa: E731
         count = len(self.state.selection)
-        title = _(model.type_label(widget_type)) + (ngettext(" (+{n} selected)", " (+{n} selected)", count - 1).format(n=count - 1)
-                                                       if count > 1 else "")
+        selected = ngettext(" (+{n} selected)", " (+{n} selected)", count - 1).format(n=count - 1) if count > 1 else ""
+        title = _(model.type_label(widget_type)) + selected
         head = self._group(self.element_page, self._element_groups, title, wid)
         head.add(self._switch_row(_("Visible"), w.get("visible", True), set_prop("visible")))
         head.add(self._switch_row(_("Lock position"), w.get("locked"), set_prop("locked")))
@@ -846,7 +846,8 @@ class KojiroPage:
             row.connect("activated", lambda _r, i=wid: self.state.select(i))
             group.add(row)
         buttons = Gtk.Box(spacing=6, halign=Gtk.Align.END, margin_top=6)
-        for icon, tip, how in (("go-top-symbolic", _("Bring to front"), "top"), ("go-up-symbolic", _("Bring forward"), "up"),
+        for icon, tip, how in (("go-top-symbolic", _("Bring to front"), "top"),
+                               ("go-up-symbolic", _("Bring forward"), "up"),
                                ("go-down-symbolic", _("Send backward"), "down"),
                                ("go-bottom-symbolic", _("Send to back"), "bottom")):
             button = Gtk.Button(icon_name=icon, tooltip_text=tip)
@@ -886,7 +887,8 @@ class KojiroPage:
             solid.add(self._color_row(_("Second colour"), wp["color2"], setw("color2")))
             solid.add(self._spin_row(_("Gradient angle"), 0, 359, 15, wp["angle"], setw("angle")))
             fit = self._group(self.background_page, self._background_groups, _("Fit and position"))
-            fit.add(self._combo_row(_("Fit"), [("cover", _("Fill the screen (crop)")), ("contain", _("Fit whole image")),
+            fit.add(self._combo_row(_("Fit"), [("cover", _("Fill the screen (crop)")),
+                                               ("contain", _("Fit whole image")),
                                                ("stretch", _("Stretch")), ("center", _("Centre")),
                                                ("tile", _("Tile")), ("original", _("Original size"))],
                                     wp["fit"], setw("fit")))
@@ -1354,7 +1356,8 @@ class KojiroPage:
         crit = stats.get("cpu_temp_crit")
         sensors.add(Adw.ActionRow(title=_("CPU"), subtitle=f"{stats.get('cpu_model') or '?'} · "
                                   f"{kdata.temperature_text(cpu_temp)}"
-                                  + (f" · {_('limit')} {crit:.0f}°C" if crit else f" · {_('no hardware limit reported')}")))
+                                  + (f" · {_('limit')} {crit:.0f}°C" if crit
+                                     else f" · {_('no hardware limit reported')}")))
         for index, gpu in enumerate(stats.get("gpus") or []):
             if not gpu.get("path"):
                 continue
@@ -1380,7 +1383,8 @@ class KojiroPage:
                                         ("sensors", needs["sensors"]), ("addresses", needs["addrs"])) if on]
         wanted += [f"disk {m}" for m in sorted(needs["disks"])]
         perf.add(Adw.ActionRow(title=_("Optional collectors used"), subtitle=", ".join(wanted) or _("none")))
-        perf.add(Adw.ActionRow(title=_("Settings size"), subtitle=f"{len(json.dumps(self.state.config)) / 1024:.1f} KB"))
+        size_kb = len(json.dumps(self.state.config)) / 1024
+        perf.add(Adw.ActionRow(title=_("Settings size"), subtitle=f"{size_kb:.1f} KB"))
         refresh = Gtk.Button(label=_("Refresh"), halign=Gtk.Align.END, margin_top=6)
         refresh.connect("clicked", lambda *_: self._refresh_advanced())
         perf.add(refresh)

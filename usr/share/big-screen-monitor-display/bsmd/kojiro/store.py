@@ -89,7 +89,8 @@ def check_png(data):
             raise StoreError("broken PNG chunk")
         chunk = data[offset + 8:offset + 8 + length]
         crc = data[offset + 8 + length:offset + 12 + length]
-        if len(chunk) != length or len(crc) != 4 or zlib.crc32(kind + chunk) & 0xFFFFFFFF != struct.unpack(">I", crc)[0]:
+        if (len(chunk) != length or len(crc) != 4
+                or zlib.crc32(kind + chunk) & 0xFFFFFFFF != struct.unpack(">I", crc)[0]):
             raise StoreError("PNG checksum mismatch")
         if width is None:
             if kind != b"IHDR" or length != 13:
@@ -154,7 +155,7 @@ def normalize_image(path):
     try:
         size = os.path.getsize(path)
     except OSError as error:
-        raise StoreError(str(error))
+        raise StoreError(str(error)) from error
     if size > MAX_SOURCE_BYTES:
         raise StoreError("file too large")
     with open(path, "rb") as handle:
@@ -174,7 +175,7 @@ def normalize_image(path):
     except StoreError:
         raise
     except Exception as error:  # noqa: BLE001 - every decoder error is just "invalid image"
-        raise StoreError(f"invalid image: {error}")
+        raise StoreError(f"invalid image: {error}") from error
     return _encode(image)
 
 
@@ -184,7 +185,7 @@ def _rasterize_svg(path):
         result = subprocess.run(["rsvg-convert", "-w", "1920", "--keep-aspect-ratio", path], capture_output=True,
                                 timeout=20, check=False)
     except (OSError, subprocess.SubprocessError) as error:
-        raise StoreError(f"cannot convert SVG: {error}")
+        raise StoreError(f"cannot convert SVG: {error}") from error
     if result.returncode != 0 or not result.stdout:
         raise StoreError("cannot convert SVG")
     from PIL import Image
@@ -270,7 +271,7 @@ def load_preset_file(path):
         with open(path, encoding="utf-8") as handle:
             data = json.load(handle)
     except (OSError, ValueError) as error:
-        raise StoreError(f"cannot read {os.path.basename(path)}: {error}")
+        raise StoreError(f"cannot read {os.path.basename(path)}: {error}") from error
     return parse_preset(data)
 
 
@@ -322,7 +323,7 @@ def read_package(path):
     try:
         archive = zipfile.ZipFile(path)
     except (OSError, zipfile.BadZipFile) as error:
-        raise StoreError(f"not a Kojiro package: {error}")
+        raise StoreError(f"not a Kojiro package: {error}") from error
     with archive:
         entries = {}
         total = 0
@@ -341,7 +342,7 @@ def read_package(path):
         metadata = json.loads(entries.get("metadata.json", b"{}").decode("utf-8"))
         config = json.loads(entries["config.json"].decode("utf-8"))
     except (KeyError, UnicodeDecodeError, ValueError) as error:
-        raise StoreError(f"invalid package: {error}")
+        raise StoreError(f"invalid package: {error}") from error
     if not isinstance(metadata, dict) or metadata.get("format", PACKAGE_FORMAT) != PACKAGE_FORMAT:
         raise StoreError("not a Kojiro package")
     wallpaper = entries.get("wallpaper.png")

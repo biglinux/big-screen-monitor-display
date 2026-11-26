@@ -262,6 +262,10 @@ def test_add_android_option_opens_the_pairing_code(config_gui, monkeypatch):
 @pytest.mark.parametrize("libadwaita", ["1.6", "1.7+"])
 def test_kojiro_inspector_builds_on_every_supported_libadwaita(config_gui, monkeypatch, libadwaita):
     """Adw.InlineViewSwitcher only exists from libadwaita 1.7; the package asks for 1.6."""
+    # Gtk.init_check() can report success without a display and the widgets then
+    # crash the whole run (segfault), so the environment is checked first.
+    if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
+        pytest.skip("no display for GTK")
     import kojiro_page
     from gi.repository import Adw, Gtk
     if not Gtk.init_check():

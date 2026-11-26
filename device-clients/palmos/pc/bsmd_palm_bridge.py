@@ -376,7 +376,8 @@ def main(argv=None):
     parser.add_argument("--interval", type=float, default=1.0, help="Intervalo de envio em segundos (padrão: 1.0)")
     parser.add_argument("--channel", type=int, default=0, help="Canal RFCOMM no modo listen (0 = automático)")
     parser.add_argument("--target", default="",
-                        help="MAC do Palm para conectar (padrão: detecta o Palm pareado) ou 'listen' para modo servidor")
+                        help="MAC do Palm para conectar (padrão: detecta o Palm pareado) "
+                             "ou 'listen' para modo servidor")
     parser.add_argument("--gpu", type=int, default=None,
                         help="Índice da GPU mostrada (padrão: a de mais VRAM)")
     parser.add_argument("--stdout", action="store_true", help="Apenas imprime pacotes no terminal (modo teste)")

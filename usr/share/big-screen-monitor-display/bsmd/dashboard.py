@@ -121,7 +121,7 @@ def text_height(font):
 
 
 def mix(a, b, t):
-    return tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b))
+    return tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b, strict=False))
 
 
 def temperature(value, unit):
@@ -539,7 +539,8 @@ def draw_footer(p, lay, box, s, stats):
     load = stats.get("load_avg") or (0, 0, 0)
     parts.append(_("load {a:.2f} {b:.2f} {c:.2f}").format(a=load[0], b=load[1], c=load[2]))
     if stats.get("proc_count"):
-        parts.append(ngettext("{count} process", "{count} processes", stats["proc_count"]).format(count=stats["proc_count"]))
+        count = stats["proc_count"]
+        parts.append(ngettext("{count} process", "{count} processes", count).format(count=count))
     if stats.get("power_profile"):
         parts.append(stats["power_profile"])
     separator = "  ·  "
