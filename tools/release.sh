@@ -26,11 +26,11 @@ git fetch -q origin main
 git rev-parse -q --verify "refs/tags/$tag" >/dev/null && die "a tag $tag já existe"
 git ls-remote --exit-code --tags origin "$tag" >/dev/null 2>&1 && die "a tag $tag já existe no GitHub"
 
-if command -v gh >/dev/null; then
-    sha=$(git rev-parse HEAD)
-    state=$(gh run list --commit "$sha" --workflow Tests --json conclusion --jq '.[0].conclusion' 2>/dev/null || true)
-    [ "$state" = "success" ] || die "o workflow Tests deste commit não está verde (estado: ${state:-sem execução})"
-fi
+# O CI precisa estar verde neste commit: sem o gh não há como conferir, então para.
+command -v gh >/dev/null || die "o gh (GitHub CLI) é necessário para conferir o workflow Tests"
+sha=$(git rev-parse HEAD)
+state=$(gh run list --commit "$sha" --workflow Tests --json conclusion --jq '.[0].conclusion' 2>/dev/null || true)
+[ "$state" = "success" ] || die "o workflow Tests deste commit não está verde (estado: ${state:-sem execução})"
 
 echo "release: $tag pronta ($(git rev-parse --short HEAD))"
 [ "$dry" = 1 ] && exit 0
