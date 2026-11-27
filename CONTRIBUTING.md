@@ -77,8 +77,12 @@ problemas, as correções vêm num PR seguinte e ficam registradas em
    `## [x.y.z]`. O `tests/test_version.py` confere tudo isso.
 2. Faça o merge na `main` e espere o *Tests* ficar verde.
 3. Rode `tools/release.sh` (ou `--dry-run` para só conferir). Ele envia a tag
-   `vx.y.z`; o workflow *Android app* compila o APK e publica a release, e o
-   *Translate and Build Package* pede o pacote ao BigLinux depois dos testes.
+   `vx.y.z`; o workflow *Android app* compila o APK e publica a release (título e
+   notas vêm do CHANGELOG), e o *Mirror to biglinux* avança o
+   `biglinux/big-screen-monitor-display`, de onde sai o pacote (precisa do segredo
+   `BIGLINUX_SYNC_TOKEN`; veja o cabeçalho do workflow).
+4. O workflow *Delivery* confere todo dia se o repositório do BigLinux tem a
+   release e abre uma issue `entrega` quando não tem.
 
 ## Segurança
 
