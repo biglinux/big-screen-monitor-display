@@ -282,6 +282,9 @@ class DeepCoolWindow(PanelWindow):
         if keys != list(self.mode_buttons):
             for button in self.mode_buttons.values():
                 self.mode_group.removeButton(button)
+                # out of the FlowLayout first: it must never keep an item whose widget
+                # is being destroyed (suspected cause of a rare PyQt5 segfault in CI)
+                self.mode_grid.removeWidget(button)
                 button.deleteLater()
             self.mode_buttons = {}
             for key, label in choices:
