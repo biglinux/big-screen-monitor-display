@@ -17,6 +17,8 @@
 
 <img src="docs/images/banner.png" alt="Brother Away de manhã, gritando AWAAAAAY depois do terceiro coco, e dormindo à noite" width="100%"/>
 
+<img src="docs/images/tour.gif" alt="Os temas em sequência: painel Padrão, Brother Away, Kojiro, Big Media Player, GKrellM, Planet e Computador Antigo" width="480"/>
+
 [Novidades](#novidades) ·
 [Big Media Player](#big-media-player) ·
 [Kojiro](#kojiro) ·

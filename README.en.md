@@ -12,7 +12,7 @@
 
 🇧🇷 [Leia em português](README.md) (full documentation) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
-<img src="docs/images/banner.png" alt="Brother Away theme" width="100%"/>
+<img src="docs/images/tour.gif" alt="The themes in sequence: Standard panel, Brother Away, Kojiro, Big Media Player, GKrellM, Planet and Old Computer" width="480"/>
 
 </div>
 
