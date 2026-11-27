@@ -45,7 +45,7 @@ histórico.
 
 ## Contribuir
 
-[CONTRIBUTING.md](../CONTRIBUTING.md) · [PLANNING.md](../PLANNING.md) (roteiro) ·
+[CONTRIBUTING.md](../CONTRIBUTING.md) · **[Planejamento estratégico](PLANEJAMENTO-ESTRATEGICO.md)** (auditoria e roadmap atual) · [PLANNING.md](../PLANNING.md) (roteiro executado) ·
 [CHANGELOG.md](../CHANGELOG.md) · integrações de PRs externos:
 [22 — PR #11](22-integracao-pr11.md), [23 — PR #19](23-integracao-pr19-palmos.md).
 

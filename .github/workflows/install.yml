@@ -40,7 +40,7 @@ jobs:
           elif command -v zypper >/dev/null; then zypper --non-interactive install bash git tar gzip
           elif command -v pacman >/dev/null; then pacman -Syu --noconfirm bash git
           fi
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: Install the packages install-system.sh asks for
         shell: bash
         run: |

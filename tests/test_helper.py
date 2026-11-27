@@ -156,3 +156,19 @@ def test_wallpaper_import_rejects_non_png(helper, payload):
 def test_wallpaper_removal_rejects_bad_ids(helper, bad_id):
     code, reply = helper(["remove-wallpaper", bad_id])
     assert code == 2 and not reply["ok"]
+
+
+def test_privileged_writes_need_an_administrator():
+    """Only administrators (wheel, local and active) skip the password; nobody else
+    may change system settings, wallpapers or send display commands without one."""
+    import re
+    root = os.path.join(os.path.dirname(__file__), "..", "usr", "share", "polkit-1")
+    with open(os.path.join(root, "actions", "br.com.biglinux.big-screen-monitor-display.policy"),
+              encoding="utf-8") as fh:
+        policy = fh.read()
+    actions = dict(re.findall(r'<action id="([^"]+)">.*?<allow_active>([^<]+)</allow_active>', policy, re.S))
+    assert actions and all(value == "auth_admin_keep" for value in actions.values()), actions
+    with open(os.path.join(root, "rules.d", "50-big-screen-monitor-display.rules"), encoding="utf-8") as fh:
+        rule = fh.read()
+    assert 'action.id.indexOf("br.com.biglinux.big-screen-monitor-display.") == 0' in rule
+    assert 'subject.local && subject.active && subject.isInGroup("wheel")' in rule

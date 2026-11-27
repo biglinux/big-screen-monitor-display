@@ -669,3 +669,25 @@ def test_session_split_commands_are_kept(qt_env, monkeypatch):
         assert calls == ["quit", "show"]
     finally:
         server.close()
+
+
+def test_rebuilt_chips_leave_no_stale_layout_items(qt_env):
+    """Chips rebuilt on a new status are taken out of their FlowLayout before deletion."""
+    from deepcooltray.app import DeepCoolWindow
+    from traykit.qt import QtWidgets
+
+    class Owner:
+        def set_mode(self, key):
+            pass
+    window = DeepCoolWindow.__new__(DeepCoolWindow)
+    QtWidgets.QWidget.__init__(window)
+    host = QtWidgets.QWidget(window)
+    from traykit.window import FlowLayout
+    window.mode_host, window.mode_grid = host, FlowLayout(host)
+    window.mode_group, window.mode_buttons = QtWidgets.QButtonGroup(window), {}
+    window.set_modes([("a", "A"), ("b", "B")], "a", Owner())
+    assert window.mode_grid.count() == 2
+    window.set_modes([("c", "C")], "c", Owner())
+    assert window.mode_grid.count() == 1                    # the two old chips left the layout
+    window.mode_grid.minimumSize()                          # walking the items is safe
+    window.deleteLater()

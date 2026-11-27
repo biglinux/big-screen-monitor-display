@@ -30,6 +30,7 @@ depends=(
     'python-pyqt6'
 )
 optdepends=(
+    'nvidia-utils: NVIDIA GPU usage, temperature, VRAM, clock and power (NVML; the proprietary driver has no sysfs usage)'
     'lm_sensors: detect and configure extra hardware sensors (fans on the Kojiro and SmartMonitor themes)'
     'python-pystray: tray icon when running the monitor manually'
     'libcanberra: sound after applying settings'
@@ -48,7 +49,7 @@ optdepends=(
     'noto-fonts-cjk: Chinese, Japanese and Korean text on the displays (otherwise drawn in English)'
 )
 makedepends=('gettext' 'git')
-pkgver=5.6.0
+pkgver=5.6.1
 pkgrel=1
 pkgver() {
     cd "${srcdir}/${_pkgname}"

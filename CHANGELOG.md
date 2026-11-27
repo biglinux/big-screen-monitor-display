@@ -7,6 +7,33 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
 
 ## [Não lançado]
 
+## [5.6.1] — Log sem enxurrada, segurança e entrega vigiada
+
+- **Pacote:** `nvidia-utils` como dependência opcional (é ele que traz a NVML,
+  usada desde a 5.6.0 para o uso, a temperatura e a memória das GPUs NVIDIA);
+  também no README e no pacote do AUR.
+- **Releases:** título e notas saem automaticamente da seção do CHANGELOG.
+- **Log sem enxurrada:** um display ligado que não responde (o FOSTON com o app
+  fechado) gerava um aviso a cada 2 s, 23 mil por dia. Agora as tentativas
+  esperam cada vez mais (até 30 s), e a mesma falha vira um resumo a cada 10 min.
+- O aviso de falha de recuperação só fala em reinício pelo systemd quando ele vai
+  mesmo acontecer (todos os displays falharam).
+- **Segurança:** quem não é administrador precisa da senha de administrador para
+  mudar a configuração do sistema, os papéis de parede e mandar comandos ao
+  serviço (como aprovar um celular Android); administradores (`wheel`) seguem sem
+  senha. Actions do CI fixadas por hash, com Dependabot; sem `tmate` no workflow
+  de pacote.
+- **Entrega vigiada:** um workflow diário confere se o repositório do BigLinux
+  tem a última release e abre uma issue quando não tem (hoje o estável entrega a
+  série 3.x, de março); a cada release, o repositório oficial
+  `biglinux/big-screen-monitor-display` pode ser avançado automaticamente.
+- **Bandejas:** os botões reconstruídos saem do layout antes de serem destruídos
+  (suspeita de um *segfault* raro do PyQt5).
+- **Qualidade:** a cobertura dos testes passa a medir também os subprocessos no
+  CI (o arquivo de configuração estava fora do repositório); piso 68 %. Teste
+  semanal de 2 h contra vazamento de memória, descritores e threads.
+- **README:** os temas em movimento logo no topo.
+
 ## [5.6.0] — GPU NVIDIA de verdade, relatar problemas e primeiro uso guiado
 
 **Para quem usa**

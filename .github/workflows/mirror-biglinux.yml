@@ -1,0 +1,43 @@
+name: Mirror to biglinux
+
+# Every release tag (v*) fast-forwards biglinux/big-screen-monitor-display, the
+# repository the BigLinux package is built from, to the tagged commit. Until now
+# this was a manual PR and the official repository drifted 117 commits behind
+# (docs/PLANEJAMENTO-ESTRATEGICO.md, T06).
+#
+# Needs the secret BIGLINUX_SYNC_TOKEN: a fine-grained token with
+# "Contents: read and write" on biglinux/big-screen-monitor-display only.
+# Without it the job only leaves a notice. A push that is not a fast-forward
+# (the official repository has commits of its own) is refused, never forced.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    if: github.repository == 'ruscher/big-screen-monitor-display'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Fast-forward biglinux/main
+        env:
+          TOKEN: ${{ secrets.BIGLINUX_SYNC_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::notice::No BIGLINUX_SYNC_TOKEN: biglinux/big-screen-monitor-display was not updated (see the header of this workflow)."
+            exit 0
+          fi
+          git fetch origin main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::$(git rev-parse --short HEAD) is not on main; only commits of main are mirrored."
+            exit 1
+          fi
+          url="https://x-access-token:${TOKEN}@github.com/biglinux/big-screen-monitor-display.git"
+          git push "$url" HEAD:refs/heads/main      # no --force: refused unless it is a fast-forward
+          echo "::notice::biglinux/main is now at $(git rev-parse --short HEAD) ($GITHUB_REF_NAME)."

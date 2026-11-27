@@ -1,5 +1,8 @@
 # PLANNING.md — Roteiro a partir da 5.5.2
 
+> **Planejamento atual:** [docs/PLANEJAMENTO-ESTRATEGICO.md](docs/PLANEJAMENTO-ESTRATEGICO.md)
+> (auditoria de 26/11/2026). Este arquivo fica como registro do roteiro das fases 0 a 7.
+
 Análise completa do projeto feita em 26/11/2026, sobre a `main` em `8c2362a`
 (PR #20). O roteiro anterior (3.x → 4.0) foi concluído e está no fim deste
 arquivo, como histórico.

@@ -1,0 +1,57 @@
+name: Delivery
+
+# Does the BigLinux package repository carry the latest release? It did not,
+# unnoticed, from March to November 2026 (docs/PLANEJAMENTO-ESTRATEGICO.md, T02).
+# Opens (or updates) an issue labelled "entrega" while it is behind and closes it
+# when the package catches up.
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Check the BigLinux repositories
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python tools/check_delivery.py --json > report.json
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          python tools/check_delivery.py || true
+      - name: Open, update or close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATUS: ${{ steps.check.outputs.status }}
+        run: |
+          gh label create entrega --color B60205 --description "Pacote do BigLinux atrás da release" 2>/dev/null || true
+          issue=$(gh issue list --label entrega --state open --json number --jq '.[0].number // empty')
+          body=$(python - <<'PY'
+          import json
+          r = json.load(open("report.json"))
+          lines = [f"Última release: **{r['release']}** ({r['release_date'][:10]})", "",
+                   "| Repositório | Estado | Pacote | Detalhe |", "| --- | --- | --- | --- |"]
+          for repo, item in r["repos"].items():
+              lines.append(f"| {repo} | {item['state']} | {item['version'] or '-'} | {item['detail']} |")
+          lines += ["", "Gerado por `tools/check_delivery.py` (workflow *Delivery*)."]
+          print("\n".join(lines))
+          PY
+          )
+          if [ "$STATUS" = "0" ]; then
+            if [ -n "$issue" ]; then gh issue close "$issue" --comment "$body"; fi
+          elif [ -n "$issue" ]; then
+            gh issue comment "$issue" --body "$body"
+          else
+            gh issue create --title "Pacote do BigLinux atrás da última release" --label entrega --body "$body"
+          fi

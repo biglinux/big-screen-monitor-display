@@ -1,0 +1,10 @@
+# The workflows pin every action to a commit hash (supply chain); Dependabot
+# proposes the update when a new release comes out, so the pins never go stale.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"

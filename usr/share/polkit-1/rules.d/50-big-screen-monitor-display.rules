@@ -1,8 +1,10 @@
-// Administrators (wheel) sitting at the computer may use the helper without
-// a password, as the previous sudoers rule allowed. The helper only accepts
-// validated settings and fixed service verbs for this one unit.
+// Administrators (wheel) sitting at the computer may use every action of the
+// helper without a password, as the previous sudoers rule allowed. Other users
+// need an administrator password (auth_admin_keep in the policy) to change the
+// system-wide settings, wallpapers, or send commands such as approving an
+// Android phone. The helper only accepts validated input and fixed verbs.
 polkit.addRule(function(action, subject) {
-    if (action.id == "br.com.biglinux.big-screen-monitor-display.manage" &&
+    if (action.id.indexOf("br.com.biglinux.big-screen-monitor-display.") == 0 &&
         subject.local && subject.active && subject.isInGroup("wheel")) {
         return polkit.Result.YES;
     }
