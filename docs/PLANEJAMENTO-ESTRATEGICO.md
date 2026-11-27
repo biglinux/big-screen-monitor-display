@@ -47,10 +47,13 @@ dele.** Essa é a conclusão central.
   usuário dinâmico sem privilégios, filtro de syscalls, rede restrita a faixas
   privadas, assistente polkit com verbos fixos, 1651 casos de teste, CI em três
   versões de Python e instalação testada em cinco distribuições. **[F]**
-- Mas **nenhum usuário do BigLinux recebeu nada desde a 5.1.0 (10/11)**. O
-  repositório de desenvolvimento nunca conseguiu pedir pacotes (sem token), e o
-  oficial, sincronizado hoje para a 5.6.0, recebe **HTTP 404** ao pedir o build.
-  **[F]**
+- Mas **o repositório estável do BigLinux entrega um pacote de 28/03/2026, da
+  série 3.x** (anterior à reconstrução da 4.0: rodava como root e travava). O
+  `biglinux-testing` nem tem o pacote. As builds de novembro (até a 5.1.0) não
+  chegaram a nenhum repositório público. O repositório de desenvolvimento nunca
+  conseguiu pedir pacotes (sem token), e o oficial, sincronizado hoje para a
+  5.6.0, recebe **HTTP 404** ao pedir o build. **[F]** (verificado nos bancos
+  públicos `biglinux-stable.db` e `biglinux-testing.db` e nas tags de build)
 - A própria máquina de desenvolvimento roda a **5.5.2** (pacote de 23/11), não a
   versão publicada. **[F]**
 - O serviço instalado aqui grava **um aviso a cada 2 segundos** (23.438 em 24 h)
@@ -116,7 +119,7 @@ flowchart LR
 | Indicador | Valor | Fonte |
 | --- | --- | --- |
 | Versão na `main` / última release | 5.6.1 / 5.6.0 | `bsmd/__init__.py`, `gh release list` |
-| Versão que o BigLinux entrega | 5.1.0 (último build 10/11) | tags `big-screen-monitor-display-26.11.10-*` no `biglinux/` |
+| Versão que o BigLinux entrega | **série 3.x** no `biglinux-stable` (build de 28/03/2026); ausente no `biglinux-testing`; a última build (10/11, 5.1.0) não está em nenhum dos dois | `tools/check_delivery.py` lendo os bancos públicos |
 | Versão instalada nesta máquina | 5.5.2 (`26.11.23-1857`) | `pacman -Q` |
 | Código Python | 144 arquivos, 46.834 linhas | `find usr -name '*.py'` |
 | Testes | 617 funções, 1651 casos, 41 arquivos | `tests/` |
@@ -169,6 +172,8 @@ Manter exatamente como está (ver também 11.4):
 | PB-10 | `apply-settings` e `import-wallpaper` sem senha para **qualquer** usuário ativo, não só administradores | `allow_active=yes` na policy | P3 |
 | PB-11 | Arquivos grandes concentram risco de conflito | `capture.py` 1767, `runtime.py` 1602, `legacy_themes.py` 1593, `config_gui.py` 1395, `kojiro_page.py` 1389 linhas | P3 |
 | PB-12 | Fator ônibus = 1 | 193 de 216 commits de um autor | P2 |
+| PB-13 | *Segfault* intermitente do PyQt5 nos testes da bandeja | job PyQt5 caiu no #35 e no #36 em `FlowLayout.minimumSize`; botões destruídos sem sair do layout (3 itens onde devia haver 1) | P1 (CI) |
+| PB-14 | Promoção `testing` → `stable` no BigLinux é manual e não aconteceu desde março | `biglinux-stable` com build de 28/03 | P0 (equipe BigLinux) |
 
 ---
 
@@ -343,7 +348,8 @@ turing-smart-screen-python crescer, e aqui o editor visual já existe.
 5. Temas compartilháveis (crescimento da comunidade).
 
 **15. Recomendação mais importante.** *Meça o projeto pelo que chega ao usuário,
-não pelo que está na `main`.* Hoje a diferença entre as duas é de cinco versões.
+não pelo que está na `main`.* Hoje o usuário do BigLinux estável recebe a série 3.x,
+enquanto a `main` está na 5.6.1.
 
 ---
 
@@ -627,7 +633,7 @@ passam a digitar senha; decisão de produto. **Arquivos:**
 
 | Métrica | Hoje | 3 meses | Como medir |
 | --- | --- | --- | --- |
-| Atraso entre release e pacote BigLinux | 5 versões | ≤ 24 h | T02 |
+| Atraso entre release e pacote BigLinux | estável na série 3.x (8 meses) | testing ≤ 2 dias; estável ≤ 21 dias | workflow *Delivery* (`tools/check_delivery.py`) |
 | Avisos no journal por hora em regime | até 1.800 | ≤ 10 | `journalctl -p warning --since -1h \| wc -l` |
 | Reinícios do serviço por semana | 0 | 0 | `NRestarts` |
 | Crescimento de RSS em 2 h | não medido | < 5 MB | T08 |
