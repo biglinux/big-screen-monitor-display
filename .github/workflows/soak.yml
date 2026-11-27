@@ -1,0 +1,41 @@
+name: Soak
+
+# Two hours of the real service on simulated panels, switching themes every five
+# minutes, sampling memory, open files and threads (tools/soak.py). Weekly, and
+# on demand. Memory must plateau after the warm-up (measured locally: about 179 MB
+# for 800x480 + 480x320 from minute 5 on); see docs/PLANEJAMENTO-ESTRATEGICO.md, T08.
+on:
+  schedule:
+    - cron: "41 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "Duration in minutes"
+        default: "120"
+
+permissions:
+  contents: read
+
+jobs:
+  soak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext librsvg2-bin fontconfig fonts-dejavu-core
+          pip install pillow numpy psutil pyusb pyserial
+      - name: Run
+        run: python tools/soak.py --minutes "${{ inputs.minutes || '120' }}" --per-theme 300 --every 15
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        if: always()
+        with:
+          name: soak-report
+          path: soak-report.json
