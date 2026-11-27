@@ -51,9 +51,19 @@ def slope_per_hour(points):
     return sum((t - mean_t) * (v - mean_v) for t, v in points) / var * 3600
 
 
-def verdict(samples, max_mb_per_hour, max_fd_growth, max_thread_growth):
-    """Report from [(seconds, rss, fds, threads)]; the second half is judged."""
-    half = samples[len(samples) // 2:]
+def verdict(samples, max_mb_per_hour, max_fd_growth, max_thread_growth, warm_up=0.0):
+    """Report from [(seconds, rss, fds, threads)]. Judged: the second half, and never
+    before ``warm_up`` seconds (one full cycle of themes: each one loads its fonts,
+    images and caches the first time, which is growth but not a leak)."""
+    if not samples:
+        return {"samples": 0, "problems": ["no samples"], "ok": False, "inconclusive": False}
+    start_at = max(samples[-1][0] / 2, warm_up)
+    half = [s for s in samples if s[0] >= start_at]
+    if len(half) < 3:
+        return {"samples": len(samples), "rss_start_mb": round(samples[0][1], 1),
+                "rss_end_mb": round(samples[-1][1], 1), "problems": [], "ok": True, "inconclusive": True,
+                "note": f"shorter than the warm-up ({warm_up / 60:.0f} min, one cycle of themes) plus a "
+                        "measured part: nothing judged"}
     rss_slope = slope_per_hour([(t, r) for t, r, _f, _th in half])
     fd_growth = half[-1][2] - half[0][2] if half else 0
     thread_growth = half[-1][3] - half[0][3] if half else 0
@@ -64,11 +74,11 @@ def verdict(samples, max_mb_per_hour, max_fd_growth, max_thread_growth):
         problems.append(f"open files grew by {fd_growth} (limit {max_fd_growth})")
     if thread_growth > max_thread_growth:
         problems.append(f"threads grew by {thread_growth} (limit {max_thread_growth})")
-    return {"samples": len(samples), "rss_start_mb": round(samples[0][1], 1) if samples else None,
-            "rss_end_mb": round(samples[-1][1], 1) if samples else None,
-            "rss_peak_mb": round(max(s[1] for s in samples), 1) if samples else None,
-            "rss_slope_mb_per_hour": round(rss_slope, 2), "fd_growth": fd_growth,
-            "thread_growth": thread_growth, "problems": problems, "ok": not problems}
+    return {"samples": len(samples), "rss_start_mb": round(samples[0][1], 1),
+            "rss_end_mb": round(samples[-1][1], 1), "rss_peak_mb": round(max(s[1] for s in samples), 1),
+            "judged_from_s": round(start_at), "rss_slope_mb_per_hour": round(rss_slope, 2),
+            "fd_growth": fd_growth, "thread_growth": thread_growth, "problems": problems,
+            "ok": not problems, "inconclusive": False}
 
 
 def main(argv=None):
@@ -116,7 +126,8 @@ def main(argv=None):
             service.kill()
         log.close()
 
-    report = verdict(samples, args.max_mb_per_hour, args.max_fd_growth, args.max_thread_growth)
+    report = verdict(samples, args.max_mb_per_hour, args.max_fd_growth, args.max_thread_growth,
+                     warm_up=len(THEMES) * args.per_theme)
     if exited_early is not None:
         report["problems"].append(f"the service exited early with code {exited_early}")
         report["ok"] = False
