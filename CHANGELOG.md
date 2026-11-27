@@ -13,6 +13,11 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   usada desde a 5.6.0 para o uso, a temperatura e a memória das GPUs NVIDIA);
   também no README e no pacote do AUR.
 - **Releases:** título e notas saem automaticamente da seção do CHANGELOG.
+- **Segurança:** quem não é administrador precisa da senha de administrador para
+  mudar a configuração do sistema, os papéis de parede e mandar comandos ao
+  serviço (como aprovar um celular Android); administradores (`wheel`) seguem sem
+  senha. Actions do CI fixadas por hash, com Dependabot; sem `tmate` no workflow
+  de pacote.
 - **Qualidade:** a cobertura dos testes passa a medir também os subprocessos no
   CI (o arquivo de configuração estava fora do repositório); piso 68 %.
 

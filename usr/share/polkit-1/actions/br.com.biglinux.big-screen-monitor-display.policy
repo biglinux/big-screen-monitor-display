@@ -27,7 +27,7 @@
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>yes</allow_active>
+      <allow_active>auth_admin_keep</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
     <annotate key="org.freedesktop.policykit.exec.argv1">apply-settings</annotate>
@@ -40,7 +40,7 @@
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>yes</allow_active>
+      <allow_active>auth_admin_keep</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
     <annotate key="org.freedesktop.policykit.exec.argv1">display-command</annotate>
@@ -53,7 +53,7 @@
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>yes</allow_active>
+      <allow_active>auth_admin_keep</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
     <annotate key="org.freedesktop.policykit.exec.argv1">import-wallpaper</annotate>
@@ -66,7 +66,7 @@
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>yes</allow_active>
+      <allow_active>auth_admin_keep</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/big-screen-monitor-display/bsm-helper</annotate>
     <annotate key="org.freedesktop.policykit.exec.argv1">remove-wallpaper</annotate>
