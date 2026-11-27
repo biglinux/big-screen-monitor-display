@@ -13,6 +13,11 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   usada desde a 5.6.0 para o uso, a temperatura e a memória das GPUs NVIDIA);
   também no README e no pacote do AUR.
 - **Releases:** título e notas saem automaticamente da seção do CHANGELOG.
+- **Log sem enxurrada:** um display ligado que não responde (o FOSTON com o app
+  fechado) gerava um aviso a cada 2 s, 23 mil por dia. Agora as tentativas
+  esperam cada vez mais (até 30 s), e a mesma falha vira um resumo a cada 10 min.
+- O aviso de falha de recuperação só fala em reinício pelo systemd quando ele vai
+  mesmo acontecer (todos os displays falharam).
 - **Segurança:** quem não é administrador precisa da senha de administrador para
   mudar a configuração do sistema, os papéis de parede e mandar comandos ao
   serviço (como aprovar um celular Android); administradores (`wheel`) seguem sem

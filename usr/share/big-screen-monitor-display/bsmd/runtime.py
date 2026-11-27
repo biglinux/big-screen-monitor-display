@@ -256,6 +256,7 @@ class DisplaySession:
         self.wake_render = threading.Event()
         self.backoff = copy.deepcopy(runtime.backoff)
         self.backoff.reset()
+        self._connect_log = {"kind": None, "at": 0.0, "suppressed": 0}
         self.ctx = RenderContext(runtime, session=self)
         self.driver = None
         self.device_info = None
@@ -844,6 +845,7 @@ class DisplaySession:
         self.failed_attempts = 0
         self.attention = None
         self.backoff.reset()
+        self._connect_log = {"kind": None, "at": 0.0, "suppressed": 0}
         self.recovery_started = None
         if self._is_telemetry():
             # What the theme needs (fans for Kojiro...) must be sampled before the first
@@ -906,6 +908,18 @@ class DisplaySession:
                 frames.to_native(image, self.driver.native_size, self._orientation(settings))))
             self.stop_event.wait(0.6)
 
+    def _record_connect_failure(self, error):
+        """One incident per kind of open failure, then a summary every CONNECT_LOG_EVERY
+        seconds while the same failure repeats (it used to log every attempt)."""
+        kind, now, state = f"connect_{error.kind}", self.clock(), self._connect_log
+        if kind == state["kind"] and now - state["at"] < self.runtime.CONNECT_LOG_EVERY:
+            state["suppressed"] += 1
+            return
+        repeated = state["suppressed"] if kind == state["kind"] else 0
+        self.record(kind, health.SEVERITY_ERROR, str(error), operation="open", attempts=self.failed_attempts,
+                    strategy="close + reopen + backoff", repeated_since_last=repeated or None)
+        state.update(kind=kind, at=now, suppressed=0)
+
     def _connect_failed(self, error, driver):
         runtime = self.runtime
         now = self.clock()
@@ -923,8 +937,15 @@ class DisplaySession:
                 self.link.to(RETRYING, "waiting for the display to be plugged in again")
             self.next_attempt = now + runtime.REPLUG_POLL
             return
-        self.record(f"connect_{error.kind}", health.SEVERITY_ERROR, str(error), operation="open",
-                    attempts=self.failed_attempts, strategy="close + reopen + backoff")
+        self._record_connect_failure(error)
+        if error.kind == NOT_FOUND and self.source.present():
+            # Plugged in but nothing answers (the FOSTON with its client closed, a
+            # panel still booting): back off. Polling every ABSENT_POLL here logged
+            # an incident every 2 s for as long as the device stayed like that.
+            if self.link.state == RECOVERING:
+                self.link.to(RETRYING, "display present but not answering")
+            self.next_attempt = now + self.backoff.next_delay()
+            return
         if error.kind in (NOT_FOUND, GONE):
             # The device went away (or is re-enumerating): poll for it at the
             # absent cadence instead of backing off exponentially.
@@ -943,9 +964,18 @@ class DisplaySession:
                             attempts=self.failed_attempts)
         if error.kind not in EXTERNAL_KINDS and self.failed_attempts >= runtime.MAX_FAILED_ATTEMPTS:
             self.link.to(FAILED, f"{self.failed_attempts} failed attempts")
+            # systemd restarts the process only when every display has failed
+            # (Runtime._supervise); with another display still working this one
+            # just retries every 60 s, and the incident must say so.
+            others = [s for s in runtime.sessions.values() if s is not self]
+            if not runtime.service:
+                action = "slow retry"
+            elif all(s.link.state == FAILED for s in others):
+                action = "process restart by systemd"
+            else:
+                action = "retry every 60 s; the other displays keep running"
             self.record("recovery_failed", health.SEVERITY_CRITICAL, "display present but not responding",
-                        attempts=self.failed_attempts,
-                        action="process restart by systemd" if runtime.service else "slow retry")
+                        attempts=self.failed_attempts, action=action)
             self.next_attempt = now + 60.0
             return
         delay = self.backoff.next_delay()
@@ -1038,6 +1068,7 @@ class Runtime:
     DISCOVERY_EVERY = 2.0          # sysfs scan for hot-plugged panels
     SESSION_LINGER = 45.0          # forget a session whose device has been gone this long
     MAX_FAILED_ATTEMPTS = 8
+    CONNECT_LOG_EVERY = 600.0      # the same open failure again: one summary per 10 min
     REPLUG_POLL = 3.0              # a display waiting to be replugged: cheap (no I/O until it is)
     RESET_PORT_AFTER = 4
     SELF_EXIT_AFTER_STALL = 90.0   # when systemd's watchdog is not configured

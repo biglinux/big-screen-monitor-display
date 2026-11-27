@@ -18,13 +18,16 @@ class SimulatedDisplay:
     DRIVER = "simulated"
 
     def __init__(self, size=(480, 320), connected=True, fail_open=0, shape="rect", latency=0.0, throughput=None,
-                 model="Simulated panel"):
+                 model="Simulated panel", refuse_open=0):
         self.size = size
         self.latency, self.throughput, self.model = latency, throughput, model
         self.capabilities = Capabilities(native_size=size, encoding="rgb888", transport="memory", shape=shape)
         self.native_size = (0, 0)
         self.connected = connected
         self.fail_open = fail_open
+        # plugged in but nothing answering (a FOSTON with its client closed): NOT_FOUND while present
+        self.refuse_open = refuse_open
+        self.open_attempts = 0
         self.faults = []
         self.is_open = False
         self.frames = 0
@@ -48,8 +51,12 @@ class SimulatedDisplay:
                 raise DisplayError(fault, f"simulated {what} fault")
 
     def open(self):
+        self.open_attempts += 1
         if not self.connected:
             raise DisplayError(NOT_FOUND, "simulated display unplugged")
+        if self.refuse_open > 0:
+            self.refuse_open -= 1
+            raise DisplayError(NOT_FOUND, "simulated: nothing listening")
         if self.fail_open > 0:
             self.fail_open -= 1
             raise DisplayError(IO, "simulated open failure")

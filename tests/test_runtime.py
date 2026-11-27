@@ -191,3 +191,53 @@ def test_status_file_is_written(env):
     status = runtime.read_status(app.status_file)
     assert status["device"]["width"] == 320
     assert set(status["pipeline"]) == {"telemetry", "render", "transport"}
+
+
+def session_of(app):
+    return next(iter(app.sessions.values()))
+
+
+def test_present_but_refusing_backs_off_and_logs_once(env):
+    """A device that is plugged in but answers nothing (FOSTON with its client closed)
+    logged an incident every ABSENT_POLL forever; now one incident and a growing delay."""
+    start, _config = env
+    panel = drivers.SimulatedDisplay((320, 240), refuse_open=10_000)
+    app, panel, _ = start(panel, CONNECT_LOG_EVERY=60.0)
+    assert wait_for(lambda: panel.open_attempts >= 5)
+    session = session_of(app)
+    assert app.link.state == health.RETRYING
+    assert session.backoff.attempt >= 4                       # exponential, not the fixed poll
+    assert kinds(app).count("connect_not_found") == 1
+    panel.refuse_open = 0                                     # the client was started on the device
+    assert wait_for(lambda: app.link.state == health.HEALTHY and panel.frames >= 1)
+    assert "recovered" in kinds(app)
+
+
+def test_repeated_failure_is_summarised(env):
+    start, _config = env
+    panel = drivers.SimulatedDisplay((320, 240), refuse_open=10_000)
+    app, panel, _ = start(panel, CONNECT_LOG_EVERY=0.4)
+    assert wait_for(lambda: kinds(app).count("connect_not_found") >= 2, timeout=6)
+    repeated = [i for i in app.incidents.recent(100) if i["kind"] == "connect_not_found"]
+    assert "repeated_since_last" not in repeated[0] and repeated[1]["repeated_since_last"] >= 1
+
+
+def test_absent_device_still_polls_at_the_absent_cadence(env):
+    start, _config = env
+    panel = drivers.SimulatedDisplay((320, 240), connected=False)
+    app, panel, _ = start(panel)
+    assert wait_for(lambda: app.link.state == health.RETRYING)
+    assert session_of(app).backoff.attempt == 0               # unplugged: cheap fixed polling
+
+
+def test_recovery_failed_says_what_really_happens(env):
+    """systemd restarts the service only when every display failed; with another one
+    working the incident must not promise a restart (it did, 6 times a day)."""
+    start, _config = env
+    broken, good = drivers.SimulatedDisplay((320, 240), fail_open=10_000), drivers.SimulatedDisplay((160, 80))
+    app, _panel, result = start([broken, good], service=True)
+    assert wait_for(lambda: "recovery_failed" in kinds(app), timeout=10)
+    failed = next(i for i in app.incidents.recent(100) if i["kind"] == "recovery_failed")
+    assert failed["action"] == "retry every 60 s; the other displays keep running"
+    time.sleep(0.5)
+    assert "code" not in result and good.frames >= 1
