@@ -284,6 +284,7 @@ class ScreenWindow(PanelWindow):
     def set_variants(self, theme, current, owner):
         for button in self.variant_buttons:
             self.variant_group.removeButton(button)
+            self.variant_grid.removeWidget(button)      # see DeepCoolWindow.set_modes
             button.deleteLater()
         self.variant_buttons = []
         has = bool(theme and theme.variants)
