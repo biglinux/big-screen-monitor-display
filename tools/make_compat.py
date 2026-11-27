@@ -27,9 +27,11 @@ ISSUE = "https://github.com/ruscher/big-screen-monitor-display/issues/new?templa
 def usb_ids(profile):
     ids = []
     for rule in profile.rules:
-        vid = "????" if rule.vid is None else f"{rule.vid:04x}"
+        if rule.vid is None:            # recognised by its serial number, whatever the USB ids
+            ids += [f"serial `{serial}`" for serial in (rule.serial or rule.serial_prefix)]
+            continue
         pids = [f"{pid:04x}" for pid in rule.pids] or ["*"]
-        ids += [f"`{vid}:{pid}`" for pid in pids]
+        ids += [f"`{rule.vid:04x}:{pid}`" for pid in pids]
     return " ".join(dict.fromkeys(ids)) or "—"
 
 
