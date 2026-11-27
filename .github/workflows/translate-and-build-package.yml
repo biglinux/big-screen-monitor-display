@@ -2,12 +2,6 @@ name: Translate and Build Package
 
 on:
   workflow_dispatch:
-    inputs:
-      debug_enabled:
-        type: boolean
-        description: 'With TMATE'
-        required: false
-        default: false
 
   # Only after the Tests workflow passed on a push to main: a branch push, or a
   # main push with a failing test, never asks BigLinux for a package.
@@ -25,7 +19,7 @@ jobs:
     env:
       BRANCH: ${{ github.event.workflow_run.head_branch || github.ref_name }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: If Template exit
         shell: bash
         run: |
@@ -40,10 +34,6 @@ jobs:
             cancel
           fi
       
-      ## Tmate ##
-      - name: Setup TMATE Session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
       # Translations are made in the repository (locale/*.po, docs/i18n.md) and
       # checked by the Tests workflow; this job only asks BigLinux to build

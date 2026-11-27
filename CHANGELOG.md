@@ -18,6 +18,11 @@ da 5.5.0. Para publicar: `tools/release.sh` (veja o [CONTRIBUTING](CONTRIBUTING.
   esperam cada vez mais (até 30 s), e a mesma falha vira um resumo a cada 10 min.
 - O aviso de falha de recuperação só fala em reinício pelo systemd quando ele vai
   mesmo acontecer (todos os displays falharam).
+- **Segurança:** quem não é administrador precisa da senha de administrador para
+  mudar a configuração do sistema, os papéis de parede e mandar comandos ao
+  serviço (como aprovar um celular Android); administradores (`wheel`) seguem sem
+  senha. Actions do CI fixadas por hash, com Dependabot; sem `tmate` no workflow
+  de pacote.
 - **Qualidade:** a cobertura dos testes passa a medir também os subprocessos no
   CI (o arquivo de configuração estava fora do repositório); piso 68 %.
 

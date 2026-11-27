@@ -38,3 +38,17 @@ def test_documentation_index_links_exist():
     missing = [link for link in links if not link.startswith("http")
                and not os.path.exists(os.path.normpath(os.path.join(ROOT, "docs", link)))]
     assert not missing, missing
+
+
+def test_workflow_actions_are_pinned_to_a_commit():
+    """Supply chain: a tag (@v7) can be moved to other code; a commit hash cannot."""
+    import glob
+    import re
+    loose = []
+    for path in glob.glob(os.path.join(ROOT, ".github", "workflows", "*.yml")):
+        with open(path, encoding="utf-8") as fh:
+            for number, line in enumerate(fh, 1):
+                match = re.search(r"uses:\s*([^\s#]+)", line)
+                if match and not match.group(1).startswith("./") and not re.search(r"@[0-9a-f]{40}$", match.group(1)):
+                    loose.append(f"{os.path.basename(path)}:{number}: {match.group(1)}")
+    assert not loose, loose
