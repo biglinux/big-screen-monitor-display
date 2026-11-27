@@ -362,6 +362,10 @@ recomendação · ⚫ obsoleta
 | Etapa | Estado | Observação |
 | --- | --- | --- |
 | Pacote BigLinux pedido só com testes verdes | 🔴 | lógica pronta e testada; o pedido recebe 404 (PB-01) |
+| Polkit: escrita só para administradores (T12) | ✅ | #36 |
+| Chamado para donos de displays nível B (T09) | 🟢 | issue #40 fixada |
+| GIF dos temas no README (T10) | ✅ | #39 |
+| Segfault do PyQt5 nas bandejas (PB-13) | 🟢 | #37; estado perigoso eliminado, causa do crash não reproduzida localmente |
 | `curl -f` no webhook | ✅ | foi o que revelou o PB-01 |
 | Releases com APK e notas do CHANGELOG | ✅ | 5.6.0 publicada; notas automáticas a partir da 5.6.1 |
 | `tools/release.sh` | ✅ | corrigido no #31/#32; usado na 5.6.0 |
@@ -379,12 +383,12 @@ recomendação · ⚫ obsoleta
 | Primeiro uso guiado | ✅ | testado com a janela real |
 | Acessibilidade: nomes de botões | ✅ | teste de varredura |
 | Acessibilidade: percurso com Orca | ⚪ | manual |
-| Backoff para conexão recusada (PB-02) | 🟣 | nova |
-| Incidente `recovery_failed` coerente (PB-03) | 🟣 | nova |
-| Verificação pós-publicação do pacote | 🟣 | nova |
-| Repositório canônico / espelhamento | 🟣 | nova |
-| Teste de longa duração | 🟣 | nova |
-| Actions por hash; sem `tmate` | 🟣 | nova |
+| Backoff para conexão recusada (PB-02) | 🟢 | #35; testado com display simulado; falta medir com o FOSTON real depois de instalar (T04) |
+| Incidente `recovery_failed` coerente (PB-03) | ✅ | #35, com teste de dois displays |
+| Verificação pós-publicação do pacote | ✅ | #38, workflow *Delivery* diário |
+| Repositório canônico / espelhamento | 🟡 | #38 (*Mirror to biglinux*); falta o segredo `BIGLINUX_SYNC_TOKEN` |
+| Teste de longa duração | ✅ | #41, workflow *Soak* semanal; local: platô em ~179 MB |
+| Actions por hash; sem `tmate` | ✅ | #36, com Dependabot e teste |
 | Temas compartilháveis | 🟣 | nova |
 | Fontes de dados próprias | 🟣 | nova |
 | Ponte com big-misterdeck | 🟣 | nova (opcional) |
